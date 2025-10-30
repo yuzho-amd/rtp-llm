@@ -43,9 +43,9 @@ bool CustomAllReduceComm::checkAllReduceAvailable(size_t elts_total_num, DataTyp
 
 void CustomAllReduceComm::allReduce(torch::Tensor& input_tensor, torch::Tensor& output_tensor) {
     if (at::hip::currentStreamCaptureStatusMayInitCtx() != at::hip::CaptureStatus::None) {
-        aiter::all_reduce_reg(fa_, input_tensor, output_tensor, false);
+        aiter::all_reduce(fa_, input_tensor, output_tensor, false, std::nullopt);
     } else {
-        aiter::all_reduce_unreg(fa_, input_tensor, buffer_, output_tensor);
+        aiter::all_reduce(fa_, input_tensor, output_tensor, false, buffer_);
     }
 }
 
