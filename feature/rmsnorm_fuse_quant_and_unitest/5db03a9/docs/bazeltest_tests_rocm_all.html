@@ -20,6 +20,7 @@
     <script type="module" src="../_static/js/dark-mode-toggle.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="client_Bert_fp16_4l_sku_mean_909" href="client_Bert_fp16_4l_sku_mean_909.html" />
     <link rel="prev" title="bazeltest_tests_ptpc_gemm_op_swizzle" href="bazeltest_tests_ptpc_gemm_op_swizzle.html" /> 
   </head>  <body class="wy-body-for-nav" role="document"> 
 <div class="menu-overlay"></div>
@@ -56,6 +57,7 @@ Loading:
 Loading: 
 Loading: 
 Loading: 
+Loading: 
 DEBUG: /mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/3rdparty/gpus/rocm_configure.bzl:716:10: rocm_toolkit_path: /opt/rocm-6.4.3
 DEBUG: /mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/3rdparty/gpus/rocm_configure.bzl:716:10: rocm_toolkit_path: /opt/rocm-6.4.3
 DEBUG: /mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/3rdparty/gpus/rocm_configure.bzl:186:10: rocm_config.rocm_toolkit_path:  /opt/rocm-6.4.3
@@ -69,17 +71,15 @@ DEBUG: /mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/bazel/p
 DEBUG: /mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/bazel/py_proto.bzl:13:10: pb2_file path: &lt;generated file rtp_llm/cpp/model_rpc/proto/model_rpc_service_pb2.py&gt;
 DEBUG: /mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/bazel/py_proto.bzl:14:10: pb2_grpc_file path: &lt;generated file rtp_llm/cpp/model_rpc/proto/model_rpc_service_pb2_grpc.py&gt;
 DEBUG: /mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/bazel/py_proto.bzl:15:10: output_dir: bazel-out/k8-opt/bin
-Analyzing: target //tests:rocm_gemm_op_test (303 packages loaded, 88417 targets configured)
+Analyzing: target //tests:rocm_gemm_op_test (301 packages loaded, 50879 targets configured)
 INFO: Analyzed target //tests:rocm_gemm_op_test (305 packages loaded, 91190 targets configured).
 INFO: Found 1 test target...
 [0 / 4] [Prepa] Expanding template tests/rocm_gemm_op_test
-[5,033 / 11,522] [Prepa] Creating source manifest for //tests:rocm_gemm_op_test
-[12,021 / 12,473] Creating source manifest for //tests:rocm_gemm_op_test; 0s local
-[12,555 / 12,567] Compiling tests/layernorm/fusedQkRmsNorm.cpp; 1s local ... (9 actions running)
-[12,557 / 12,567] Compiling tests/layernorm/fusedQkRmsNorm.cpp; 5s local ... (8 actions running)
-[12,557 / 12,567] Compiling tests/layernorm/fusedQkRmsNorm.cpp; 16s local ... (8 actions running)
-[12,558 / 12,567] Compiling tests/layernorm/fusedQkRmsNorm.cpp; 34s local ... (7 actions running)
-[12,561 / 12,567] Compiling tests/layernorm/fusedQkRmsNorm.cpp; 36s local ... (4 actions running)
+[12,023 / 12,486] [Prepa] Creating source manifest for //tests:rocm_gemm_op_test
+[12,556 / 12,567] Compiling tests/ffn/rocm_ffn_moe_fp8_ptpc_test.cc; 0s local ... (9 actions running)
+[12,557 / 12,567] Compiling tests/ffn/rocm_ffn_moe_fp8_ptpc_test.cc; 4s local ... (8 actions running)
+[12,557 / 12,567] Compiling tests/ffn/rocm_ffn_moe_fp8_ptpc_test.cc; 15s local ... (8 actions running)
+[12,561 / 12,567] Compiling tests/mla/mla_rotary_kvcache_test.cc; 33s local ... (4 actions running)
 INFO: From Compiling tests/mla/mla_context_attention.cc:
 In file included from tests/mla/mla_context_attention.cc:2:
 In file included from ./rtp_llm/cpp/devices/rocm_impl/ROCmDevice.h:18:
@@ -306,6 +306,258 @@ external/com_google_absl/absl/strings/cord.h:342:9: note: in instantiation of me
   342 |   class ChunkIterator {
       |         ^
 In file included from tests/mla/mla_context_attention.cc:2:
+In file included from ./rtp_llm/cpp/devices/rocm_impl/ROCmDevice.h:18:
+In file included from ./rtp_llm/cpp/rocm/hipblasMMWrapper.h:4:
+In file included from ./rtp_llm/cpp/rocm/hipblasAlgoMap.h:4:
+In file included from external/com_google_absl/absl/container/node_hash_map.h:43:
+In file included from external/com_google_absl/absl/algorithm/container.h:55:
+external/com_google_absl/absl/meta/type_traits.h:486:17: warning: builtin __has_trivial_assign is deprecated; use __is_trivially_assignable instead [-Wdeprecated-builtins]
+  486 |           bool, __has_trivial_assign(typename std::remove_reference&lt;T&gt;::type) &amp;&amp;
+      |                 ^
+external/com_google_absl/absl/meta/type_traits.h:226:24: note: in instantiation of template class &#x27;absl::is_trivially_copy_assignable&lt;absl::cord_internal::CordRep *&gt;&#x27; requested here
+  226 |     : std::conditional&lt;T::value, conjunction&lt;Ts...&gt;, T&gt;::type {};
+      |                        ^
+external/com_google_absl/absl/meta/type_traits.h:226:7: note: in instantiation of template class &#x27;absl::conjunction&lt;absl::is_trivially_copy_assignable&lt;absl::cord_internal::CordRep *&gt;, absl::is_trivially_destructible&lt;absl::cord_internal::CordRep *&gt;&gt;&#x27; requested here
+  226 |     : std::conditional&lt;T::value, conjunction&lt;Ts...&gt;, T&gt;::type {};
+      |       ^
+external/com_google_absl/absl/meta/type_traits.h:226:7: note: in instantiation of template class &#x27;absl::conjunction&lt;absl::is_trivially_copy_constructible&lt;absl::cord_internal::CordRep *&gt;, absl::is_trivially_copy_assignable&lt;absl::cord_internal::CordRep *&gt;, absl::is_trivially_destructible&lt;absl::cord_internal::CordRep *&gt;&gt;&#x27; requested here
+external/com_google_absl/absl/container/inlined_vector.h:170:9: note: in instantiation of template class &#x27;absl::conjunction&lt;std::is_same&lt;std::allocator&lt;absl::cord_internal::CordRep *&gt;, std::allocator&lt;absl::cord_internal::CordRep *&gt;&gt;, absl::is_trivially_copy_constructible&lt;absl::cord_internal::CordRep *&gt;, absl::is_trivially_copy_assignable&lt;absl::cord_internal::CordRep *&gt;, absl::is_trivially_destructible&lt;absl::cord_internal::CordRep *&gt;&gt;&#x27; requested here
+  170 |     if (IsMemcpyOk::value &amp;&amp; !other.storage_.GetIsAllocated()) {
+      |         ^
+external/com_google_absl/absl/container/inlined_vector.h:165:9: note: in instantiation of member function &#x27;absl::InlinedVector&lt;absl::cord_internal::CordRep *, 4&gt;::InlinedVector&#x27; requested here
+  165 |       : InlinedVector(other, *other.storage_.GetAllocPtr()) {}
+      |         ^
+external/com_google_absl/absl/strings/cord.h:342:9: note: in instantiation of member function &#x27;absl::InlinedVector&lt;absl::cord_internal::CordRep *, 4&gt;::InlinedVector&#x27; requested here
+  342 |   class ChunkIterator {
+      |         ^
+9 warnings generated when compiling for host.
+[12,562 / 12,567] Compiling tests/mla/mla_rotary_kvcache_test.cc; 35s local ... (3 actions running)
+INFO: From Compiling tests/mla/mla_rotary_kvcache_test.cc:
+In file included from tests/mla/mla_rotary_kvcache_test.cc:2:
+In file included from ./rtp_llm/cpp/devices/rocm_impl/ROCmDevice.h:18:
+In file included from ./rtp_llm/cpp/rocm/hipblasMMWrapper.h:4:
+In file included from ./rtp_llm/cpp/rocm/hipblasAlgoMap.h:4:
+In file included from external/com_google_absl/absl/container/node_hash_map.h:43:
+In file included from external/com_google_absl/absl/algorithm/container.h:55:
+external/com_google_absl/absl/meta/type_traits.h:293:36: warning: builtin __has_trivial_destructor is deprecated; use __is_trivially_destructible instead [-Wdeprecated-builtins]
+  293 |     : std::integral_constant&lt;bool, __has_trivial_destructor(T) &amp;&amp;
+      |                                    ^
+external/com_google_absl/absl/meta/type_traits.h:342:36: warning: builtin __has_trivial_constructor is deprecated; use __is_trivially_constructible instead [-Wdeprecated-builtins]
+  342 |     : std::integral_constant&lt;bool, __has_trivial_constructor(T) &amp;&amp;
+      |                                    ^
+external/com_google_absl/absl/meta/type_traits.h:486:17: warning: builtin __has_trivial_assign is deprecated; use __is_trivially_assignable instead [-Wdeprecated-builtins]
+  486 |           bool, __has_trivial_assign(typename std::remove_reference&lt;T&gt;::type) &amp;&amp;
+      |                 ^
+external/com_google_absl/absl/meta/type_traits.h:530:8: warning: builtin __has_trivial_copy is deprecated; use __is_trivially_copyable instead [-Wdeprecated-builtins]
+  530 |       (__has_trivial_copy(ExtentsRemoved) || !kIsCopyOrMoveConstructible) &amp;&amp;
+      |        ^
+external/com_google_absl/absl/meta/type_traits.h:531:8: warning: builtin __has_trivial_assign is deprecated; use __is_trivially_assignable instead [-Wdeprecated-builtins]
+  531 |       (__has_trivial_assign(ExtentsRemoved) || !kIsCopyOrMoveAssignable) &amp;&amp;
+      |        ^
+external/com_google_absl/absl/meta/type_traits.h:293:36: warning: builtin __has_trivial_destructor is deprecated; use __is_trivially_destructible instead [-Wdeprecated-builtins]
+  293 |     : std::integral_constant&lt;bool, __has_trivial_destructor(T) &amp;&amp;
+      |                                    ^
+external/com_google_absl/absl/meta/type_traits.h:91:27: note: in instantiation of template class &#x27;absl::is_trivially_destructible&lt;absl::string_view&gt;&#x27; requested here
+   91 |                     absl::is_trivially_destructible&lt;T&gt;::value&gt; {};
+      |                           ^
+external/com_google_absl/absl/meta/type_traits.h:414:41: note: in instantiation of template class &#x27;absl::type_traits_internal::IsTriviallyCopyConstructibleObject&lt;absl::string_view&gt;&#x27; requested here
+  414 |           std::is_lvalue_reference&lt;T&gt;&gt;::type::type {
+      |                                         ^
+external/com_google_absl/absl/functional/internal/function_ref.h:46:16: note: in instantiation of template class &#x27;absl::is_trivially_copy_constructible&lt;absl::string_view&gt;&#x27; requested here
+   46 |          absl::is_trivially_copy_constructible&lt;T&gt;::value &amp;&amp;
+      |                ^
+external/com_google_absl/absl/functional/internal/function_ref.h:54:36: note: in instantiation of function template specialization &#x27;absl::functional_internal::PassByValue&lt;absl::string_view&gt;&#x27; requested here
+   54 | struct ForwardT : std::conditional&lt;PassByValue&lt;T&gt;(), T, T&amp;&amp;&gt; {};
+      |                                    ^
+external/com_google_absl/absl/functional/internal/function_ref.h:63:1: note: in instantiation of template class &#x27;absl::functional_internal::ForwardT&lt;absl::string_view&gt;&#x27; requested here
+   63 | using Invoker = R (*)(VoidPtr, typename ForwardT&lt;Args&gt;::type...);
+      | ^
+external/com_google_absl/absl/functional/function_ref.h:133:30: note: in instantiation of template type alias &#x27;Invoker&#x27; requested here
+  133 |   absl::functional_internal::Invoker&lt;R, Args...&gt; invoker_;
+      |                              ^
+external/com_google_absl/absl/strings/cord.h:1202:48: note: in instantiation of template class &#x27;absl::FunctionRef&lt;void (absl::string_view)&gt;&#x27; requested here
+ 1202 |     absl::FunctionRef&lt;void(absl::string_view)&gt; callback) const {
+      |                                                ^
+In file included from tests/mla/mla_rotary_kvcache_test.cc:2:
+In file included from ./rtp_llm/cpp/devices/rocm_impl/ROCmDevice.h:18:
+In file included from ./rtp_llm/cpp/rocm/hipblasMMWrapper.h:4:
+In file included from ./rtp_llm/cpp/rocm/hipblasAlgoMap.h:4:
+In file included from external/com_google_absl/absl/container/node_hash_map.h:43:
+In file included from external/com_google_absl/absl/algorithm/container.h:55:
+external/com_google_absl/absl/meta/type_traits.h:486:17: warning: builtin __has_trivial_assign is deprecated; use __is_trivially_assignable instead [-Wdeprecated-builtins]
+  486 |           bool, __has_trivial_assign(typename std::remove_reference&lt;T&gt;::type) &amp;&amp;
+      |                 ^
+external/com_google_absl/absl/functional/internal/function_ref.h:47:16: note: in instantiation of template class &#x27;absl::is_trivially_copy_assignable&lt;absl::string_view&gt;&#x27; requested here
+   47 |          absl::is_trivially_copy_assignable&lt;
+      |                ^
+external/com_google_absl/absl/functional/internal/function_ref.h:54:36: note: in instantiation of function template specialization &#x27;absl::functional_internal::PassByValue&lt;absl::string_view&gt;&#x27; requested here
+   54 | struct ForwardT : std::conditional&lt;PassByValue&lt;T&gt;(), T, T&amp;&amp;&gt; {};
+      |                                    ^
+external/com_google_absl/absl/functional/internal/function_ref.h:63:1: note: in instantiation of template class &#x27;absl::functional_internal::ForwardT&lt;absl::string_view&gt;&#x27; requested here
+   63 | using Invoker = R (*)(VoidPtr, typename ForwardT&lt;Args&gt;::type...);
+      | ^
+external/com_google_absl/absl/functional/function_ref.h:133:30: note: in instantiation of template type alias &#x27;Invoker&#x27; requested here
+  133 |   absl::functional_internal::Invoker&lt;R, Args...&gt; invoker_;
+      |                              ^
+external/com_google_absl/absl/strings/cord.h:1202:48: note: in instantiation of template class &#x27;absl::FunctionRef&lt;void (absl::string_view)&gt;&#x27; requested here
+ 1202 |     absl::FunctionRef&lt;void(absl::string_view)&gt; callback) const {
+      |                                                ^
+In file included from tests/mla/mla_rotary_kvcache_test.cc:2:
+In file included from ./rtp_llm/cpp/devices/rocm_impl/ROCmDevice.h:18:
+In file included from ./rtp_llm/cpp/rocm/hipblasMMWrapper.h:4:
+In file included from ./rtp_llm/cpp/rocm/hipblasAlgoMap.h:4:
+In file included from external/com_google_absl/absl/container/node_hash_map.h:43:
+In file included from external/com_google_absl/absl/algorithm/container.h:55:
+external/com_google_absl/absl/meta/type_traits.h:293:36: warning: builtin __has_trivial_destructor is deprecated; use __is_trivially_destructible instead [-Wdeprecated-builtins]
+  293 |     : std::integral_constant&lt;bool, __has_trivial_destructor(T) &amp;&amp;
+      |                                    ^
+external/com_google_absl/absl/meta/type_traits.h:91:27: note: in instantiation of template class &#x27;absl::is_trivially_destructible&lt;absl::cord_internal::CordRep *&gt;&#x27; requested here
+   91 |                     absl::is_trivially_destructible&lt;T&gt;::value&gt; {};
+      |                           ^
+external/com_google_absl/absl/meta/type_traits.h:414:41: note: in instantiation of template class &#x27;absl::type_traits_internal::IsTriviallyCopyConstructibleObject&lt;absl::cord_internal::CordRep *&gt;&#x27; requested here
+  414 |           std::is_lvalue_reference&lt;T&gt;&gt;::type::type {
+      |                                         ^
+external/com_google_absl/absl/meta/type_traits.h:226:24: note: in instantiation of template class &#x27;absl::is_trivially_copy_constructible&lt;absl::cord_internal::CordRep *&gt;&#x27; requested here
+  226 |     : std::conditional&lt;T::value, conjunction&lt;Ts...&gt;, T&gt;::type {};
+      |                        ^
+external/com_google_absl/absl/meta/type_traits.h:226:7: note: in instantiation of template class &#x27;absl::conjunction&lt;absl::is_trivially_copy_constructible&lt;absl::cord_internal::CordRep *&gt;, absl::is_trivially_copy_assignable&lt;absl::cord_internal::CordRep *&gt;, absl::is_trivially_destructible&lt;absl::cord_internal::CordRep *&gt;&gt;&#x27; requested here
+  226 |     : std::conditional&lt;T::value, conjunction&lt;Ts...&gt;, T&gt;::type {};
+      |       ^
+external/com_google_absl/absl/container/inlined_vector.h:170:9: note: in instantiation of template class &#x27;absl::conjunction&lt;std::is_same&lt;std::allocator&lt;absl::cord_internal::CordRep *&gt;, std::allocator&lt;absl::cord_internal::CordRep *&gt;&gt;, absl::is_trivially_copy_constructible&lt;absl::cord_internal::CordRep *&gt;, absl::is_trivially_copy_assignable&lt;absl::cord_internal::CordRep *&gt;, absl::is_trivially_destructible&lt;absl::cord_internal::CordRep *&gt;&gt;&#x27; requested here
+  170 |     if (IsMemcpyOk::value &amp;&amp; !other.storage_.GetIsAllocated()) {
+      |         ^
+external/com_google_absl/absl/container/inlined_vector.h:165:9: note: in instantiation of member function &#x27;absl::InlinedVector&lt;absl::cord_internal::CordRep *, 4&gt;::InlinedVector&#x27; requested here
+  165 |       : InlinedVector(other, *other.storage_.GetAllocPtr()) {}
+      |         ^
+external/com_google_absl/absl/strings/cord.h:342:9: note: in instantiation of member function &#x27;absl::InlinedVector&lt;absl::cord_internal::CordRep *, 4&gt;::InlinedVector&#x27; requested here
+  342 |   class ChunkIterator {
+      |         ^
+In file included from tests/mla/mla_rotary_kvcache_test.cc:2:
+In file included from ./rtp_llm/cpp/devices/rocm_impl/ROCmDevice.h:18:
+In file included from ./rtp_llm/cpp/rocm/hipblasMMWrapper.h:4:
+In file included from ./rtp_llm/cpp/rocm/hipblasAlgoMap.h:4:
+In file included from external/com_google_absl/absl/container/node_hash_map.h:43:
+In file included from external/com_google_absl/absl/algorithm/container.h:55:
+external/com_google_absl/absl/meta/type_traits.h:486:17: warning: builtin __has_trivial_assign is deprecated; use __is_trivially_assignable instead [-Wdeprecated-builtins]
+  486 |           bool, __has_trivial_assign(typename std::remove_reference&lt;T&gt;::type) &amp;&amp;
+      |                 ^
+external/com_google_absl/absl/meta/type_traits.h:226:24: note: in instantiation of template class &#x27;absl::is_trivially_copy_assignable&lt;absl::cord_internal::CordRep *&gt;&#x27; requested here
+  226 |     : std::conditional&lt;T::value, conjunction&lt;Ts...&gt;, T&gt;::type {};
+      |                        ^
+external/com_google_absl/absl/meta/type_traits.h:226:7: note: in instantiation of template class &#x27;absl::conjunction&lt;absl::is_trivially_copy_assignable&lt;absl::cord_internal::CordRep *&gt;, absl::is_trivially_destructible&lt;absl::cord_internal::CordRep *&gt;&gt;&#x27; requested here
+  226 |     : std::conditional&lt;T::value, conjunction&lt;Ts...&gt;, T&gt;::type {};
+      |       ^
+external/com_google_absl/absl/meta/type_traits.h:226:7: note: in instantiation of template class &#x27;absl::conjunction&lt;absl::is_trivially_copy_constructible&lt;absl::cord_internal::CordRep *&gt;, absl::is_trivially_copy_assignable&lt;absl::cord_internal::CordRep *&gt;, absl::is_trivially_destructible&lt;absl::cord_internal::CordRep *&gt;&gt;&#x27; requested here
+external/com_google_absl/absl/container/inlined_vector.h:170:9: note: in instantiation of template class &#x27;absl::conjunction&lt;std::is_same&lt;std::allocator&lt;absl::cord_internal::CordRep *&gt;, std::allocator&lt;absl::cord_internal::CordRep *&gt;&gt;, absl::is_trivially_copy_constructible&lt;absl::cord_internal::CordRep *&gt;, absl::is_trivially_copy_assignable&lt;absl::cord_internal::CordRep *&gt;, absl::is_trivially_destructible&lt;absl::cord_internal::CordRep *&gt;&gt;&#x27; requested here
+  170 |     if (IsMemcpyOk::value &amp;&amp; !other.storage_.GetIsAllocated()) {
+      |         ^
+external/com_google_absl/absl/container/inlined_vector.h:165:9: note: in instantiation of member function &#x27;absl::InlinedVector&lt;absl::cord_internal::CordRep *, 4&gt;::InlinedVector&#x27; requested here
+  165 |       : InlinedVector(other, *other.storage_.GetAllocPtr()) {}
+      |         ^
+external/com_google_absl/absl/strings/cord.h:342:9: note: in instantiation of member function &#x27;absl::InlinedVector&lt;absl::cord_internal::CordRep *, 4&gt;::InlinedVector&#x27; requested here
+  342 |   class ChunkIterator {
+      |         ^
+9 warnings generated when compiling for gfx942.
+In file included from tests/mla/mla_rotary_kvcache_test.cc:2:
+In file included from ./rtp_llm/cpp/devices/rocm_impl/ROCmDevice.h:18:
+In file included from ./rtp_llm/cpp/rocm/hipblasMMWrapper.h:4:
+In file included from ./rtp_llm/cpp/rocm/hipblasAlgoMap.h:4:
+In file included from external/com_google_absl/absl/container/node_hash_map.h:43:
+In file included from external/com_google_absl/absl/algorithm/container.h:55:
+external/com_google_absl/absl/meta/type_traits.h:293:36: warning: builtin __has_trivial_destructor is deprecated; use __is_trivially_destructible instead [-Wdeprecated-builtins]
+  293 |     : std::integral_constant&lt;bool, __has_trivial_destructor(T) &amp;&amp;
+      |                                    ^
+external/com_google_absl/absl/meta/type_traits.h:342:36: warning: builtin __has_trivial_constructor is deprecated; use __is_trivially_constructible instead [-Wdeprecated-builtins]
+  342 |     : std::integral_constant&lt;bool, __has_trivial_constructor(T) &amp;&amp;
+      |                                    ^
+external/com_google_absl/absl/meta/type_traits.h:486:17: warning: builtin __has_trivial_assign is deprecated; use __is_trivially_assignable instead [-Wdeprecated-builtins]
+  486 |           bool, __has_trivial_assign(typename std::remove_reference&lt;T&gt;::type) &amp;&amp;
+      |                 ^
+external/com_google_absl/absl/meta/type_traits.h:530:8: warning: builtin __has_trivial_copy is deprecated; use __is_trivially_copyable instead [-Wdeprecated-builtins]
+  530 |       (__has_trivial_copy(ExtentsRemoved) || !kIsCopyOrMoveConstructible) &amp;&amp;
+      |        ^
+external/com_google_absl/absl/meta/type_traits.h:531:8: warning: builtin __has_trivial_assign is deprecated; use __is_trivially_assignable instead [-Wdeprecated-builtins]
+  531 |       (__has_trivial_assign(ExtentsRemoved) || !kIsCopyOrMoveAssignable) &amp;&amp;
+      |        ^
+external/com_google_absl/absl/meta/type_traits.h:293:36: warning: builtin __has_trivial_destructor is deprecated; use __is_trivially_destructible instead [-Wdeprecated-builtins]
+  293 |     : std::integral_constant&lt;bool, __has_trivial_destructor(T) &amp;&amp;
+      |                                    ^
+external/com_google_absl/absl/meta/type_traits.h:91:27: note: in instantiation of template class &#x27;absl::is_trivially_destructible&lt;absl::string_view&gt;&#x27; requested here
+   91 |                     absl::is_trivially_destructible&lt;T&gt;::value&gt; {};
+      |                           ^
+external/com_google_absl/absl/meta/type_traits.h:414:41: note: in instantiation of template class &#x27;absl::type_traits_internal::IsTriviallyCopyConstructibleObject&lt;absl::string_view&gt;&#x27; requested here
+  414 |           std::is_lvalue_reference&lt;T&gt;&gt;::type::type {
+      |                                         ^
+external/com_google_absl/absl/functional/internal/function_ref.h:46:16: note: in instantiation of template class &#x27;absl::is_trivially_copy_constructible&lt;absl::string_view&gt;&#x27; requested here
+   46 |          absl::is_trivially_copy_constructible&lt;T&gt;::value &amp;&amp;
+      |                ^
+external/com_google_absl/absl/functional/internal/function_ref.h:54:36: note: in instantiation of function template specialization &#x27;absl::functional_internal::PassByValue&lt;absl::string_view&gt;&#x27; requested here
+   54 | struct ForwardT : std::conditional&lt;PassByValue&lt;T&gt;(), T, T&amp;&amp;&gt; {};
+      |                                    ^
+external/com_google_absl/absl/functional/internal/function_ref.h:63:1: note: in instantiation of template class &#x27;absl::functional_internal::ForwardT&lt;absl::string_view&gt;&#x27; requested here
+   63 | using Invoker = R (*)(VoidPtr, typename ForwardT&lt;Args&gt;::type...);
+      | ^
+external/com_google_absl/absl/functional/function_ref.h:133:30: note: in instantiation of template type alias &#x27;Invoker&#x27; requested here
+  133 |   absl::functional_internal::Invoker&lt;R, Args...&gt; invoker_;
+      |                              ^
+external/com_google_absl/absl/strings/cord.h:1202:48: note: in instantiation of template class &#x27;absl::FunctionRef&lt;void (absl::string_view)&gt;&#x27; requested here
+ 1202 |     absl::FunctionRef&lt;void(absl::string_view)&gt; callback) const {
+      |                                                ^
+In file included from tests/mla/mla_rotary_kvcache_test.cc:2:
+In file included from ./rtp_llm/cpp/devices/rocm_impl/ROCmDevice.h:18:
+In file included from ./rtp_llm/cpp/rocm/hipblasMMWrapper.h:4:
+In file included from ./rtp_llm/cpp/rocm/hipblasAlgoMap.h:4:
+In file included from external/com_google_absl/absl/container/node_hash_map.h:43:
+In file included from external/com_google_absl/absl/algorithm/container.h:55:
+external/com_google_absl/absl/meta/type_traits.h:486:17: warning: builtin __has_trivial_assign is deprecated; use __is_trivially_assignable instead [-Wdeprecated-builtins]
+  486 |           bool, __has_trivial_assign(typename std::remove_reference&lt;T&gt;::type) &amp;&amp;
+      |                 ^
+external/com_google_absl/absl/functional/internal/function_ref.h:47:16: note: in instantiation of template class &#x27;absl::is_trivially_copy_assignable&lt;absl::string_view&gt;&#x27; requested here
+   47 |          absl::is_trivially_copy_assignable&lt;
+      |                ^
+external/com_google_absl/absl/functional/internal/function_ref.h:54:36: note: in instantiation of function template specialization &#x27;absl::functional_internal::PassByValue&lt;absl::string_view&gt;&#x27; requested here
+   54 | struct ForwardT : std::conditional&lt;PassByValue&lt;T&gt;(), T, T&amp;&amp;&gt; {};
+      |                                    ^
+external/com_google_absl/absl/functional/internal/function_ref.h:63:1: note: in instantiation of template class &#x27;absl::functional_internal::ForwardT&lt;absl::string_view&gt;&#x27; requested here
+   63 | using Invoker = R (*)(VoidPtr, typename ForwardT&lt;Args&gt;::type...);
+      | ^
+external/com_google_absl/absl/functional/function_ref.h:133:30: note: in instantiation of template type alias &#x27;Invoker&#x27; requested here
+  133 |   absl::functional_internal::Invoker&lt;R, Args...&gt; invoker_;
+      |                              ^
+external/com_google_absl/absl/strings/cord.h:1202:48: note: in instantiation of template class &#x27;absl::FunctionRef&lt;void (absl::string_view)&gt;&#x27; requested here
+ 1202 |     absl::FunctionRef&lt;void(absl::string_view)&gt; callback) const {
+      |                                                ^
+In file included from tests/mla/mla_rotary_kvcache_test.cc:2:
+In file included from ./rtp_llm/cpp/devices/rocm_impl/ROCmDevice.h:18:
+In file included from ./rtp_llm/cpp/rocm/hipblasMMWrapper.h:4:
+In file included from ./rtp_llm/cpp/rocm/hipblasAlgoMap.h:4:
+In file included from external/com_google_absl/absl/container/node_hash_map.h:43:
+In file included from external/com_google_absl/absl/algorithm/container.h:55:
+external/com_google_absl/absl/meta/type_traits.h:293:36: warning: builtin __has_trivial_destructor is deprecated; use __is_trivially_destructible instead [-Wdeprecated-builtins]
+  293 |     : std::integral_constant&lt;bool, __has_trivial_destructor(T) &amp;&amp;
+      |                                    ^
+external/com_google_absl/absl/meta/type_traits.h:91:27: note: in instantiation of template class &#x27;absl::is_trivially_destructible&lt;absl::cord_internal::CordRep *&gt;&#x27; requested here
+   91 |                     absl::is_trivially_destructible&lt;T&gt;::value&gt; {};
+      |                           ^
+external/com_google_absl/absl/meta/type_traits.h:414:41: note: in instantiation of template class &#x27;absl::type_traits_internal::IsTriviallyCopyConstructibleObject&lt;absl::cord_internal::CordRep *&gt;&#x27; requested here
+  414 |           std::is_lvalue_reference&lt;T&gt;&gt;::type::type {
+      |                                         ^
+external/com_google_absl/absl/meta/type_traits.h:226:24: note: in instantiation of template class &#x27;absl::is_trivially_copy_constructible&lt;absl::cord_internal::CordRep *&gt;&#x27; requested here
+  226 |     : std::conditional&lt;T::value, conjunction&lt;Ts...&gt;, T&gt;::type {};
+      |                        ^
+external/com_google_absl/absl/meta/type_traits.h:226:7: note: in instantiation of template class &#x27;absl::conjunction&lt;absl::is_trivially_copy_constructible&lt;absl::cord_internal::CordRep *&gt;, absl::is_trivially_copy_assignable&lt;absl::cord_internal::CordRep *&gt;, absl::is_trivially_destructible&lt;absl::cord_internal::CordRep *&gt;&gt;&#x27; requested here
+  226 |     : std::conditional&lt;T::value, conjunction&lt;Ts...&gt;, T&gt;::type {};
+      |       ^
+external/com_google_absl/absl/container/inlined_vector.h:170:9: note: in instantiation of template class &#x27;absl::conjunction&lt;std::is_same&lt;std::allocator&lt;absl::cord_internal::CordRep *&gt;, std::allocator&lt;absl::cord_internal::CordRep *&gt;&gt;, absl::is_trivially_copy_constructible&lt;absl::cord_internal::CordRep *&gt;, absl::is_trivially_copy_assignable&lt;absl::cord_internal::CordRep *&gt;, absl::is_trivially_destructible&lt;absl::cord_internal::CordRep *&gt;&gt;&#x27; requested here
+  170 |     if (IsMemcpyOk::value &amp;&amp; !other.storage_.GetIsAllocated()) {
+      |         ^
+external/com_google_absl/absl/container/inlined_vector.h:165:9: note: in instantiation of member function &#x27;absl::InlinedVector&lt;absl::cord_internal::CordRep *, 4&gt;::InlinedVector&#x27; requested here
+  165 |       : InlinedVector(other, *other.storage_.GetAllocPtr()) {}
+      |         ^
+external/com_google_absl/absl/strings/cord.h:342:9: note: in instantiation of member function &#x27;absl::InlinedVector&lt;absl::cord_internal::CordRep *, 4&gt;::InlinedVector&#x27; requested here
+  342 |   class ChunkIterator {
+      |         ^
+In file included from tests/mla/mla_rotary_kvcache_test.cc:2:
 In file included from ./rtp_llm/cpp/devices/rocm_impl/ROCmDevice.h:18:
 In file included from ./rtp_llm/cpp/rocm/hipblasMMWrapper.h:4:
 In file included from ./rtp_llm/cpp/rocm/hipblasAlgoMap.h:4:
@@ -582,257 +834,6 @@ external/com_google_absl/absl/strings/cord.h:342:9: note: in instantiation of me
   342 |   class ChunkIterator {
       |         ^
 9 warnings generated when compiling for host.
-INFO: From Compiling tests/mla/mla_rotary_kvcache_test.cc:
-In file included from tests/mla/mla_rotary_kvcache_test.cc:2:
-In file included from ./rtp_llm/cpp/devices/rocm_impl/ROCmDevice.h:18:
-In file included from ./rtp_llm/cpp/rocm/hipblasMMWrapper.h:4:
-In file included from ./rtp_llm/cpp/rocm/hipblasAlgoMap.h:4:
-In file included from external/com_google_absl/absl/container/node_hash_map.h:43:
-In file included from external/com_google_absl/absl/algorithm/container.h:55:
-external/com_google_absl/absl/meta/type_traits.h:293:36: warning: builtin __has_trivial_destructor is deprecated; use __is_trivially_destructible instead [-Wdeprecated-builtins]
-  293 |     : std::integral_constant&lt;bool, __has_trivial_destructor(T) &amp;&amp;
-      |                                    ^
-external/com_google_absl/absl/meta/type_traits.h:342:36: warning: builtin __has_trivial_constructor is deprecated; use __is_trivially_constructible instead [-Wdeprecated-builtins]
-  342 |     : std::integral_constant&lt;bool, __has_trivial_constructor(T) &amp;&amp;
-      |                                    ^
-external/com_google_absl/absl/meta/type_traits.h:486:17: warning: builtin __has_trivial_assign is deprecated; use __is_trivially_assignable instead [-Wdeprecated-builtins]
-  486 |           bool, __has_trivial_assign(typename std::remove_reference&lt;T&gt;::type) &amp;&amp;
-      |                 ^
-external/com_google_absl/absl/meta/type_traits.h:530:8: warning: builtin __has_trivial_copy is deprecated; use __is_trivially_copyable instead [-Wdeprecated-builtins]
-  530 |       (__has_trivial_copy(ExtentsRemoved) || !kIsCopyOrMoveConstructible) &amp;&amp;
-      |        ^
-external/com_google_absl/absl/meta/type_traits.h:531:8: warning: builtin __has_trivial_assign is deprecated; use __is_trivially_assignable instead [-Wdeprecated-builtins]
-  531 |       (__has_trivial_assign(ExtentsRemoved) || !kIsCopyOrMoveAssignable) &amp;&amp;
-      |        ^
-external/com_google_absl/absl/meta/type_traits.h:293:36: warning: builtin __has_trivial_destructor is deprecated; use __is_trivially_destructible instead [-Wdeprecated-builtins]
-  293 |     : std::integral_constant&lt;bool, __has_trivial_destructor(T) &amp;&amp;
-      |                                    ^
-external/com_google_absl/absl/meta/type_traits.h:91:27: note: in instantiation of template class &#x27;absl::is_trivially_destructible&lt;absl::string_view&gt;&#x27; requested here
-   91 |                     absl::is_trivially_destructible&lt;T&gt;::value&gt; {};
-      |                           ^
-external/com_google_absl/absl/meta/type_traits.h:414:41: note: in instantiation of template class &#x27;absl::type_traits_internal::IsTriviallyCopyConstructibleObject&lt;absl::string_view&gt;&#x27; requested here
-  414 |           std::is_lvalue_reference&lt;T&gt;&gt;::type::type {
-      |                                         ^
-external/com_google_absl/absl/functional/internal/function_ref.h:46:16: note: in instantiation of template class &#x27;absl::is_trivially_copy_constructible&lt;absl::string_view&gt;&#x27; requested here
-   46 |          absl::is_trivially_copy_constructible&lt;T&gt;::value &amp;&amp;
-      |                ^
-external/com_google_absl/absl/functional/internal/function_ref.h:54:36: note: in instantiation of function template specialization &#x27;absl::functional_internal::PassByValue&lt;absl::string_view&gt;&#x27; requested here
-   54 | struct ForwardT : std::conditional&lt;PassByValue&lt;T&gt;(), T, T&amp;&amp;&gt; {};
-      |                                    ^
-external/com_google_absl/absl/functional/internal/function_ref.h:63:1: note: in instantiation of template class &#x27;absl::functional_internal::ForwardT&lt;absl::string_view&gt;&#x27; requested here
-   63 | using Invoker = R (*)(VoidPtr, typename ForwardT&lt;Args&gt;::type...);
-      | ^
-external/com_google_absl/absl/functional/function_ref.h:133:30: note: in instantiation of template type alias &#x27;Invoker&#x27; requested here
-  133 |   absl::functional_internal::Invoker&lt;R, Args...&gt; invoker_;
-      |                              ^
-external/com_google_absl/absl/strings/cord.h:1202:48: note: in instantiation of template class &#x27;absl::FunctionRef&lt;void (absl::string_view)&gt;&#x27; requested here
- 1202 |     absl::FunctionRef&lt;void(absl::string_view)&gt; callback) const {
-      |                                                ^
-In file included from tests/mla/mla_rotary_kvcache_test.cc:2:
-In file included from ./rtp_llm/cpp/devices/rocm_impl/ROCmDevice.h:18:
-In file included from ./rtp_llm/cpp/rocm/hipblasMMWrapper.h:4:
-In file included from ./rtp_llm/cpp/rocm/hipblasAlgoMap.h:4:
-In file included from external/com_google_absl/absl/container/node_hash_map.h:43:
-In file included from external/com_google_absl/absl/algorithm/container.h:55:
-external/com_google_absl/absl/meta/type_traits.h:486:17: warning: builtin __has_trivial_assign is deprecated; use __is_trivially_assignable instead [-Wdeprecated-builtins]
-  486 |           bool, __has_trivial_assign(typename std::remove_reference&lt;T&gt;::type) &amp;&amp;
-      |                 ^
-external/com_google_absl/absl/functional/internal/function_ref.h:47:16: note: in instantiation of template class &#x27;absl::is_trivially_copy_assignable&lt;absl::string_view&gt;&#x27; requested here
-   47 |          absl::is_trivially_copy_assignable&lt;
-      |                ^
-external/com_google_absl/absl/functional/internal/function_ref.h:54:36: note: in instantiation of function template specialization &#x27;absl::functional_internal::PassByValue&lt;absl::string_view&gt;&#x27; requested here
-   54 | struct ForwardT : std::conditional&lt;PassByValue&lt;T&gt;(), T, T&amp;&amp;&gt; {};
-      |                                    ^
-external/com_google_absl/absl/functional/internal/function_ref.h:63:1: note: in instantiation of template class &#x27;absl::functional_internal::ForwardT&lt;absl::string_view&gt;&#x27; requested here
-   63 | using Invoker = R (*)(VoidPtr, typename ForwardT&lt;Args&gt;::type...);
-      | ^
-external/com_google_absl/absl/functional/function_ref.h:133:30: note: in instantiation of template type alias &#x27;Invoker&#x27; requested here
-  133 |   absl::functional_internal::Invoker&lt;R, Args...&gt; invoker_;
-      |                              ^
-external/com_google_absl/absl/strings/cord.h:1202:48: note: in instantiation of template class &#x27;absl::FunctionRef&lt;void (absl::string_view)&gt;&#x27; requested here
- 1202 |     absl::FunctionRef&lt;void(absl::string_view)&gt; callback) const {
-      |                                                ^
-In file included from tests/mla/mla_rotary_kvcache_test.cc:2:
-In file included from ./rtp_llm/cpp/devices/rocm_impl/ROCmDevice.h:18:
-In file included from ./rtp_llm/cpp/rocm/hipblasMMWrapper.h:4:
-In file included from ./rtp_llm/cpp/rocm/hipblasAlgoMap.h:4:
-In file included from external/com_google_absl/absl/container/node_hash_map.h:43:
-In file included from external/com_google_absl/absl/algorithm/container.h:55:
-external/com_google_absl/absl/meta/type_traits.h:293:36: warning: builtin __has_trivial_destructor is deprecated; use __is_trivially_destructible instead [-Wdeprecated-builtins]
-  293 |     : std::integral_constant&lt;bool, __has_trivial_destructor(T) &amp;&amp;
-      |                                    ^
-external/com_google_absl/absl/meta/type_traits.h:91:27: note: in instantiation of template class &#x27;absl::is_trivially_destructible&lt;absl::cord_internal::CordRep *&gt;&#x27; requested here
-   91 |                     absl::is_trivially_destructible&lt;T&gt;::value&gt; {};
-      |                           ^
-external/com_google_absl/absl/meta/type_traits.h:414:41: note: in instantiation of template class &#x27;absl::type_traits_internal::IsTriviallyCopyConstructibleObject&lt;absl::cord_internal::CordRep *&gt;&#x27; requested here
-  414 |           std::is_lvalue_reference&lt;T&gt;&gt;::type::type {
-      |                                         ^
-external/com_google_absl/absl/meta/type_traits.h:226:24: note: in instantiation of template class &#x27;absl::is_trivially_copy_constructible&lt;absl::cord_internal::CordRep *&gt;&#x27; requested here
-  226 |     : std::conditional&lt;T::value, conjunction&lt;Ts...&gt;, T&gt;::type {};
-      |                        ^
-external/com_google_absl/absl/meta/type_traits.h:226:7: note: in instantiation of template class &#x27;absl::conjunction&lt;absl::is_trivially_copy_constructible&lt;absl::cord_internal::CordRep *&gt;, absl::is_trivially_copy_assignable&lt;absl::cord_internal::CordRep *&gt;, absl::is_trivially_destructible&lt;absl::cord_internal::CordRep *&gt;&gt;&#x27; requested here
-  226 |     : std::conditional&lt;T::value, conjunction&lt;Ts...&gt;, T&gt;::type {};
-      |       ^
-external/com_google_absl/absl/container/inlined_vector.h:170:9: note: in instantiation of template class &#x27;absl::conjunction&lt;std::is_same&lt;std::allocator&lt;absl::cord_internal::CordRep *&gt;, std::allocator&lt;absl::cord_internal::CordRep *&gt;&gt;, absl::is_trivially_copy_constructible&lt;absl::cord_internal::CordRep *&gt;, absl::is_trivially_copy_assignable&lt;absl::cord_internal::CordRep *&gt;, absl::is_trivially_destructible&lt;absl::cord_internal::CordRep *&gt;&gt;&#x27; requested here
-  170 |     if (IsMemcpyOk::value &amp;&amp; !other.storage_.GetIsAllocated()) {
-      |         ^
-external/com_google_absl/absl/container/inlined_vector.h:165:9: note: in instantiation of member function &#x27;absl::InlinedVector&lt;absl::cord_internal::CordRep *, 4&gt;::InlinedVector&#x27; requested here
-  165 |       : InlinedVector(other, *other.storage_.GetAllocPtr()) {}
-      |         ^
-external/com_google_absl/absl/strings/cord.h:342:9: note: in instantiation of member function &#x27;absl::InlinedVector&lt;absl::cord_internal::CordRep *, 4&gt;::InlinedVector&#x27; requested here
-  342 |   class ChunkIterator {
-      |         ^
-In file included from tests/mla/mla_rotary_kvcache_test.cc:2:
-In file included from ./rtp_llm/cpp/devices/rocm_impl/ROCmDevice.h:18:
-In file included from ./rtp_llm/cpp/rocm/hipblasMMWrapper.h:4:
-In file included from ./rtp_llm/cpp/rocm/hipblasAlgoMap.h:4:
-In file included from external/com_google_absl/absl/container/node_hash_map.h:43:
-In file included from external/com_google_absl/absl/algorithm/container.h:55:
-external/com_google_absl/absl/meta/type_traits.h:486:17: warning: builtin __has_trivial_assign is deprecated; use __is_trivially_assignable instead [-Wdeprecated-builtins]
-  486 |           bool, __has_trivial_assign(typename std::remove_reference&lt;T&gt;::type) &amp;&amp;
-      |                 ^
-external/com_google_absl/absl/meta/type_traits.h:226:24: note: in instantiation of template class &#x27;absl::is_trivially_copy_assignable&lt;absl::cord_internal::CordRep *&gt;&#x27; requested here
-  226 |     : std::conditional&lt;T::value, conjunction&lt;Ts...&gt;, T&gt;::type {};
-      |                        ^
-external/com_google_absl/absl/meta/type_traits.h:226:7: note: in instantiation of template class &#x27;absl::conjunction&lt;absl::is_trivially_copy_assignable&lt;absl::cord_internal::CordRep *&gt;, absl::is_trivially_destructible&lt;absl::cord_internal::CordRep *&gt;&gt;&#x27; requested here
-  226 |     : std::conditional&lt;T::value, conjunction&lt;Ts...&gt;, T&gt;::type {};
-      |       ^
-external/com_google_absl/absl/meta/type_traits.h:226:7: note: in instantiation of template class &#x27;absl::conjunction&lt;absl::is_trivially_copy_constructible&lt;absl::cord_internal::CordRep *&gt;, absl::is_trivially_copy_assignable&lt;absl::cord_internal::CordRep *&gt;, absl::is_trivially_destructible&lt;absl::cord_internal::CordRep *&gt;&gt;&#x27; requested here
-external/com_google_absl/absl/container/inlined_vector.h:170:9: note: in instantiation of template class &#x27;absl::conjunction&lt;std::is_same&lt;std::allocator&lt;absl::cord_internal::CordRep *&gt;, std::allocator&lt;absl::cord_internal::CordRep *&gt;&gt;, absl::is_trivially_copy_constructible&lt;absl::cord_internal::CordRep *&gt;, absl::is_trivially_copy_assignable&lt;absl::cord_internal::CordRep *&gt;, absl::is_trivially_destructible&lt;absl::cord_internal::CordRep *&gt;&gt;&#x27; requested here
-  170 |     if (IsMemcpyOk::value &amp;&amp; !other.storage_.GetIsAllocated()) {
-      |         ^
-external/com_google_absl/absl/container/inlined_vector.h:165:9: note: in instantiation of member function &#x27;absl::InlinedVector&lt;absl::cord_internal::CordRep *, 4&gt;::InlinedVector&#x27; requested here
-  165 |       : InlinedVector(other, *other.storage_.GetAllocPtr()) {}
-      |         ^
-external/com_google_absl/absl/strings/cord.h:342:9: note: in instantiation of member function &#x27;absl::InlinedVector&lt;absl::cord_internal::CordRep *, 4&gt;::InlinedVector&#x27; requested here
-  342 |   class ChunkIterator {
-      |         ^
-9 warnings generated when compiling for gfx942.
-In file included from tests/mla/mla_rotary_kvcache_test.cc:2:
-In file included from ./rtp_llm/cpp/devices/rocm_impl/ROCmDevice.h:18:
-In file included from ./rtp_llm/cpp/rocm/hipblasMMWrapper.h:4:
-In file included from ./rtp_llm/cpp/rocm/hipblasAlgoMap.h:4:
-In file included from external/com_google_absl/absl/container/node_hash_map.h:43:
-In file included from external/com_google_absl/absl/algorithm/container.h:55:
-external/com_google_absl/absl/meta/type_traits.h:293:36: warning: builtin __has_trivial_destructor is deprecated; use __is_trivially_destructible instead [-Wdeprecated-builtins]
-  293 |     : std::integral_constant&lt;bool, __has_trivial_destructor(T) &amp;&amp;
-      |                                    ^
-external/com_google_absl/absl/meta/type_traits.h:342:36: warning: builtin __has_trivial_constructor is deprecated; use __is_trivially_constructible instead [-Wdeprecated-builtins]
-  342 |     : std::integral_constant&lt;bool, __has_trivial_constructor(T) &amp;&amp;
-      |                                    ^
-external/com_google_absl/absl/meta/type_traits.h:486:17: warning: builtin __has_trivial_assign is deprecated; use __is_trivially_assignable instead [-Wdeprecated-builtins]
-  486 |           bool, __has_trivial_assign(typename std::remove_reference&lt;T&gt;::type) &amp;&amp;
-      |                 ^
-external/com_google_absl/absl/meta/type_traits.h:530:8: warning: builtin __has_trivial_copy is deprecated; use __is_trivially_copyable instead [-Wdeprecated-builtins]
-  530 |       (__has_trivial_copy(ExtentsRemoved) || !kIsCopyOrMoveConstructible) &amp;&amp;
-      |        ^
-external/com_google_absl/absl/meta/type_traits.h:531:8: warning: builtin __has_trivial_assign is deprecated; use __is_trivially_assignable instead [-Wdeprecated-builtins]
-  531 |       (__has_trivial_assign(ExtentsRemoved) || !kIsCopyOrMoveAssignable) &amp;&amp;
-      |        ^
-external/com_google_absl/absl/meta/type_traits.h:293:36: warning: builtin __has_trivial_destructor is deprecated; use __is_trivially_destructible instead [-Wdeprecated-builtins]
-  293 |     : std::integral_constant&lt;bool, __has_trivial_destructor(T) &amp;&amp;
-      |                                    ^
-external/com_google_absl/absl/meta/type_traits.h:91:27: note: in instantiation of template class &#x27;absl::is_trivially_destructible&lt;absl::string_view&gt;&#x27; requested here
-   91 |                     absl::is_trivially_destructible&lt;T&gt;::value&gt; {};
-      |                           ^
-external/com_google_absl/absl/meta/type_traits.h:414:41: note: in instantiation of template class &#x27;absl::type_traits_internal::IsTriviallyCopyConstructibleObject&lt;absl::string_view&gt;&#x27; requested here
-  414 |           std::is_lvalue_reference&lt;T&gt;&gt;::type::type {
-      |                                         ^
-external/com_google_absl/absl/functional/internal/function_ref.h:46:16: note: in instantiation of template class &#x27;absl::is_trivially_copy_constructible&lt;absl::string_view&gt;&#x27; requested here
-   46 |          absl::is_trivially_copy_constructible&lt;T&gt;::value &amp;&amp;
-      |                ^
-external/com_google_absl/absl/functional/internal/function_ref.h:54:36: note: in instantiation of function template specialization &#x27;absl::functional_internal::PassByValue&lt;absl::string_view&gt;&#x27; requested here
-   54 | struct ForwardT : std::conditional&lt;PassByValue&lt;T&gt;(), T, T&amp;&amp;&gt; {};
-      |                                    ^
-external/com_google_absl/absl/functional/internal/function_ref.h:63:1: note: in instantiation of template class &#x27;absl::functional_internal::ForwardT&lt;absl::string_view&gt;&#x27; requested here
-   63 | using Invoker = R (*)(VoidPtr, typename ForwardT&lt;Args&gt;::type...);
-      | ^
-external/com_google_absl/absl/functional/function_ref.h:133:30: note: in instantiation of template type alias &#x27;Invoker&#x27; requested here
-  133 |   absl::functional_internal::Invoker&lt;R, Args...&gt; invoker_;
-      |                              ^
-external/com_google_absl/absl/strings/cord.h:1202:48: note: in instantiation of template class &#x27;absl::FunctionRef&lt;void (absl::string_view)&gt;&#x27; requested here
- 1202 |     absl::FunctionRef&lt;void(absl::string_view)&gt; callback) const {
-      |                                                ^
-In file included from tests/mla/mla_rotary_kvcache_test.cc:2:
-In file included from ./rtp_llm/cpp/devices/rocm_impl/ROCmDevice.h:18:
-In file included from ./rtp_llm/cpp/rocm/hipblasMMWrapper.h:4:
-In file included from ./rtp_llm/cpp/rocm/hipblasAlgoMap.h:4:
-In file included from external/com_google_absl/absl/container/node_hash_map.h:43:
-In file included from external/com_google_absl/absl/algorithm/container.h:55:
-external/com_google_absl/absl/meta/type_traits.h:486:17: warning: builtin __has_trivial_assign is deprecated; use __is_trivially_assignable instead [-Wdeprecated-builtins]
-  486 |           bool, __has_trivial_assign(typename std::remove_reference&lt;T&gt;::type) &amp;&amp;
-      |                 ^
-external/com_google_absl/absl/functional/internal/function_ref.h:47:16: note: in instantiation of template class &#x27;absl::is_trivially_copy_assignable&lt;absl::string_view&gt;&#x27; requested here
-   47 |          absl::is_trivially_copy_assignable&lt;
-      |                ^
-external/com_google_absl/absl/functional/internal/function_ref.h:54:36: note: in instantiation of function template specialization &#x27;absl::functional_internal::PassByValue&lt;absl::string_view&gt;&#x27; requested here
-   54 | struct ForwardT : std::conditional&lt;PassByValue&lt;T&gt;(), T, T&amp;&amp;&gt; {};
-      |                                    ^
-external/com_google_absl/absl/functional/internal/function_ref.h:63:1: note: in instantiation of template class &#x27;absl::functional_internal::ForwardT&lt;absl::string_view&gt;&#x27; requested here
-   63 | using Invoker = R (*)(VoidPtr, typename ForwardT&lt;Args&gt;::type...);
-      | ^
-external/com_google_absl/absl/functional/function_ref.h:133:30: note: in instantiation of template type alias &#x27;Invoker&#x27; requested here
-  133 |   absl::functional_internal::Invoker&lt;R, Args...&gt; invoker_;
-      |                              ^
-external/com_google_absl/absl/strings/cord.h:1202:48: note: in instantiation of template class &#x27;absl::FunctionRef&lt;void (absl::string_view)&gt;&#x27; requested here
- 1202 |     absl::FunctionRef&lt;void(absl::string_view)&gt; callback) const {
-      |                                                ^
-In file included from tests/mla/mla_rotary_kvcache_test.cc:2:
-In file included from ./rtp_llm/cpp/devices/rocm_impl/ROCmDevice.h:18:
-In file included from ./rtp_llm/cpp/rocm/hipblasMMWrapper.h:4:
-In file included from ./rtp_llm/cpp/rocm/hipblasAlgoMap.h:4:
-In file included from external/com_google_absl/absl/container/node_hash_map.h:43:
-In file included from external/com_google_absl/absl/algorithm/container.h:55:
-external/com_google_absl/absl/meta/type_traits.h:293:36: warning: builtin __has_trivial_destructor is deprecated; use __is_trivially_destructible instead [-Wdeprecated-builtins]
-  293 |     : std::integral_constant&lt;bool, __has_trivial_destructor(T) &amp;&amp;
-      |                                    ^
-external/com_google_absl/absl/meta/type_traits.h:91:27: note: in instantiation of template class &#x27;absl::is_trivially_destructible&lt;absl::cord_internal::CordRep *&gt;&#x27; requested here
-   91 |                     absl::is_trivially_destructible&lt;T&gt;::value&gt; {};
-      |                           ^
-external/com_google_absl/absl/meta/type_traits.h:414:41: note: in instantiation of template class &#x27;absl::type_traits_internal::IsTriviallyCopyConstructibleObject&lt;absl::cord_internal::CordRep *&gt;&#x27; requested here
-  414 |           std::is_lvalue_reference&lt;T&gt;&gt;::type::type {
-      |                                         ^
-external/com_google_absl/absl/meta/type_traits.h:226:24: note: in instantiation of template class &#x27;absl::is_trivially_copy_constructible&lt;absl::cord_internal::CordRep *&gt;&#x27; requested here
-  226 |     : std::conditional&lt;T::value, conjunction&lt;Ts...&gt;, T&gt;::type {};
-      |                        ^
-external/com_google_absl/absl/meta/type_traits.h:226:7: note: in instantiation of template class &#x27;absl::conjunction&lt;absl::is_trivially_copy_constructible&lt;absl::cord_internal::CordRep *&gt;, absl::is_trivially_copy_assignable&lt;absl::cord_internal::CordRep *&gt;, absl::is_trivially_destructible&lt;absl::cord_internal::CordRep *&gt;&gt;&#x27; requested here
-  226 |     : std::conditional&lt;T::value, conjunction&lt;Ts...&gt;, T&gt;::type {};
-      |       ^
-external/com_google_absl/absl/container/inlined_vector.h:170:9: note: in instantiation of template class &#x27;absl::conjunction&lt;std::is_same&lt;std::allocator&lt;absl::cord_internal::CordRep *&gt;, std::allocator&lt;absl::cord_internal::CordRep *&gt;&gt;, absl::is_trivially_copy_constructible&lt;absl::cord_internal::CordRep *&gt;, absl::is_trivially_copy_assignable&lt;absl::cord_internal::CordRep *&gt;, absl::is_trivially_destructible&lt;absl::cord_internal::CordRep *&gt;&gt;&#x27; requested here
-  170 |     if (IsMemcpyOk::value &amp;&amp; !other.storage_.GetIsAllocated()) {
-      |         ^
-external/com_google_absl/absl/container/inlined_vector.h:165:9: note: in instantiation of member function &#x27;absl::InlinedVector&lt;absl::cord_internal::CordRep *, 4&gt;::InlinedVector&#x27; requested here
-  165 |       : InlinedVector(other, *other.storage_.GetAllocPtr()) {}
-      |         ^
-external/com_google_absl/absl/strings/cord.h:342:9: note: in instantiation of member function &#x27;absl::InlinedVector&lt;absl::cord_internal::CordRep *, 4&gt;::InlinedVector&#x27; requested here
-  342 |   class ChunkIterator {
-      |         ^
-In file included from tests/mla/mla_rotary_kvcache_test.cc:2:
-In file included from ./rtp_llm/cpp/devices/rocm_impl/ROCmDevice.h:18:
-In file included from ./rtp_llm/cpp/rocm/hipblasMMWrapper.h:4:
-In file included from ./rtp_llm/cpp/rocm/hipblasAlgoMap.h:4:
-In file included from external/com_google_absl/absl/container/node_hash_map.h:43:
-In file included from external/com_google_absl/absl/algorithm/container.h:55:
-external/com_google_absl/absl/meta/type_traits.h:486:17: warning: builtin __has_trivial_assign is deprecated; use __is_trivially_assignable instead [-Wdeprecated-builtins]
-  486 |           bool, __has_trivial_assign(typename std::remove_reference&lt;T&gt;::type) &amp;&amp;
-      |                 ^
-external/com_google_absl/absl/meta/type_traits.h:226:24: note: in instantiation of template class &#x27;absl::is_trivially_copy_assignable&lt;absl::cord_internal::CordRep *&gt;&#x27; requested here
-  226 |     : std::conditional&lt;T::value, conjunction&lt;Ts...&gt;, T&gt;::type {};
-      |                        ^
-external/com_google_absl/absl/meta/type_traits.h:226:7: note: in instantiation of template class &#x27;absl::conjunction&lt;absl::is_trivially_copy_assignable&lt;absl::cord_internal::CordRep *&gt;, absl::is_trivially_destructible&lt;absl::cord_internal::CordRep *&gt;&gt;&#x27; requested here
-  226 |     : std::conditional&lt;T::value, conjunction&lt;Ts...&gt;, T&gt;::type {};
-      |       ^
-external/com_google_absl/absl/meta/type_traits.h:226:7: note: in instantiation of template class &#x27;absl::conjunction&lt;absl::is_trivially_copy_constructible&lt;absl::cord_internal::CordRep *&gt;, absl::is_trivially_copy_assignable&lt;absl::cord_internal::CordRep *&gt;, absl::is_trivially_destructible&lt;absl::cord_internal::CordRep *&gt;&gt;&#x27; requested here
-external/com_google_absl/absl/container/inlined_vector.h:170:9: note: in instantiation of template class &#x27;absl::conjunction&lt;std::is_same&lt;std::allocator&lt;absl::cord_internal::CordRep *&gt;, std::allocator&lt;absl::cord_internal::CordRep *&gt;&gt;, absl::is_trivially_copy_constructible&lt;absl::cord_internal::CordRep *&gt;, absl::is_trivially_copy_assignable&lt;absl::cord_internal::CordRep *&gt;, absl::is_trivially_destructible&lt;absl::cord_internal::CordRep *&gt;&gt;&#x27; requested here
-  170 |     if (IsMemcpyOk::value &amp;&amp; !other.storage_.GetIsAllocated()) {
-      |         ^
-external/com_google_absl/absl/container/inlined_vector.h:165:9: note: in instantiation of member function &#x27;absl::InlinedVector&lt;absl::cord_internal::CordRep *, 4&gt;::InlinedVector&#x27; requested here
-  165 |       : InlinedVector(other, *other.storage_.GetAllocPtr()) {}
-      |         ^
-external/com_google_absl/absl/strings/cord.h:342:9: note: in instantiation of member function &#x27;absl::InlinedVector&lt;absl::cord_internal::CordRep *, 4&gt;::InlinedVector&#x27; requested here
-  342 |   class ChunkIterator {
-      |         ^
-9 warnings generated when compiling for host.
 INFO: From Compiling tests/mla/mla_decoder_attention.cc:
 In file included from tests/mla/mla_decoder_attention.cc:2:
 In file included from ./rtp_llm/cpp/devices/rocm_impl/ROCmDevice.h:18:
@@ -1084,21 +1085,22 @@ external/com_google_absl/absl/strings/cord.h:342:9: note: in instantiation of me
   342 |   class ChunkIterator {
       |         ^
 9 warnings generated when compiling for host.
-[12,565 / 12,567] [Prepa] Linking tests/librocm_test_ops_libs.pic.lo
-[12,566 / 12,567] Linking tests/librocm_test_ops.so; 1s local
+[12,566 / 12,567] Linking tests/librocm_test_ops.so; 0s local
 [12,567 / 12,568] [Prepa] Testing //tests:rocm_gemm_op_test
 [12,567 / 12,568] Testing //tests:rocm_gemm_op_test; 0s local
 [12,567 / 12,568] Testing //tests:rocm_gemm_op_test; 10s local
 [12,567 / 12,568] Testing //tests:rocm_gemm_op_test; 40s local
-[12,567 / 12,568] Testing //tests:rocm_gemm_op_test; 78s local
+[12,567 / 12,568] Testing //tests:rocm_gemm_op_test; 75s local
 [12,567 / 12,568] Testing //tests:rocm_gemm_op_test; 1s local
 [12,567 / 12,568] 1 / 1 tests; Testing //tests:rocm_gemm_op_test; 11s local
+INFO: From Testing //tests:rocm_gemm_op_test:
+stdout (/root/.cache/bazel/_bazel_root/9119faf156746bd2e78c415f3fc2e5b3/execroot/rtp_llm/bazel-out/_tmp/actions/stdout-24) 31277631 exceeds maximum size of --experimental_ui_max_stdouterr_bytes=1048576 bytes; skipping
 Target //tests:rocm_gemm_op_test up-to-date:
   bazel-bin/tests/rocm_gemm_op_test
-INFO: Elapsed time: 143.199s, Critical Path: 131.28s
+INFO: Elapsed time: 137.232s, Critical Path: 127.22s
 INFO: 16 processes: 4 internal, 12 local.
 INFO: Build completed successfully, 16 total actions
-//tests:rocm_gemm_op_test                                                PASSED in 78.3s
+//tests:rocm_gemm_op_test                                                PASSED in 75.1s
 
 Executed 1 out of 1 test: 1 test passes.
 There were tests whose specified size is too big. Use the --test_verbose_timeout_warnings command line option to see which ones these are.
@@ -1109,18 +1111,65 @@ Loading: 0 packages loaded
 Analyzing: target //tests:rocm_mla_context_attention (0 packages loaded, 0 targets configured)
 INFO: Analyzed target //tests:rocm_mla_context_attention (3 packages loaded, 43 targets configured).
 INFO: Found 1 test target...
-[0 / 3] [Prepa] BazelWorkspaceStatusAction stable-status.txt
+[0 / 3] [Prepa] BazelWorkspaceStatusAction stable-status.txt ... (2 actions, 0 running)
 [3 / 4] Creating runfiles tree bazel-out/k8-opt/bin/tests/rocm_mla_context_attention.runfiles; 0s local
 [4 / 5] [Prepa] Testing //tests:rocm_mla_context_attention
 [4 / 5] Testing //tests:rocm_mla_context_attention; 0s local
 [4 / 5] Testing //tests:rocm_mla_context_attention; 10s local
-[4 / 5] Testing //tests:rocm_mla_context_attention; 26s local
+[4 / 5] Testing //tests:rocm_mla_context_attention; 23s local
+INFO: From Testing //tests:rocm_mla_context_attention:
+==================== Test output for //tests:rocm_mla_context_attention:
+/root/.cache/bazel/_bazel_root/9119faf156746bd2e78c415f3fc2e5b3/execroot/rtp_llm/bazel-out/k8-opt/bin/tests/rocm_mla_context_attention.runfiles/pip_gpu_rocm_torch_torch/site-packages/torch/cuda/__init__.py:58: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  import pynvml  # type: ignore[import]
+cwd: /root/.cache/bazel/_bazel_root/9119faf156746bd2e78c415f3fc2e5b3/execroot/rtp_llm/bazel-out/k8-opt/bin/tests/rocm_mla_context_attention.runfiles/rtp_llm
+initLogger log_file_path: 
+[2025-11-12 11:41:25.265511] [INFO] [25858:25858] [RANK 0][10.67.77.202][rtp_llm/cpp/devices/DeviceFactory.cc:37][static GlobalDeviceParams rtp_llm::DeviceFactory::getDefaultGlobalDeviceParams()] Device type 1 is not registered, skip.
+[2025-11-12 11:41:25.265540] [INFO] [25858:25858] [RANK 0][10.67.77.202][rtp_llm/cpp/devices/DeviceFactory.cc:37][static GlobalDeviceParams rtp_llm::DeviceFactory::getDefaultGlobalDeviceParams()] Device type 2 is not registered, skip.
+[2025-11-12 11:41:25.265545] [INFO] [25858:25858] [RANK 0][10.67.77.202][rtp_llm/cpp/devices/DeviceFactory.cc:37][static GlobalDeviceParams rtp_llm::DeviceFactory::getDefaultGlobalDeviceParams()] Device type 3 is not registered, skip.
+[2025-11-12 11:41:25.265548] [INFO] [25858:25858] [RANK 0][10.67.77.202][rtp_llm/cpp/devices/DeviceFactory.cc:37][static GlobalDeviceParams rtp_llm::DeviceFactory::getDefaultGlobalDeviceParams()] Device type 0 is not registered, skip.
+[2025-11-12 11:41:25.265553] [INFO] [25858:25858] [RANK 0][10.67.77.202][rtp_llm/cpp/devices/DeviceFactory.cc:34][static GlobalDeviceParams rtp_llm::DeviceFactory::getDefaultGlobalDeviceParams()] found device type 4, use as default.
+[2025-11-12 11:41:25.265559] [INFO] [25858:25858] [RANK 0][10.67.77.202][rtp_llm/cpp/devices/DeviceFactory.cc:37][static GlobalDeviceParams rtp_llm::DeviceFactory::getDefaultGlobalDeviceParams()] Device type 5 is not registered, skip.
+[2025-11-12 11:41:25.265564] [INFO] [25858:25858] [RANK 0][10.67.77.202][rtp_llm/cpp/devices/DeviceFactory.cc:104][static void rtp_llm::DeviceFactory::initDevices(const GptInitParameter &amp;)] set overlap type to be 0
+[2025-11-12 11:41:25.265573] [INFO] [25858:25858] [RANK 0][10.67.77.202][rtp_llm/cpp/devices/DeviceFactory.cc:112][static void rtp_llm::DeviceFactory::initDevices(const GptInitParameter &amp;)] Device reserve memory bytes from env: 128000000
+[2025-11-12 11:41:25.265577] [INFO] [25858:25858] [RANK 0][10.67.77.202][rtp_llm/cpp/devices/DeviceFactory.cc:115][static void rtp_llm::DeviceFactory::initDevices(const GptInitParameter &amp;)] Device reserve memory bytes: 128000000
+[2025-11-12 11:41:25.265581] [INFO] [25858:25858] [RANK 0][10.67.77.202][rtp_llm/cpp/devices/DeviceFactory.cc:118][static void rtp_llm::DeviceFactory::initDevices(const GptInitParameter &amp;)] Host reserve memory bytes: 4294967296
+[2025-11-12 11:41:25.265585] [INFO] [25858:25858] [RANK 0][10.67.77.202][rtp_llm/cpp/devices/DeviceFactory.cc:125][static void rtp_llm::DeviceFactory::initDevices(const GptInitParameter &amp;)] enable comm overlap: 1, enable layer micro batch: 0
+[2025-11-12 11:41:25.265595] [INFO] [25858:25858] [RANK 0][10.67.77.202][rtp_llm/cpp/devices/DeviceFactory.cc:134][static void rtp_llm::DeviceFactory::initDevices(const GptInitParameter &amp;)] device_params sp_type is 
+[2025-11-12 11:41:25.265598] [INFO] [25858:25858] [RANK 0][10.67.77.202][rtp_llm/cpp/devices/DeviceFactory.cc:135][static void rtp_llm::DeviceFactory::initDevices(const GptInitParameter &amp;)] device_params sp_model_type is 
+[2025-11-12 11:41:25.265603] [INFO] [25858:25858] [RANK 0][10.67.77.202][rtp_llm/cpp/devices/DeviceFactory.cc:150][static void rtp_llm::DeviceFactory::initDevices(const GptInitParameter &amp;)] use deepep moe: 0, use deepep low latency: 1
+[2025-11-12 11:41:25.511816] [INFO] [25858:25858] [RANK 0][10.67.77.202][rtp_llm/cpp/devices/rocm_impl/ROCmDevice.cc:90][rtp_llm::ROCmDevice::ROCmDevice(const DeviceInitParams &amp;)] [ROCM] total = 191.98(GB), free = 191.35(GB), reserve = 0.12(GB), track = 0.12(GB)
+
+[2025-11-12 11:41:25.511922] [INFO] [25858:25858] [RANK 0][10.67.77.202][rtp_llm/cpp/core/TrackerAllocator.cc:32][rtp_llm::TrackerAllocator::TrackerAllocator(const TrackerAllocatorParams &amp;)] TrackerAllocator successfully reserved 128000000 bytes (122 MiB) of memory [2], reserved base addr [0x7ee8bd200000]
+[2025-11-12 11:41:26.287385] [INFO] [25858:25858] [RANK 0][10.67.77.202][rtp_llm/cpp/core/TrackerAllocator.cc:32][rtp_llm::TrackerAllocator::TrackerAllocator(const TrackerAllocatorParams &amp;)] TrackerAllocator successfully reserved 4294967296 bytes (4096 MiB) of memory [1], reserved base addr [0x7ee7bd000000]
+[BLAS] Gemm config not find: gemm_config.csv 
+[2025-11-12 11:41:26.293393] [INFO] [25858:25858] [RANK 0][10.67.77.202][rtp_llm/cpp/devices/rocm_impl/ROCmDevice.cc:173][virtual void rtp_llm::ROCmDevice::init()] max batch size: 1024
+[2025-11-12 11:41:26.293421] [INFO] [25858:25858] [RANK 0][10.67.77.202][rtp_llm/cpp/devices/DeviceFactory.cc:168][static void rtp_llm::DeviceFactory::initDevices(const GptInitParameter &amp;)] init devices done
+[2025-11-12 11:41:26.339787] [WARN] [25858:25858] [RANK 0][10.67.77.202][rtp_llm/cpp/core/TrackerAllocator.cc:97][virtual void *rtp_llm::TrackerAllocator::malloc(size_t)] TrackerAllocator failed to allocate 10 MB of memory [2]. Current memory tracker has 1 MB available, with 0 MB fragmented. Reserved 122 MB in total. Use real allocator directly as fallback.
+[2025-11-12 11:41:26.340024] [WARN] [25858:25858] [RANK 0][10.67.77.202][rtp_llm/cpp/core/TrackerAllocator.cc:97][virtual void *rtp_llm::TrackerAllocator::malloc(size_t)] TrackerAllocator failed to allocate 2 MB of memory [2]. Current memory tracker has 1 MB available, with 0 MB fragmented. Reserved 122 MB in total. Use real allocator directly as fallback.
+[2025-11-12 11:41:26.351409] [WARN] [25858:25858] [RANK 0][10.67.77.202][rtp_llm/cpp/core/TrackerAllocator.cc:97][virtual void *rtp_llm::TrackerAllocator::malloc(size_t)] TrackerAllocator failed to allocate 4 MB of memory [2]. Current memory tracker has 0 MB available, with 0 MB fragmented. Reserved 122 MB in total. Use real allocator directly as fallback.
+[2025-11-12 11:41:26.356564] [WARN] [25858:25858] [RANK 0][10.67.77.202][rtp_llm/cpp/core/TrackerAllocator.cc:97][virtual void *rtp_llm::TrackerAllocator::malloc(size_t)] TrackerAllocator failed to allocate 16 MB of memory [2]. Current memory tracker has 0 MB available, with 0 MB fragmented. Reserved 122 MB in total. Use real allocator directly as fallback.
+[2025-11-12 11:41:26.356666] [WARN] [25858:25858] [RANK 0][10.67.77.202][rtp_llm/cpp/core/TrackerAllocator.cc:97][virtual void *rtp_llm::TrackerAllocator::malloc(size_t)] TrackerAllocator failed to allocate 16 MB of memory [2]. Current memory tracker has 0 MB available, with 0 MB fragmented. Reserved 122 MB in total. Use real allocator directly as fallback.
+[2025-11-12 11:41:26.356914] [WARN] [25858:25858] [RANK 0][10.67.77.202][rtp_llm/cpp/core/TrackerAllocator.cc:97][virtual void *rtp_llm::TrackerAllocator::malloc(size_t)] TrackerAllocator failed to allocate 80 MB of memory [2]. Current memory tracker has 0 MB available, with 0 MB fragmented. Reserved 122 MB in total. Use real allocator directly as fallback.
+[2025-11-12 11:41:26.362433] [WARN] [25858:25858] [RANK 0][10.67.77.202][rtp_llm/cpp/core/TrackerAllocator.cc:97][virtual void *rtp_llm::TrackerAllocator::malloc(size_t)] TrackerAllocator failed to allocate 7 MB of memory [2]. Current memory tracker has 0 MB available, with 0 MB fragmented. Reserved 122 MB in total. Use real allocator directly as fallback.
+[2025-11-12 11:41:26.363953] [WARN] [25858:25858] [RANK 0][10.67.77.202][rtp_llm/cpp/core/TrackerAllocator.cc:97][virtual void *rtp_llm::TrackerAllocator::malloc(size_t)] TrackerAllocator failed to allocate 2 MB of memory [2]. Current memory tracker has 0 MB available, with 0 MB fragmented. Reserved 122 MB in total. Use real allocator directly as fallback.
+[2025-11-12 11:41:26.364014] [WARN] [25858:25858] [RANK 0][10.67.77.202][rtp_llm/cpp/core/TrackerAllocator.cc:97][virtual void *rtp_llm::TrackerAllocator::malloc(size_t)] TrackerAllocator failed to allocate 362 MB of memory [2]. Current memory tracker has 0 MB available, with 0 MB fragmented. Reserved 122 MB in total. Use real allocator directly as fallback.
+[2025-11-12 11:41:26.364066] [WARN] [25858:25858] [RANK 0][10.67.77.202][rtp_llm/cpp/core/TrackerAllocator.cc:97][virtual void *rtp_llm::TrackerAllocator::malloc(size_t)] TrackerAllocator failed to allocate 80 MB of memory [2]. Current memory tracker has 0 MB available, with 0 MB fragmented. Reserved 122 MB in total. Use real allocator directly as fallback.
+[2025-11-12 11:41:27.480279] [WARN] [25858:25858] [RANK 0][10.67.77.202][rtp_llm/cpp/core/TrackerAllocator.cc:97][virtual void *rtp_llm::TrackerAllocator::malloc(size_t)] TrackerAllocator failed to allocate 80 MB of memory [2]. Current memory tracker has 0 MB available, with 0 MB fragmented. Reserved 122 MB in total. Use real allocator directly as fallback.
+[2025-11-12 11:41:27.481231] [WARN] [25858:25858] [RANK 0][10.67.77.202][rtp_llm/cpp/core/TrackerAllocator.cc:97][virtual void *rtp_llm::TrackerAllocator::malloc(size_t)] TrackerAllocator failed to allocate 120 MB of memory [2]. Current memory tracker has 0 MB available, with 0 MB fragmented. Reserved 122 MB in total. Use real allocator directly as fallback.
+[2025-11-12 11:41:27.481847] [WARN] [25858:25858] [RANK 0][10.67.77.202][rtp_llm/cpp/core/TrackerAllocator.cc:97][virtual void *rtp_llm::TrackerAllocator::malloc(size_t)] TrackerAllocator failed to allocate 80 MB of memory [2]. Current memory tracker has 0 MB available, with 0 MB fragmented. Reserved 122 MB in total. Use real allocator directly as fallback.
+[2025-11-12 11:41:27.485509] [WARN] [25858:25858] [RANK 0][10.67.77.202][rtp_llm/cpp/core/TrackerAllocator.cc:97][virtual void *rtp_llm::TrackerAllocator::malloc(size_t)] TrackerAllocator failed to allocate 80 MB of memory [2]. Current memory tracker has 0 MB available, with 0 MB fragmented. Reserved 122 MB in total. Use real allocator directly as fallback.
+.
+----------------------------------------------------------------------
+Ran 1 test in 1.192s
+
+OK
+================================================================================
 Target //tests:rocm_mla_context_attention up-to-date:
   bazel-bin/tests/rocm_mla_context_attention
-INFO: Elapsed time: 32.362s, Critical Path: 31.01s
+INFO: Elapsed time: 29.415s, Critical Path: 28.29s
 INFO: 5 processes: 3 internal, 2 local.
 INFO: Build completed successfully, 5 total actions
-//tests:rocm_mla_context_attention                                       PASSED in 26.8s
+//tests:rocm_mla_context_attention                                       PASSED in 24.0s
 
 Executed 1 out of 1 test: 1 test passes.
 There were tests whose specified size is too big. Use the --test_verbose_timeout_warnings command line option to see which ones these are.
@@ -1131,18 +1180,58 @@ Loading: 0 packages loaded
 Analyzing: target //tests:rocm_mla_decode_attention (0 packages loaded, 0 targets configured)
 INFO: Analyzed target //tests:rocm_mla_decode_attention (0 packages loaded, 3 targets configured).
 INFO: Found 1 test target...
-[0 / 2] [Prepa] BazelWorkspaceStatusAction stable-status.txt
+[0 / 3] [Prepa] BazelWorkspaceStatusAction stable-status.txt
 [16 / 17] Creating runfiles tree bazel-out/k8-opt/bin/tests/rocm_mla_decode_attention.runfiles; 1s local
 [17 / 18] [Prepa] Testing //tests:rocm_mla_decode_attention
 [17 / 18] Testing //tests:rocm_mla_decode_attention; 0s local
 [17 / 18] Testing //tests:rocm_mla_decode_attention; 10s local
-[17 / 18] Testing //tests:rocm_mla_decode_attention; 25s local
+[17 / 18] Testing //tests:rocm_mla_decode_attention; 23s local
+INFO: From Testing //tests:rocm_mla_decode_attention:
+==================== Test output for //tests:rocm_mla_decode_attention:
+/root/.cache/bazel/_bazel_root/9119faf156746bd2e78c415f3fc2e5b3/execroot/rtp_llm/bazel-out/k8-opt/bin/tests/rocm_mla_decode_attention.runfiles/pip_gpu_rocm_torch_torch/site-packages/torch/cuda/__init__.py:58: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  import pynvml  # type: ignore[import]
+cwd: /root/.cache/bazel/_bazel_root/9119faf156746bd2e78c415f3fc2e5b3/execroot/rtp_llm/bazel-out/k8-opt/bin/tests/rocm_mla_decode_attention.runfiles/rtp_llm
+initLogger log_file_path: 
+[2025-11-12 11:41:55.522001] [INFO] [26810:26810] [RANK 0][10.67.77.202][rtp_llm/cpp/devices/DeviceFactory.cc:37][static GlobalDeviceParams rtp_llm::DeviceFactory::getDefaultGlobalDeviceParams()] Device type 1 is not registered, skip.
+[2025-11-12 11:41:55.522029] [INFO] [26810:26810] [RANK 0][10.67.77.202][rtp_llm/cpp/devices/DeviceFactory.cc:37][static GlobalDeviceParams rtp_llm::DeviceFactory::getDefaultGlobalDeviceParams()] Device type 2 is not registered, skip.
+[2025-11-12 11:41:55.522034] [INFO] [26810:26810] [RANK 0][10.67.77.202][rtp_llm/cpp/devices/DeviceFactory.cc:37][static GlobalDeviceParams rtp_llm::DeviceFactory::getDefaultGlobalDeviceParams()] Device type 3 is not registered, skip.
+[2025-11-12 11:41:55.522038] [INFO] [26810:26810] [RANK 0][10.67.77.202][rtp_llm/cpp/devices/DeviceFactory.cc:37][static GlobalDeviceParams rtp_llm::DeviceFactory::getDefaultGlobalDeviceParams()] Device type 0 is not registered, skip.
+[2025-11-12 11:41:55.522042] [INFO] [26810:26810] [RANK 0][10.67.77.202][rtp_llm/cpp/devices/DeviceFactory.cc:34][static GlobalDeviceParams rtp_llm::DeviceFactory::getDefaultGlobalDeviceParams()] found device type 4, use as default.
+[2025-11-12 11:41:55.522049] [INFO] [26810:26810] [RANK 0][10.67.77.202][rtp_llm/cpp/devices/DeviceFactory.cc:37][static GlobalDeviceParams rtp_llm::DeviceFactory::getDefaultGlobalDeviceParams()] Device type 5 is not registered, skip.
+[2025-11-12 11:41:55.522053] [INFO] [26810:26810] [RANK 0][10.67.77.202][rtp_llm/cpp/devices/DeviceFactory.cc:104][static void rtp_llm::DeviceFactory::initDevices(const GptInitParameter &amp;)] set overlap type to be 0
+[2025-11-12 11:41:55.522064] [INFO] [26810:26810] [RANK 0][10.67.77.202][rtp_llm/cpp/devices/DeviceFactory.cc:112][static void rtp_llm::DeviceFactory::initDevices(const GptInitParameter &amp;)] Device reserve memory bytes from env: 256000000
+[2025-11-12 11:41:55.522068] [INFO] [26810:26810] [RANK 0][10.67.77.202][rtp_llm/cpp/devices/DeviceFactory.cc:115][static void rtp_llm::DeviceFactory::initDevices(const GptInitParameter &amp;)] Device reserve memory bytes: 256000000
+[2025-11-12 11:41:55.522072] [INFO] [26810:26810] [RANK 0][10.67.77.202][rtp_llm/cpp/devices/DeviceFactory.cc:118][static void rtp_llm::DeviceFactory::initDevices(const GptInitParameter &amp;)] Host reserve memory bytes: 4294967296
+[2025-11-12 11:41:55.522077] [INFO] [26810:26810] [RANK 0][10.67.77.202][rtp_llm/cpp/devices/DeviceFactory.cc:125][static void rtp_llm::DeviceFactory::initDevices(const GptInitParameter &amp;)] enable comm overlap: 1, enable layer micro batch: 0
+[2025-11-12 11:41:55.522088] [INFO] [26810:26810] [RANK 0][10.67.77.202][rtp_llm/cpp/devices/DeviceFactory.cc:134][static void rtp_llm::DeviceFactory::initDevices(const GptInitParameter &amp;)] device_params sp_type is 
+[2025-11-12 11:41:55.522091] [INFO] [26810:26810] [RANK 0][10.67.77.202][rtp_llm/cpp/devices/DeviceFactory.cc:135][static void rtp_llm::DeviceFactory::initDevices(const GptInitParameter &amp;)] device_params sp_model_type is 
+[2025-11-12 11:41:55.522096] [INFO] [26810:26810] [RANK 0][10.67.77.202][rtp_llm/cpp/devices/DeviceFactory.cc:150][static void rtp_llm::DeviceFactory::initDevices(const GptInitParameter &amp;)] use deepep moe: 0, use deepep low latency: 1
+[2025-11-12 11:41:55.769216] [INFO] [26810:26810] [RANK 0][10.67.77.202][rtp_llm/cpp/devices/rocm_impl/ROCmDevice.cc:90][rtp_llm::ROCmDevice::ROCmDevice(const DeviceInitParams &amp;)] [ROCM] total = 191.98(GB), free = 191.35(GB), reserve = 0.24(GB), track = 0.24(GB)
+
+[2025-11-12 11:41:55.769315] [INFO] [26810:26810] [RANK 0][10.67.77.202][rtp_llm/cpp/core/TrackerAllocator.cc:32][rtp_llm::TrackerAllocator::TrackerAllocator(const TrackerAllocatorParams &amp;)] TrackerAllocator successfully reserved 256000000 bytes (244 MiB) of memory [2], reserved base addr [0x7f978c800000]
+[2025-11-12 11:41:56.353110] [INFO] [26810:26810] [RANK 0][10.67.77.202][rtp_llm/cpp/core/TrackerAllocator.cc:32][rtp_llm::TrackerAllocator::TrackerAllocator(const TrackerAllocatorParams &amp;)] TrackerAllocator successfully reserved 4294967296 bytes (4096 MiB) of memory [1], reserved base addr [0x7f968c600000]
+[BLAS] Gemm config not find: gemm_config.csv 
+[2025-11-12 11:41:56.358962] [INFO] [26810:26810] [RANK 0][10.67.77.202][rtp_llm/cpp/devices/rocm_impl/ROCmDevice.cc:173][virtual void rtp_llm::ROCmDevice::init()] max batch size: 1024
+[2025-11-12 11:41:56.358995] [INFO] [26810:26810] [RANK 0][10.67.77.202][rtp_llm/cpp/devices/DeviceFactory.cc:168][static void rtp_llm::DeviceFactory::initDevices(const GptInitParameter &amp;)] init devices done
+[2025-11-12 11:41:56.414866] [WARN] [26810:26810] [RANK 0][10.67.77.202][rtp_llm/cpp/core/TrackerAllocator.cc:97][virtual void *rtp_llm::TrackerAllocator::malloc(size_t)] TrackerAllocator failed to allocate 128 MB of memory [2]. Current memory tracker has 71 MB available, with 0 MB fragmented. Reserved 244 MB in total. Use real allocator directly as fallback.
+[2025-11-12 11:41:56.875561] [WARN] [26810:26810] [RANK 0][10.67.77.202][rtp_llm/cpp/core/TrackerAllocator.cc:97][virtual void *rtp_llm::TrackerAllocator::malloc(size_t)] TrackerAllocator failed to allocate 144 MB of memory [2]. Current memory tracker has 205 MB available, with 136 MB fragmented. Reserved 244 MB in total. Use real allocator directly as fallback.
+[2025-11-12 11:41:56.875751] [WARN] [26810:26810] [RANK 0][10.67.77.202][rtp_llm/cpp/core/TrackerAllocator.cc:97][virtual void *rtp_llm::TrackerAllocator::malloc(size_t)] TrackerAllocator failed to allocate 288 MB of memory [2]. Current memory tracker has 78 MB available, with 7 MB fragmented. Reserved 244 MB in total. Use real allocator directly as fallback.
+[2025-11-12 11:41:56.878064] [WARN] [26810:26810] [RANK 0][10.67.77.202][rtp_llm/cpp/core/TrackerAllocator.cc:97][virtual void *rtp_llm::TrackerAllocator::malloc(size_t)] TrackerAllocator failed to allocate 256 MB of memory [2]. Current memory tracker has 77 MB available, with 7 MB fragmented. Reserved 244 MB in total. Use real allocator directly as fallback.
+[2025-11-12 11:41:56.885207] [WARN] [26810:26810] [RANK 0][10.67.77.202][rtp_llm/cpp/core/TrackerAllocator.cc:97][virtual void *rtp_llm::TrackerAllocator::malloc(size_t)] TrackerAllocator failed to allocate 144 MB of memory [2]. Current memory tracker has 205 MB available, with 136 MB fragmented. Reserved 244 MB in total. Use real allocator directly as fallback.
+[2025-11-12 11:41:56.885362] [WARN] [26810:26810] [RANK 0][10.67.77.202][rtp_llm/cpp/core/TrackerAllocator.cc:97][virtual void *rtp_llm::TrackerAllocator::malloc(size_t)] TrackerAllocator failed to allocate 288 MB of memory [2]. Current memory tracker has 78 MB available, with 7 MB fragmented. Reserved 244 MB in total. Use real allocator directly as fallback.
+[2025-11-12 11:41:56.887693] [WARN] [26810:26810] [RANK 0][10.67.77.202][rtp_llm/cpp/core/TrackerAllocator.cc:97][virtual void *rtp_llm::TrackerAllocator::malloc(size_t)] TrackerAllocator failed to allocate 256 MB of memory [2]. Current memory tracker has 77 MB available, with 6 MB fragmented. Reserved 244 MB in total. Use real allocator directly as fallback.
+.
+----------------------------------------------------------------------
+Ran 1 test in 0.551s
+
+OK
+================================================================================
 Target //tests:rocm_mla_decode_attention up-to-date:
   bazel-bin/tests/rocm_mla_decode_attention
-INFO: Elapsed time: 31.037s, Critical Path: 29.67s
+INFO: Elapsed time: 29.175s, Critical Path: 28.15s
 INFO: 5 processes: 3 internal, 2 local.
 INFO: Build completed successfully, 5 total actions
-//tests:rocm_mla_decode_attention                                        PASSED in 25.2s
+//tests:rocm_mla_decode_attention                                        PASSED in 23.4s
 
 Executed 1 out of 1 test: 1 test passes.
 There were tests whose specified size is too big. Use the --test_verbose_timeout_warnings command line option to see which ones these are.
@@ -1153,19 +1242,374 @@ Loading: 0 packages loaded
 Analyzing: target //tests:rocm_mla_rotary_kvcache_test (0 packages loaded, 0 targets configured)
 INFO: Analyzed target //tests:rocm_mla_rotary_kvcache_test (0 packages loaded, 3 targets configured).
 INFO: Found 1 test target...
-[0 / 3] [Prepa] BazelWorkspaceStatusAction stable-status.txt
+[0 / 2] [Prepa] BazelWorkspaceStatusAction stable-status.txt
 [3 / 4] Creating runfiles tree bazel-out/k8-opt/bin/tests/rocm_mla_rotary_kvcache_test.runfiles; 1s local
 [4 / 5] [Prepa] Testing //tests:rocm_mla_rotary_kvcache_test
-[4 / 5] Testing //tests:rocm_mla_rotary_kvcache_test; 1s local
-[4 / 5] Testing //tests:rocm_mla_rotary_kvcache_test; 10s local
-[4 / 5] Testing //tests:rocm_mla_rotary_kvcache_test; 40s local
-[4 / 5] Testing //tests:rocm_mla_rotary_kvcache_test; 61s local
+[4 / 5] Testing //tests:rocm_mla_rotary_kvcache_test; 0s local
+[4 / 5] Testing //tests:rocm_mla_rotary_kvcache_test; 11s local
+[4 / 5] Testing //tests:rocm_mla_rotary_kvcache_test; 41s local
+[4 / 5] Testing //tests:rocm_mla_rotary_kvcache_test; 58s local
+INFO: From Testing //tests:rocm_mla_rotary_kvcache_test:
+==================== Test output for //tests:rocm_mla_rotary_kvcache_test:
+/root/.cache/bazel/_bazel_root/9119faf156746bd2e78c415f3fc2e5b3/execroot/rtp_llm/bazel-out/k8-opt/bin/tests/rocm_mla_rotary_kvcache_test.runfiles/pip_gpu_rocm_torch_torch/site-packages/torch/cuda/__init__.py:58: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  import pynvml  # type: ignore[import]
+[process-27731][root][2025-11-12 11:42:18.242][__init__.py:&lt;module&gt;():71][INFO] so path: /root/.cache/bazel/_bazel_root/9119faf156746bd2e78c415f3fc2e5b3/execroot/rtp_llm/bazel-out/k8-opt/bin/tests/rocm_mla_rotary_kvcache_test.runfiles/rtp_llm/rtp_llm/libs
+[process-27731][root][2025-11-12 11:42:18.242][__init__.py:&lt;module&gt;():94][INFO] torch path: [&#x27;/root/.cache/bazel/_bazel_root/9119faf156746bd2e78c415f3fc2e5b3/execroot/rtp_llm/bazel-out/k8-opt/bin/tests/rocm_mla_rotary_kvcache_test.runfiles/pip_gpu_rocm_torch_torch/site-packages/torch&#x27;]
+[process-27731][root][2025-11-12 11:42:18.243][__init__.py:&lt;module&gt;():100][INFO] loaded libcaffe2_nvrtc.so from /root/.cache/bazel/_bazel_root/9119faf156746bd2e78c415f3fc2e5b3/execroot/rtp_llm/bazel-out/k8-opt/bin/tests/rocm_mla_rotary_kvcache_test.runfiles/pip_gpu_rocm_torch_torch/site-packages/torch/lib/libcaffe2_nvrtc.so
+[process-27731][root][2025-11-12 11:42:24.935][hippo_helper.py:HippoHelper():15][INFO] get container_ip from socket:10.67.77.202
+[process-27731][root][2025-11-12 11:42:24.940][fuser.py:_check_valid():97][WARNING] fuse is not valid: connet http://0:28006 error
+[process-27731][root][2025-11-12 11:42:24.941][fuser.py:fetch_remote_file_to_local():283][INFO] Local path  use directly.
+[process-27731][root][2025-11-12 11:42:24.941][py_config_modules.py:update_from_env():879][INFO] [server_config]
+frontend_server_count: 4
+start_port: 8088
+timeout_keep_alive: 5
+frontend_server_id: 0
+rank_id: 0
+
+[profiling_debug_config]
+trace_memory: 0
+trace_malloc_stack: 0
+enable_device_perf: 0
+ft_core_dump_on_exception: 0
+ft_alog_conf_path: 
+log_level: INFO
+gen_timeline_sync: 0
+torch_cuda_profiler_dir
+log_path: logs
+log_file_backup_count: 16
+nccl_debug_file: 
+debug_load_server: 0
+hack_layer_num: 0
+debug_start_fake_process: 0
+dg_print_reg_reuse: 0
+qwen_agent_debug0
+disable_dpc_random0
+check_nan0
+
+
+[model_config]
+extra_data_path: 
+local_extra_data_path: None
+tokenizer_path: 
+act_type: FP16
+use_float32: False
+original_checkpoint_path: None
+mla_ops_type: AUTO
+ft_plugin_path: None
+weight_type: None
+task_type: None
+model_type: 
+checkpoint_path: 
+oss_endpoint: 
+ptuning_path: None
+openai_api_key: EMPTY
+dashscope_api_key: EMPTY
+dashscope_http_url: None
+dashscope_websocket_url: None
+json_model_override_args: {}
+
+[py_speculative_execution_config]
+gen_num_per_circle: 5
+sp_quantization: None
+sp_checkpoint_path: None
+sp_type: None
+sp_model_type: Nonesp_kv_cache_dtype: None
+sp_checkpoint_path: None
+
+[lora_config]
+lora_info: {}
+merge_lora: True
+
+
+[load_config]
+phy2log_path: 
+converter_num_per_gpu: 4
+tokenizers_parallelism: False
+load_ckpt_num_process: 0
+load_method: auto
+
+[render_config]
+model_template_type: None
+default_chat_template_key: default
+default_tool_use_template_key: tool_use
+llava_chat_template: 
+
+[gang_config]
+fake_gang_env: False
+gang_annocation_path: /etc/podinfo/annotations
+gang_config_string: None
+zone_name: 
+distribute_config_file: 
+dist_barrier_timeout: 45
+gang_sleep_time: 10
+gang_timeout_min: 30
+json_gang_parts: None
+lead_address: None
+
+
+[vit_config]
+vit_separation: 0
+vit_trt: 0
+trt_cache_enabled: 0
+trt_cache_path: None
+download_headers: 
+mm_cache_item_num: 10
+url_cache_item_num: 100
+use_igraph_cache: True
+igraph_search_dom: com.taobao.search.igraph.common
+igraph_vipserver: 0
+igraph_table_name: 
+igraph_default_key: None
+
+[generate_env_config]
+think_end_tag: &lt;/think&gt;
+
+
+think_end_token_id: -1
+think_mode: 0
+force_stop_words: False
+stop_words_list: None
+stop_words_str: None
+think_start_tag: &lt;think&gt;
+
+generation_config_path: None
+
+[quantization_config]
+int8_mode: 0
+quantization: 
+
+[py_eplb_config]
+eplb_mode: NONE
+eplb_update_time: 5000
+redundant_expert: 0
+hack_ep_single_entry: 0
+balance_method: mix
+eplb_force_repack: 0
+eplb_stats_window_size: 10
+
+[py_kv_cache_config]
+int8_kv_cache: 0
+fp8_kv_cache: 0
+kv_cache_dtype: auto
+kv_cache_mem_mb: -1
+seq_size_per_block: -1
+test_block_num: 0
+use_block_cache: None
+blockwise_use_fp8_kv_cache: 0
+reuse_cache: False
+
+[py_device_resource_config]
+reserver_runtime_mem_mb: 1024
+specify_gpu_arch: 
+acext_gemm_config_dir: None
+device_reserve_memory_bytes: 128000000
+
+[sparse_config]
+sparse_config_file: None
+
+[engine_config]
+warm_up: 1
+warm_up_with_loss: 0
+max_seq_len: 0
+
+[embedding_config]
+embedding_model: 0
+extra_input_in_mm_embedding: 
+
+[worker_config]
+worker_info_port_num: 7
+
+[role_config]
+role_type: PDFUSION
+
+[pd_separation_config]
+prefill_retry_times: 0
+prefill_retry_timeout_ms: 20
+prefill_max_wait_timeout_ms: 600000
+decode_retry_times: 100
+decode_retry_timeout_ms: 100
+decode_retry_interval_ms: 1
+decode_polling_kv_cache_step_ms: 30
+decode_entrance: 0
+rdma_connect_retry_times: 0
+load_cache_timeout_ms: 5000
+
+[parallelism_distributed_config]
+tp_size: 1
+ep_size: 1
+dp_size: 1
+world_size: 1
+world_rank: 0
+pp_size: 1
+local_world_size: 1
+ffn_sp_size1
+
+[model_specific_config]
+max_lora_model_size: -1
+load_python_model:0
+
+
+[fmha_config]
+enable_fmha: 1
+enable_trt_fmha: 1
+enable_paged_trt_fmha: 1
+enable_open_source_fmha: 1
+enable_paged_open_source_fmha: 1
+enable_trtv1_fmha: 1
+fmha_perf_instrument: 0
+fmha_show_params: 0
+disable_flash_infer: 0
+enable_xqa: 1
+
+
+[misc_config]
+disable_pdl1
+aux_string: 
+
+
+[concurrency_config]
+concurrency_with_block: 0
+concurrency_limit: 32
+
+[jit_config]
+remote_jit_dir: 
+
+[py_hw_kernel_config]
+deep_gemm_num_sm: -1
+arm_gemm_use_kai: False
+enable_stable_scatter_add: False
+enable_multi_block_mode: True
+ft_disable_custom_ar: True
+rocm_hipblaslt_config: gemm_config.csv
+use_swizzleA: False
+enable_cuda_graph: False
+enable_cuda_graph_debug_mode: False
+use_aiter_pa: True
+use_asm_pa: True
+enable_native_cuda_graph: False
+num_native_cuda_graph: 200
+
+
+[process-27731][root][2025-11-12 11:42:24.942][__init__.py:&lt;module&gt;():68][INFO] init logger end
+[process-27731][root][2025-11-12 11:42:25.746][__init__.py:&lt;module&gt;():72][INFO] transformers version: 4.46.2
+[process-27731][root][2025-11-12 11:42:25.748][__init__.py:&lt;module&gt;():81][WARNING] Failed to import internal_source models
+[process-27731][root][2025-11-12 11:42:26.154][worker_info.py:get_worker_port_num():22][INFO] env WORKER_INFO_PORT_NUM: 7
+[process-27731][root][2025-11-12 11:42:26.186][worker_info.py:__init__():63][INFO] ParallelInfo:[ tp_size=1 ep_size=1 pp_size=1 world_size=1 world_rank=0 local_world_size=1 ffn_sp_size=1 ffn_tp_size=1]
+[process-27731][root][2025-11-12 11:42:26.191][__init__.py:&lt;module&gt;():8][INFO] internal devices not found
+[process-27731][root][2025-11-12 11:42:26.579][__init__.py:&lt;module&gt;():23][INFO] import internal source failed, error: No module named &#x27;internal_source&#x27;
+[aiter] WARNING: NUMA balancing is enabled, which may cause errors. It is recommended to disable NUMA balancing by running &quot;sudo sh -c &#x27;echo 0 &gt; /proc/sys/kernel/numa_balancing&#x27;&quot; for more details: https://rocm.docs.amd.com/en/latest/how-to/system-optimization/mi300x.html#disable-numa-auto-balancing
+[process-27731][aiter][2025-11-12 11:42:29.848][core.py:check_numa_custom_op():202][WARNING] WARNING: NUMA balancing is enabled, which may cause errors. It is recommended to disable NUMA balancing by running &quot;sudo sh -c &#x27;echo 0 &gt; /proc/sys/kernel/numa_balancing&#x27;&quot; for more details: https://rocm.docs.amd.com/en/latest/how-to/system-optimization/mi300x.html#disable-numa-auto-balancing
+[aiter] import [module_aiter_enum] under /root/.cache/bazel/_bazel_root/9119faf156746bd2e78c415f3fc2e5b3/execroot/rtp_llm/bazel-out/k8-opt/bin/tests/rocm_mla_rotary_kvcache_test.runfiles/pip_gpu_rocm_torch_aiter/site-packages/aiter/jit/module_aiter_enum.so
+[process-27731][aiter][2025-11-12 11:42:29.849][core.py:get_module_custom_op():225][INFO] import [module_aiter_enum] under /root/.cache/bazel/_bazel_root/9119faf156746bd2e78c415f3fc2e5b3/execroot/rtp_llm/bazel-out/k8-opt/bin/tests/rocm_mla_rotary_kvcache_test.runfiles/pip_gpu_rocm_torch_aiter/site-packages/aiter/jit/module_aiter_enum.so
+[process-27731][root][2025-11-12 11:42:30.985][flashinfer_mla.py:load_flashinfer_python():33][WARNING] Failed to load flashinfer-python: The &#x27;flashinfer-python&#x27; distribution was not found and is required by the application
+[process-27731][root][2025-11-12 11:42:30.987][fmha.py:&lt;module&gt;():270][INFO] FlashInferPrefillImpl not available, skipped.
+[process-27731][root][2025-11-12 11:42:30.987][fmha.py:&lt;module&gt;():366][INFO] FlashInferDecodeOp not available, skipped.
+[process-27731][root][2025-11-12 11:42:30.987][fmha.py:&lt;module&gt;():393][INFO] TRTMHAImpl not available, skipped.
+[process-27731][root][2025-11-12 11:42:30.987][fmha.py:&lt;module&gt;():419][INFO] XQAAttnOp not available, skipped.
+[process-27731][root][2025-11-12 11:42:31.577][report_worker.py:__init__():32][INFO] kmonitor report default tags: {}
+[process-27731][root][2025-11-12 11:42:31.578][report_worker.py:__init__():52][INFO] test mode, kmonitor metrics not reported.
+/root/.cache/bazel/_bazel_root/9119faf156746bd2e78c415f3fc2e5b3/execroot/rtp_llm/bazel-out/k8-opt/bin/tests/rocm_mla_rotary_kvcache_test.runfiles/pip_gpu_rocm_torch_torchvision/site-packages/torchvision/io/image.py:14: UserWarning: Failed to load image Python extension: &#x27;libjpeg.so.8: cannot open shared object file: No such file or directory&#x27;If you don&#x27;t plan on using image functionality from `torchvision.io`, you can ignore this warning. Otherwise, there might be something wrong with your environment. Did you have `libjpeg` or `libpng` installed before building `torchvision` from source?
+  warn(
+[process-27731][root][2025-11-12 11:42:33.374][fp8_kernel.py:&lt;module&gt;():20][WARNING] can&#x27;t import from rtp_llm_ops, only support cuda!
+[process-27731][root][2025-11-12 11:42:49.475][vipserver_proxy.py:refresh_srv_lst():86][ERROR] failed to refresh vipserver server list, exception : HTTPConnectionPool(host=&#x27;jmenv.tbsite.net&#x27;, port=8080): Max retries exceeded with url: /vipserver/serverlist?nofix=1&amp;labels=&amp; (Caused by NameResolutionError(&quot;&lt;urllib3.connection.HTTPConnection object at 0x7fd8ece51330&gt;: Failed to resolve &#x27;jmenv.tbsite.net&#x27; ([Errno -2] Name or service not known)&quot;))
+[process-27731][root][2025-11-12 11:42:49.476][host_reactor.py:start():32][INFO] vipserver domain update thread started. to refresh domains: &lt;bound method HostReactor.refresh_cache_domain_srv_lst of &lt;rtp_llm.vipserver.host_reactor.HostReactor object at 0x7fd8ece53340&gt;&gt;
+[process-27731][root][2025-11-12 11:42:50.961][__init__.py:&lt;module&gt;():21][INFO] no internal_source found, error: No module named &#x27;internal_source&#x27;
+[process-27731][root][2025-11-12 11:42:50.990][__init__.py:&lt;module&gt;():48][INFO] import internal source failed, error: No module named &#x27;internal_source&#x27;
+initLogger log_file_path: 
+[2025-11-12 11:42:51.006007] [INFO] [27731:27731] [RANK 0][10.67.77.202][rtp_llm/cpp/devices/DeviceFactory.cc:37][static GlobalDeviceParams rtp_llm::DeviceFactory::getDefaultGlobalDeviceParams()] Device type 1 is not registered, skip.
+[2025-11-12 11:42:51.006028] [INFO] [27731:27731] [RANK 0][10.67.77.202][rtp_llm/cpp/devices/DeviceFactory.cc:37][static GlobalDeviceParams rtp_llm::DeviceFactory::getDefaultGlobalDeviceParams()] Device type 2 is not registered, skip.
+[2025-11-12 11:42:51.006033] [INFO] [27731:27731] [RANK 0][10.67.77.202][rtp_llm/cpp/devices/DeviceFactory.cc:37][static GlobalDeviceParams rtp_llm::DeviceFactory::getDefaultGlobalDeviceParams()] Device type 3 is not registered, skip.
+[2025-11-12 11:42:51.006037] [INFO] [27731:27731] [RANK 0][10.67.77.202][rtp_llm/cpp/devices/DeviceFactory.cc:37][static GlobalDeviceParams rtp_llm::DeviceFactory::getDefaultGlobalDeviceParams()] Device type 0 is not registered, skip.
+[2025-11-12 11:42:51.006041] [INFO] [27731:27731] [RANK 0][10.67.77.202][rtp_llm/cpp/devices/DeviceFactory.cc:34][static GlobalDeviceParams rtp_llm::DeviceFactory::getDefaultGlobalDeviceParams()] found device type 4, use as default.
+[2025-11-12 11:42:51.006053] [INFO] [27731:27731] [RANK 0][10.67.77.202][rtp_llm/cpp/devices/DeviceFactory.cc:37][static GlobalDeviceParams rtp_llm::DeviceFactory::getDefaultGlobalDeviceParams()] Device type 5 is not registered, skip.
+[2025-11-12 11:42:51.006058] [INFO] [27731:27731] [RANK 0][10.67.77.202][rtp_llm/cpp/devices/DeviceFactory.cc:104][static void rtp_llm::DeviceFactory::initDevices(const GptInitParameter &amp;)] set overlap type to be 0
+[2025-11-12 11:42:51.006067] [INFO] [27731:27731] [RANK 0][10.67.77.202][rtp_llm/cpp/devices/DeviceFactory.cc:112][static void rtp_llm::DeviceFactory::initDevices(const GptInitParameter &amp;)] Device reserve memory bytes from env: 0
+[2025-11-12 11:42:51.006071] [INFO] [27731:27731] [RANK 0][10.67.77.202][rtp_llm/cpp/devices/DeviceFactory.cc:49][int64_t rtp_llm::getDefaultDeviceReserveMemoryBytes(const GptInitParameter &amp;)] Default device reserve memory bytes: -536870912
+[2025-11-12 11:42:51.006074] [INFO] [27731:27731] [RANK 0][10.67.77.202][rtp_llm/cpp/devices/DeviceFactory.cc:115][static void rtp_llm::DeviceFactory::initDevices(const GptInitParameter &amp;)] Device reserve memory bytes: -536870912
+[2025-11-12 11:42:51.006078] [INFO] [27731:27731] [RANK 0][10.67.77.202][rtp_llm/cpp/devices/DeviceFactory.cc:118][static void rtp_llm::DeviceFactory::initDevices(const GptInitParameter &amp;)] Host reserve memory bytes: 4294967296
+[2025-11-12 11:42:51.006082] [INFO] [27731:27731] [RANK 0][10.67.77.202][rtp_llm/cpp/devices/DeviceFactory.cc:125][static void rtp_llm::DeviceFactory::initDevices(const GptInitParameter &amp;)] enable comm overlap: 1, enable layer micro batch: 0
+[2025-11-12 11:42:51.006096] [INFO] [27731:27731] [RANK 0][10.67.77.202][rtp_llm/cpp/devices/DeviceFactory.cc:134][static void rtp_llm::DeviceFactory::initDevices(const GptInitParameter &amp;)] device_params sp_type is 
+[2025-11-12 11:42:51.006100] [INFO] [27731:27731] [RANK 0][10.67.77.202][rtp_llm/cpp/devices/DeviceFactory.cc:135][static void rtp_llm::DeviceFactory::initDevices(const GptInitParameter &amp;)] device_params sp_model_type is 
+[2025-11-12 11:42:51.006104] [INFO] [27731:27731] [RANK 0][10.67.77.202][rtp_llm/cpp/devices/DeviceFactory.cc:150][static void rtp_llm::DeviceFactory::initDevices(const GptInitParameter &amp;)] use deepep moe: 0, use deepep low latency: 1
+[2025-11-12 11:42:51.262324] [INFO] [27731:27731] [RANK 0][10.67.77.202][rtp_llm/cpp/devices/rocm_impl/ROCmDevice.cc:90][rtp_llm::ROCmDevice::ROCmDevice(const DeviceInitParams &amp;)] [ROCM] total = 191.98(GB), free = 191.35(GB), reserve = -0.50(GB), track = 189.85(GB)
+
+[2025-11-12 11:42:51.263310] [INFO] [27731:27731] [RANK 0][10.67.77.202][rtp_llm/cpp/core/TrackerAllocator.cc:32][rtp_llm::TrackerAllocator::TrackerAllocator(const TrackerAllocatorParams &amp;)] TrackerAllocator successfully reserved 203853660160 bytes (194410 MiB) of memory [2], reserved base addr [0x7fa95a400000]
+[2025-11-12 11:42:52.034631] [INFO] [27731:27731] [RANK 0][10.67.77.202][rtp_llm/cpp/core/TrackerAllocator.cc:32][rtp_llm::TrackerAllocator::TrackerAllocator(const TrackerAllocatorParams &amp;)] TrackerAllocator successfully reserved 4294967296 bytes (4096 MiB) of memory [1], reserved base addr [0x7fa85a200000]
+[BLAS] Gemm config not find: gemm_config.csv 
+[2025-11-12 11:42:52.040793] [INFO] [27731:27731] [RANK 0][10.67.77.202][rtp_llm/cpp/devices/rocm_impl/ROCmDevice.cc:173][virtual void rtp_llm::ROCmDevice::init()] max batch size: 1024
+[2025-11-12 11:42:52.040822] [INFO] [27731:27731] [RANK 0][10.67.77.202][rtp_llm/cpp/devices/DeviceFactory.cc:168][static void rtp_llm::DeviceFactory::initDevices(const GptInitParameter &amp;)] init devices done
+[process-27731][root][2025-11-12 11:42:52.079][rocm_mla_rotary_kvcache_test.py:_test_one_case():144][INFO] --------------------2, [], [25], 16--------------------
+[2025-11-12 11:42:52.096551] [INFO] [27731:27731] [RANK 0][10.67.77.202][tests/mla/mla_rotary_kvcache_test.cc:147][void unittest::MlaRotaryKVCacheOp::applyRotaryKVCache(torch::Tensor, torch::Tensor, int64_t, torch::Tensor, torch::Tensor, torch::Tensor)] before run
+[2025-11-12 11:42:52.096582] [INFO] [27731:27731] [RANK 0][10.67.77.202][tests/mla/mla_rotary_kvcache_test.cc:149][void unittest::MlaRotaryKVCacheOp::applyRotaryKVCache(torch::Tensor, torch::Tensor, int64_t, torch::Tensor, torch::Tensor, torch::Tensor)] run context
+[2025-11-12 11:42:52.102510] [INFO] [27731:27731] [RANK 0][10.67.77.202][tests/mla/mla_rotary_kvcache_test.cc:185][void unittest::MlaRotaryKVCacheOp::applyRotaryKVCache(torch::Tensor, torch::Tensor, int64_t, torch::Tensor, torch::Tensor, torch::Tensor)] after run
+[process-27731][root][2025-11-12 11:42:52.265][rocm_mla_rotary_kvcache_test.py:_test_one_case():144][INFO] --------------------2, [], [1024], 16--------------------
+[2025-11-12 11:42:52.266570] [INFO] [27731:27731] [RANK 0][10.67.77.202][tests/mla/mla_rotary_kvcache_test.cc:147][void unittest::MlaRotaryKVCacheOp::applyRotaryKVCache(torch::Tensor, torch::Tensor, int64_t, torch::Tensor, torch::Tensor, torch::Tensor)] before run
+[2025-11-12 11:42:52.266596] [INFO] [27731:27731] [RANK 0][10.67.77.202][tests/mla/mla_rotary_kvcache_test.cc:149][void unittest::MlaRotaryKVCacheOp::applyRotaryKVCache(torch::Tensor, torch::Tensor, int64_t, torch::Tensor, torch::Tensor, torch::Tensor)] run context
+[2025-11-12 11:42:52.266651] [INFO] [27731:27731] [RANK 0][10.67.77.202][tests/mla/mla_rotary_kvcache_test.cc:185][void unittest::MlaRotaryKVCacheOp::applyRotaryKVCache(torch::Tensor, torch::Tensor, int64_t, torch::Tensor, torch::Tensor, torch::Tensor)] after run
+[process-27731][root][2025-11-12 11:42:52.579][rocm_mla_rotary_kvcache_test.py:_test_one_case():144][INFO] --------------------2, [30], [25], 16--------------------
+[2025-11-12 11:42:52.580174] [INFO] [27731:27731] [RANK 0][10.67.77.202][tests/mla/mla_rotary_kvcache_test.cc:147][void unittest::MlaRotaryKVCacheOp::applyRotaryKVCache(torch::Tensor, torch::Tensor, int64_t, torch::Tensor, torch::Tensor, torch::Tensor)] before run
+[2025-11-12 11:42:52.580198] [INFO] [27731:27731] [RANK 0][10.67.77.202][tests/mla/mla_rotary_kvcache_test.cc:168][void unittest::MlaRotaryKVCacheOp::applyRotaryKVCache(torch::Tensor, torch::Tensor, int64_t, torch::Tensor, torch::Tensor, torch::Tensor)] run decode
+[2025-11-12 11:42:52.580249] [INFO] [27731:27731] [RANK 0][10.67.77.202][tests/mla/mla_rotary_kvcache_test.cc:185][void unittest::MlaRotaryKVCacheOp::applyRotaryKVCache(torch::Tensor, torch::Tensor, int64_t, torch::Tensor, torch::Tensor, torch::Tensor)] after run
+[process-27731][root][2025-11-12 11:42:52.581][rocm_mla_rotary_kvcache_test.py:_test_one_case():144][INFO] --------------------2, [26], [25], 64--------------------
+[2025-11-12 11:42:52.582280] [INFO] [27731:27731] [RANK 0][10.67.77.202][tests/mla/mla_rotary_kvcache_test.cc:147][void unittest::MlaRotaryKVCacheOp::applyRotaryKVCache(torch::Tensor, torch::Tensor, int64_t, torch::Tensor, torch::Tensor, torch::Tensor)] before run
+[2025-11-12 11:42:52.582300] [INFO] [27731:27731] [RANK 0][10.67.77.202][tests/mla/mla_rotary_kvcache_test.cc:168][void unittest::MlaRotaryKVCacheOp::applyRotaryKVCache(torch::Tensor, torch::Tensor, int64_t, torch::Tensor, torch::Tensor, torch::Tensor)] run decode
+[2025-11-12 11:42:52.582339] [INFO] [27731:27731] [RANK 0][10.67.77.202][tests/mla/mla_rotary_kvcache_test.cc:185][void unittest::MlaRotaryKVCacheOp::applyRotaryKVCache(torch::Tensor, torch::Tensor, int64_t, torch::Tensor, torch::Tensor, torch::Tensor)] after run
+[process-27731][root][2025-11-12 11:42:52.583][rocm_mla_rotary_kvcache_test.py:_test_one_case():144][INFO] --------------------2, [26], [25, 65], 64--------------------
+[2025-11-12 11:42:52.584269] [INFO] [27731:27731] [RANK 0][10.67.77.202][tests/mla/mla_rotary_kvcache_test.cc:147][void unittest::MlaRotaryKVCacheOp::applyRotaryKVCache(torch::Tensor, torch::Tensor, int64_t, torch::Tensor, torch::Tensor, torch::Tensor)] before run
+[2025-11-12 11:42:52.584288] [INFO] [27731:27731] [RANK 0][10.67.77.202][tests/mla/mla_rotary_kvcache_test.cc:149][void unittest::MlaRotaryKVCacheOp::applyRotaryKVCache(torch::Tensor, torch::Tensor, int64_t, torch::Tensor, torch::Tensor, torch::Tensor)] run context
+[2025-11-12 11:42:52.584340] [INFO] [27731:27731] [RANK 0][10.67.77.202][tests/mla/mla_rotary_kvcache_test.cc:168][void unittest::MlaRotaryKVCacheOp::applyRotaryKVCache(torch::Tensor, torch::Tensor, int64_t, torch::Tensor, torch::Tensor, torch::Tensor)] run decode
+[2025-11-12 11:42:52.584362] [INFO] [27731:27731] [RANK 0][10.67.77.202][tests/mla/mla_rotary_kvcache_test.cc:185][void unittest::MlaRotaryKVCacheOp::applyRotaryKVCache(torch::Tensor, torch::Tensor, int64_t, torch::Tensor, torch::Tensor, torch::Tensor)] after run
+[process-27731][root][2025-11-12 11:42:52.606][rocm_mla_rotary_kvcache_test.py:_test_one_case():144][INFO] --------------------2, [84], [25, 953], 64--------------------
+[2025-11-12 11:42:52.607250] [INFO] [27731:27731] [RANK 0][10.67.77.202][tests/mla/mla_rotary_kvcache_test.cc:147][void unittest::MlaRotaryKVCacheOp::applyRotaryKVCache(torch::Tensor, torch::Tensor, int64_t, torch::Tensor, torch::Tensor, torch::Tensor)] before run
+[2025-11-12 11:42:52.607270] [INFO] [27731:27731] [RANK 0][10.67.77.202][tests/mla/mla_rotary_kvcache_test.cc:149][void unittest::MlaRotaryKVCacheOp::applyRotaryKVCache(torch::Tensor, torch::Tensor, int64_t, torch::Tensor, torch::Tensor, torch::Tensor)] run context
+[2025-11-12 11:42:52.607309] [INFO] [27731:27731] [RANK 0][10.67.77.202][tests/mla/mla_rotary_kvcache_test.cc:168][void unittest::MlaRotaryKVCacheOp::applyRotaryKVCache(torch::Tensor, torch::Tensor, int64_t, torch::Tensor, torch::Tensor, torch::Tensor)] run decode
+[2025-11-12 11:42:52.607331] [INFO] [27731:27731] [RANK 0][10.67.77.202][tests/mla/mla_rotary_kvcache_test.cc:185][void unittest::MlaRotaryKVCacheOp::applyRotaryKVCache(torch::Tensor, torch::Tensor, int64_t, torch::Tensor, torch::Tensor, torch::Tensor)] after run
+[process-27731][root][2025-11-12 11:42:52.902][rocm_mla_rotary_kvcache_test.py:_test_one_case():144][INFO] --------------------2, [30], [25, 300], 16--------------------
+[2025-11-12 11:42:52.903322] [INFO] [27731:27731] [RANK 0][10.67.77.202][tests/mla/mla_rotary_kvcache_test.cc:147][void unittest::MlaRotaryKVCacheOp::applyRotaryKVCache(torch::Tensor, torch::Tensor, int64_t, torch::Tensor, torch::Tensor, torch::Tensor)] before run
+[2025-11-12 11:42:52.903343] [INFO] [27731:27731] [RANK 0][10.67.77.202][tests/mla/mla_rotary_kvcache_test.cc:149][void unittest::MlaRotaryKVCacheOp::applyRotaryKVCache(torch::Tensor, torch::Tensor, int64_t, torch::Tensor, torch::Tensor, torch::Tensor)] run context
+[2025-11-12 11:42:52.903382] [INFO] [27731:27731] [RANK 0][10.67.77.202][tests/mla/mla_rotary_kvcache_test.cc:168][void unittest::MlaRotaryKVCacheOp::applyRotaryKVCache(torch::Tensor, torch::Tensor, int64_t, torch::Tensor, torch::Tensor, torch::Tensor)] run decode
+[2025-11-12 11:42:52.903405] [INFO] [27731:27731] [RANK 0][10.67.77.202][tests/mla/mla_rotary_kvcache_test.cc:185][void unittest::MlaRotaryKVCacheOp::applyRotaryKVCache(torch::Tensor, torch::Tensor, int64_t, torch::Tensor, torch::Tensor, torch::Tensor)] after run
+[process-27731][root][2025-11-12 11:42:52.997][rocm_mla_rotary_kvcache_test.py:_test_one_case():144][INFO] --------------------2, [30], [25, 34, 65, 123, 2345], 64--------------------
+[2025-11-12 11:42:52.998592] [INFO] [27731:27731] [RANK 0][10.67.77.202][tests/mla/mla_rotary_kvcache_test.cc:147][void unittest::MlaRotaryKVCacheOp::applyRotaryKVCache(torch::Tensor, torch::Tensor, int64_t, torch::Tensor, torch::Tensor, torch::Tensor)] before run
+[2025-11-12 11:42:52.998613] [INFO] [27731:27731] [RANK 0][10.67.77.202][tests/mla/mla_rotary_kvcache_test.cc:149][void unittest::MlaRotaryKVCacheOp::applyRotaryKVCache(torch::Tensor, torch::Tensor, int64_t, torch::Tensor, torch::Tensor, torch::Tensor)] run context
+[2025-11-12 11:42:52.998654] [INFO] [27731:27731] [RANK 0][10.67.77.202][tests/mla/mla_rotary_kvcache_test.cc:168][void unittest::MlaRotaryKVCacheOp::applyRotaryKVCache(torch::Tensor, torch::Tensor, int64_t, torch::Tensor, torch::Tensor, torch::Tensor)] run decode
+[2025-11-12 11:42:52.998676] [INFO] [27731:27731] [RANK 0][10.67.77.202][tests/mla/mla_rotary_kvcache_test.cc:185][void unittest::MlaRotaryKVCacheOp::applyRotaryKVCache(torch::Tensor, torch::Tensor, int64_t, torch::Tensor, torch::Tensor, torch::Tensor)] after run
+[process-27731][root][2025-11-12 11:42:53.793][rocm_mla_rotary_kvcache_test.py:_test_one_case():144][INFO] --------------------2, [130], [39], 64--------------------
+[2025-11-12 11:42:53.794139] [INFO] [27731:27731] [RANK 0][10.67.77.202][tests/mla/mla_rotary_kvcache_test.cc:147][void unittest::MlaRotaryKVCacheOp::applyRotaryKVCache(torch::Tensor, torch::Tensor, int64_t, torch::Tensor, torch::Tensor, torch::Tensor)] before run
+[2025-11-12 11:42:53.794172] [INFO] [27731:27731] [RANK 0][10.67.77.202][tests/mla/mla_rotary_kvcache_test.cc:168][void unittest::MlaRotaryKVCacheOp::applyRotaryKVCache(torch::Tensor, torch::Tensor, int64_t, torch::Tensor, torch::Tensor, torch::Tensor)] run decode
+[2025-11-12 11:42:53.794230] [INFO] [27731:27731] [RANK 0][10.67.77.202][tests/mla/mla_rotary_kvcache_test.cc:185][void unittest::MlaRotaryKVCacheOp::applyRotaryKVCache(torch::Tensor, torch::Tensor, int64_t, torch::Tensor, torch::Tensor, torch::Tensor)] after run
+[process-27731][root][2025-11-12 11:42:53.795][rocm_mla_rotary_kvcache_test.py:_test_one_case():144][INFO] --------------------2, [129], [39], 64--------------------
+[2025-11-12 11:42:53.796227] [INFO] [27731:27731] [RANK 0][10.67.77.202][tests/mla/mla_rotary_kvcache_test.cc:147][void unittest::MlaRotaryKVCacheOp::applyRotaryKVCache(torch::Tensor, torch::Tensor, int64_t, torch::Tensor, torch::Tensor, torch::Tensor)] before run
+[2025-11-12 11:42:53.796246] [INFO] [27731:27731] [RANK 0][10.67.77.202][tests/mla/mla_rotary_kvcache_test.cc:168][void unittest::MlaRotaryKVCacheOp::applyRotaryKVCache(torch::Tensor, torch::Tensor, int64_t, torch::Tensor, torch::Tensor, torch::Tensor)] run decode
+[2025-11-12 11:42:53.796288] [INFO] [27731:27731] [RANK 0][10.67.77.202][tests/mla/mla_rotary_kvcache_test.cc:185][void unittest::MlaRotaryKVCacheOp::applyRotaryKVCache(torch::Tensor, torch::Tensor, int64_t, torch::Tensor, torch::Tensor, torch::Tensor)] after run
+[process-27731][root][2025-11-12 11:42:53.797][rocm_mla_rotary_kvcache_test.py:_test_one_case():144][INFO] --------------------2, [127], [39], 64--------------------
+[2025-11-12 11:42:53.798184] [INFO] [27731:27731] [RANK 0][10.67.77.202][tests/mla/mla_rotary_kvcache_test.cc:147][void unittest::MlaRotaryKVCacheOp::applyRotaryKVCache(torch::Tensor, torch::Tensor, int64_t, torch::Tensor, torch::Tensor, torch::Tensor)] before run
+[2025-11-12 11:42:53.798203] [INFO] [27731:27731] [RANK 0][10.67.77.202][tests/mla/mla_rotary_kvcache_test.cc:168][void unittest::MlaRotaryKVCacheOp::applyRotaryKVCache(torch::Tensor, torch::Tensor, int64_t, torch::Tensor, torch::Tensor, torch::Tensor)] run decode
+[2025-11-12 11:42:53.798243] [INFO] [27731:27731] [RANK 0][10.67.77.202][tests/mla/mla_rotary_kvcache_test.cc:185][void unittest::MlaRotaryKVCacheOp::applyRotaryKVCache(torch::Tensor, torch::Tensor, int64_t, torch::Tensor, torch::Tensor, torch::Tensor)] after run
+[process-27731][root][2025-11-12 11:42:53.799][rocm_mla_rotary_kvcache_test.py:_test_one_case():144][INFO] --------------------2, [128], [39], 64--------------------
+[2025-11-12 11:42:53.800120] [INFO] [27731:27731] [RANK 0][10.67.77.202][tests/mla/mla_rotary_kvcache_test.cc:147][void unittest::MlaRotaryKVCacheOp::applyRotaryKVCache(torch::Tensor, torch::Tensor, int64_t, torch::Tensor, torch::Tensor, torch::Tensor)] before run
+[2025-11-12 11:42:53.800138] [INFO] [27731:27731] [RANK 0][10.67.77.202][tests/mla/mla_rotary_kvcache_test.cc:168][void unittest::MlaRotaryKVCacheOp::applyRotaryKVCache(torch::Tensor, torch::Tensor, int64_t, torch::Tensor, torch::Tensor, torch::Tensor)] run decode
+[2025-11-12 11:42:53.800178] [INFO] [27731:27731] [RANK 0][10.67.77.202][tests/mla/mla_rotary_kvcache_test.cc:185][void unittest::MlaRotaryKVCacheOp::applyRotaryKVCache(torch::Tensor, torch::Tensor, int64_t, torch::Tensor, torch::Tensor, torch::Tensor)] after run
+[process-27731][root][2025-11-12 11:42:53.801][rocm_mla_rotary_kvcache_test.py:_test_one_case():144][INFO] --------------------2, [129], [39], 64--------------------
+[2025-11-12 11:42:53.802056] [INFO] [27731:27731] [RANK 0][10.67.77.202][tests/mla/mla_rotary_kvcache_test.cc:147][void unittest::MlaRotaryKVCacheOp::applyRotaryKVCache(torch::Tensor, torch::Tensor, int64_t, torch::Tensor, torch::Tensor, torch::Tensor)] before run
+[2025-11-12 11:42:53.802076] [INFO] [27731:27731] [RANK 0][10.67.77.202][tests/mla/mla_rotary_kvcache_test.cc:168][void unittest::MlaRotaryKVCacheOp::applyRotaryKVCache(torch::Tensor, torch::Tensor, int64_t, torch::Tensor, torch::Tensor, torch::Tensor)] run decode
+[2025-11-12 11:42:53.802116] [INFO] [27731:27731] [RANK 0][10.67.77.202][tests/mla/mla_rotary_kvcache_test.cc:185][void unittest::MlaRotaryKVCacheOp::applyRotaryKVCache(torch::Tensor, torch::Tensor, int64_t, torch::Tensor, torch::Tensor, torch::Tensor)] after run
+[process-27731][root][2025-11-12 11:42:53.803][rocm_mla_rotary_kvcache_test.py:_test_one_case():144][INFO] --------------------2, [126], [39], 64--------------------
+[2025-11-12 11:42:53.803989] [INFO] [27731:27731] [RANK 0][10.67.77.202][tests/mla/mla_rotary_kvcache_test.cc:147][void unittest::MlaRotaryKVCacheOp::applyRotaryKVCache(torch::Tensor, torch::Tensor, int64_t, torch::Tensor, torch::Tensor, torch::Tensor)] before run
+[2025-11-12 11:42:53.804008] [INFO] [27731:27731] [RANK 0][10.67.77.202][tests/mla/mla_rotary_kvcache_test.cc:168][void unittest::MlaRotaryKVCacheOp::applyRotaryKVCache(torch::Tensor, torch::Tensor, int64_t, torch::Tensor, torch::Tensor, torch::Tensor)] run decode
+[2025-11-12 11:42:53.804047] [INFO] [27731:27731] [RANK 0][10.67.77.202][tests/mla/mla_rotary_kvcache_test.cc:185][void unittest::MlaRotaryKVCacheOp::applyRotaryKVCache(torch::Tensor, torch::Tensor, int64_t, torch::Tensor, torch::Tensor, torch::Tensor)] after run
+.
+----------------------------------------------------------------------
+Ran 1 test in 1.727s
+
+OK
+================================================================================
 Target //tests:rocm_mla_rotary_kvcache_test up-to-date:
   bazel-bin/tests/rocm_mla_rotary_kvcache_test
-INFO: Elapsed time: 66.609s, Critical Path: 65.50s
+INFO: Elapsed time: 64.930s, Critical Path: 63.70s
 INFO: 5 processes: 3 internal, 2 local.
 INFO: Build completed successfully, 5 total actions
-//tests:rocm_mla_rotary_kvcache_test                                     PASSED in 61.2s
+//tests:rocm_mla_rotary_kvcache_test                                     PASSED in 59.0s
 
 Executed 1 out of 1 test: 1 test passes.
 Runing //tests:rocm_pertensor_int8_gemm_op_test ...
@@ -1175,20 +1619,82 @@ Loading: 0 packages loaded
 Analyzing: target //tests:rocm_pertensor_int8_gemm_op_test (0 packages loaded, 0 targets configured)
 INFO: Analyzed target //tests:rocm_pertensor_int8_gemm_op_test (0 packages loaded, 2 targets configured).
 INFO: Found 1 test target...
-[0 / 3] [Prepa] BazelWorkspaceStatusAction stable-status.txt ... (2 actions, 0 running)
+[0 / 1] [Prepa] BazelWorkspaceStatusAction stable-status.txt
 [3 / 4] Creating runfiles tree bazel-out/k8-opt/bin/tests/rocm_pertensor_int8_gemm_op_test.runfiles; 1s local
 [4 / 5] [Prepa] Testing //tests:rocm_pertensor_int8_gemm_op_test
-[4 / 5] Testing //tests:rocm_pertensor_int8_gemm_op_test; 0s local
+[4 / 5] Testing //tests:rocm_pertensor_int8_gemm_op_test; 1s local
 [4 / 5] Testing //tests:rocm_pertensor_int8_gemm_op_test; 10s local
-[4 / 5] Testing //tests:rocm_pertensor_int8_gemm_op_test; 31s local
+[4 / 5] Testing //tests:rocm_pertensor_int8_gemm_op_test; 26s local
+INFO: From Testing //tests:rocm_pertensor_int8_gemm_op_test:
+==================== Test output for //tests:rocm_pertensor_int8_gemm_op_test:
+/root/.cache/bazel/_bazel_root/9119faf156746bd2e78c415f3fc2e5b3/execroot/rtp_llm/bazel-out/k8-opt/bin/tests/rocm_pertensor_int8_gemm_op_test.runfiles/pip_gpu_rocm_torch_torch/site-packages/torch/cuda/__init__.py:58: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  import pynvml  # type: ignore[import]
+initLogger log_file_path: 
+[2025-11-12 11:43:29.069074] [INFO] [28667:28667] [RANK 0][10.67.77.202][rtp_llm/cpp/devices/DeviceFactory.cc:37][static GlobalDeviceParams rtp_llm::DeviceFactory::getDefaultGlobalDeviceParams()] Device type 1 is not registered, skip.
+[2025-11-12 11:43:29.069102] [INFO] [28667:28667] [RANK 0][10.67.77.202][rtp_llm/cpp/devices/DeviceFactory.cc:37][static GlobalDeviceParams rtp_llm::DeviceFactory::getDefaultGlobalDeviceParams()] Device type 2 is not registered, skip.
+[2025-11-12 11:43:29.069107] [INFO] [28667:28667] [RANK 0][10.67.77.202][rtp_llm/cpp/devices/DeviceFactory.cc:37][static GlobalDeviceParams rtp_llm::DeviceFactory::getDefaultGlobalDeviceParams()] Device type 3 is not registered, skip.
+[2025-11-12 11:43:29.069111] [INFO] [28667:28667] [RANK 0][10.67.77.202][rtp_llm/cpp/devices/DeviceFactory.cc:37][static GlobalDeviceParams rtp_llm::DeviceFactory::getDefaultGlobalDeviceParams()] Device type 0 is not registered, skip.
+[2025-11-12 11:43:29.069116] [INFO] [28667:28667] [RANK 0][10.67.77.202][rtp_llm/cpp/devices/DeviceFactory.cc:34][static GlobalDeviceParams rtp_llm::DeviceFactory::getDefaultGlobalDeviceParams()] found device type 4, use as default.
+[2025-11-12 11:43:29.069123] [INFO] [28667:28667] [RANK 0][10.67.77.202][rtp_llm/cpp/devices/DeviceFactory.cc:37][static GlobalDeviceParams rtp_llm::DeviceFactory::getDefaultGlobalDeviceParams()] Device type 5 is not registered, skip.
+[2025-11-12 11:43:29.069127] [INFO] [28667:28667] [RANK 0][10.67.77.202][rtp_llm/cpp/devices/DeviceFactory.cc:104][static void rtp_llm::DeviceFactory::initDevices(const GptInitParameter &amp;)] set overlap type to be 0
+[2025-11-12 11:43:29.069138] [INFO] [28667:28667] [RANK 0][10.67.77.202][rtp_llm/cpp/devices/DeviceFactory.cc:112][static void rtp_llm::DeviceFactory::initDevices(const GptInitParameter &amp;)] Device reserve memory bytes from env: 0
+[2025-11-12 11:43:29.069142] [INFO] [28667:28667] [RANK 0][10.67.77.202][rtp_llm/cpp/devices/DeviceFactory.cc:49][int64_t rtp_llm::getDefaultDeviceReserveMemoryBytes(const GptInitParameter &amp;)] Default device reserve memory bytes: -536870912
+[2025-11-12 11:43:29.069146] [INFO] [28667:28667] [RANK 0][10.67.77.202][rtp_llm/cpp/devices/DeviceFactory.cc:115][static void rtp_llm::DeviceFactory::initDevices(const GptInitParameter &amp;)] Device reserve memory bytes: -536870912
+[2025-11-12 11:43:29.069150] [INFO] [28667:28667] [RANK 0][10.67.77.202][rtp_llm/cpp/devices/DeviceFactory.cc:118][static void rtp_llm::DeviceFactory::initDevices(const GptInitParameter &amp;)] Host reserve memory bytes: 4294967296
+[2025-11-12 11:43:29.069154] [INFO] [28667:28667] [RANK 0][10.67.77.202][rtp_llm/cpp/devices/DeviceFactory.cc:125][static void rtp_llm::DeviceFactory::initDevices(const GptInitParameter &amp;)] enable comm overlap: 1, enable layer micro batch: 0
+[2025-11-12 11:43:29.069166] [INFO] [28667:28667] [RANK 0][10.67.77.202][rtp_llm/cpp/devices/DeviceFactory.cc:134][static void rtp_llm::DeviceFactory::initDevices(const GptInitParameter &amp;)] device_params sp_type is 
+[2025-11-12 11:43:29.069169] [INFO] [28667:28667] [RANK 0][10.67.77.202][rtp_llm/cpp/devices/DeviceFactory.cc:135][static void rtp_llm::DeviceFactory::initDevices(const GptInitParameter &amp;)] device_params sp_model_type is 
+[2025-11-12 11:43:29.069174] [INFO] [28667:28667] [RANK 0][10.67.77.202][rtp_llm/cpp/devices/DeviceFactory.cc:150][static void rtp_llm::DeviceFactory::initDevices(const GptInitParameter &amp;)] use deepep moe: 0, use deepep low latency: 1
+[2025-11-12 11:43:29.316222] [INFO] [28667:28667] [RANK 0][10.67.77.202][rtp_llm/cpp/devices/rocm_impl/ROCmDevice.cc:90][rtp_llm::ROCmDevice::ROCmDevice(const DeviceInitParams &amp;)] [ROCM] total = 191.98(GB), free = 191.35(GB), reserve = -0.50(GB), track = 189.85(GB)
+
+[2025-11-12 11:43:29.317110] [INFO] [28667:28667] [RANK 0][10.67.77.202][rtp_llm/cpp/core/TrackerAllocator.cc:32][rtp_llm::TrackerAllocator::TrackerAllocator(const TrackerAllocatorParams &amp;)] TrackerAllocator successfully reserved 203853660160 bytes (194410 MiB) of memory [2], reserved base addr [0x7f3bca400000]
+[2025-11-12 11:43:29.885759] [INFO] [28667:28667] [RANK 0][10.67.77.202][rtp_llm/cpp/core/TrackerAllocator.cc:32][rtp_llm::TrackerAllocator::TrackerAllocator(const TrackerAllocatorParams &amp;)] TrackerAllocator successfully reserved 4294967296 bytes (4096 MiB) of memory [1], reserved base addr [0x7f3aca200000]
+[BLAS] Gemm config not find: gemm_config.csv 
+[2025-11-12 11:43:29.891396] [INFO] [28667:28667] [RANK 0][10.67.77.202][rtp_llm/cpp/devices/rocm_impl/ROCmDevice.cc:173][virtual void rtp_llm::ROCmDevice::init()] max batch size: 1024
+[2025-11-12 11:43:29.891427] [INFO] [28667:28667] [RANK 0][10.67.77.202][rtp_llm/cpp/devices/DeviceFactory.cc:168][static void rtp_llm::DeviceFactory::initDevices(const GptInitParameter &amp;)] init devices done
+.
+----------------------------------------------------------------------
+Ran 1 test in 10.535s
+
+OK
+dims(m=1, n=9216, k=4096) passed~
+dims(m=2, n=9216, k=4096) passed~
+dims(m=4, n=9216, k=4096) passed~
+dims(m=8, n=9216, k=4096) passed~
+dims(m=16, n=9216, k=4096) passed~
+dims(m=32, n=9216, k=4096) passed~
+dims(m=64, n=9216, k=4096) passed~
+dims(m=128, n=9216, k=4096) passed~
+dims(m=256, n=9216, k=4096) passed~
+dims(m=1024, n=9216, k=4096) passed~
+dims(m=2048, n=9216, k=4096) passed~
+dims(m=4096, n=9216, k=4096) passed~
+dims(m=16384, n=9216, k=4096) passed~
+dims(m=32768, n=9216, k=4096) passed~
+dims(m=1, n=4608, k=4096) passed~
+dims(m=2, n=4608, k=4096) passed~
+dims(m=4, n=4608, k=4096) passed~
+dims(m=8, n=4608, k=4096) passed~
+dims(m=16, n=4608, k=4096) passed~
+dims(m=32, n=4608, k=4096) passed~
+dims(m=64, n=4608, k=4096) passed~
+dims(m=128, n=4608, k=4096) passed~
+dims(m=256, n=4608, k=4096) passed~
+dims(m=1024, n=4608, k=4096) passed~
+dims(m=2048, n=4608, k=4096) passed~
+dims(m=4096, n=4608, k=4096) passed~
+dims(m=16384, n=4608, k=4096) passed~
+dims(m=32768, n=4608, k=4096) passed~
+================================================================================
 Target //tests:rocm_pertensor_int8_gemm_op_test up-to-date:
   bazel-bin/tests/rocm_pertensor_int8_gemm_op_test
-INFO: Elapsed time: 36.985s, Critical Path: 36.00s
+INFO: Elapsed time: 31.855s, Critical Path: 30.82s
 INFO: 5 processes: 3 internal, 2 local.
 INFO: Build completed successfully, 5 total actions
-//tests:rocm_pertensor_int8_gemm_op_test                                 PASSED in 31.1s
+//tests:rocm_pertensor_int8_gemm_op_test                                 PASSED in 26.4s
 
 Executed 1 out of 1 test: 1 test passes.
+There were tests whose specified size is too big. Use the --test_verbose_timeout_warnings command line option to see which ones these are.
 Runing //tests:rocm_ptpc_a8w8_gemm_op_test ...
 Loading: 
 Loading: 
@@ -1198,18 +1704,80 @@ INFO: Analyzed target //tests:rocm_ptpc_a8w8_gemm_op_test (0 packages loaded, 2 
 INFO: Found 1 test target...
 [0 / 2] [Prepa] BazelWorkspaceStatusAction stable-status.txt
 [3 / 4] Creating runfiles tree bazel-out/k8-opt/bin/tests/rocm_ptpc_a8w8_gemm_op_test.runfiles; 1s local
-[4 / 5] [Prepa] Testing //tests:rocm_ptpc_a8w8_gemm_op_test
-[4 / 5] Testing //tests:rocm_ptpc_a8w8_gemm_op_test; 0s local
+[4 / 4] checking cached actions
+[4 / 5] Testing //tests:rocm_ptpc_a8w8_gemm_op_test; 1s local
 [4 / 5] Testing //tests:rocm_ptpc_a8w8_gemm_op_test; 10s local
-[4 / 5] Testing //tests:rocm_ptpc_a8w8_gemm_op_test; 31s local
+[4 / 5] Testing //tests:rocm_ptpc_a8w8_gemm_op_test; 25s local
+INFO: From Testing //tests:rocm_ptpc_a8w8_gemm_op_test:
+==================== Test output for //tests:rocm_ptpc_a8w8_gemm_op_test:
+/root/.cache/bazel/_bazel_root/9119faf156746bd2e78c415f3fc2e5b3/execroot/rtp_llm/bazel-out/k8-opt/bin/tests/rocm_ptpc_a8w8_gemm_op_test.runfiles/pip_gpu_rocm_torch_torch/site-packages/torch/cuda/__init__.py:58: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  import pynvml  # type: ignore[import]
+initLogger log_file_path: 
+[2025-11-12 11:44:00.778928] [INFO] [29549:29549] [RANK 0][10.67.77.202][rtp_llm/cpp/devices/DeviceFactory.cc:37][static GlobalDeviceParams rtp_llm::DeviceFactory::getDefaultGlobalDeviceParams()] Device type 1 is not registered, skip.
+[2025-11-12 11:44:00.778960] [INFO] [29549:29549] [RANK 0][10.67.77.202][rtp_llm/cpp/devices/DeviceFactory.cc:37][static GlobalDeviceParams rtp_llm::DeviceFactory::getDefaultGlobalDeviceParams()] Device type 2 is not registered, skip.
+[2025-11-12 11:44:00.778965] [INFO] [29549:29549] [RANK 0][10.67.77.202][rtp_llm/cpp/devices/DeviceFactory.cc:37][static GlobalDeviceParams rtp_llm::DeviceFactory::getDefaultGlobalDeviceParams()] Device type 3 is not registered, skip.
+[2025-11-12 11:44:00.778968] [INFO] [29549:29549] [RANK 0][10.67.77.202][rtp_llm/cpp/devices/DeviceFactory.cc:37][static GlobalDeviceParams rtp_llm::DeviceFactory::getDefaultGlobalDeviceParams()] Device type 0 is not registered, skip.
+[2025-11-12 11:44:00.778973] [INFO] [29549:29549] [RANK 0][10.67.77.202][rtp_llm/cpp/devices/DeviceFactory.cc:34][static GlobalDeviceParams rtp_llm::DeviceFactory::getDefaultGlobalDeviceParams()] found device type 4, use as default.
+[2025-11-12 11:44:00.778980] [INFO] [29549:29549] [RANK 0][10.67.77.202][rtp_llm/cpp/devices/DeviceFactory.cc:37][static GlobalDeviceParams rtp_llm::DeviceFactory::getDefaultGlobalDeviceParams()] Device type 5 is not registered, skip.
+[2025-11-12 11:44:00.778985] [INFO] [29549:29549] [RANK 0][10.67.77.202][rtp_llm/cpp/devices/DeviceFactory.cc:104][static void rtp_llm::DeviceFactory::initDevices(const GptInitParameter &amp;)] set overlap type to be 0
+[2025-11-12 11:44:00.778994] [INFO] [29549:29549] [RANK 0][10.67.77.202][rtp_llm/cpp/devices/DeviceFactory.cc:112][static void rtp_llm::DeviceFactory::initDevices(const GptInitParameter &amp;)] Device reserve memory bytes from env: 0
+[2025-11-12 11:44:00.778999] [INFO] [29549:29549] [RANK 0][10.67.77.202][rtp_llm/cpp/devices/DeviceFactory.cc:49][int64_t rtp_llm::getDefaultDeviceReserveMemoryBytes(const GptInitParameter &amp;)] Default device reserve memory bytes: -536870912
+[2025-11-12 11:44:00.779003] [INFO] [29549:29549] [RANK 0][10.67.77.202][rtp_llm/cpp/devices/DeviceFactory.cc:115][static void rtp_llm::DeviceFactory::initDevices(const GptInitParameter &amp;)] Device reserve memory bytes: -536870912
+[2025-11-12 11:44:00.779006] [INFO] [29549:29549] [RANK 0][10.67.77.202][rtp_llm/cpp/devices/DeviceFactory.cc:118][static void rtp_llm::DeviceFactory::initDevices(const GptInitParameter &amp;)] Host reserve memory bytes: 4294967296
+[2025-11-12 11:44:00.779011] [INFO] [29549:29549] [RANK 0][10.67.77.202][rtp_llm/cpp/devices/DeviceFactory.cc:125][static void rtp_llm::DeviceFactory::initDevices(const GptInitParameter &amp;)] enable comm overlap: 1, enable layer micro batch: 0
+[2025-11-12 11:44:00.779021] [INFO] [29549:29549] [RANK 0][10.67.77.202][rtp_llm/cpp/devices/DeviceFactory.cc:134][static void rtp_llm::DeviceFactory::initDevices(const GptInitParameter &amp;)] device_params sp_type is 
+[2025-11-12 11:44:00.779024] [INFO] [29549:29549] [RANK 0][10.67.77.202][rtp_llm/cpp/devices/DeviceFactory.cc:135][static void rtp_llm::DeviceFactory::initDevices(const GptInitParameter &amp;)] device_params sp_model_type is 
+[2025-11-12 11:44:00.779029] [INFO] [29549:29549] [RANK 0][10.67.77.202][rtp_llm/cpp/devices/DeviceFactory.cc:150][static void rtp_llm::DeviceFactory::initDevices(const GptInitParameter &amp;)] use deepep moe: 0, use deepep low latency: 1
+[2025-11-12 11:44:01.025487] [INFO] [29549:29549] [RANK 0][10.67.77.202][rtp_llm/cpp/devices/rocm_impl/ROCmDevice.cc:90][rtp_llm::ROCmDevice::ROCmDevice(const DeviceInitParams &amp;)] [ROCM] total = 191.98(GB), free = 191.35(GB), reserve = -0.50(GB), track = 189.85(GB)
+
+[2025-11-12 11:44:01.026429] [INFO] [29549:29549] [RANK 0][10.67.77.202][rtp_llm/cpp/core/TrackerAllocator.cc:32][rtp_llm::TrackerAllocator::TrackerAllocator(const TrackerAllocatorParams &amp;)] TrackerAllocator successfully reserved 203853660160 bytes (194410 MiB) of memory [2], reserved base addr [0x7f6f86400000]
+[2025-11-12 11:44:01.798436] [INFO] [29549:29549] [RANK 0][10.67.77.202][rtp_llm/cpp/core/TrackerAllocator.cc:32][rtp_llm::TrackerAllocator::TrackerAllocator(const TrackerAllocatorParams &amp;)] TrackerAllocator successfully reserved 4294967296 bytes (4096 MiB) of memory [1], reserved base addr [0x7f6e86200000]
+[BLAS] Gemm config not find: gemm_config.csv 
+[2025-11-12 11:44:01.804590] [INFO] [29549:29549] [RANK 0][10.67.77.202][rtp_llm/cpp/devices/rocm_impl/ROCmDevice.cc:173][virtual void rtp_llm::ROCmDevice::init()] max batch size: 1024
+[2025-11-12 11:44:01.804621] [INFO] [29549:29549] [RANK 0][10.67.77.202][rtp_llm/cpp/devices/DeviceFactory.cc:168][static void rtp_llm::DeviceFactory::initDevices(const GptInitParameter &amp;)] init devices done
+.
+----------------------------------------------------------------------
+Ran 1 test in 10.392s
+
+OK
+dims(m=1, n=9216, k=4096) passed~
+dims(m=2, n=9216, k=4096) passed~
+dims(m=4, n=9216, k=4096) passed~
+dims(m=8, n=9216, k=4096) passed~
+dims(m=16, n=9216, k=4096) passed~
+dims(m=32, n=9216, k=4096) passed~
+dims(m=64, n=9216, k=4096) passed~
+dims(m=128, n=9216, k=4096) passed~
+dims(m=256, n=9216, k=4096) passed~
+dims(m=1024, n=9216, k=4096) passed~
+dims(m=2048, n=9216, k=4096) passed~
+dims(m=4096, n=9216, k=4096) passed~
+dims(m=16384, n=9216, k=4096) passed~
+dims(m=32768, n=9216, k=4096) passed~
+dims(m=1, n=4608, k=4096) passed~
+dims(m=2, n=4608, k=4096) passed~
+dims(m=4, n=4608, k=4096) passed~
+dims(m=8, n=4608, k=4096) passed~
+dims(m=16, n=4608, k=4096) passed~
+dims(m=32, n=4608, k=4096) passed~
+dims(m=64, n=4608, k=4096) passed~
+dims(m=128, n=4608, k=4096) passed~
+dims(m=256, n=4608, k=4096) passed~
+dims(m=1024, n=4608, k=4096) passed~
+dims(m=2048, n=4608, k=4096) passed~
+dims(m=4096, n=4608, k=4096) passed~
+dims(m=16384, n=4608, k=4096) passed~
+dims(m=32768, n=4608, k=4096) passed~
+================================================================================
 Target //tests:rocm_ptpc_a8w8_gemm_op_test up-to-date:
   bazel-bin/tests/rocm_ptpc_a8w8_gemm_op_test
-INFO: Elapsed time: 36.540s, Critical Path: 35.57s
+INFO: Elapsed time: 31.047s, Critical Path: 30.04s
 INFO: 5 processes: 3 internal, 2 local.
 INFO: Build completed successfully, 5 total actions
-//tests:rocm_ptpc_a8w8_gemm_op_test                                      PASSED in 31.1s
+//tests:rocm_ptpc_a8w8_gemm_op_test                                      PASSED in 25.7s
 
 Executed 1 out of 1 test: 1 test passes.
+There were tests whose specified size is too big. Use the --test_verbose_timeout_warnings command line option to see which ones these are.
 Runing //tests:rocm_ptpc_gemm_op_test ...
 Loading: 
 Loading: 
@@ -1217,20 +1785,82 @@ Loading: 0 packages loaded
 Analyzing: target //tests:rocm_ptpc_gemm_op_test (0 packages loaded, 0 targets configured)
 INFO: Analyzed target //tests:rocm_ptpc_gemm_op_test (0 packages loaded, 2 targets configured).
 INFO: Found 1 test target...
-[0 / 3] [Prepa] BazelWorkspaceStatusAction stable-status.txt
+[0 / 2] [Prepa] BazelWorkspaceStatusAction stable-status.txt
 [3 / 4] Creating runfiles tree bazel-out/k8-opt/bin/tests/rocm_ptpc_gemm_op_test.runfiles; 1s local
-[4 / 4] checking cached actions
-[4 / 5] Testing //tests:rocm_ptpc_gemm_op_test; 1s local
-[4 / 5] Testing //tests:rocm_ptpc_gemm_op_test; 10s local
-[4 / 5] Testing //tests:rocm_ptpc_gemm_op_test; 30s local
+[4 / 5] [Prepa] Testing //tests:rocm_ptpc_gemm_op_test
+[4 / 5] Testing //tests:rocm_ptpc_gemm_op_test; 0s local
+[4 / 5] Testing //tests:rocm_ptpc_gemm_op_test; 11s local
+[4 / 5] Testing //tests:rocm_ptpc_gemm_op_test; 25s local
+INFO: From Testing //tests:rocm_ptpc_gemm_op_test:
+==================== Test output for //tests:rocm_ptpc_gemm_op_test:
+/root/.cache/bazel/_bazel_root/9119faf156746bd2e78c415f3fc2e5b3/execroot/rtp_llm/bazel-out/k8-opt/bin/tests/rocm_ptpc_gemm_op_test.runfiles/pip_gpu_rocm_torch_torch/site-packages/torch/cuda/__init__.py:58: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  import pynvml  # type: ignore[import]
+initLogger log_file_path: 
+[2025-11-12 11:44:32.243007] [INFO] [30437:30437] [RANK 0][10.67.77.202][rtp_llm/cpp/devices/DeviceFactory.cc:37][static GlobalDeviceParams rtp_llm::DeviceFactory::getDefaultGlobalDeviceParams()] Device type 1 is not registered, skip.
+[2025-11-12 11:44:32.243032] [INFO] [30437:30437] [RANK 0][10.67.77.202][rtp_llm/cpp/devices/DeviceFactory.cc:37][static GlobalDeviceParams rtp_llm::DeviceFactory::getDefaultGlobalDeviceParams()] Device type 2 is not registered, skip.
+[2025-11-12 11:44:32.243037] [INFO] [30437:30437] [RANK 0][10.67.77.202][rtp_llm/cpp/devices/DeviceFactory.cc:37][static GlobalDeviceParams rtp_llm::DeviceFactory::getDefaultGlobalDeviceParams()] Device type 3 is not registered, skip.
+[2025-11-12 11:44:32.243041] [INFO] [30437:30437] [RANK 0][10.67.77.202][rtp_llm/cpp/devices/DeviceFactory.cc:37][static GlobalDeviceParams rtp_llm::DeviceFactory::getDefaultGlobalDeviceParams()] Device type 0 is not registered, skip.
+[2025-11-12 11:44:32.243045] [INFO] [30437:30437] [RANK 0][10.67.77.202][rtp_llm/cpp/devices/DeviceFactory.cc:34][static GlobalDeviceParams rtp_llm::DeviceFactory::getDefaultGlobalDeviceParams()] found device type 4, use as default.
+[2025-11-12 11:44:32.243052] [INFO] [30437:30437] [RANK 0][10.67.77.202][rtp_llm/cpp/devices/DeviceFactory.cc:37][static GlobalDeviceParams rtp_llm::DeviceFactory::getDefaultGlobalDeviceParams()] Device type 5 is not registered, skip.
+[2025-11-12 11:44:32.243057] [INFO] [30437:30437] [RANK 0][10.67.77.202][rtp_llm/cpp/devices/DeviceFactory.cc:104][static void rtp_llm::DeviceFactory::initDevices(const GptInitParameter &amp;)] set overlap type to be 0
+[2025-11-12 11:44:32.243066] [INFO] [30437:30437] [RANK 0][10.67.77.202][rtp_llm/cpp/devices/DeviceFactory.cc:112][static void rtp_llm::DeviceFactory::initDevices(const GptInitParameter &amp;)] Device reserve memory bytes from env: 0
+[2025-11-12 11:44:32.243071] [INFO] [30437:30437] [RANK 0][10.67.77.202][rtp_llm/cpp/devices/DeviceFactory.cc:49][int64_t rtp_llm::getDefaultDeviceReserveMemoryBytes(const GptInitParameter &amp;)] Default device reserve memory bytes: -536870912
+[2025-11-12 11:44:32.243074] [INFO] [30437:30437] [RANK 0][10.67.77.202][rtp_llm/cpp/devices/DeviceFactory.cc:115][static void rtp_llm::DeviceFactory::initDevices(const GptInitParameter &amp;)] Device reserve memory bytes: -536870912
+[2025-11-12 11:44:32.243078] [INFO] [30437:30437] [RANK 0][10.67.77.202][rtp_llm/cpp/devices/DeviceFactory.cc:118][static void rtp_llm::DeviceFactory::initDevices(const GptInitParameter &amp;)] Host reserve memory bytes: 4294967296
+[2025-11-12 11:44:32.243083] [INFO] [30437:30437] [RANK 0][10.67.77.202][rtp_llm/cpp/devices/DeviceFactory.cc:125][static void rtp_llm::DeviceFactory::initDevices(const GptInitParameter &amp;)] enable comm overlap: 1, enable layer micro batch: 0
+[2025-11-12 11:44:32.243092] [INFO] [30437:30437] [RANK 0][10.67.77.202][rtp_llm/cpp/devices/DeviceFactory.cc:134][static void rtp_llm::DeviceFactory::initDevices(const GptInitParameter &amp;)] device_params sp_type is 
+[2025-11-12 11:44:32.243095] [INFO] [30437:30437] [RANK 0][10.67.77.202][rtp_llm/cpp/devices/DeviceFactory.cc:135][static void rtp_llm::DeviceFactory::initDevices(const GptInitParameter &amp;)] device_params sp_model_type is 
+[2025-11-12 11:44:32.243100] [INFO] [30437:30437] [RANK 0][10.67.77.202][rtp_llm/cpp/devices/DeviceFactory.cc:150][static void rtp_llm::DeviceFactory::initDevices(const GptInitParameter &amp;)] use deepep moe: 0, use deepep low latency: 1
+[2025-11-12 11:44:32.488339] [INFO] [30437:30437] [RANK 0][10.67.77.202][rtp_llm/cpp/devices/rocm_impl/ROCmDevice.cc:90][rtp_llm::ROCmDevice::ROCmDevice(const DeviceInitParams &amp;)] [ROCM] total = 191.98(GB), free = 191.35(GB), reserve = -0.50(GB), track = 189.85(GB)
+
+[2025-11-12 11:44:32.489287] [INFO] [30437:30437] [RANK 0][10.67.77.202][rtp_llm/cpp/core/TrackerAllocator.cc:32][rtp_llm::TrackerAllocator::TrackerAllocator(const TrackerAllocatorParams &amp;)] TrackerAllocator successfully reserved 203853660160 bytes (194410 MiB) of memory [2], reserved base addr [0x7f8338e00000]
+[2025-11-12 11:44:33.257487] [INFO] [30437:30437] [RANK 0][10.67.77.202][rtp_llm/cpp/core/TrackerAllocator.cc:32][rtp_llm::TrackerAllocator::TrackerAllocator(const TrackerAllocatorParams &amp;)] TrackerAllocator successfully reserved 4294967296 bytes (4096 MiB) of memory [1], reserved base addr [0x7f8238c00000]
+[BLAS] Gemm config not find: gemm_config.csv 
+[2025-11-12 11:44:33.263462] [INFO] [30437:30437] [RANK 0][10.67.77.202][rtp_llm/cpp/devices/rocm_impl/ROCmDevice.cc:173][virtual void rtp_llm::ROCmDevice::init()] max batch size: 1024
+[2025-11-12 11:44:33.263492] [INFO] [30437:30437] [RANK 0][10.67.77.202][rtp_llm/cpp/devices/DeviceFactory.cc:168][static void rtp_llm::DeviceFactory::initDevices(const GptInitParameter &amp;)] init devices done
+.
+----------------------------------------------------------------------
+Ran 1 test in 10.866s
+
+OK
+dims(m=1, n=9216, k=4096) passed~
+dims(m=2, n=9216, k=4096) passed~
+dims(m=4, n=9216, k=4096) passed~
+dims(m=8, n=9216, k=4096) passed~
+dims(m=16, n=9216, k=4096) passed~
+dims(m=32, n=9216, k=4096) passed~
+dims(m=64, n=9216, k=4096) passed~
+dims(m=128, n=9216, k=4096) passed~
+dims(m=256, n=9216, k=4096) passed~
+dims(m=1024, n=9216, k=4096) passed~
+dims(m=2048, n=9216, k=4096) passed~
+dims(m=4096, n=9216, k=4096) passed~
+dims(m=16384, n=9216, k=4096) passed~
+dims(m=32768, n=9216, k=4096) passed~
+dims(m=1, n=4608, k=4096) passed~
+dims(m=2, n=4608, k=4096) passed~
+dims(m=4, n=4608, k=4096) passed~
+dims(m=8, n=4608, k=4096) passed~
+dims(m=16, n=4608, k=4096) passed~
+dims(m=32, n=4608, k=4096) passed~
+dims(m=64, n=4608, k=4096) passed~
+dims(m=128, n=4608, k=4096) passed~
+dims(m=256, n=4608, k=4096) passed~
+dims(m=1024, n=4608, k=4096) passed~
+dims(m=2048, n=4608, k=4096) passed~
+dims(m=4096, n=4608, k=4096) passed~
+dims(m=16384, n=4608, k=4096) passed~
+dims(m=32768, n=4608, k=4096) passed~
+================================================================================
 Target //tests:rocm_ptpc_gemm_op_test up-to-date:
   bazel-bin/tests/rocm_ptpc_gemm_op_test
-INFO: Elapsed time: 38.826s, Critical Path: 37.86s
+INFO: Elapsed time: 31.334s, Critical Path: 30.34s
 INFO: 5 processes: 3 internal, 2 local.
 INFO: Build completed successfully, 5 total actions
-//tests:rocm_ptpc_gemm_op_test                                           PASSED in 30.9s
+//tests:rocm_ptpc_gemm_op_test                                           PASSED in 25.7s
 
 Executed 1 out of 1 test: 1 test passes.
+There were tests whose specified size is too big. Use the --test_verbose_timeout_warnings command line option to see which ones these are.
 </pre></section>
 
 
@@ -1242,6 +1872,8 @@ Executed 1 out of 1 test: 1 test passes.
       <footer>
   
   <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+    
+    <a href="client_Bert_fp16_4l_sku_mean_909.html" class="btn btn-neutral float-right" title="client_Bert_fp16_4l_sku_mean_909">Next <span class="fa fa-arrow-circle-right"></span></a>
     
     
     <a href="bazeltest_tests_ptpc_gemm_op_swizzle.html" class="btn btn-neutral" title="bazeltest_tests_ptpc_gemm_op_swizzle"><span class="fa fa-arrow-circle-left"></span>Previous</a>
@@ -1296,11 +1928,32 @@ Executed 1 out of 1 test: 1 test passes.
 	  <p class="caption" role="heading"><span class="caption-text">LogFiles:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="bazelbuild.html">bazelbuild</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bazeltest_py_all.html">bazeltest_py_all</a></li>
 <li class="toctree-l1"><a class="reference internal" href="bazeltest_rocmimpl_all.html">bazeltest_rocmimpl_all</a></li>
 <li class="toctree-l1"><a class="reference internal" href="bazeltest_rocmimpl_gemm_op_swizzle.html">bazeltest_rocmimpl_gemm_op_swizzle</a></li>
 <li class="toctree-l1"><a class="reference internal" href="bazeltest_tests_fused_qk_rmsnorm.html">bazeltest_tests_fused_qk_rmsnorm</a></li>
 <li class="toctree-l1"><a class="reference internal" href="bazeltest_tests_ptpc_gemm_op_swizzle.html">bazeltest_tests_ptpc_gemm_op_swizzle</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">bazeltest_tests_rocm_all</a></li>
+<li class="toctree-l1"><a class="reference internal" href="client_Bert_fp16_4l_sku_mean_909.html">client_Bert_fp16_4l_sku_mean_909</a></li>
+<li class="toctree-l1"><a class="reference internal" href="client_Bert_fp8_4l_sku_mean_909.html">client_Bert_fp8_4l_sku_mean_909</a></li>
+<li class="toctree-l1"><a class="reference internal" href="client_Bert_int8.html">client_Bert_int8</a></li>
+<li class="toctree-l1"><a class="reference internal" href="client_Qwen3-32B_FP8_ptpc_dense_Quark.html">client_Qwen3-32B_FP8_ptpc_dense_Quark</a></li>
+<li class="toctree-l1"><a class="reference internal" href="client_Qwen3_30B_A3B_bf16_moe.html">client_Qwen3_30B_A3B_bf16_moe</a></li>
+<li class="toctree-l1"><a class="reference internal" href="client_Qwen3_32B_bf16_dense.html">client_Qwen3_32B_bf16_dense</a></li>
+<li class="toctree-l1"><a class="reference internal" href="client_Qwen3_8B_FP8_ptpc_dense_llmcompressor.html">client_Qwen3_8B_FP8_ptpc_dense_llmcompressor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="client_qwen_vl_tp1.html">client_qwen_vl_tp1</a></li>
+<li class="toctree-l1"><a class="reference internal" href="client_qwen_vl_tp4.html">client_qwen_vl_tp4</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server_Bert_fp16_4l_sku_mean_909.html">server_Bert_fp16_4l_sku_mean_909</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server_Bert_fp8_4l_sku_mean_909.html">server_Bert_fp8_4l_sku_mean_909</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server_Bert_int8.html">server_Bert_int8</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server_Qwen3-32B_FP8_ptpc_dense_Quark.html">server_Qwen3-32B_FP8_ptpc_dense_Quark</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server_Qwen3_30B_A3B_bf16_moe.html">server_Qwen3_30B_A3B_bf16_moe</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server_Qwen3_30B_A3B_fp8_ptpc_moe_Quark.html">server_Qwen3_30B_A3B_fp8_ptpc_moe_Quark</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server_Qwen3_30B_A3B_fp8_ptpc_moe_llmcompressor.html">server_Qwen3_30B_A3B_fp8_ptpc_moe_llmcompressor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server_Qwen3_32B_bf16_dense.html">server_Qwen3_32B_bf16_dense</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server_Qwen3_8B_FP8_ptpc_dense_llmcompressor.html">server_Qwen3_8B_FP8_ptpc_dense_llmcompressor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server_qwen_vl_tp1.html">server_qwen_vl_tp1</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server_qwen_vl_tp4.html">server_qwen_vl_tp4</a></li>
 </ul>
 
       
@@ -1313,6 +1966,11 @@ Executed 1 out of 1 test: 1 test passes.
     <h4>Previous topic</h4>
     <p class="topless"><a href="bazeltest_tests_ptpc_gemm_op_swizzle.html"
                           title="previous chapter">bazeltest_tests_ptpc_gemm_op_swizzle</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="client_Bert_fp16_4l_sku_mean_909.html"
+                          title="next chapter">client_Bert_fp16_4l_sku_mean_909</a></p>
   </div>
   
   

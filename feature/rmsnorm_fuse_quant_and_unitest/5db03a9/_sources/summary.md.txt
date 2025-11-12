@@ -1,24 +1,45 @@
-| case_name                                                           | status   | duration   |  |
-| -----------                                                         | -------- | ---------- |  |
-| 1. //rtp_llm/cpp/devices/rocm_impl/test:embedding_lookup_test       | PASSED   | 26.1s      |  |
-| 2. //rtp_llm/cpp/devices/rocm_impl/test:gemm_op_test                | PASSED   | 26.8s      |  |
-| 3. //rtp_llm/cpp/devices/rocm_impl/test:layernorm_test              | PASSED   | 27.4s      |  |
-| 4. //rtp_llm/cpp/devices/rocm_impl/test:rccl_test                   | PASSED   | 28.6s      |  |
-| 5. //rtp_llm/cpp/devices/rocm_impl/test:rocm_act_op_test            | PASSED   | 28.9s      |  |
-| 6. //rtp_llm/cpp/devices/rocm_impl/test:rocm_attention_op_test      | PASSED   | 28.3s      |  |
-| 7. //rtp_llm/cpp/devices/rocm_impl/test:rocm_basic_test             | PASSED   | 27.6s      |  |
-| 8. //rtp_llm/cpp/devices/rocm_impl/test:rocm_custom_all_reduce_test | PASSED   | 27.4s      |  |
-| 9. //rtp_llm/cpp/devices/rocm_impl/test:rocm_ffn_op_test            | PASSED   | 31.9s      |  |
-| 10. //rtp_llm/cpp/devices/rocm_impl/test:rocm_ops_test              | PASSED   | 26.4s      |  |
-| 11. //rtp_llm/cpp/devices/rocm_impl/test:rocm_softmax_op_test       | PASSED   | 25.7s      |  |
-| 12. //rtp_llm/cpp/devices/rocm_impl/test:sampler_test               | PASSED   | 26.1s      |  |
-| 13. //rtp_llm/cpp/devices/rocm_impl/test:gemm_op_test               | PASSED   | 37.9s      |  |
-| 14. //tests:fused_qk_rmsnorm                                        | PASSED   | 27.1s      |  |
-| 15. //tests:rocm_ptpc_gemm_op_test                                  | PASSED   | 26.0s      |  |
-| 16. //tests:rocm_gemm_op_test                                       | PASSED   | 78.3s      |  |
-| 17. //tests:rocm_mla_context_attention                              | PASSED   | 26.8s      |  |
-| 18. //tests:rocm_mla_decode_attention                               | PASSED   | 25.2s      |  |
-| 19. //tests:rocm_mla_rotary_kvcache_test                            | PASSED   | 61.2s      |  |
-| 20. //tests:rocm_pertensor_int8_gemm_op_test                        | PASSED   | 31.1s      |  |
-| 21. //tests:rocm_ptpc_a8w8_gemm_op_test                             | PASSED   | 31.1s      |  |
-| 22. //tests:rocm_ptpc_gemm_op_test                                  | PASSED   | 30.9s      |  |
+| case_name                                                               | status   | duration   |  |
+| -----------                                                             | -------- | ---------- |  |
+| 1. rocm_gemm_op_test (in bazeltest_tests_rocm_all.log)                  | PASSED   | 75.1s      |  |
+| 2. rocm_mla_context_attention (in bazeltest_tests_rocm_all.log)         | PASSED   | 24.0s      |  |
+| 3. rocm_mla_decode_attention (in bazeltest_tests_rocm_all.log)          | PASSED   | 23.4s      |  |
+| 4. rocm_mla_rotary_kvcache_test (in bazeltest_tests_rocm_all.log)       | PASSED   | 59.0s      |  |
+| 5. rocm_pertensor_int8_gemm_op_test (in bazeltest_tests_rocm_all.log)   | PASSED   | 26.4s      |  |
+| 6. rocm_ptpc_a8w8_gemm_op_test (in bazeltest_tests_rocm_all.log)        | PASSED   | 25.7s      |  |
+| 7. rocm_ptpc_gemm_op_test (in bazeltest_tests_rocm_all.log)             | PASSED   | 25.7s      |  |
+| 8. fused_qk_rmsnorm (in bazeltest_tests_fused_qk_rmsnorm.log)           | PASSED   | 24.8s      |  |
+| 9. rocm_ptpc_gemm_op_test (in bazeltest_tests_ptpc_gemm_op_swizzle.log) | PASSED   | 26.7s      |  |
+| 10. embedding_lookup_test (in bazeltest_rocmimpl_all.log)               | PASSED   | 25.6s      |  |
+| 11. gemm_op_test (in bazeltest_rocmimpl_all.log)                        | PASSED   | 27.1s      |  |
+| 12. layernorm_test (in bazeltest_rocmimpl_all.log)                      | PASSED   | 26.0s      |  |
+| 13. rccl_test (in bazeltest_rocmimpl_all.log)                           | PASSED   | 26.5s      |  |
+| 14. rocm_act_op_test (in bazeltest_rocmimpl_all.log)                    | PASSED   | 26.1s      |  |
+| 15. rocm_attention_op_test (in bazeltest_rocmimpl_all.log)              | PASSED   | 26.6s      |  |
+| 16. rocm_basic_test (in bazeltest_rocmimpl_all.log)                     | PASSED   | 26.6s      |  |
+| 17. rocm_custom_all_reduce_test (in bazeltest_rocmimpl_all.log)         | PASSED   | 26.3s      |  |
+| 18. rocm_ffn_op_test (in bazeltest_rocmimpl_all.log)                    | PASSED   | 29.0s      |  |
+| 19. rocm_ops_test (in bazeltest_rocmimpl_all.log)                       | PASSED   | 26.4s      |  |
+| 20. rocm_softmax_op_test (in bazeltest_rocmimpl_all.log)                | PASSED   | 26.6s      |  |
+| 21. sampler_test (in bazeltest_rocmimpl_all.log)                        | PASSED   | 26.3s      |  |
+| 22. gemm_op_test (in bazeltest_rocmimpl_gemm_op_swizzle.log)            | PASSED   | 26.8s      |  |
+| 23. rocm_embedding_test (in bazeltest_py_all.log)                       | PASSED   | 28.3s      |  |
+| 24. rocm_fmha_test (in bazeltest_py_all.log)                            | PASSED   | 283.9s     |  |
+| 25. rocm_fp8_linear_test (in bazeltest_py_all.log)                      | PASSED   | 63.7s      |  |
+| 26. rocm_fused_add_layernorm_test (in bazeltest_py_all.log)             | PASSED   | 28.1s      |  |
+| 27. rocm_fused_moe_test (in bazeltest_py_all.log)                       | PASSED   | 177.2s     |  |
+| 28. rocm_fusedqkrmsnorm_test (in bazeltest_py_all.log)                  | PASSED   | 30.2s      |  |
+| 29. rocm_general_layer_norm_test (in bazeltest_py_all.log)              | PASSED   | 27.9s      |  |
+| 30. rocm_layer_norm_test (in bazeltest_py_all.log)                      | PASSED   | 27.8s      |  |
+| 31. rocm_linear_test (in bazeltest_py_all.log)                          | PASSED   | 30.6s      |  |
+| 32. rocm_norm_test (in bazeltest_py_all.log)                            | PASSED   | 30.3s      |  |
+| Qwen3_30B_A3B_fp8_ptpc_moe_llmcompressor                                | FAILED   | -          |  |
+| Qwen3_30B_A3B_fp8_ptpc_moe_Quark                                        | FAILED   | -          |  |
+| Bert_fp16_4l_sku_mean_909                                               | MATCH    | -          |  |
+| Bert_fp8_4l_sku_mean_909                                                | MATCH    | -          |  |
+| Bert_int8                                                               | MATCH    | -          |  |
+| Qwen3_30B_A3B_bf16_moe                                                  | MATCH    | -          |  |
+| Qwen3_32B_bf16_dense                                                    | MATCH    | -          |  |
+| Qwen3-32B_FP8_ptpc_dense_Quark                                          | MISMATCH | -          |  |
+| Qwen3_8B_FP8_ptpc_dense_llmcompressor                                   | MISMATCH | -          |  |
+| qwen_vl_tp1                                                             | MATCH    | -          |  |
+| qwen_vl_tp4                                                             | MATCH    | -          |  |

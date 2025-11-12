@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>bazeltest_rocmimpl_gemm_op_swizzle &#8212; rtp-llm-private  documentation</title>
+    <title>client_Qwen3_32B_bf16_dense &#8212; rtp-llm-private  documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8e8a900e" />
       <link rel="stylesheet" type="text/css" href="../_static/css/pdj.css?v=4abe0d83" />
 
@@ -20,8 +20,8 @@
     <script type="module" src="../_static/js/dark-mode-toggle.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="bazeltest_tests_fused_qk_rmsnorm" href="bazeltest_tests_fused_qk_rmsnorm.html" />
-    <link rel="prev" title="bazeltest_rocmimpl_all" href="bazeltest_rocmimpl_all.html" /> 
+    <link rel="next" title="client_Qwen3_8B_FP8_ptpc_dense_llmcompressor" href="client_Qwen3_8B_FP8_ptpc_dense_llmcompressor.html" />
+    <link rel="prev" title="client_Qwen3_30B_A3B_bf16_moe" href="client_Qwen3_30B_A3B_bf16_moe.html" /> 
   </head>  <body class="wy-body-for-nav" role="document"> 
 <div class="menu-overlay"></div>
 <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
@@ -49,33 +49,17 @@
 	    </dark-mode-toggle>
 	  </div>
 	  <div role="main">
-  <section id="bazeltest-rocmimpl-gemm-op-swizzle">
-<h1>bazeltest_rocmimpl_gemm_op_swizzle<a class="headerlink" href="#bazeltest-rocmimpl-gemm-op-swizzle" title="Link to this heading">¶</a></h1>
+  <section id="client-qwen3-32b-bf16-dense">
+<h1>client_Qwen3_32B_bf16_dense<a class="headerlink" href="#client-qwen3-32b-bf16-dense" title="Link to this heading">¶</a></h1>
 <pre>
-Loading: 
-Loading: 
-Loading: 0 packages loaded
-INFO: Build option --test_env has changed, discarding analysis cache.
-Analyzing: target //rtp_llm/cpp/devices/rocm_impl/test:gemm_op_test (0 packages loaded, 0 targets configured)
-INFO: Analyzed target //rtp_llm/cpp/devices/rocm_impl/test:gemm_op_test (0 packages loaded, 14796 targets configured).
-INFO: Found 1 test target...
-[0 / 3] [Prepa] BazelWorkspaceStatusAction stable-status.txt
-[12,870 / 12,871] Testing //rtp_llm/cpp/devices/rocm_impl/test:gemm_op_test; 1s local
-[12,870 / 12,871] Testing //rtp_llm/cpp/devices/rocm_impl/test:gemm_op_test; 11s local
-[12,870 / 12,871] Testing //rtp_llm/cpp/devices/rocm_impl/test:gemm_op_test; 26s local
-INFO: From Testing //rtp_llm/cpp/devices/rocm_impl/test:gemm_op_test:
-==================== Test output for //rtp_llm/cpp/devices/rocm_impl/test:gemm_op_test:
-[int32|fp32|cx|0]tokens:128, num_experts:8, topk:4, mp:0, ms:0.012384, total_tokens_post_pad:608(608), valid:y
-================================================================================
-Target //rtp_llm/cpp/devices/rocm_impl/test:gemm_op_test up-to-date:
-  bazel-bin/rtp_llm/cpp/devices/rocm_impl/test/gemm_op_test
-INFO: Elapsed time: 27.651s, Critical Path: 27.08s
-INFO: 2 processes: 2 local.
-INFO: Build completed successfully, 2 total actions
-//rtp_llm/cpp/devices/rocm_impl/test:gemm_op_test                        PASSED in 26.8s
-
-Executed 1 out of 1 test: 1 test passes.
-There were tests whose specified size is too big. Use the --test_verbose_timeout_warnings command line option to see which ones these are.
+CASE: Qwen3_32B_bf16_dense
+SERVER_PARAMS: USE_AITER_PA=1 SEQ_SIZE_PER_BLOCK=16 DEVICE_RESERVE_MEMORY_BYTES=-2048000000 RESERVER_RUNTIME_MEM_MB=102400 AITER_ASM_DIR=$(bazelisk info output_base)/external/aiter/aiter_meta/hsa/gfx942/ MAX_SEQ_LEN=150000 CONCURRENCY_LIMIT=1024 WORLD_SIZE=1 DP_SIZE=1 TP_SIZE=1 WARM_UP=0 ACT_TYPE=bf16 TOKENIZER_PATH=/mnt/raid0/pretrained_model/rtp_ci/Qwen3-32B CHECKPOINT_PATH=/mnt/raid0/pretrained_model/rtp_ci/Qwen3-32B MODEL_TYPE=qwen_3 FT_SERVER_TEST=1
+TEST_TIME: 2025-11-12T12:17:00+08:00
+PROMPT: Explain the benefits of renewable energy
+GENERATE_CONFIG: {&quot;max_new_tokens&quot;: 50, &quot;seed&quot;: 42, &quot;topk&quot;: 1, &quot;top_p&quot;: 0, &quot;temperature&quot;: 0.0}
+EXPECTED_RESPONSE:  sources and how they can help reduce carbon emissions. Renewable energy sources, such as solar, wind, hydroelectric, geothermal, and biomass energy, offer numerous benefits that contribute to reducing carbon emissions and mitigating climate change. Here&#x27;s a detailed explanation
+ACTUAL_RESPONSE:  sources and how they can help reduce carbon emissions. Renewable energy sources, such as solar, wind, hydroelectric, geothermal, and biomass energy, offer numerous benefits that contribute to reducing carbon emissions and mitigating climate change. Here&#x27;s a detailed explanation 
+CHECK: MATCH
 </pre></section>
 
 
@@ -88,10 +72,10 @@ There were tests whose specified size is too big. Use the --test_verbose_timeout
   
   <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
     
-    <a href="bazeltest_tests_fused_qk_rmsnorm.html" class="btn btn-neutral float-right" title="bazeltest_tests_fused_qk_rmsnorm">Next <span class="fa fa-arrow-circle-right"></span></a>
+    <a href="client_Qwen3_8B_FP8_ptpc_dense_llmcompressor.html" class="btn btn-neutral float-right" title="client_Qwen3_8B_FP8_ptpc_dense_llmcompressor">Next <span class="fa fa-arrow-circle-right"></span></a>
     
     
-    <a href="bazeltest_rocmimpl_all.html" class="btn btn-neutral" title="bazeltest_rocmimpl_all"><span class="fa fa-arrow-circle-left"></span>Previous</a>
+    <a href="client_Qwen3_30B_A3B_bf16_moe.html" class="btn btn-neutral" title="client_Qwen3_30B_A3B_bf16_moe"><span class="fa fa-arrow-circle-left"></span>Previous</a>
     
   </div>
   
@@ -145,7 +129,7 @@ There were tests whose specified size is too big. Use the --test_verbose_timeout
 <li class="toctree-l1"><a class="reference internal" href="bazelbuild.html">bazelbuild</a></li>
 <li class="toctree-l1"><a class="reference internal" href="bazeltest_py_all.html">bazeltest_py_all</a></li>
 <li class="toctree-l1"><a class="reference internal" href="bazeltest_rocmimpl_all.html">bazeltest_rocmimpl_all</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">bazeltest_rocmimpl_gemm_op_swizzle</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bazeltest_rocmimpl_gemm_op_swizzle.html">bazeltest_rocmimpl_gemm_op_swizzle</a></li>
 <li class="toctree-l1"><a class="reference internal" href="bazeltest_tests_fused_qk_rmsnorm.html">bazeltest_tests_fused_qk_rmsnorm</a></li>
 <li class="toctree-l1"><a class="reference internal" href="bazeltest_tests_ptpc_gemm_op_swizzle.html">bazeltest_tests_ptpc_gemm_op_swizzle</a></li>
 <li class="toctree-l1"><a class="reference internal" href="bazeltest_tests_rocm_all.html">bazeltest_tests_rocm_all</a></li>
@@ -154,7 +138,7 @@ There were tests whose specified size is too big. Use the --test_verbose_timeout
 <li class="toctree-l1"><a class="reference internal" href="client_Bert_int8.html">client_Bert_int8</a></li>
 <li class="toctree-l1"><a class="reference internal" href="client_Qwen3-32B_FP8_ptpc_dense_Quark.html">client_Qwen3-32B_FP8_ptpc_dense_Quark</a></li>
 <li class="toctree-l1"><a class="reference internal" href="client_Qwen3_30B_A3B_bf16_moe.html">client_Qwen3_30B_A3B_bf16_moe</a></li>
-<li class="toctree-l1"><a class="reference internal" href="client_Qwen3_32B_bf16_dense.html">client_Qwen3_32B_bf16_dense</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">client_Qwen3_32B_bf16_dense</a></li>
 <li class="toctree-l1"><a class="reference internal" href="client_Qwen3_8B_FP8_ptpc_dense_llmcompressor.html">client_Qwen3_8B_FP8_ptpc_dense_llmcompressor</a></li>
 <li class="toctree-l1"><a class="reference internal" href="client_qwen_vl_tp1.html">client_qwen_vl_tp1</a></li>
 <li class="toctree-l1"><a class="reference internal" href="client_qwen_vl_tp4.html">client_qwen_vl_tp4</a></li>
@@ -179,20 +163,20 @@ There were tests whose specified size is too big. Use the --test_verbose_timeout
   
   <div>
     <h4>Previous topic</h4>
-    <p class="topless"><a href="bazeltest_rocmimpl_all.html"
-                          title="previous chapter">bazeltest_rocmimpl_all</a></p>
+    <p class="topless"><a href="client_Qwen3_30B_A3B_bf16_moe.html"
+                          title="previous chapter">client_Qwen3_30B_A3B_bf16_moe</a></p>
   </div>
   <div>
     <h4>Next topic</h4>
-    <p class="topless"><a href="bazeltest_tests_fused_qk_rmsnorm.html"
-                          title="next chapter">bazeltest_tests_fused_qk_rmsnorm</a></p>
+    <p class="topless"><a href="client_Qwen3_8B_FP8_ptpc_dense_llmcompressor.html"
+                          title="next chapter">client_Qwen3_8B_FP8_ptpc_dense_llmcompressor</a></p>
   </div>
   
   
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
-      <li><a href="../_sources/docs/bazeltest_rocmimpl_gemm_op_swizzle.md.txt"
+      <li><a href="../_sources/docs/client_Qwen3_32B_bf16_dense.md.txt"
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
