@@ -1,0 +1,2219 @@
+# server_Qwen3_32B_bf16_dense
+<pre>
+/opt/conda310/lib/python3.10/site-packages/torch/cuda/__init__.py:58: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  import pynvml  # type: ignore[import]
+[process-21851][root][2025-11-19 12:19:45.665][__init__.py:&lt;module&gt;():61][INFO] failed to load libth_transformer_config.so from libs, try use another path
+[process-21851][root][2025-11-19 12:19:45.665][__init__.py:find_th_transformer():31][INFO] find_th_transformer: /mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/../bazel-bin
+[process-21851][root][2025-11-19 12:19:45.666][__init__.py:&lt;module&gt;():67][INFO] failed to find libth_transformer_config.so in /mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/../bazel-bin
+[process-21851][root][2025-11-19 12:19:45.666][__init__.py:&lt;module&gt;():71][INFO] so path: /mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/../bazel-bin
+[process-21851][root][2025-11-19 12:19:45.666][__init__.py:&lt;module&gt;():94][INFO] torch path: [&#x27;/opt/conda310/lib/python3.10/site-packages/torch&#x27;]
+[process-21851][root][2025-11-19 12:19:45.666][__init__.py:&lt;module&gt;():100][INFO] loaded libcaffe2_nvrtc.so from /opt/conda310/lib/python3.10/site-packages/torch/lib/libcaffe2_nvrtc.so
+[process-21851][root][2025-11-19 12:19:52.610][hippo_helper.py:HippoHelper():15][INFO] get container_ip from socket:10.67.77.202
+[process-21851][root][2025-11-19 12:19:52.612][fuser.py:_check_valid():97][WARNING] fuse is not valid: connet http://0:28006 error
+[process-21851][root][2025-11-19 12:19:52.613][fuser.py:fetch_remote_file_to_local():283][INFO] Local path  use directly.
+[process-21851][root][2025-11-19 12:19:52.613][py_config_modules.py:update_from_env():880][INFO] [server_config]
+frontend_server_count: 4
+start_port: 6789
+timeout_keep_alive: 5
+frontend_server_id: 0
+rank_id: 0
+
+[profiling_debug_config]
+trace_memory: 0
+trace_malloc_stack: 0
+enable_device_perf: 0
+ft_core_dump_on_exception: 0
+ft_alog_conf_path: 
+log_level: INFO
+gen_timeline_sync: 0
+torch_cuda_profiler_dir
+log_path: logs
+log_file_backup_count: 16
+nccl_debug_file: 
+debug_load_server: 0
+hack_layer_num: 0
+debug_start_fake_process: 0
+dg_print_reg_reuse: 0
+qwen_agent_debug0
+disable_dpc_random0
+check_nan0
+
+
+[model_config]
+extra_data_path: 
+local_extra_data_path: None
+tokenizer_path: /mnt/raid0/pretrained_model/rtp_ci/Qwen3-32B
+act_type: bf16
+use_float32: False
+original_checkpoint_path: None
+mla_ops_type: AUTO
+ft_plugin_path: None
+weight_type: None
+task_type: None
+model_type: qwen_3
+checkpoint_path: /mnt/raid0/pretrained_model/rtp_ci/Qwen3-32B
+oss_endpoint: 
+ptuning_path: None
+openai_api_key: EMPTY
+dashscope_api_key: EMPTY
+dashscope_http_url: None
+dashscope_websocket_url: None
+json_model_override_args: {}
+
+[py_speculative_execution_config]
+gen_num_per_circle: 5
+sp_quantization: None
+sp_checkpoint_path: None
+sp_type: None
+sp_model_type: Nonesp_kv_cache_dtype: None
+sp_checkpoint_path: None
+
+[lora_config]
+lora_info: {}
+merge_lora: True
+
+
+[load_config]
+phy2log_path: 
+converter_num_per_gpu: 4
+tokenizers_parallelism: False
+load_ckpt_num_process: 0
+load_method: auto
+
+[render_config]
+model_template_type: None
+default_chat_template_key: default
+default_tool_use_template_key: tool_use
+llava_chat_template: 
+
+[gang_config]
+fake_gang_env: False
+gang_annocation_path: /etc/podinfo/annotations
+gang_config_string: None
+zone_name: 
+distribute_config_file: 
+dist_barrier_timeout: None
+gang_sleep_time: 10
+gang_timeout_min: 30
+json_gang_parts: None
+lead_address: None
+
+
+[vit_config]
+vit_separation: 0
+vit_trt: 0
+trt_cache_enabled: 0
+trt_cache_path: None
+download_headers: 
+mm_cache_item_num: 10
+url_cache_item_num: 100
+use_igraph_cache: True
+igraph_search_dom: com.taobao.search.igraph.common
+igraph_vipserver: 0
+igraph_table_name: 
+igraph_default_key: None
+
+[generate_env_config]
+think_end_tag: &lt;/think&gt;
+
+
+think_end_token_id: -1
+think_mode: 0
+force_stop_words: False
+stop_words_list: None
+stop_words_str: None
+think_start_tag: &lt;think&gt;
+
+generation_config_path: None
+
+[quantization_config]
+int8_mode: 0
+quantization: 
+
+[py_eplb_config]
+eplb_mode: NONE
+eplb_update_time: 5000
+redundant_expert: 0
+hack_ep_single_entry: 0
+balance_method: mix
+eplb_force_repack: 0
+eplb_stats_window_size: 10
+
+[py_kv_cache_config]
+int8_kv_cache: 0
+fp8_kv_cache: 0
+kv_cache_dtype: auto
+kv_cache_mem_mb: -1
+seq_size_per_block: 16
+test_block_num: 0
+use_block_cache: None
+blockwise_use_fp8_kv_cache: 0
+reuse_cache: False
+
+[py_device_resource_config]
+reserver_runtime_mem_mb: 102400
+specify_gpu_arch: 
+acext_gemm_config_dir: None
+device_reserve_memory_bytes: -2048000000
+
+[sparse_config]
+sparse_config_file: None
+
+[engine_config]
+warm_up: 0
+warm_up_with_loss: 0
+max_seq_len: 150000
+
+[embedding_config]
+embedding_model: 0
+extra_input_in_mm_embedding: 
+
+[worker_config]
+worker_info_port_num: 7
+
+[role_config]
+role_type: PDFUSION
+
+[pd_separation_config]
+prefill_retry_times: 0
+prefill_retry_timeout_ms: 20
+prefill_max_wait_timeout_ms: 600000
+decode_retry_times: 100
+decode_retry_timeout_ms: 100
+decode_retry_interval_ms: 1
+decode_polling_kv_cache_step_ms: 30
+decode_entrance: 0
+rdma_connect_retry_times: 0
+load_cache_timeout_ms: 5000
+
+[parallelism_distributed_config]
+tp_size: 1
+ep_size: 1
+dp_size: 1
+world_size: 1
+world_rank: 0
+pp_size: 1
+local_world_size: 1
+ffn_sp_size1
+
+[model_specific_config]
+max_lora_model_size: -1
+load_python_model:0
+
+
+[fmha_config]
+enable_fmha: 1
+enable_trt_fmha: 1
+enable_paged_trt_fmha: 1
+enable_open_source_fmha: 1
+enable_paged_open_source_fmha: 1
+enable_trtv1_fmha: 1
+fmha_perf_instrument: 0
+fmha_show_params: 0
+disable_flash_infer: 0
+enable_xqa: 1
+
+
+[misc_config]
+disable_pdl1
+aux_string: 
+
+
+[concurrency_config]
+concurrency_with_block: 0
+concurrency_limit: 1024
+
+[jit_config]
+remote_jit_dir: 
+
+[py_hw_kernel_config]
+deep_gemm_num_sm: -1
+arm_gemm_use_kai: False
+enable_stable_scatter_add: False
+enable_multi_block_mode: True
+ft_disable_custom_ar: True
+rocm_hipblaslt_config: gemm_config.csv
+use_swizzleA: False
+enable_cuda_graph: False
+enable_cuda_graph_debug_mode: False
+use_aiter_pa: True
+use_asm_pa: True
+enable_native_cuda_graph: False
+num_native_cuda_graph: 200
+
+
+[process-21851][root][2025-11-19 12:19:52.613][__init__.py:&lt;module&gt;():68][INFO] init logger end
+[process-21851][root][2025-11-19 12:19:52.789][__init__.py:&lt;module&gt;():72][INFO] transformers version: 4.51.2
+[process-21851][root][2025-11-19 12:19:52.789][__init__.py:&lt;module&gt;():81][WARNING] Failed to import internal_source models
+[process-21851][root][2025-11-19 12:19:52.809][report_worker.py:__init__():32][INFO] kmonitor report default tags: {}
+[process-21851][root][2025-11-19 12:19:52.809][report_worker.py:__init__():52][INFO] test mode, kmonitor metrics not reported.
+[process-21851][root][2025-11-19 12:19:52.812][worker_info.py:get_worker_port_num():22][INFO] env WORKER_INFO_PORT_NUM: 7
+[process-21851][root][2025-11-19 12:19:52.859][worker_info.py:__init__():63][INFO] ParallelInfo:[ tp_size=1 ep_size=1 pp_size=1 world_size=1 world_rank=0 local_world_size=1 ffn_sp_size=1 ffn_tp_size=1]
+[process-21851][root][2025-11-19 12:19:52.876][server_args.py:parse_args():156][INFO] Parsing arguments and setting environment variables...
+[process-21851][root][2025-11-19 12:19:52.877][server_args.py:parse_args():175][INFO] BATCH_DECODE_SCHEDULER_BATCH_SIZE = 1
+[process-21851][root][2025-11-19 12:19:52.877][server_args.py:parse_args():175][INFO] CACHE_STORE_RDMA_MODE = 0
+[process-21851][root][2025-11-19 12:19:52.877][server_args.py:parse_args():175][INFO] WRR_AVAILABLE_RATIO = 80
+[process-21851][root][2025-11-19 12:19:52.877][server_args.py:parse_args():175][INFO] RANK_FACTOR = 0
+[process-21851][root][2025-11-19 12:19:52.877][server_args.py:parse_args():175][INFO] CACHE_STORE_THREAD_COUNT = 16
+[process-21851][root][2025-11-19 12:19:52.877][server_args.py:parse_args():175][INFO] CACHE_STORE_RDMA_CONNECT_TIMEOUT_MS = 250
+[process-21851][root][2025-11-19 12:19:52.877][server_args.py:parse_args():175][INFO] CACHE_STORE_RDMA_QP_COUNT_PER_CONNECTION = 2
+[process-21851][root][2025-11-19 12:19:52.877][server_args.py:parse_args():175][INFO] CONCURRENCY_WITH_BLOCK = 0
+[process-21851][root][2025-11-19 12:19:52.877][server_args.py:parse_args():175][INFO] HOST_RESERVE_MEMORY_BYTES = 4294967296
+[process-21851][root][2025-11-19 12:19:52.877][server_args.py:parse_args():175][INFO] OVERLAP_MATH_SM_COUNT = 0
+[process-21851][root][2025-11-19 12:19:52.877][server_args.py:parse_args():175][INFO] OVERLAP_COMM_TYPE = 0
+[process-21851][root][2025-11-19 12:19:52.877][server_args.py:parse_args():175][INFO] M_SPLIT = 0
+[process-21851][root][2025-11-19 12:19:52.877][server_args.py:parse_args():175][INFO] ENABLE_LAYER_MICRO_BATCH = 0
+[process-21851][root][2025-11-19 12:19:52.877][server_args.py:parse_args():175][INFO] NOT_USE_DEFAULT_STREAM = 0
+[process-21851][root][2025-11-19 12:19:52.877][server_args.py:parse_args():175][INFO] SPECIFY_GPU_ARCH = 
+[process-21851][root][2025-11-19 12:19:52.877][server_args.py:parse_args():175][INFO] EMBEDDING_MODEL = 0
+[process-21851][root][2025-11-19 12:19:52.877][server_args.py:parse_args():175][INFO] WARM_UP_WITH_LOSS = 0
+[process-21851][root][2025-11-19 12:19:52.877][server_args.py:parse_args():175][INFO] MAX_CONTEXT_BATCH_SIZE = 1
+[process-21851][root][2025-11-19 12:19:52.877][server_args.py:parse_args():175][INFO] SCHEDULER_RESERVE_RESOURCE_RATIO = 5
+[process-21851][root][2025-11-19 12:19:52.877][server_args.py:parse_args():175][INFO] ENABLE_FAST_GEN = 0
+[process-21851][root][2025-11-19 12:19:52.877][server_args.py:parse_args():175][INFO] ENABLE_PARTIAL_FALLBACK = 0
+[process-21851][root][2025-11-19 12:19:52.877][server_args.py:parse_args():175][INFO] ENABLE_FMHA = 1
+[process-21851][root][2025-11-19 12:19:52.877][server_args.py:parse_args():175][INFO] ENABLE_TRT_FMHA = 1
+[process-21851][root][2025-11-19 12:19:52.877][server_args.py:parse_args():175][INFO] ENABLE_PAGED_TRT_FMHA = 1
+[process-21851][root][2025-11-19 12:19:52.877][server_args.py:parse_args():175][INFO] ENABLE_OPENSOURCE_FMHA = 1
+[process-21851][root][2025-11-19 12:19:52.877][server_args.py:parse_args():175][INFO] ENABLE_PAGED_OPEN_SOURCE_FMHA = 1
+[process-21851][root][2025-11-19 12:19:52.877][server_args.py:parse_args():175][INFO] ENABLE_TRTV1_FMHA = 1
+[process-21851][root][2025-11-19 12:19:52.877][server_args.py:parse_args():175][INFO] FMHA_PERF_INSTRUMENT = 0
+[process-21851][root][2025-11-19 12:19:52.877][server_args.py:parse_args():175][INFO] FMHA_SHOW_PARAMS = 0
+[process-21851][root][2025-11-19 12:19:52.877][server_args.py:parse_args():175][INFO] DISABLE_FLASH_INFER = 0
+[process-21851][root][2025-11-19 12:19:52.877][server_args.py:parse_args():175][INFO] ENABLE_XQA = 1
+[process-21851][root][2025-11-19 12:19:52.877][server_args.py:parse_args():175][INFO] FAKE_GANG_ENV = 0
+[process-21851][root][2025-11-19 12:19:52.877][server_args.py:parse_args():175][INFO] GANG_ANNOCATION_PATH = /etc/podinfo/annotations
+[process-21851][root][2025-11-19 12:19:52.877][server_args.py:parse_args():175][INFO] ZONE_NAME = 
+[process-21851][root][2025-11-19 12:19:52.877][server_args.py:parse_args():175][INFO] DIST_BARRIER_TIMEOUT = 45
+[process-21851][root][2025-11-19 12:19:52.877][server_args.py:parse_args():175][INFO] GANG_SLEEP_TIME = 10
+[process-21851][root][2025-11-19 12:19:52.877][server_args.py:parse_args():175][INFO] GANG_TIMEOUT_MIN = 30
+[process-21851][root][2025-11-19 12:19:52.877][server_args.py:parse_args():175][INFO] THINK_END_TAG = &lt;/think&gt;
+
+
+[process-21851][root][2025-11-19 12:19:52.877][server_args.py:parse_args():175][INFO] THINK_END_TOKEN_ID = -1
+[process-21851][root][2025-11-19 12:19:52.877][server_args.py:parse_args():175][INFO] THINK_MODE = 0
+[process-21851][root][2025-11-19 12:19:52.877][server_args.py:parse_args():175][INFO] FORCE_STOP_WORDS = 0
+[process-21851][root][2025-11-19 12:19:52.877][server_args.py:parse_args():175][INFO] THINK_START_TAG = &lt;think&gt;\n
+[process-21851][root][2025-11-19 12:19:52.877][server_args.py:parse_args():175][INFO] ENABLE_CUDA_GRAPH = 0
+[process-21851][root][2025-11-19 12:19:52.877][server_args.py:parse_args():175][INFO] ENABLE_CUDA_GRAPH_DEBUG_MODE = 0
+[process-21851][root][2025-11-19 12:19:52.877][server_args.py:parse_args():175][INFO] ENABLE_NATIVE_CUDA_GRAPH = 0
+[process-21851][root][2025-11-19 12:19:52.877][server_args.py:parse_args():175][INFO] NUM_NATIVE_CUDA_GRAPH = 200
+[process-21851][root][2025-11-19 12:19:52.877][server_args.py:parse_args():175][INFO] ARM_GEMM_USE_KAI = 0
+[process-21851][root][2025-11-19 12:19:52.877][server_args.py:parse_args():175][INFO] ENABLE_STABLE_SCATTER_ADD = 0
+[process-21851][root][2025-11-19 12:19:52.877][server_args.py:parse_args():175][INFO] ENABLE_MULTI_BLOCK_MODE = 1
+[process-21851][root][2025-11-19 12:19:52.878][server_args.py:parse_args():175][INFO] ROCM_HIPBLASLT_CONFIG = gemm_config.csv
+[process-21851][root][2025-11-19 12:19:52.878][server_args.py:parse_args():175][INFO] USE_ASM_PA = 1
+[process-21851][root][2025-11-19 12:19:52.878][server_args.py:parse_args():175][INFO] USE_SWIZZLEA = 0
+[process-21851][root][2025-11-19 12:19:52.878][server_args.py:parse_args():175][INFO] REUSE_CACHE = 0
+[process-21851][root][2025-11-19 12:19:52.878][server_args.py:parse_args():175][INFO] INT8_KV_CACHE = 0
+[process-21851][root][2025-11-19 12:19:52.878][server_args.py:parse_args():175][INFO] FP8_KV_CACHE = 0
+[process-21851][root][2025-11-19 12:19:52.878][server_args.py:parse_args():175][INFO] KV_CACHE_MEM_MB = -1
+[process-21851][root][2025-11-19 12:19:52.878][server_args.py:parse_args():175][INFO] TEST_BLOCK_NUM = 0
+[process-21851][root][2025-11-19 12:19:52.878][server_args.py:parse_args():175][INFO] MEMORY_BLOCK_CACHE_SIZE_MB = 0
+[process-21851][root][2025-11-19 12:19:52.878][server_args.py:parse_args():175][INFO] MEMORY_BLOCK_CACHE_SYNC_TIMEOUT_MS = 10000
+[process-21851][root][2025-11-19 12:19:52.878][server_args.py:parse_args():175][INFO] ENABLE_3FS = 0
+[process-21851][root][2025-11-19 12:19:52.878][server_args.py:parse_args():175][INFO] THREEFS_MATCH_TIMEOUT_MS = 1000
+[process-21851][root][2025-11-19 12:19:52.878][server_args.py:parse_args():175][INFO] THREEFS_RPC_GET_CACHE_TIMEOUT_MS = 3000
+[process-21851][root][2025-11-19 12:19:52.878][server_args.py:parse_args():175][INFO] THREEFS_RPC_PUT_CACHE_TIMEOUT_MS = 3000
+[process-21851][root][2025-11-19 12:19:52.878][server_args.py:parse_args():175][INFO] THREEFS_READ_TIMEOUT_MS = 1000
+[process-21851][root][2025-11-19 12:19:52.878][server_args.py:parse_args():175][INFO] THREEFS_WRITE_TIMEOUT_MS = 2000
+[process-21851][root][2025-11-19 12:19:52.878][server_args.py:parse_args():175][INFO] THREEFS_READ_IOV_SIZE = 4294967296
+[process-21851][root][2025-11-19 12:19:52.878][server_args.py:parse_args():175][INFO] THREEFS_WRITE_IOV_SIZE = 4294967296
+[process-21851][root][2025-11-19 12:19:52.878][server_args.py:parse_args():175][INFO] MAX_BLOCK_SIZE_PER_ITEM = 16
+[process-21851][root][2025-11-19 12:19:52.878][server_args.py:parse_args():175][INFO] PHY2LOG_PATH = 
+[process-21851][root][2025-11-19 12:19:52.878][server_args.py:parse_args():175][INFO] CONVERTER_NUM_PER_GPU = 4
+[process-21851][root][2025-11-19 12:19:52.878][server_args.py:parse_args():175][INFO] TOKENIZERS_PARALLELISM = 0
+[process-21851][root][2025-11-19 12:19:52.878][server_args.py:parse_args():175][INFO] LOAD_CKPT_NUM_PROCESS = 0
+[process-21851][root][2025-11-19 12:19:52.878][server_args.py:parse_args():175][INFO] LOAD_METHOD = auto
+[process-21851][root][2025-11-19 12:19:52.878][server_args.py:parse_args():175][INFO] LORA_INFO = {}
+[process-21851][root][2025-11-19 12:19:52.878][server_args.py:parse_args():175][INFO] MERGE_LORA = 1
+[process-21851][root][2025-11-19 12:19:52.878][server_args.py:parse_args():175][INFO] DISABLE_PDL = 1
+[process-21851][root][2025-11-19 12:19:52.878][server_args.py:parse_args():175][INFO] AUX_STRING = 
+[process-21851][root][2025-11-19 12:19:52.878][server_args.py:parse_args():175][INFO] USE_FLOAT32 = 0
+[process-21851][root][2025-11-19 12:19:52.878][server_args.py:parse_args():175][INFO] MLA_OPS_TYPE = AUTO
+[process-21851][root][2025-11-19 12:19:52.878][server_args.py:parse_args():175][INFO] DASHSCOPE_API_KEY = EMPTY
+[process-21851][root][2025-11-19 12:19:52.878][server_args.py:parse_args():175][INFO] OPENAI_API_KEY = EMPTY
+[process-21851][root][2025-11-19 12:19:52.878][server_args.py:parse_args():175][INFO] JSON_MODEL_OVERRIDE_ARGS = {}
+[process-21851][root][2025-11-19 12:19:52.878][server_args.py:parse_args():175][INFO] MAX_LORA_MODEL_SIZE = -1
+[process-21851][root][2025-11-19 12:19:52.878][server_args.py:parse_args():175][INFO] USE_DEEPEP_MOE = 0
+[process-21851][root][2025-11-19 12:19:52.878][server_args.py:parse_args():175][INFO] USE_DEEPEP_INTERNODE = 0
+[process-21851][root][2025-11-19 12:19:52.878][server_args.py:parse_args():175][INFO] USE_DEEPEP_LOW_LATENCY = 1
+[process-21851][root][2025-11-19 12:19:52.878][server_args.py:parse_args():175][INFO] USE_DEEPEP_P2P_LOW_LATENCY = 0
+[process-21851][root][2025-11-19 12:19:52.878][server_args.py:parse_args():175][INFO] DEEP_EP_NUM_SM = 0
+[process-21851][root][2025-11-19 12:19:52.878][server_args.py:parse_args():175][INFO] FAKE_BALANCE_EXPERT = 0
+[process-21851][root][2025-11-19 12:19:52.878][server_args.py:parse_args():175][INFO] EPLB_CONTROL_STEP = 100
+[process-21851][root][2025-11-19 12:19:52.878][server_args.py:parse_args():175][INFO] EPLB_TEST_MODE = 0
+[process-21851][root][2025-11-19 12:19:52.878][server_args.py:parse_args():175][INFO] EPLB_BALANCE_LAYER_PER_STEP = 1
+[process-21851][root][2025-11-19 12:19:52.878][server_args.py:parse_args():175][INFO] EPLB_MODE = NONE
+[process-21851][root][2025-11-19 12:19:52.878][server_args.py:parse_args():175][INFO] EPLB_UPDATE_TIME = 5000
+[process-21851][root][2025-11-19 12:19:52.878][server_args.py:parse_args():175][INFO] REDUNDANT_EXPERT = 0
+[process-21851][root][2025-11-19 12:19:52.878][server_args.py:parse_args():175][INFO] HACK_EP_SINGLE_ENTRY = 0
+[process-21851][root][2025-11-19 12:19:52.878][server_args.py:parse_args():175][INFO] BALANCE_METHOD = mix
+[process-21851][root][2025-11-19 12:19:52.878][server_args.py:parse_args():175][INFO] EPLB_FORCE_REPACK = 0
+[process-21851][root][2025-11-19 12:19:52.878][server_args.py:parse_args():175][INFO] EPLB_STATS_WINDOW_SIZE = 10
+[process-21851][root][2025-11-19 12:19:52.878][server_args.py:parse_args():175][INFO] RTP_LLM_MAX_MOE_NORMAL_MASKED_TOKEN_NUM = 1024
+[process-21851][root][2025-11-19 12:19:52.878][server_args.py:parse_args():175][INFO] FFN_SP_SIZE = 1
+[process-21851][root][2025-11-19 12:19:52.878][server_args.py:parse_args():175][INFO] ENABLE_FFN_DISAGGREGATE = 0
+[process-21851][root][2025-11-19 12:19:52.878][server_args.py:parse_args():175][INFO] RTP_LLM_TRACE_MEMORY = 0
+[process-21851][root][2025-11-19 12:19:52.878][server_args.py:parse_args():175][INFO] RTP_LLM_TRACE_MALLOC_STACK = 0
+[process-21851][root][2025-11-19 12:19:52.878][server_args.py:parse_args():175][INFO] ENABLE_DEVICE_PERF = 0
+[process-21851][root][2025-11-19 12:19:52.878][server_args.py:parse_args():175][INFO] FT_CORE_DUMP_ON_EXCEPTION = 0
+[process-21851][root][2025-11-19 12:19:52.879][server_args.py:parse_args():175][INFO] LOG_LEVEL = INFO
+[process-21851][root][2025-11-19 12:19:52.879][server_args.py:parse_args():175][INFO] GEN_TIMELINE_SYNC = 0
+[process-21851][root][2025-11-19 12:19:52.879][server_args.py:parse_args():175][INFO] TORCH_CUDA_PROFILER_DIR = 
+[process-21851][root][2025-11-19 12:19:52.879][server_args.py:parse_args():175][INFO] LOG_PATH = logs
+[process-21851][root][2025-11-19 12:19:52.879][server_args.py:parse_args():175][INFO] LOG_FILE_BACKUP_COUNT = 16
+[process-21851][root][2025-11-19 12:19:52.879][server_args.py:parse_args():175][INFO] DEBUG_LOAD_SERVER = 0
+[process-21851][root][2025-11-19 12:19:52.879][server_args.py:parse_args():175][INFO] HACK_LAYER_NUM = 0
+[process-21851][root][2025-11-19 12:19:52.879][server_args.py:parse_args():175][INFO] QWEN_AGENT_DEBUG = 0
+[process-21851][root][2025-11-19 12:19:52.879][server_args.py:parse_args():175][INFO] CHECK_NAN = 0
+[process-21851][root][2025-11-19 12:19:52.879][server_args.py:parse_args():175][INFO] INT8_MODE = 0
+[process-21851][root][2025-11-19 12:19:52.879][server_args.py:parse_args():175][INFO] DEFAULT_CHAT_TEMPLATE_KEY = default
+[process-21851][root][2025-11-19 12:19:52.879][server_args.py:parse_args():175][INFO] DEFAULT_TOOL_USE_TEMPLATE_KEY = tool_use
+[process-21851][root][2025-11-19 12:19:52.879][server_args.py:parse_args():175][INFO] LLAVA_CHAT_TEMPLATE = 
+[process-21851][root][2025-11-19 12:19:52.879][server_args.py:parse_args():175][INFO] ROLE_TYPE = PDFUSION
+[process-21851][root][2025-11-19 12:19:52.879][server_args.py:parse_args():175][INFO] USE_LOCAL = 0
+[process-21851][root][2025-11-19 12:19:52.879][server_args.py:parse_args():175][INFO] MAX_BATCH_SIZE = 0
+[process-21851][root][2025-11-19 12:19:52.879][server_args.py:parse_args():175][INFO] ENABLE_FLASHINFER_SAMPLE_KERNEL = 1
+[process-21851][root][2025-11-19 12:19:52.879][server_args.py:parse_args():175][INFO] USE_BATCH_DECODE_SCHEDULER = 0
+[process-21851][root][2025-11-19 12:19:52.879][server_args.py:parse_args():175][INFO] FRONTEND_SERVER_COUNT = 4
+[process-21851][root][2025-11-19 12:19:52.879][server_args.py:parse_args():175][INFO] TIMEOUT_KEEP_ALIVE = 5
+[process-21851][root][2025-11-19 12:19:52.879][server_args.py:parse_args():175][INFO] FRONTEND_SERVER_ID = 0
+[process-21851][root][2025-11-19 12:19:52.879][server_args.py:parse_args():175][INFO] SP_MODEL_TYPE = 
+[process-21851][root][2025-11-19 12:19:52.879][server_args.py:parse_args():175][INFO] SP_TYPE = 
+[process-21851][root][2025-11-19 12:19:52.879][server_args.py:parse_args():175][INFO] SP_MIN_TOKEN_MATCH = 2
+[process-21851][root][2025-11-19 12:19:52.879][server_args.py:parse_args():175][INFO] SP_MAX_TOKEN_MATCH = 2
+[process-21851][root][2025-11-19 12:19:52.879][server_args.py:parse_args():175][INFO] TREE_DECODE_CONFIG = 
+[process-21851][root][2025-11-19 12:19:52.879][server_args.py:parse_args():175][INFO] GEN_NUM_PER_CIRCLE = 1
+[process-21851][root][2025-11-19 12:19:52.879][server_args.py:parse_args():175][INFO] FORCE_STREAM_SAMPLE = 0
+[process-21851][root][2025-11-19 12:19:52.879][server_args.py:parse_args():175][INFO] FORCE_SCORE_CONTEXT_ATTENTION = 1
+[process-21851][root][2025-11-19 12:19:52.879][server_args.py:parse_args():175][INFO] VIT_SEPARATION = 0
+[process-21851][root][2025-11-19 12:19:52.879][server_args.py:parse_args():175][INFO] VIT_TRT = 0
+[process-21851][root][2025-11-19 12:19:52.879][server_args.py:parse_args():175][INFO] TRT_CACHE_ENABLED = 0
+[process-21851][root][2025-11-19 12:19:52.879][server_args.py:parse_args():175][INFO] TRT_CACHE_PATH = /mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/trt_cache
+[process-21851][root][2025-11-19 12:19:52.879][server_args.py:parse_args():175][INFO] DOWNLOAD_HEADERS = 
+[process-21851][root][2025-11-19 12:19:52.879][server_args.py:parse_args():175][INFO] MM_CACHE_ITEM_NUM = 10
+[process-21851][root][2025-11-19 12:19:52.879][server_args.py:parse_args():175][INFO] URL_CACHE_ITEM_NUM = 100
+[process-21851][root][2025-11-19 12:19:52.879][server_args.py:parse_args():175][INFO] USE_IGRAPH_CACHE = 1
+[process-21851][root][2025-11-19 12:19:52.879][server_args.py:parse_args():175][INFO] IGRAPH_SEARCH_DOM = com.taobao.search.igraph.common
+[process-21851][root][2025-11-19 12:19:52.879][server_args.py:parse_args():175][INFO] IGRAPH_VIPSERVER = 0
+[process-21851][root][2025-11-19 12:19:52.879][server_args.py:parse_args():175][INFO] IGRAPH_TABLE_NAME = 
+[process-21851][root][2025-11-19 12:19:52.879][server_args.py:parse_args():175][INFO] WORKER_INFO_PORT_NUM = 7
+[process-21851][root][2025-11-19 12:19:52.879][server_args.py:parse_args():175][INFO] PREFILL_RETRY_TIMES = 0
+[process-21851][root][2025-11-19 12:19:52.879][server_args.py:parse_args():175][INFO] PREFILL_RETRY_TIMEOUT_MS = 0
+[process-21851][root][2025-11-19 12:19:52.879][server_args.py:parse_args():175][INFO] PREFILL_MAX_WAIT_TIMEOUT_MS = 600000
+[process-21851][root][2025-11-19 12:19:52.879][server_args.py:parse_args():175][INFO] LOAD_CACHE_TIMEOUT_MS = 5000
+[process-21851][root][2025-11-19 12:19:52.879][server_args.py:parse_args():175][INFO] DECODE_RETRY_TIMES = 100
+[process-21851][root][2025-11-19 12:19:52.879][server_args.py:parse_args():175][INFO] DECODE_RETRY_TIMEOUT_MS = 100
+[process-21851][root][2025-11-19 12:19:52.879][server_args.py:parse_args():175][INFO] DECODE_RETRY_INTERVAL_MS = 100
+[process-21851][root][2025-11-19 12:19:52.879][server_args.py:parse_args():175][INFO] RDMA_CONNECT_RETRY_TIMES = 0
+[process-21851][root][2025-11-19 12:19:52.879][server_args.py:parse_args():175][INFO] DECODE_POLLING_KV_CACHE_STEP_MS = 30
+[process-21851][root][2025-11-19 12:19:52.879][server_args.py:parse_args():175][INFO] DECODE_ENTRANCE = 0
+[process-21851][root][2025-11-19 12:19:52.879][server_args.py:setup_args():294][INFO] [MI308X] enable FT_DISABLE_CUSTOM_AR by default, as amd has own implementation.
+[process-21851][root][2025-11-19 12:19:52.879][server_args.py:setup_args():306][INFO] [MI308X] disable ENABLE_COMM_OVERLAP by default.
+[process-21851][root][2025-11-19 12:19:52.879][server_args.py:print_env_mappings():209][INFO] Argument -&gt; Environment Variable Mappings:
+[process-21851][root][2025-11-19 12:19:52.880][server_args.py:print_env_mappings():210][INFO] --------------------------------------------------
+[process-21851][root][2025-11-19 12:19:52.880][server_args.py:print_env_mappings():224][INFO] help                 -&gt; HELP
+[process-21851][root][2025-11-19 12:19:52.880][server_args.py:print_env_mappings():224][INFO] batch_decode_scheduler_batch_size -&gt; BATCH_DECODE_SCHEDULER_BATCH_SIZE
+[process-21851][root][2025-11-19 12:19:52.880][server_args.py:print_env_mappings():224][INFO] cache_store_rdma_mode -&gt; CACHE_STORE_RDMA_MODE
+[process-21851][root][2025-11-19 12:19:52.880][server_args.py:print_env_mappings():224][INFO] wrr_available_ratio  -&gt; WRR_AVAILABLE_RATIO
+[process-21851][root][2025-11-19 12:19:52.880][server_args.py:print_env_mappings():224][INFO] rank_factor          -&gt; RANK_FACTOR
+[process-21851][root][2025-11-19 12:19:52.880][server_args.py:print_env_mappings():224][INFO] cache_store_thread_count -&gt; CACHE_STORE_THREAD_COUNT
+[process-21851][root][2025-11-19 12:19:52.880][server_args.py:print_env_mappings():224][INFO] cache_store_rdma_connect_timeout_ms -&gt; CACHE_STORE_RDMA_CONNECT_TIMEOUT_MS
+[process-21851][root][2025-11-19 12:19:52.880][server_args.py:print_env_mappings():224][INFO] cache_store_rdma_qp_count_per_connection -&gt; CACHE_STORE_RDMA_QP_COUNT_PER_CONNECTION
+[process-21851][root][2025-11-19 12:19:52.880][server_args.py:print_env_mappings():224][INFO] concurrency_with_block -&gt; CONCURRENCY_WITH_BLOCK
+[process-21851][root][2025-11-19 12:19:52.880][server_args.py:print_env_mappings():224][INFO] concurrency_limit    -&gt; CONCURRENCY_LIMIT
+[process-21851][root][2025-11-19 12:19:52.880][server_args.py:print_env_mappings():224][INFO] device_reserve_memory_bytes -&gt; DEVICE_RESERVE_MEMORY_BYTES
+[process-21851][root][2025-11-19 12:19:52.880][server_args.py:print_env_mappings():224][INFO] host_reserve_memory_bytes -&gt; HOST_RESERVE_MEMORY_BYTES
+[process-21851][root][2025-11-19 12:19:52.880][server_args.py:print_env_mappings():224][INFO] overlap_math_sm_count -&gt; OVERLAP_MATH_SM_COUNT
+[process-21851][root][2025-11-19 12:19:52.880][server_args.py:print_env_mappings():224][INFO] overlap_comm_type    -&gt; OVERLAP_COMM_TYPE
+[process-21851][root][2025-11-19 12:19:52.880][server_args.py:print_env_mappings():224][INFO] m_split              -&gt; M_SPLIT
+[process-21851][root][2025-11-19 12:19:52.880][server_args.py:print_env_mappings():224][INFO] enable_comm_overlap  -&gt; ENABLE_COMM_OVERLAP
+[process-21851][root][2025-11-19 12:19:52.880][server_args.py:print_env_mappings():224][INFO] enable_layer_micro_batch -&gt; ENABLE_LAYER_MICRO_BATCH
+[process-21851][root][2025-11-19 12:19:52.880][server_args.py:print_env_mappings():224][INFO] not_use_default_stream -&gt; NOT_USE_DEFAULT_STREAM
+[process-21851][root][2025-11-19 12:19:52.880][server_args.py:print_env_mappings():224][INFO] reserver_runtime_mem_mb -&gt; RESERVER_RUNTIME_MEM_MB
+[process-21851][root][2025-11-19 12:19:52.880][server_args.py:print_env_mappings():224][INFO] specify_gpu_arch     -&gt; SPECIFY_GPU_ARCH
+[process-21851][root][2025-11-19 12:19:52.880][server_args.py:print_env_mappings():224][INFO] acext_gemm_config_dir -&gt; ACEXT_GEMM_CONFIG_DIR
+[process-21851][root][2025-11-19 12:19:52.880][server_args.py:print_env_mappings():224][INFO] embedding_model      -&gt; EMBEDDING_MODEL
+[process-21851][root][2025-11-19 12:19:52.880][server_args.py:print_env_mappings():224][INFO] extra_input_in_mm_embedding -&gt; EXTRA_INPUT_IN_MM_EMBEDDING
+[process-21851][root][2025-11-19 12:19:52.880][server_args.py:print_env_mappings():224][INFO] warm_up              -&gt; WARM_UP
+[process-21851][root][2025-11-19 12:19:52.880][server_args.py:print_env_mappings():224][INFO] warm_up_with_loss    -&gt; WARM_UP_WITH_LOSS
+[process-21851][root][2025-11-19 12:19:52.880][server_args.py:print_env_mappings():224][INFO] max_seq_len          -&gt; MAX_SEQ_LEN
+[process-21851][root][2025-11-19 12:19:52.880][server_args.py:print_env_mappings():224][INFO] max_context_batch_size -&gt; MAX_CONTEXT_BATCH_SIZE
+[process-21851][root][2025-11-19 12:19:52.880][server_args.py:print_env_mappings():224][INFO] scheduler_reserve_resource_ratio -&gt; SCHEDULER_RESERVE_RESOURCE_RATIO
+[process-21851][root][2025-11-19 12:19:52.880][server_args.py:print_env_mappings():224][INFO] enable_fast_gen      -&gt; ENABLE_FAST_GEN
+[process-21851][root][2025-11-19 12:19:52.880][server_args.py:print_env_mappings():224][INFO] fast_gen_context_budget -&gt; FAST_GEN_MAX_CONTEXT_LEN
+[process-21851][root][2025-11-19 12:19:52.880][server_args.py:print_env_mappings():224][INFO] enable_partial_fallback -&gt; ENABLE_PARTIAL_FALLBACK
+[process-21851][root][2025-11-19 12:19:52.880][server_args.py:print_env_mappings():224][INFO] enable_fmha          -&gt; ENABLE_FMHA
+[process-21851][root][2025-11-19 12:19:52.880][server_args.py:print_env_mappings():224][INFO] enable_trt_fmha      -&gt; ENABLE_TRT_FMHA
+[process-21851][root][2025-11-19 12:19:52.880][server_args.py:print_env_mappings():224][INFO] enable_paged_trt_fmha -&gt; ENABLE_PAGED_TRT_FMHA
+[process-21851][root][2025-11-19 12:19:52.880][server_args.py:print_env_mappings():224][INFO] enable_open_source_fmha -&gt; ENABLE_OPENSOURCE_FMHA
+[process-21851][root][2025-11-19 12:19:52.880][server_args.py:print_env_mappings():224][INFO] enable_paged_open_source_fmha -&gt; ENABLE_PAGED_OPEN_SOURCE_FMHA
+[process-21851][root][2025-11-19 12:19:52.880][server_args.py:print_env_mappings():224][INFO] enable_trtv1_fmha    -&gt; ENABLE_TRTV1_FMHA
+[process-21851][root][2025-11-19 12:19:52.880][server_args.py:print_env_mappings():224][INFO] fmha_perf_instrument -&gt; FMHA_PERF_INSTRUMENT
+[process-21851][root][2025-11-19 12:19:52.880][server_args.py:print_env_mappings():224][INFO] fmha_show_params     -&gt; FMHA_SHOW_PARAMS
+[process-21851][root][2025-11-19 12:19:52.880][server_args.py:print_env_mappings():224][INFO] disable_flash_infer  -&gt; DISABLE_FLASH_INFER
+[process-21851][root][2025-11-19 12:19:52.880][server_args.py:print_env_mappings():224][INFO] enable_xqa           -&gt; ENABLE_XQA
+[process-21851][root][2025-11-19 12:19:52.880][server_args.py:print_env_mappings():224][INFO] fake_gang_env        -&gt; FAKE_GANG_ENV
+[process-21851][root][2025-11-19 12:19:52.880][server_args.py:print_env_mappings():224][INFO] gang_annocation_path -&gt; GANG_ANNOCATION_PATH
+[process-21851][root][2025-11-19 12:19:52.880][server_args.py:print_env_mappings():224][INFO] gang_config_string   -&gt; GANG_CONFIG_STRING
+[process-21851][root][2025-11-19 12:19:52.880][server_args.py:print_env_mappings():224][INFO] zone_name            -&gt; ZONE_NAME
+[process-21851][root][2025-11-19 12:19:52.880][server_args.py:print_env_mappings():224][INFO] distribute_config_file -&gt; DISTRIBUTE_CONFIG_FILE
+[process-21851][root][2025-11-19 12:19:52.880][server_args.py:print_env_mappings():224][INFO] dist_barrier_timeout -&gt; DIST_BARRIER_TIMEOUT
+[process-21851][root][2025-11-19 12:19:52.880][server_args.py:print_env_mappings():224][INFO] gang_sleep_time      -&gt; GANG_SLEEP_TIME
+[process-21851][root][2025-11-19 12:19:52.880][server_args.py:print_env_mappings():224][INFO] gang_timeout_min     -&gt; GANG_TIMEOUT_MIN
+[process-21851][root][2025-11-19 12:19:52.880][server_args.py:print_env_mappings():224][INFO] think_end_tag        -&gt; THINK_END_TAG
+[process-21851][root][2025-11-19 12:19:52.880][server_args.py:print_env_mappings():224][INFO] think_end_token_id   -&gt; THINK_END_TOKEN_ID
+[process-21851][root][2025-11-19 12:19:52.880][server_args.py:print_env_mappings():224][INFO] think_mode           -&gt; THINK_MODE
+[process-21851][root][2025-11-19 12:19:52.880][server_args.py:print_env_mappings():224][INFO] force_stop_words     -&gt; FORCE_STOP_WORDS
+[process-21851][root][2025-11-19 12:19:52.880][server_args.py:print_env_mappings():224][INFO] stop_words_list      -&gt; STOP_WORDS_LIST
+[process-21851][root][2025-11-19 12:19:52.880][server_args.py:print_env_mappings():224][INFO] stop_words_str       -&gt; STOP_WORDS_STR
+[process-21851][root][2025-11-19 12:19:52.880][server_args.py:print_env_mappings():224][INFO] think_start_tag      -&gt; THINK_START_TAG
+[process-21851][root][2025-11-19 12:19:52.880][server_args.py:print_env_mappings():224][INFO] generation_config_path -&gt; GENERATION_CONFIG_PATH
+[process-21851][root][2025-11-19 12:19:52.880][server_args.py:print_env_mappings():224][INFO] enable_cuda_graph    -&gt; ENABLE_CUDA_GRAPH
+[process-21851][root][2025-11-19 12:19:52.880][server_args.py:print_env_mappings():224][INFO] enable_cuda_graph_debug_mode -&gt; ENABLE_CUDA_GRAPH_DEBUG_MODE
+[process-21851][root][2025-11-19 12:19:52.880][server_args.py:print_env_mappings():224][INFO] enable_native_cuda_graph -&gt; ENABLE_NATIVE_CUDA_GRAPH
+[process-21851][root][2025-11-19 12:19:52.880][server_args.py:print_env_mappings():224][INFO] num_native_cuda_graph -&gt; NUM_NATIVE_CUDA_GRAPH
+[process-21851][root][2025-11-19 12:19:52.880][server_args.py:print_env_mappings():224][INFO] deep_gemm_num_sm     -&gt; DEEP_GEMM_NUM_SM
+[process-21851][root][2025-11-19 12:19:52.880][server_args.py:print_env_mappings():224][INFO] arm_gemm_use_kai     -&gt; ARM_GEMM_USE_KAI
+[process-21851][root][2025-11-19 12:19:52.880][server_args.py:print_env_mappings():224][INFO] enable_stable_scatter_add -&gt; ENABLE_STABLE_SCATTER_ADD
+[process-21851][root][2025-11-19 12:19:52.880][server_args.py:print_env_mappings():224][INFO] enable_multi_block_mode -&gt; ENABLE_MULTI_BLOCK_MODE
+[process-21851][root][2025-11-19 12:19:52.880][server_args.py:print_env_mappings():224][INFO] rocm_hipblaslt_config -&gt; ROCM_HIPBLASLT_CONFIG
+[process-21851][root][2025-11-19 12:19:52.880][server_args.py:print_env_mappings():224][INFO] ft_disable_custom_ar -&gt; FT_DISABLE_CUSTOM_AR
+[process-21851][root][2025-11-19 12:19:52.880][server_args.py:print_env_mappings():224][INFO] use_aiter_pa         -&gt; USE_AITER_PA
+[process-21851][root][2025-11-19 12:19:52.880][server_args.py:print_env_mappings():224][INFO] use_asm_pa           -&gt; USE_ASM_PA
+[process-21851][root][2025-11-19 12:19:52.880][server_args.py:print_env_mappings():224][INFO] use_swizzleA         -&gt; USE_SWIZZLEA
+[process-21851][root][2025-11-19 12:19:52.880][server_args.py:print_env_mappings():224][INFO] reuse_cache          -&gt; REUSE_CACHE
+[process-21851][root][2025-11-19 12:19:52.881][server_args.py:print_env_mappings():224][INFO] multi_task_prompt    -&gt; MULTI_TASK_PROMPT
+[process-21851][root][2025-11-19 12:19:52.881][server_args.py:print_env_mappings():224][INFO] multi_task_prompt_str -&gt; MULTI_TASK_PROMPT_STR
+[process-21851][root][2025-11-19 12:19:52.881][server_args.py:print_env_mappings():224][INFO] int8_kv_cache        -&gt; INT8_KV_CACHE
+[process-21851][root][2025-11-19 12:19:52.881][server_args.py:print_env_mappings():224][INFO] fp8_kv_cache         -&gt; FP8_KV_CACHE
+[process-21851][root][2025-11-19 12:19:52.881][server_args.py:print_env_mappings():224][INFO] kv_cache_mem_mb      -&gt; KV_CACHE_MEM_MB
+[process-21851][root][2025-11-19 12:19:52.881][server_args.py:print_env_mappings():224][INFO] seq_size_per_block   -&gt; SEQ_SIZE_PER_BLOCK
+[process-21851][root][2025-11-19 12:19:52.881][server_args.py:print_env_mappings():224][INFO] test_block_num       -&gt; TEST_BLOCK_NUM
+[process-21851][root][2025-11-19 12:19:52.881][server_args.py:print_env_mappings():224][INFO] memory_block_cache_size_mb -&gt; MEMORY_BLOCK_CACHE_SIZE_MB
+[process-21851][root][2025-11-19 12:19:52.881][server_args.py:print_env_mappings():224][INFO] memory_block_cache_sync_timeout_ms -&gt; MEMORY_BLOCK_CACHE_SYNC_TIMEOUT_MS
+[process-21851][root][2025-11-19 12:19:52.881][server_args.py:print_env_mappings():224][INFO] enable_3fs           -&gt; ENABLE_3FS
+[process-21851][root][2025-11-19 12:19:52.881][server_args.py:print_env_mappings():224][INFO] threefs_match_timeout_ms -&gt; THREEFS_MATCH_TIMEOUT_MS
+[process-21851][root][2025-11-19 12:19:52.881][server_args.py:print_env_mappings():224][INFO] threefs_rpc_get_cache_timeout_ms -&gt; THREEFS_RPC_GET_CACHE_TIMEOUT_MS
+[process-21851][root][2025-11-19 12:19:52.881][server_args.py:print_env_mappings():224][INFO] threefs_rpc_put_cache_timeout_ms -&gt; THREEFS_RPC_PUT_CACHE_TIMEOUT_MS
+[process-21851][root][2025-11-19 12:19:52.881][server_args.py:print_env_mappings():224][INFO] threefs_read_timeout_ms -&gt; THREEFS_READ_TIMEOUT_MS
+[process-21851][root][2025-11-19 12:19:52.881][server_args.py:print_env_mappings():224][INFO] threefs_write_timeout_ms -&gt; THREEFS_WRITE_TIMEOUT_MS
+[process-21851][root][2025-11-19 12:19:52.881][server_args.py:print_env_mappings():224][INFO] threefs_read_iov_size -&gt; THREEFS_READ_IOV_SIZE
+[process-21851][root][2025-11-19 12:19:52.881][server_args.py:print_env_mappings():224][INFO] threefs_write_iov_size -&gt; THREEFS_WRITE_IOV_SIZE
+[process-21851][root][2025-11-19 12:19:52.881][server_args.py:print_env_mappings():224][INFO] max_block_size_per_item -&gt; MAX_BLOCK_SIZE_PER_ITEM
+[process-21851][root][2025-11-19 12:19:52.881][server_args.py:print_env_mappings():224][INFO] phy2log_path         -&gt; PHY2LOG_PATH
+[process-21851][root][2025-11-19 12:19:52.881][server_args.py:print_env_mappings():224][INFO] converter_num_per_gpu -&gt; CONVERTER_NUM_PER_GPU
+[process-21851][root][2025-11-19 12:19:52.881][server_args.py:print_env_mappings():224][INFO] tokenizers_parallelism -&gt; TOKENIZERS_PARALLELISM
+[process-21851][root][2025-11-19 12:19:52.881][server_args.py:print_env_mappings():224][INFO] load_ckpt_num_process -&gt; LOAD_CKPT_NUM_PROCESS
+[process-21851][root][2025-11-19 12:19:52.881][server_args.py:print_env_mappings():224][INFO] load_method          -&gt; LOAD_METHOD
+[process-21851][root][2025-11-19 12:19:52.881][server_args.py:print_env_mappings():224][INFO] lora_info            -&gt; LORA_INFO
+[process-21851][root][2025-11-19 12:19:52.881][server_args.py:print_env_mappings():224][INFO] merge_lora           -&gt; MERGE_LORA
+[process-21851][root][2025-11-19 12:19:52.881][server_args.py:print_env_mappings():224][INFO] disable_pdl          -&gt; DISABLE_PDL
+[process-21851][root][2025-11-19 12:19:52.881][server_args.py:print_env_mappings():224][INFO] aux_string           -&gt; AUX_STRING
+[process-21851][root][2025-11-19 12:19:52.881][server_args.py:print_env_mappings():224][INFO] extra_data_path      -&gt; EXTRA_DATA_PATH
+[process-21851][root][2025-11-19 12:19:52.881][server_args.py:print_env_mappings():224][INFO] local_extra_data_path -&gt; LOCAL_EXTRA_DATA_PATH
+[process-21851][root][2025-11-19 12:19:52.881][server_args.py:print_env_mappings():224][INFO] tokenizer_path       -&gt; TOKENIZER_PATH
+[process-21851][root][2025-11-19 12:19:52.881][server_args.py:print_env_mappings():224][INFO] act_type             -&gt; ACT_TYPE
+[process-21851][root][2025-11-19 12:19:52.881][server_args.py:print_env_mappings():224][INFO] use_float32          -&gt; USE_FLOAT32
+[process-21851][root][2025-11-19 12:19:52.881][server_args.py:print_env_mappings():224][INFO] original_checkpoint_path -&gt; ORIGINAL_CHECKPOINT_PATH
+[process-21851][root][2025-11-19 12:19:52.881][server_args.py:print_env_mappings():224][INFO] mla_ops_type         -&gt; MLA_OPS_TYPE
+[process-21851][root][2025-11-19 12:19:52.881][server_args.py:print_env_mappings():224][INFO] ft_plugin_path       -&gt; FT_PLUGIN_PATH
+[process-21851][root][2025-11-19 12:19:52.881][server_args.py:print_env_mappings():224][INFO] weight_type          -&gt; WEIGHT_TYPE
+[process-21851][root][2025-11-19 12:19:52.881][server_args.py:print_env_mappings():224][INFO] task_type            -&gt; TASK_TYPE
+[process-21851][root][2025-11-19 12:19:52.881][server_args.py:print_env_mappings():224][INFO] model_type           -&gt; MODEL_TYPE
+[process-21851][root][2025-11-19 12:19:52.881][server_args.py:print_env_mappings():224][INFO] checkpoint_path      -&gt; CHECKPOINT_PATH
+[process-21851][root][2025-11-19 12:19:52.881][server_args.py:print_env_mappings():224][INFO] oss_endpoint         -&gt; OSS_ENDPOINT
+[process-21851][root][2025-11-19 12:19:52.881][server_args.py:print_env_mappings():224][INFO] ptuning_path         -&gt; PTUNING_PATH
+[process-21851][root][2025-11-19 12:19:52.881][server_args.py:print_env_mappings():224][INFO] dashscope_api_key    -&gt; DASHSCOPE_API_KEY
+[process-21851][root][2025-11-19 12:19:52.881][server_args.py:print_env_mappings():224][INFO] dashscope_http_url   -&gt; DASHSCOPE_HTTP_URL
+[process-21851][root][2025-11-19 12:19:52.881][server_args.py:print_env_mappings():224][INFO] dashscope_websocket_url -&gt; DASHSCOPE_WEBSOCKET_URL
+[process-21851][root][2025-11-19 12:19:52.881][server_args.py:print_env_mappings():224][INFO] openai_api_key       -&gt; OPENAI_API_KEY
+[process-21851][root][2025-11-19 12:19:52.881][server_args.py:print_env_mappings():224][INFO] json_model_override_args -&gt; JSON_MODEL_OVERRIDE_ARGS
+[process-21851][root][2025-11-19 12:19:52.881][server_args.py:print_env_mappings():224][INFO] max_lora_model_size  -&gt; MAX_LORA_MODEL_SIZE
+[process-21851][root][2025-11-19 12:19:52.881][server_args.py:print_env_mappings():224][INFO] use_deepep_moe       -&gt; USE_DEEPEP_MOE
+[process-21851][root][2025-11-19 12:19:52.881][server_args.py:print_env_mappings():224][INFO] use_deepep_internode -&gt; USE_DEEPEP_INTERNODE
+[process-21851][root][2025-11-19 12:19:52.881][server_args.py:print_env_mappings():224][INFO] use_deepep_low_latency -&gt; USE_DEEPEP_LOW_LATENCY
+[process-21851][root][2025-11-19 12:19:52.881][server_args.py:print_env_mappings():224][INFO] use_deepep_p2p_low_latency -&gt; USE_DEEPEP_P2P_LOW_LATENCY
+[process-21851][root][2025-11-19 12:19:52.881][server_args.py:print_env_mappings():224][INFO] deep_ep_num_sm       -&gt; DEEP_EP_NUM_SM
+[process-21851][root][2025-11-19 12:19:52.881][server_args.py:print_env_mappings():224][INFO] fake_balance_expert  -&gt; FAKE_BALANCE_EXPERT
+[process-21851][root][2025-11-19 12:19:52.881][server_args.py:print_env_mappings():224][INFO] eplb_control_step    -&gt; EPLB_CONTROL_STEP
+[process-21851][root][2025-11-19 12:19:52.881][server_args.py:print_env_mappings():224][INFO] eplb_test_mode       -&gt; EPLB_TEST_MODE
+[process-21851][root][2025-11-19 12:19:52.881][server_args.py:print_env_mappings():224][INFO] eplb_balance_layer_per_step -&gt; EPLB_BALANCE_LAYER_PER_STEP
+[process-21851][root][2025-11-19 12:19:52.881][server_args.py:print_env_mappings():224][INFO] eplb_mode            -&gt; EPLB_MODE
+[process-21851][root][2025-11-19 12:19:52.881][server_args.py:print_env_mappings():224][INFO] eplb_update_time     -&gt; EPLB_UPDATE_TIME
+[process-21851][root][2025-11-19 12:19:52.881][server_args.py:print_env_mappings():224][INFO] redundant_expert     -&gt; REDUNDANT_EXPERT
+[process-21851][root][2025-11-19 12:19:52.881][server_args.py:print_env_mappings():224][INFO] hack_ep_single_entry -&gt; HACK_EP_SINGLE_ENTRY
+[process-21851][root][2025-11-19 12:19:52.881][server_args.py:print_env_mappings():224][INFO] balance_method       -&gt; BALANCE_METHOD
+[process-21851][root][2025-11-19 12:19:52.881][server_args.py:print_env_mappings():224][INFO] eplb_force_repack    -&gt; EPLB_FORCE_REPACK
+[process-21851][root][2025-11-19 12:19:52.881][server_args.py:print_env_mappings():224][INFO] eplb_stats_window_size -&gt; EPLB_STATS_WINDOW_SIZE
+[process-21851][root][2025-11-19 12:19:52.881][server_args.py:print_env_mappings():224][INFO] max_moe_normal_masked_token_num -&gt; RTP_LLM_MAX_MOE_NORMAL_MASKED_TOKEN_NUM
+[process-21851][root][2025-11-19 12:19:52.881][server_args.py:print_env_mappings():224][INFO] tp_size              -&gt; TP_SIZE
+[process-21851][root][2025-11-19 12:19:52.881][server_args.py:print_env_mappings():224][INFO] ep_size              -&gt; EP_SIZE
+[process-21851][root][2025-11-19 12:19:52.881][server_args.py:print_env_mappings():224][INFO] dp_size              -&gt; DP_SIZE
+[process-21851][root][2025-11-19 12:19:52.881][server_args.py:print_env_mappings():224][INFO] world_size           -&gt; WORLD_SIZE
+[process-21851][root][2025-11-19 12:19:52.881][server_args.py:print_env_mappings():224][INFO] world_rank           -&gt; WORLD_RANK
+[process-21851][root][2025-11-19 12:19:52.881][server_args.py:print_env_mappings():224][INFO] local_world_size     -&gt; LOCAL_WORLD_SIZE
+[process-21851][root][2025-11-19 12:19:52.881][server_args.py:print_env_mappings():224][INFO] ffn_sp_size          -&gt; FFN_SP_SIZE
+[process-21851][root][2025-11-19 12:19:52.881][server_args.py:print_env_mappings():224][INFO] enable_ffn_disaggregate -&gt; ENABLE_FFN_DISAGGREGATE
+[process-21851][root][2025-11-19 12:19:52.882][server_args.py:print_env_mappings():224][INFO] trace_memory         -&gt; RTP_LLM_TRACE_MEMORY
+[process-21851][root][2025-11-19 12:19:52.882][server_args.py:print_env_mappings():224][INFO] trace_malloc_stack   -&gt; RTP_LLM_TRACE_MALLOC_STACK
+[process-21851][root][2025-11-19 12:19:52.882][server_args.py:print_env_mappings():224][INFO] enable_device_perf   -&gt; ENABLE_DEVICE_PERF
+[process-21851][root][2025-11-19 12:19:52.882][server_args.py:print_env_mappings():224][INFO] ft_core_dump_on_exception -&gt; FT_CORE_DUMP_ON_EXCEPTION
+[process-21851][root][2025-11-19 12:19:52.882][server_args.py:print_env_mappings():224][INFO] ft_alog_conf_path    -&gt; FT_ALOG_CONF_PATH
+[process-21851][root][2025-11-19 12:19:52.882][server_args.py:print_env_mappings():224][INFO] log_level            -&gt; LOG_LEVEL
+[process-21851][root][2025-11-19 12:19:52.882][server_args.py:print_env_mappings():224][INFO] gen_timeline_sync    -&gt; GEN_TIMELINE_SYNC
+[process-21851][root][2025-11-19 12:19:52.882][server_args.py:print_env_mappings():224][INFO] torch_cuda_profiler_dir -&gt; TORCH_CUDA_PROFILER_DIR
+[process-21851][root][2025-11-19 12:19:52.882][server_args.py:print_env_mappings():224][INFO] log_path             -&gt; LOG_PATH
+[process-21851][root][2025-11-19 12:19:52.882][server_args.py:print_env_mappings():224][INFO] log_file_backup_count -&gt; LOG_FILE_BACKUP_COUNT
+[process-21851][root][2025-11-19 12:19:52.882][server_args.py:print_env_mappings():224][INFO] nccl_debug_file      -&gt; NCCL_DEBUG_FILE
+[process-21851][root][2025-11-19 12:19:52.882][server_args.py:print_env_mappings():224][INFO] debug_load_server    -&gt; DEBUG_LOAD_SERVER
+[process-21851][root][2025-11-19 12:19:52.882][server_args.py:print_env_mappings():224][INFO] hack_layer_num       -&gt; HACK_LAYER_NUM
+[process-21851][root][2025-11-19 12:19:52.882][server_args.py:print_env_mappings():224][INFO] debug_start_fake_process -&gt; DEBUG_START_FAKE_PROCESS
+[process-21851][root][2025-11-19 12:19:52.882][server_args.py:print_env_mappings():224][INFO] dg_print_reg_reuse   -&gt; DG_PRINT_REG_REUSE
+[process-21851][root][2025-11-19 12:19:52.882][server_args.py:print_env_mappings():224][INFO] qwen_agent_debug     -&gt; QWEN_AGENT_DEBUG
+[process-21851][root][2025-11-19 12:19:52.882][server_args.py:print_env_mappings():224][INFO] disable_dpc_random   -&gt; DISABLE_DPC_RANDOM
+[process-21851][root][2025-11-19 12:19:52.882][server_args.py:print_env_mappings():224][INFO] enable_detail_log    -&gt; ENABLE_DETAIL_LOG
+[process-21851][root][2025-11-19 12:19:52.882][server_args.py:print_env_mappings():224][INFO] check_nan            -&gt; CHECK_NAN
+[process-21851][root][2025-11-19 12:19:52.882][server_args.py:print_env_mappings():224][INFO] int8_mode            -&gt; INT8_MODE
+[process-21851][root][2025-11-19 12:19:52.882][server_args.py:print_env_mappings():224][INFO] quantization         -&gt; QUANTIZATION
+[process-21851][root][2025-11-19 12:19:52.882][server_args.py:print_env_mappings():224][INFO] model_template_type  -&gt; MODEL_TEMPLATE_TYPE
+[process-21851][root][2025-11-19 12:19:52.882][server_args.py:print_env_mappings():224][INFO] default_chat_template_key -&gt; DEFAULT_CHAT_TEMPLATE_KEY
+[process-21851][root][2025-11-19 12:19:52.882][server_args.py:print_env_mappings():224][INFO] default_tool_use_template_key -&gt; DEFAULT_TOOL_USE_TEMPLATE_KEY
+[process-21851][root][2025-11-19 12:19:52.882][server_args.py:print_env_mappings():224][INFO] llava_chat_template  -&gt; LLAVA_CHAT_TEMPLATE
+[process-21851][root][2025-11-19 12:19:52.882][server_args.py:print_env_mappings():224][INFO] role_type            -&gt; ROLE_TYPE
+[process-21851][root][2025-11-19 12:19:52.882][server_args.py:print_env_mappings():224][INFO] use_local            -&gt; USE_LOCAL
+[process-21851][root][2025-11-19 12:19:52.882][server_args.py:print_env_mappings():224][INFO] remote_rpc_server_ip -&gt; REMOTE_RPC_SERVER_IP
+[process-21851][root][2025-11-19 12:19:52.882][server_args.py:print_env_mappings():224][INFO] decode_cm2_config    -&gt; RTP_LLM_DECODE_CM2_CONFIG
+[process-21851][root][2025-11-19 12:19:52.882][server_args.py:print_env_mappings():224][INFO] remote_vit_server_ip -&gt; REMOTE_VIT_SERVER_IP
+[process-21851][root][2025-11-19 12:19:52.882][server_args.py:print_env_mappings():224][INFO] multimodal_part_cm2_config -&gt; RTP_LLM_MULTIMODAL_PART_CM2_CONFIG
+[process-21851][root][2025-11-19 12:19:52.882][server_args.py:print_env_mappings():224][INFO] max_batch_size       -&gt; MAX_BATCH_SIZE
+[process-21851][root][2025-11-19 12:19:52.882][server_args.py:print_env_mappings():224][INFO] enable_flashinfer_sample_kernel -&gt; ENABLE_FLASHINFER_SAMPLE_KERNEL
+[process-21851][root][2025-11-19 12:19:52.882][server_args.py:print_env_mappings():224][INFO] use_batch_decode_scheduler -&gt; USE_BATCH_DECODE_SCHEDULER
+[process-21851][root][2025-11-19 12:19:52.882][server_args.py:print_env_mappings():224][INFO] frontend_server_count -&gt; FRONTEND_SERVER_COUNT
+[process-21851][root][2025-11-19 12:19:52.882][server_args.py:print_env_mappings():224][INFO] start_port           -&gt; START_PORT
+[process-21851][root][2025-11-19 12:19:52.882][server_args.py:print_env_mappings():224][INFO] timeout_keep_alive   -&gt; TIMEOUT_KEEP_ALIVE
+[process-21851][root][2025-11-19 12:19:52.882][server_args.py:print_env_mappings():224][INFO] frontend_server_id   -&gt; FRONTEND_SERVER_ID
+[process-21851][root][2025-11-19 12:19:52.882][server_args.py:print_env_mappings():224][INFO] sparse_config_file   -&gt; SPARSE_CONFIG_FILE
+[process-21851][root][2025-11-19 12:19:52.882][server_args.py:print_env_mappings():224][INFO] sp_model_type        -&gt; SP_MODEL_TYPE
+[process-21851][root][2025-11-19 12:19:52.882][server_args.py:print_env_mappings():224][INFO] sp_type              -&gt; SP_TYPE
+[process-21851][root][2025-11-19 12:19:52.882][server_args.py:print_env_mappings():224][INFO] sp_min_token_match   -&gt; SP_MIN_TOKEN_MATCH
+[process-21851][root][2025-11-19 12:19:52.882][server_args.py:print_env_mappings():224][INFO] sp_max_token_match   -&gt; SP_MAX_TOKEN_MATCH
+[process-21851][root][2025-11-19 12:19:52.882][server_args.py:print_env_mappings():224][INFO] tree_decode_config   -&gt; TREE_DECODE_CONFIG
+[process-21851][root][2025-11-19 12:19:52.882][server_args.py:print_env_mappings():224][INFO] sp_act_type          -&gt; SP_ACT_TYPE
+[process-21851][root][2025-11-19 12:19:52.882][server_args.py:print_env_mappings():224][INFO] sp_quantization      -&gt; SP_QUANTIZATION
+[process-21851][root][2025-11-19 12:19:52.882][server_args.py:print_env_mappings():224][INFO] sp_checkpoint_path   -&gt; SP_CHECKPOINT_PATH
+[process-21851][root][2025-11-19 12:19:52.882][server_args.py:print_env_mappings():224][INFO] gen_num_per_cycle    -&gt; GEN_NUM_PER_CIRCLE
+[process-21851][root][2025-11-19 12:19:52.882][server_args.py:print_env_mappings():224][INFO] force_stream_sample  -&gt; FORCE_STREAM_SAMPLE
+[process-21851][root][2025-11-19 12:19:52.882][server_args.py:print_env_mappings():224][INFO] force_score_context_attention -&gt; FORCE_SCORE_CONTEXT_ATTENTION
+[process-21851][root][2025-11-19 12:19:52.882][server_args.py:print_env_mappings():224][INFO] vit_separation       -&gt; VIT_SEPARATION
+[process-21851][root][2025-11-19 12:19:52.882][server_args.py:print_env_mappings():224][INFO] vit_trt              -&gt; VIT_TRT
+[process-21851][root][2025-11-19 12:19:52.882][server_args.py:print_env_mappings():224][INFO] trt_cache_enabled    -&gt; TRT_CACHE_ENABLED
+[process-21851][root][2025-11-19 12:19:52.882][server_args.py:print_env_mappings():224][INFO] trt_cache_path       -&gt; TRT_CACHE_PATH
+[process-21851][root][2025-11-19 12:19:52.882][server_args.py:print_env_mappings():224][INFO] download_headers     -&gt; DOWNLOAD_HEADERS
+[process-21851][root][2025-11-19 12:19:52.882][server_args.py:print_env_mappings():224][INFO] mm_cache_item_num    -&gt; MM_CACHE_ITEM_NUM
+[process-21851][root][2025-11-19 12:19:52.882][server_args.py:print_env_mappings():224][INFO] url_cache_item_num   -&gt; URL_CACHE_ITEM_NUM
+[process-21851][root][2025-11-19 12:19:52.882][server_args.py:print_env_mappings():224][INFO] use_igraph_cache     -&gt; USE_IGRAPH_CACHE
+[process-21851][root][2025-11-19 12:19:52.882][server_args.py:print_env_mappings():224][INFO] igraph_search_dom    -&gt; IGRAPH_SEARCH_DOM
+[process-21851][root][2025-11-19 12:19:52.882][server_args.py:print_env_mappings():224][INFO] igraph_vipserver     -&gt; IGRAPH_VIPSERVER
+[process-21851][root][2025-11-19 12:19:52.882][server_args.py:print_env_mappings():224][INFO] igraph_table_name    -&gt; IGRAPH_TABLE_NAME
+[process-21851][root][2025-11-19 12:19:52.882][server_args.py:print_env_mappings():224][INFO] igraph_default_key   -&gt; IGRAPH_DEFAULT_KEY
+[process-21851][root][2025-11-19 12:19:52.882][server_args.py:print_env_mappings():224][INFO] worker_info_port_num -&gt; WORKER_INFO_PORT_NUM
+[process-21851][root][2025-11-19 12:19:52.882][server_args.py:print_env_mappings():224][INFO] remote_jit_dir       -&gt; REMOTE_JIT_DIR
+[process-21851][root][2025-11-19 12:19:52.882][server_args.py:print_env_mappings():224][INFO] prefill_retry_times  -&gt; PREFILL_RETRY_TIMES
+[process-21851][root][2025-11-19 12:19:52.882][server_args.py:print_env_mappings():224][INFO] prefill_retry_timeout_ms -&gt; PREFILL_RETRY_TIMEOUT_MS
+[process-21851][root][2025-11-19 12:19:52.882][server_args.py:print_env_mappings():224][INFO] prefill_max_wait_timeout_ms -&gt; PREFILL_MAX_WAIT_TIMEOUT_MS
+[process-21851][root][2025-11-19 12:19:52.882][server_args.py:print_env_mappings():224][INFO] load_cache_timeout_ms -&gt; LOAD_CACHE_TIMEOUT_MS
+[process-21851][root][2025-11-19 12:19:52.882][server_args.py:print_env_mappings():224][INFO] decode_retry_times   -&gt; DECODE_RETRY_TIMES
+[process-21851][root][2025-11-19 12:19:52.882][server_args.py:print_env_mappings():224][INFO] decode_retry_timeout_ms -&gt; DECODE_RETRY_TIMEOUT_MS
+[process-21851][root][2025-11-19 12:19:52.882][server_args.py:print_env_mappings():224][INFO] decode_retry_interval_ms -&gt; DECODE_RETRY_INTERVAL_MS
+[process-21851][root][2025-11-19 12:19:52.882][server_args.py:print_env_mappings():224][INFO] rdma_connect_retry_times -&gt; RDMA_CONNECT_RETRY_TIMES
+[process-21851][root][2025-11-19 12:19:52.882][server_args.py:print_env_mappings():224][INFO] decode_polling_kv_cache_step_ms -&gt; DECODE_POLLING_KV_CACHE_STEP_MS
+[process-21851][root][2025-11-19 12:19:52.883][server_args.py:print_env_mappings():224][INFO] decode_entrance      -&gt; DECODE_ENTRANCE
+[process-21851][root][2025-11-19 12:19:52.883][server_args.py:print_env_mappings():226][INFO] --------------------------------------------------
+[process-21851][root][2025-11-19 12:19:52.883][fuser.py:fetch_remote_file_to_local():283][INFO] Local path  use directly.
+[process-21851][root][2025-11-19 12:19:52.883][py_config_modules.py:update_from_env():880][INFO] [server_config]
+frontend_server_count: 4
+start_port: 6789
+timeout_keep_alive: 5
+frontend_server_id: 0
+rank_id: 0
+
+[profiling_debug_config]
+trace_memory: 0
+trace_malloc_stack: 0
+enable_device_perf: 0
+ft_core_dump_on_exception: 0
+ft_alog_conf_path: /mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/config/alog.conf
+log_level: INFO
+gen_timeline_sync: 0
+torch_cuda_profiler_dir
+log_path: logs
+log_file_backup_count: 16
+nccl_debug_file: 
+debug_load_server: 0
+hack_layer_num: 0
+debug_start_fake_process: 0
+dg_print_reg_reuse: 0
+qwen_agent_debug0
+disable_dpc_random0
+check_nan0
+
+
+[model_config]
+extra_data_path: 
+local_extra_data_path: None
+tokenizer_path: /mnt/raid0/pretrained_model/rtp_ci/Qwen3-32B
+act_type: bf16
+use_float32: False
+original_checkpoint_path: None
+mla_ops_type: AUTO
+ft_plugin_path: None
+weight_type: None
+task_type: None
+model_type: qwen_3
+checkpoint_path: /mnt/raid0/pretrained_model/rtp_ci/Qwen3-32B
+oss_endpoint: 
+ptuning_path: None
+openai_api_key: EMPTY
+dashscope_api_key: EMPTY
+dashscope_http_url: None
+dashscope_websocket_url: None
+json_model_override_args: {}
+
+[py_speculative_execution_config]
+gen_num_per_circle: 1
+sp_quantization: None
+sp_checkpoint_path: None
+sp_type: 
+sp_model_type: sp_kv_cache_dtype: None
+sp_checkpoint_path: None
+
+[lora_config]
+lora_info: {}
+merge_lora: True
+
+
+[load_config]
+phy2log_path: 
+converter_num_per_gpu: 4
+tokenizers_parallelism: False
+load_ckpt_num_process: 0
+load_method: auto
+
+[render_config]
+model_template_type: None
+default_chat_template_key: default
+default_tool_use_template_key: tool_use
+llava_chat_template: 
+
+[gang_config]
+fake_gang_env: False
+gang_annocation_path: /etc/podinfo/annotations
+gang_config_string: None
+zone_name: 
+distribute_config_file: 
+dist_barrier_timeout: 45
+gang_sleep_time: 10
+gang_timeout_min: 30
+json_gang_parts: None
+lead_address: None
+
+
+[vit_config]
+vit_separation: 0
+vit_trt: 0
+trt_cache_enabled: 0
+trt_cache_path: /mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/trt_cache
+download_headers: 
+mm_cache_item_num: 10
+url_cache_item_num: 100
+use_igraph_cache: True
+igraph_search_dom: com.taobao.search.igraph.common
+igraph_vipserver: 0
+igraph_table_name: 
+igraph_default_key: None
+
+[generate_env_config]
+think_end_tag: &lt;/think&gt;
+
+
+think_end_token_id: -1
+think_mode: 0
+force_stop_words: False
+stop_words_list: None
+stop_words_str: None
+think_start_tag: &lt;think&gt;\n
+generation_config_path: None
+
+[quantization_config]
+int8_mode: 0
+quantization: 
+
+[py_eplb_config]
+eplb_mode: NONE
+eplb_update_time: 5000
+redundant_expert: 0
+hack_ep_single_entry: 0
+balance_method: mix
+eplb_force_repack: 0
+eplb_stats_window_size: 10
+
+[py_kv_cache_config]
+int8_kv_cache: 0
+fp8_kv_cache: 0
+kv_cache_dtype: auto
+kv_cache_mem_mb: -1
+seq_size_per_block: 16
+test_block_num: 0
+use_block_cache: None
+blockwise_use_fp8_kv_cache: 0
+reuse_cache: False
+
+[py_device_resource_config]
+reserver_runtime_mem_mb: 102400
+specify_gpu_arch: 
+acext_gemm_config_dir: None
+device_reserve_memory_bytes: -2048000000
+
+[sparse_config]
+sparse_config_file: None
+
+[engine_config]
+warm_up: 0
+warm_up_with_loss: 0
+max_seq_len: 150000
+
+[embedding_config]
+embedding_model: 0
+extra_input_in_mm_embedding: 
+
+[worker_config]
+worker_info_port_num: 7
+
+[role_config]
+role_type: PDFUSION
+
+[pd_separation_config]
+prefill_retry_times: 0
+prefill_retry_timeout_ms: 0
+prefill_max_wait_timeout_ms: 600000
+decode_retry_times: 100
+decode_retry_timeout_ms: 100
+decode_retry_interval_ms: 100
+decode_polling_kv_cache_step_ms: 30
+decode_entrance: 0
+rdma_connect_retry_times: 0
+load_cache_timeout_ms: 5000
+
+[parallelism_distributed_config]
+tp_size: 1
+ep_size: 1
+dp_size: 1
+world_size: 1
+world_rank: 0
+pp_size: 1
+local_world_size: 1
+ffn_sp_size1
+
+[model_specific_config]
+max_lora_model_size: -1
+load_python_model:0
+
+
+[fmha_config]
+enable_fmha: 1
+enable_trt_fmha: 1
+enable_paged_trt_fmha: 1
+enable_open_source_fmha: 1
+enable_paged_open_source_fmha: 1
+enable_trtv1_fmha: 1
+fmha_perf_instrument: 0
+fmha_show_params: 0
+disable_flash_infer: 0
+enable_xqa: 1
+
+
+[misc_config]
+disable_pdl1
+aux_string: 
+
+
+[concurrency_config]
+concurrency_with_block: 0
+concurrency_limit: 1024
+
+[jit_config]
+remote_jit_dir: 
+
+[py_hw_kernel_config]
+deep_gemm_num_sm: -1
+arm_gemm_use_kai: False
+enable_stable_scatter_add: False
+enable_multi_block_mode: True
+ft_disable_custom_ar: False
+rocm_hipblaslt_config: gemm_config.csv
+use_swizzleA: False
+enable_cuda_graph: False
+enable_cuda_graph_debug_mode: False
+use_aiter_pa: True
+use_asm_pa: True
+enable_native_cuda_graph: False
+num_native_cuda_graph: 200
+
+
+[process-21851][root][2025-11-19 12:19:52.883][concurrency_controller.py:init_controller():58][INFO] concurrency_limit : 1024, global_concurrency_limit : 1024
+[process-21851][root][2025-11-19 12:19:52.886][fuser.py:fetch_remote_file_to_local():283][INFO] Local path  use directly.
+[process-21851][root][2025-11-19 12:19:52.886][py_config_modules.py:update_from_env():880][INFO] [server_config]
+frontend_server_count: 4
+start_port: 6789
+timeout_keep_alive: 5
+frontend_server_id: 0
+rank_id: 0
+
+[profiling_debug_config]
+trace_memory: 0
+trace_malloc_stack: 0
+enable_device_perf: 0
+ft_core_dump_on_exception: 0
+ft_alog_conf_path: /mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/config/alog.conf
+log_level: INFO
+gen_timeline_sync: 0
+torch_cuda_profiler_dir
+log_path: logs
+log_file_backup_count: 16
+nccl_debug_file: 
+debug_load_server: 0
+hack_layer_num: 0
+debug_start_fake_process: 0
+dg_print_reg_reuse: 0
+qwen_agent_debug0
+disable_dpc_random0
+check_nan0
+
+
+[model_config]
+extra_data_path: 
+local_extra_data_path: None
+tokenizer_path: /mnt/raid0/pretrained_model/rtp_ci/Qwen3-32B
+act_type: bf16
+use_float32: False
+original_checkpoint_path: None
+mla_ops_type: AUTO
+ft_plugin_path: None
+weight_type: None
+task_type: None
+model_type: qwen_3
+checkpoint_path: /mnt/raid0/pretrained_model/rtp_ci/Qwen3-32B
+oss_endpoint: 
+ptuning_path: None
+openai_api_key: EMPTY
+dashscope_api_key: EMPTY
+dashscope_http_url: None
+dashscope_websocket_url: None
+json_model_override_args: {}
+
+[py_speculative_execution_config]
+gen_num_per_circle: 1
+sp_quantization: None
+sp_checkpoint_path: None
+sp_type: 
+sp_model_type: sp_kv_cache_dtype: None
+sp_checkpoint_path: None
+
+[lora_config]
+lora_info: {}
+merge_lora: True
+
+
+[load_config]
+phy2log_path: 
+converter_num_per_gpu: 4
+tokenizers_parallelism: False
+load_ckpt_num_process: 0
+load_method: auto
+
+[render_config]
+model_template_type: None
+default_chat_template_key: default
+default_tool_use_template_key: tool_use
+llava_chat_template: 
+
+[gang_config]
+fake_gang_env: False
+gang_annocation_path: /etc/podinfo/annotations
+gang_config_string: None
+zone_name: 
+distribute_config_file: 
+dist_barrier_timeout: 45
+gang_sleep_time: 10
+gang_timeout_min: 30
+json_gang_parts: None
+lead_address: None
+
+
+[vit_config]
+vit_separation: 0
+vit_trt: 0
+trt_cache_enabled: 0
+trt_cache_path: /mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/trt_cache
+download_headers: 
+mm_cache_item_num: 10
+url_cache_item_num: 100
+use_igraph_cache: True
+igraph_search_dom: com.taobao.search.igraph.common
+igraph_vipserver: 0
+igraph_table_name: 
+igraph_default_key: None
+
+[generate_env_config]
+think_end_tag: &lt;/think&gt;
+
+
+think_end_token_id: -1
+think_mode: 0
+force_stop_words: False
+stop_words_list: None
+stop_words_str: None
+think_start_tag: &lt;think&gt;\n
+generation_config_path: None
+
+[quantization_config]
+int8_mode: 0
+quantization: 
+
+[py_eplb_config]
+eplb_mode: NONE
+eplb_update_time: 5000
+redundant_expert: 0
+hack_ep_single_entry: 0
+balance_method: mix
+eplb_force_repack: 0
+eplb_stats_window_size: 10
+
+[py_kv_cache_config]
+int8_kv_cache: 0
+fp8_kv_cache: 0
+kv_cache_dtype: auto
+kv_cache_mem_mb: -1
+seq_size_per_block: 16
+test_block_num: 0
+use_block_cache: None
+blockwise_use_fp8_kv_cache: 0
+reuse_cache: False
+
+[py_device_resource_config]
+reserver_runtime_mem_mb: 102400
+specify_gpu_arch: 
+acext_gemm_config_dir: None
+device_reserve_memory_bytes: -2048000000
+
+[sparse_config]
+sparse_config_file: None
+
+[engine_config]
+warm_up: 0
+warm_up_with_loss: 0
+max_seq_len: 150000
+
+[embedding_config]
+embedding_model: 0
+extra_input_in_mm_embedding: 
+
+[worker_config]
+worker_info_port_num: 7
+
+[role_config]
+role_type: PDFUSION
+
+[pd_separation_config]
+prefill_retry_times: 0
+prefill_retry_timeout_ms: 0
+prefill_max_wait_timeout_ms: 600000
+decode_retry_times: 100
+decode_retry_timeout_ms: 100
+decode_retry_interval_ms: 100
+decode_polling_kv_cache_step_ms: 30
+decode_entrance: 0
+rdma_connect_retry_times: 0
+load_cache_timeout_ms: 5000
+
+[parallelism_distributed_config]
+tp_size: 1
+ep_size: 1
+dp_size: 1
+world_size: 1
+world_rank: 0
+pp_size: 1
+local_world_size: 1
+ffn_sp_size1
+
+[model_specific_config]
+max_lora_model_size: -1
+load_python_model:0
+
+
+[fmha_config]
+enable_fmha: 1
+enable_trt_fmha: 1
+enable_paged_trt_fmha: 1
+enable_open_source_fmha: 1
+enable_paged_open_source_fmha: 1
+enable_trtv1_fmha: 1
+fmha_perf_instrument: 0
+fmha_show_params: 0
+disable_flash_infer: 0
+enable_xqa: 1
+
+
+[misc_config]
+disable_pdl1
+aux_string: 
+
+
+[concurrency_config]
+concurrency_with_block: 0
+concurrency_limit: 1024
+
+[jit_config]
+remote_jit_dir: 
+
+[py_hw_kernel_config]
+deep_gemm_num_sm: -1
+arm_gemm_use_kai: False
+enable_stable_scatter_add: False
+enable_multi_block_mode: True
+ft_disable_custom_ar: False
+rocm_hipblaslt_config: gemm_config.csv
+use_swizzleA: False
+enable_cuda_graph: False
+enable_cuda_graph_debug_mode: False
+use_aiter_pa: True
+use_asm_pa: True
+enable_native_cuda_graph: False
+num_native_cuda_graph: 200
+
+
+[process-21851][root][2025-11-19 12:19:52.886][start_server.py:start_server():196][INFO] start backend server
+[process-21851][root][2025-11-19 12:19:53.210][__init__.py:&lt;module&gt;():8][INFO] internal devices not found
+[process-21851][root][2025-11-19 12:19:54.224][__init__.py:&lt;module&gt;():23][INFO] import internal source failed, error: No module named &#x27;internal_source&#x27;
+[aiter] import [module_aiter_enum] under /opt/conda310/lib/python3.10/site-packages/aiter/jit/module_aiter_enum.so
+[process-21851][aiter][2025-11-19 12:19:55.698][core.py:get_module_custom_op():225][INFO] import [module_aiter_enum] under /opt/conda310/lib/python3.10/site-packages/aiter/jit/module_aiter_enum.so
+[process-21851][root][2025-11-19 12:19:55.951][fmha.py:&lt;module&gt;():129][INFO] FlashInferPrefillImpl not available, skipped.
+[process-21851][root][2025-11-19 12:19:55.951][fmha.py:&lt;module&gt;():157][INFO] FlashInferDecodeOp not available, skipped.
+[process-21851][root][2025-11-19 12:19:55.951][fmha.py:&lt;module&gt;():184][INFO] TRTMHAImpl not available, skipped.
+[process-21851][root][2025-11-19 12:19:55.951][fmha.py:&lt;module&gt;():210][INFO] XQAAttnOp not available, skipped.
+/opt/conda310/lib/python3.10/site-packages/torchvision/io/image.py:14: UserWarning: Failed to load image Python extension: &#x27;libjpeg.so.8: cannot open shared object file: No such file or directory&#x27;If you don&#x27;t plan on using image functionality from `torchvision.io`, you can ignore this warning. Otherwise, there might be something wrong with your environment. Did you have `libjpeg` or `libpng` installed before building `torchvision` from source?
+  warn(
+[process-21851][root][2025-11-19 12:19:56.335][flashinfer_mla.py:load_flashinfer_python():33][WARNING] Failed to load flashinfer-python: The &#x27;flashinfer-python&#x27; distribution was not found and is required by the application
+[process-21851][root][2025-11-19 12:20:16.092][vipserver_proxy.py:refresh_srv_lst():86][ERROR] failed to refresh vipserver server list, exception : HTTPConnectionPool(host=&#x27;jmenv.tbsite.net&#x27;, port=8080): Max retries exceeded with url: /vipserver/serverlist?nofix=1&amp;labels=&amp; (Caused by NewConnectionError(&#x27;&lt;urllib3.connection.HTTPConnection object at 0x7f1303d1df60&gt;: Failed to establish a new connection: [Errno -2] Name or service not known&#x27;))
+[process-21851][root][2025-11-19 12:20:16.092][host_reactor.py:start():32][INFO] vipserver domain update thread started. to refresh domains: &lt;bound method HostReactor.refresh_cache_domain_srv_lst of &lt;rtp_llm.vipserver.host_reactor.HostReactor object at 0x7f1303d1e500&gt;&gt;
+[process-21851][root][2025-11-19 12:20:16.976][__init__.py:&lt;module&gt;():21][INFO] no internal_source found, error: No module named &#x27;internal_source&#x27;
+[process-21851][root][2025-11-19 12:20:16.995][__init__.py:&lt;module&gt;():48][INFO] import internal source failed, error: No module named &#x27;internal_source&#x27;
+/opt/conda310/lib/python3.10/site-packages/torch/cuda/__init__.py:58: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  import pynvml  # type: ignore[import]
+[process-22109][root][2025-11-19 12:20:18.455][__init__.py:&lt;module&gt;():61][INFO] failed to load libth_transformer_config.so from libs, try use another path
+[process-22109][root][2025-11-19 12:20:18.455][__init__.py:find_th_transformer():31][INFO] find_th_transformer: /mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/../bazel-bin
+[process-22109][root][2025-11-19 12:20:18.455][__init__.py:&lt;module&gt;():67][INFO] failed to find libth_transformer_config.so in /mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/../bazel-bin
+[process-22109][root][2025-11-19 12:20:18.455][__init__.py:&lt;module&gt;():71][INFO] so path: /mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/../bazel-bin
+[process-22109][root][2025-11-19 12:20:18.455][__init__.py:&lt;module&gt;():94][INFO] torch path: [&#x27;/opt/conda310/lib/python3.10/site-packages/torch&#x27;]
+[process-22109][root][2025-11-19 12:20:18.456][__init__.py:&lt;module&gt;():100][INFO] loaded libcaffe2_nvrtc.so from /opt/conda310/lib/python3.10/site-packages/torch/lib/libcaffe2_nvrtc.so
+[process-22109][root][2025-11-19 12:20:25.069][hippo_helper.py:HippoHelper():15][INFO] get container_ip from socket:10.67.77.202
+[process-22109][root][2025-11-19 12:20:25.071][fuser.py:_check_valid():97][WARNING] fuse is not valid: connet http://0:28006 error
+[process-22109][root][2025-11-19 12:20:25.072][fuser.py:fetch_remote_file_to_local():283][INFO] Local path  use directly.
+[process-22109][root][2025-11-19 12:20:25.072][py_config_modules.py:update_from_env():880][INFO] [server_config]
+frontend_server_count: 4
+start_port: 6789
+timeout_keep_alive: 5
+frontend_server_id: 0
+rank_id: 0
+
+[profiling_debug_config]
+trace_memory: 0
+trace_malloc_stack: 0
+enable_device_perf: 0
+ft_core_dump_on_exception: 0
+ft_alog_conf_path: /mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/config/alog.conf
+log_level: INFO
+gen_timeline_sync: 0
+torch_cuda_profiler_dir
+log_path: logs
+log_file_backup_count: 16
+nccl_debug_file: 
+debug_load_server: 0
+hack_layer_num: 0
+debug_start_fake_process: 0
+dg_print_reg_reuse: 0
+qwen_agent_debug0
+disable_dpc_random0
+check_nan0
+
+
+[model_config]
+extra_data_path: 
+local_extra_data_path: None
+tokenizer_path: /mnt/raid0/pretrained_model/rtp_ci/Qwen3-32B
+act_type: bf16
+use_float32: False
+original_checkpoint_path: None
+mla_ops_type: AUTO
+ft_plugin_path: None
+weight_type: None
+task_type: None
+model_type: qwen_3
+checkpoint_path: /mnt/raid0/pretrained_model/rtp_ci/Qwen3-32B
+oss_endpoint: 
+ptuning_path: None
+openai_api_key: EMPTY
+dashscope_api_key: EMPTY
+dashscope_http_url: None
+dashscope_websocket_url: None
+json_model_override_args: {}
+
+[py_speculative_execution_config]
+gen_num_per_circle: 1
+sp_quantization: None
+sp_checkpoint_path: None
+sp_type: 
+sp_model_type: sp_kv_cache_dtype: None
+sp_checkpoint_path: None
+
+[lora_config]
+lora_info: {}
+merge_lora: True
+
+
+[load_config]
+phy2log_path: 
+converter_num_per_gpu: 4
+tokenizers_parallelism: False
+load_ckpt_num_process: 0
+load_method: auto
+
+[render_config]
+model_template_type: None
+default_chat_template_key: default
+default_tool_use_template_key: tool_use
+llava_chat_template: 
+
+[gang_config]
+fake_gang_env: False
+gang_annocation_path: /etc/podinfo/annotations
+gang_config_string: None
+zone_name: 
+distribute_config_file: 
+dist_barrier_timeout: 45
+gang_sleep_time: 10
+gang_timeout_min: 30
+json_gang_parts: None
+lead_address: None
+
+
+[vit_config]
+vit_separation: 0
+vit_trt: 0
+trt_cache_enabled: 0
+trt_cache_path: /mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/trt_cache
+download_headers: 
+mm_cache_item_num: 10
+url_cache_item_num: 100
+use_igraph_cache: True
+igraph_search_dom: com.taobao.search.igraph.common
+igraph_vipserver: 0
+igraph_table_name: 
+igraph_default_key: None
+
+[generate_env_config]
+think_end_tag: &lt;/think&gt;
+
+
+think_end_token_id: -1
+think_mode: 0
+force_stop_words: False
+stop_words_list: None
+stop_words_str: None
+think_start_tag: &lt;think&gt;\n
+generation_config_path: None
+
+[quantization_config]
+int8_mode: 0
+quantization: 
+
+[py_eplb_config]
+eplb_mode: NONE
+eplb_update_time: 5000
+redundant_expert: 0
+hack_ep_single_entry: 0
+balance_method: mix
+eplb_force_repack: 0
+eplb_stats_window_size: 10
+
+[py_kv_cache_config]
+int8_kv_cache: 0
+fp8_kv_cache: 0
+kv_cache_dtype: auto
+kv_cache_mem_mb: -1
+seq_size_per_block: 16
+test_block_num: 0
+use_block_cache: None
+blockwise_use_fp8_kv_cache: 0
+reuse_cache: False
+
+[py_device_resource_config]
+reserver_runtime_mem_mb: 102400
+specify_gpu_arch: 
+acext_gemm_config_dir: None
+device_reserve_memory_bytes: -2048000000
+
+[sparse_config]
+sparse_config_file: None
+
+[engine_config]
+warm_up: 0
+warm_up_with_loss: 0
+max_seq_len: 150000
+
+[embedding_config]
+embedding_model: 0
+extra_input_in_mm_embedding: 
+
+[worker_config]
+worker_info_port_num: 7
+
+[role_config]
+role_type: PDFUSION
+
+[pd_separation_config]
+prefill_retry_times: 0
+prefill_retry_timeout_ms: 0
+prefill_max_wait_timeout_ms: 600000
+decode_retry_times: 100
+decode_retry_timeout_ms: 100
+decode_retry_interval_ms: 100
+decode_polling_kv_cache_step_ms: 30
+decode_entrance: 0
+rdma_connect_retry_times: 0
+load_cache_timeout_ms: 5000
+
+[parallelism_distributed_config]
+tp_size: 1
+ep_size: 1
+dp_size: 1
+world_size: 1
+world_rank: 0
+pp_size: 1
+local_world_size: 1
+ffn_sp_size1
+
+[model_specific_config]
+max_lora_model_size: -1
+load_python_model:0
+
+
+[fmha_config]
+enable_fmha: 1
+enable_trt_fmha: 1
+enable_paged_trt_fmha: 1
+enable_open_source_fmha: 1
+enable_paged_open_source_fmha: 1
+enable_trtv1_fmha: 1
+fmha_perf_instrument: 0
+fmha_show_params: 0
+disable_flash_infer: 0
+enable_xqa: 1
+
+
+[misc_config]
+disable_pdl1
+aux_string: 
+
+
+[concurrency_config]
+concurrency_with_block: 0
+concurrency_limit: 1024
+
+[jit_config]
+remote_jit_dir: 
+
+[py_hw_kernel_config]
+deep_gemm_num_sm: -1
+arm_gemm_use_kai: False
+enable_stable_scatter_add: False
+enable_multi_block_mode: True
+ft_disable_custom_ar: False
+rocm_hipblaslt_config: gemm_config.csv
+use_swizzleA: False
+enable_cuda_graph: False
+enable_cuda_graph_debug_mode: False
+use_aiter_pa: True
+use_asm_pa: True
+enable_native_cuda_graph: False
+num_native_cuda_graph: 200
+
+
+[process-22109][root][2025-11-19 12:20:25.072][__init__.py:&lt;module&gt;():68][INFO] init logger end
+[process-22109][root][2025-11-19 12:20:25.246][__init__.py:&lt;module&gt;():72][INFO] transformers version: 4.51.2
+[process-22109][root][2025-11-19 12:20:25.247][__init__.py:&lt;module&gt;():81][WARNING] Failed to import internal_source models
+[process-22109][root][2025-11-19 12:20:25.250][report_worker.py:__init__():32][INFO] kmonitor report default tags: {}
+[process-22109][root][2025-11-19 12:20:25.251][report_worker.py:__init__():52][INFO] test mode, kmonitor metrics not reported.
+[process-22109][root][2025-11-19 12:20:25.252][worker_info.py:get_worker_port_num():22][INFO] env WORKER_INFO_PORT_NUM: 7
+[process-22109][root][2025-11-19 12:20:25.287][worker_info.py:__init__():63][INFO] ParallelInfo:[ tp_size=1 ep_size=1 pp_size=1 world_size=1 world_rank=0 local_world_size=1 ffn_sp_size=1 ffn_tp_size=1]
+[process-22109][root][2025-11-19 12:20:25.658][__init__.py:&lt;module&gt;():8][INFO] internal devices not found
+[process-22109][root][2025-11-19 12:20:26.631][__init__.py:&lt;module&gt;():23][INFO] import internal source failed, error: No module named &#x27;internal_source&#x27;
+[aiter] import [module_aiter_enum] under /opt/conda310/lib/python3.10/site-packages/aiter/jit/module_aiter_enum.so
+[process-22109][aiter][2025-11-19 12:20:27.926][core.py:get_module_custom_op():225][INFO] import [module_aiter_enum] under /opt/conda310/lib/python3.10/site-packages/aiter/jit/module_aiter_enum.so
+[process-22109][root][2025-11-19 12:20:28.148][fmha.py:&lt;module&gt;():129][INFO] FlashInferPrefillImpl not available, skipped.
+[process-22109][root][2025-11-19 12:20:28.148][fmha.py:&lt;module&gt;():157][INFO] FlashInferDecodeOp not available, skipped.
+[process-22109][root][2025-11-19 12:20:28.148][fmha.py:&lt;module&gt;():184][INFO] TRTMHAImpl not available, skipped.
+[process-22109][root][2025-11-19 12:20:28.148][fmha.py:&lt;module&gt;():210][INFO] XQAAttnOp not available, skipped.
+/opt/conda310/lib/python3.10/site-packages/torchvision/io/image.py:14: UserWarning: Failed to load image Python extension: &#x27;libjpeg.so.8: cannot open shared object file: No such file or directory&#x27;If you don&#x27;t plan on using image functionality from `torchvision.io`, you can ignore this warning. Otherwise, there might be something wrong with your environment. Did you have `libjpeg` or `libpng` installed before building `torchvision` from source?
+  warn(
+[process-22109][root][2025-11-19 12:20:28.535][flashinfer_mla.py:load_flashinfer_python():33][WARNING] Failed to load flashinfer-python: The &#x27;flashinfer-python&#x27; distribution was not found and is required by the application
+[process-21851][root][2025-11-19 12:20:46.420][vipserver_proxy.py:refresh_srv_lst():86][ERROR] failed to refresh vipserver server list, exception : HTTPConnectionPool(host=&#x27;jmenv.tbsite.net&#x27;, port=8080): Max retries exceeded with url: /vipserver/serverlist?nofix=1&amp;labels=&amp; (Caused by NewConnectionError(&#x27;&lt;urllib3.connection.HTTPConnection object at 0x7f27e789ad40&gt;: Failed to establish a new connection: [Errno -2] Name or service not known&#x27;))
+[process-22109][root][2025-11-19 12:20:49.014][vipserver_proxy.py:refresh_srv_lst():86][ERROR] failed to refresh vipserver server list, exception : HTTPConnectionPool(host=&#x27;jmenv.tbsite.net&#x27;, port=8080): Max retries exceeded with url: /vipserver/serverlist?nofix=1&amp;labels=&amp; (Caused by NewConnectionError(&#x27;&lt;urllib3.connection.HTTPConnection object at 0x7faff626e5f0&gt;: Failed to establish a new connection: [Errno -2] Name or service not known&#x27;))
+[process-22109][root][2025-11-19 12:20:49.015][host_reactor.py:start():32][INFO] vipserver domain update thread started. to refresh domains: &lt;bound method HostReactor.refresh_cache_domain_srv_lst of &lt;rtp_llm.vipserver.host_reactor.HostReactor object at 0x7faff626dc00&gt;&gt;
+[process-22109][root][2025-11-19 12:20:50.155][__init__.py:&lt;module&gt;():21][INFO] no internal_source found, error: No module named &#x27;internal_source&#x27;
+[process-22109][root][2025-11-19 12:20:50.164][__init__.py:&lt;module&gt;():48][INFO] import internal source failed, error: No module named &#x27;internal_source&#x27;
+[process-22109][root][2025-11-19 12:20:50.672][start_backend_server.py:load_gpu_nic_affinity():145][INFO] get gpu nic affinity failed, run /usr/local/bin/run_affinity failed, exception is Command &#x27;[&#x27;/usr/local/bin/run_affinity&#x27;]&#x27; returned non-zero exit status 255.
+[process-22109][root][2025-11-19 12:20:50.672][util.py:copy_gemm_config():160][INFO] not found gemm_config in HIPPO_APP_INST_ROOT, not copy
+[process-22109][root][2025-11-19 12:20:50.672][fuser.py:fetch_remote_file_to_local():283][INFO] Local path  use directly.
+[process-22109][root][2025-11-19 12:20:50.673][py_config_modules.py:update_from_env():880][INFO] [server_config]
+frontend_server_count: 4
+start_port: 6789
+timeout_keep_alive: 5
+frontend_server_id: 0
+rank_id: 0
+
+[profiling_debug_config]
+trace_memory: 0
+trace_malloc_stack: 0
+enable_device_perf: 0
+ft_core_dump_on_exception: 0
+ft_alog_conf_path: /mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/config/alog.conf
+log_level: INFO
+gen_timeline_sync: 0
+torch_cuda_profiler_dir
+log_path: logs
+log_file_backup_count: 16
+nccl_debug_file: 
+debug_load_server: 0
+hack_layer_num: 0
+debug_start_fake_process: 0
+dg_print_reg_reuse: 0
+qwen_agent_debug0
+disable_dpc_random0
+check_nan0
+
+
+[model_config]
+extra_data_path: 
+local_extra_data_path: None
+tokenizer_path: /mnt/raid0/pretrained_model/rtp_ci/Qwen3-32B
+act_type: bf16
+use_float32: False
+original_checkpoint_path: None
+mla_ops_type: AUTO
+ft_plugin_path: None
+weight_type: None
+task_type: None
+model_type: qwen_3
+checkpoint_path: /mnt/raid0/pretrained_model/rtp_ci/Qwen3-32B
+oss_endpoint: 
+ptuning_path: None
+openai_api_key: EMPTY
+dashscope_api_key: EMPTY
+dashscope_http_url: None
+dashscope_websocket_url: None
+json_model_override_args: {}
+
+[py_speculative_execution_config]
+gen_num_per_circle: 1
+sp_quantization: None
+sp_checkpoint_path: None
+sp_type: 
+sp_model_type: sp_kv_cache_dtype: None
+sp_checkpoint_path: None
+
+[lora_config]
+lora_info: {}
+merge_lora: True
+
+
+[load_config]
+phy2log_path: 
+converter_num_per_gpu: 4
+tokenizers_parallelism: False
+load_ckpt_num_process: 0
+load_method: auto
+
+[render_config]
+model_template_type: None
+default_chat_template_key: default
+default_tool_use_template_key: tool_use
+llava_chat_template: 
+
+[gang_config]
+fake_gang_env: False
+gang_annocation_path: /etc/podinfo/annotations
+gang_config_string: None
+zone_name: 
+distribute_config_file: 
+dist_barrier_timeout: 45
+gang_sleep_time: 10
+gang_timeout_min: 30
+json_gang_parts: None
+lead_address: None
+
+
+[vit_config]
+vit_separation: 0
+vit_trt: 0
+trt_cache_enabled: 0
+trt_cache_path: /mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/trt_cache
+download_headers: 
+mm_cache_item_num: 10
+url_cache_item_num: 100
+use_igraph_cache: True
+igraph_search_dom: com.taobao.search.igraph.common
+igraph_vipserver: 0
+igraph_table_name: 
+igraph_default_key: None
+
+[generate_env_config]
+think_end_tag: &lt;/think&gt;
+
+
+think_end_token_id: -1
+think_mode: 0
+force_stop_words: False
+stop_words_list: None
+stop_words_str: None
+think_start_tag: &lt;think&gt;\n
+generation_config_path: None
+
+[quantization_config]
+int8_mode: 0
+quantization: 
+
+[py_eplb_config]
+eplb_mode: NONE
+eplb_update_time: 5000
+redundant_expert: 0
+hack_ep_single_entry: 0
+balance_method: mix
+eplb_force_repack: 0
+eplb_stats_window_size: 10
+
+[py_kv_cache_config]
+int8_kv_cache: 0
+fp8_kv_cache: 0
+kv_cache_dtype: auto
+kv_cache_mem_mb: -1
+seq_size_per_block: 16
+test_block_num: 0
+use_block_cache: None
+blockwise_use_fp8_kv_cache: 0
+reuse_cache: False
+
+[py_device_resource_config]
+reserver_runtime_mem_mb: 102400
+specify_gpu_arch: 
+acext_gemm_config_dir: None
+device_reserve_memory_bytes: -2048000000
+
+[sparse_config]
+sparse_config_file: None
+
+[engine_config]
+warm_up: 0
+warm_up_with_loss: 0
+max_seq_len: 150000
+
+[embedding_config]
+embedding_model: 0
+extra_input_in_mm_embedding: 
+
+[worker_config]
+worker_info_port_num: 7
+
+[role_config]
+role_type: PDFUSION
+
+[pd_separation_config]
+prefill_retry_times: 0
+prefill_retry_timeout_ms: 0
+prefill_max_wait_timeout_ms: 600000
+decode_retry_times: 100
+decode_retry_timeout_ms: 100
+decode_retry_interval_ms: 100
+decode_polling_kv_cache_step_ms: 30
+decode_entrance: 0
+rdma_connect_retry_times: 0
+load_cache_timeout_ms: 5000
+
+[parallelism_distributed_config]
+tp_size: 1
+ep_size: 1
+dp_size: 1
+world_size: 1
+world_rank: 0
+pp_size: 1
+local_world_size: 1
+ffn_sp_size1
+
+[model_specific_config]
+max_lora_model_size: -1
+load_python_model:0
+
+
+[fmha_config]
+enable_fmha: 1
+enable_trt_fmha: 1
+enable_paged_trt_fmha: 1
+enable_open_source_fmha: 1
+enable_paged_open_source_fmha: 1
+enable_trtv1_fmha: 1
+fmha_perf_instrument: 0
+fmha_show_params: 0
+disable_flash_infer: 0
+enable_xqa: 1
+
+
+[misc_config]
+disable_pdl1
+aux_string: 
+
+
+[concurrency_config]
+concurrency_with_block: 0
+concurrency_limit: 1024
+
+[jit_config]
+remote_jit_dir: 
+
+[py_hw_kernel_config]
+deep_gemm_num_sm: -1
+arm_gemm_use_kai: False
+enable_stable_scatter_add: False
+enable_multi_block_mode: True
+ft_disable_custom_ar: False
+rocm_hipblaslt_config: gemm_config.csv
+use_swizzleA: False
+enable_cuda_graph: False
+enable_cuda_graph_debug_mode: False
+use_aiter_pa: True
+use_asm_pa: True
+enable_native_cuda_graph: False
+num_native_cuda_graph: 200
+
+
+[process-22109][root][2025-11-19 12:20:50.673][worker_info.py:__init__():63][INFO] ParallelInfo:[ tp_size=1 ep_size=1 pp_size=1 world_size=1 world_rank=0 local_world_size=1 ffn_sp_size=1 ffn_tp_size=1]
+[process-22109][root][2025-11-19 12:20:50.673][start_backend_server.py:local_rank_start():45][INFO] start local 
+        WorkerInfo: [ip=10.67.77.202 server_port=6789 gang_hb_port=6792
+        http_port=6794 rpc_port=6790 backend_server_port=6795
+        cache_store_listen_port=6791 cache_store_connect_port=2 remote_rpc_server_port=1
+        local_rank=0 world_rank=0 name= info=None ]
+        , ParallelInfo:[ tp_size=1 pp_size=1 world_size=1 world_rank=0 local_world_size=1 tp_rank=0 dp_rank=0 ep_size=1 dp_size=1 ep_rank=0 local_rank=0 ffn_sp_size=1 ]
+[process-22109][root][2025-11-19 12:20:50.673][gang_server.py:start():415][INFO] world_size==1, do not start gang_server
+[process-22109][root][2025-11-19 12:20:50.674][fuser.py:fetch_remote_file_to_local():283][INFO] Local path /mnt/raid0/pretrained_model/rtp_ci/Qwen3-32B use directly.
+[process-22109][root][2025-11-19 12:20:50.674][fuser.py:fetch_remote_file_to_local():283][INFO] Local path /mnt/raid0/pretrained_model/rtp_ci/Qwen3-32B use directly.
+[process-22109][root][2025-11-19 12:20:50.674][model_factory.py:create_normal_model_config():230][INFO] load model from tokenizer_path: /mnt/raid0/pretrained_model/rtp_ci/Qwen3-32B, ckpt_path: /mnt/raid0/pretrained_model/rtp_ci/Qwen3-32B, lora_infos: {}, ptuning_path: None
+[process-22109][root][2025-11-19 12:20:50.674][gang_info.py:get_gang_info():305][INFO] local rank 0 vs 0,                          new_member: 10.67.77.202 vs 10.67.77.202,                          server port 6789 vs 6789
+[process-22109][root][2025-11-19 12:20:50.675][gpt_init_model_parameters.py:update_gpt_init_params_from_env():618][INFO] enable_detail_log = False
+[process-22109][root][2025-11-19 12:20:50.675][fuser.py:fetch_remote_file_to_local():283][INFO] Local path  use directly.
+[process-22109][root][2025-11-19 12:20:50.675][py_config_modules.py:update_from_env():880][INFO] [server_config]
+frontend_server_count: 4
+start_port: 6789
+timeout_keep_alive: 5
+frontend_server_id: 0
+rank_id: 0
+
+[profiling_debug_config]
+trace_memory: 0
+trace_malloc_stack: 0
+enable_device_perf: 0
+ft_core_dump_on_exception: 0
+ft_alog_conf_path: /mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/config/alog.conf
+log_level: INFO
+gen_timeline_sync: 0
+torch_cuda_profiler_dir
+log_path: logs
+log_file_backup_count: 16
+nccl_debug_file: 
+debug_load_server: 0
+hack_layer_num: 0
+debug_start_fake_process: 0
+dg_print_reg_reuse: 0
+qwen_agent_debug0
+disable_dpc_random0
+check_nan0
+
+
+[model_config]
+extra_data_path: 
+local_extra_data_path: None
+tokenizer_path: /mnt/raid0/pretrained_model/rtp_ci/Qwen3-32B
+act_type: bf16
+use_float32: False
+original_checkpoint_path: None
+mla_ops_type: AUTO
+ft_plugin_path: None
+weight_type: None
+task_type: None
+model_type: qwen_3
+checkpoint_path: /mnt/raid0/pretrained_model/rtp_ci/Qwen3-32B
+oss_endpoint: 
+ptuning_path: None
+openai_api_key: EMPTY
+dashscope_api_key: EMPTY
+dashscope_http_url: None
+dashscope_websocket_url: None
+json_model_override_args: {}
+
+[py_speculative_execution_config]
+gen_num_per_circle: 1
+sp_quantization: None
+sp_checkpoint_path: None
+sp_type: 
+sp_model_type: sp_kv_cache_dtype: None
+sp_checkpoint_path: None
+
+[lora_config]
+lora_info: {}
+merge_lora: True
+
+
+[load_config]
+phy2log_path: 
+converter_num_per_gpu: 4
+tokenizers_parallelism: False
+load_ckpt_num_process: 0
+load_method: auto
+
+[render_config]
+model_template_type: None
+default_chat_template_key: default
+default_tool_use_template_key: tool_use
+llava_chat_template: 
+
+[gang_config]
+fake_gang_env: False
+gang_annocation_path: /etc/podinfo/annotations
+gang_config_string: None
+zone_name: 
+distribute_config_file: 
+dist_barrier_timeout: 45
+gang_sleep_time: 10
+gang_timeout_min: 30
+json_gang_parts: None
+lead_address: None
+
+
+[vit_config]
+vit_separation: 0
+vit_trt: 0
+trt_cache_enabled: 0
+trt_cache_path: /mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/trt_cache
+download_headers: 
+mm_cache_item_num: 10
+url_cache_item_num: 100
+use_igraph_cache: True
+igraph_search_dom: com.taobao.search.igraph.common
+igraph_vipserver: 0
+igraph_table_name: 
+igraph_default_key: None
+
+[generate_env_config]
+think_end_tag: &lt;/think&gt;
+
+
+think_end_token_id: -1
+think_mode: 0
+force_stop_words: False
+stop_words_list: None
+stop_words_str: None
+think_start_tag: &lt;think&gt;\n
+generation_config_path: None
+
+[quantization_config]
+int8_mode: 0
+quantization: 
+
+[py_eplb_config]
+eplb_mode: NONE
+eplb_update_time: 5000
+redundant_expert: 0
+hack_ep_single_entry: 0
+balance_method: mix
+eplb_force_repack: 0
+eplb_stats_window_size: 10
+
+[py_kv_cache_config]
+int8_kv_cache: 0
+fp8_kv_cache: 0
+kv_cache_dtype: auto
+kv_cache_mem_mb: -1
+seq_size_per_block: 16
+test_block_num: 0
+use_block_cache: None
+blockwise_use_fp8_kv_cache: 0
+reuse_cache: False
+
+[py_device_resource_config]
+reserver_runtime_mem_mb: 102400
+specify_gpu_arch: 
+acext_gemm_config_dir: None
+device_reserve_memory_bytes: -2048000000
+
+[sparse_config]
+sparse_config_file: None
+
+[engine_config]
+warm_up: 0
+warm_up_with_loss: 0
+max_seq_len: 150000
+
+[embedding_config]
+embedding_model: 0
+extra_input_in_mm_embedding: 
+
+[worker_config]
+worker_info_port_num: 7
+
+[role_config]
+role_type: PDFUSION
+
+[pd_separation_config]
+prefill_retry_times: 0
+prefill_retry_timeout_ms: 0
+prefill_max_wait_timeout_ms: 600000
+decode_retry_times: 100
+decode_retry_timeout_ms: 100
+decode_retry_interval_ms: 100
+decode_polling_kv_cache_step_ms: 30
+decode_entrance: 0
+rdma_connect_retry_times: 0
+load_cache_timeout_ms: 5000
+
+[parallelism_distributed_config]
+tp_size: 1
+ep_size: 1
+dp_size: 1
+world_size: 1
+world_rank: 0
+pp_size: 1
+local_world_size: 1
+ffn_sp_size1
+
+[model_specific_config]
+max_lora_model_size: -1
+load_python_model:0
+
+
+[fmha_config]
+enable_fmha: 1
+enable_trt_fmha: 1
+enable_paged_trt_fmha: 1
+enable_open_source_fmha: 1
+enable_paged_open_source_fmha: 1
+enable_trtv1_fmha: 1
+fmha_perf_instrument: 0
+fmha_show_params: 0
+disable_flash_infer: 0
+enable_xqa: 1
+
+
+[misc_config]
+disable_pdl1
+aux_string: 
+
+
+[concurrency_config]
+concurrency_with_block: 0
+concurrency_limit: 1024
+
+[jit_config]
+remote_jit_dir: 
+
+[py_hw_kernel_config]
+deep_gemm_num_sm: -1
+arm_gemm_use_kai: False
+enable_stable_scatter_add: False
+enable_multi_block_mode: True
+ft_disable_custom_ar: False
+rocm_hipblaslt_config: gemm_config.csv
+use_swizzleA: False
+enable_cuda_graph: False
+enable_cuda_graph_debug_mode: False
+use_aiter_pa: True
+use_asm_pa: True
+enable_native_cuda_graph: False
+num_native_cuda_graph: 200
+
+
+[process-22109][root][2025-11-19 12:20:50.675][gpt_init_model_parameters.py:__init__():486][INFO] vit_separation: 0
+[process-22109][root][2025-11-19 12:20:50.676][gang_info.py:get_gang_info():305][INFO] local rank 0 vs 0,                          new_member: 10.67.77.202 vs 10.67.77.202,                          server port 6789 vs 6789
+[process-22109][root][2025-11-19 12:20:50.676][gpt_init_model_parameters.py:_get_and_verify_dtype():1374][INFO] set data_type by args: WEIGHT_TYPE.BF16
+[process-22109][root][2025-11-19 12:20:50.676][gpt_init_model_parameters.py:_init_precision_config():1262][INFO] quant_config: None, data_type:bf16, kv_cache_data_type: bf16
+[process-22109][root][2025-11-19 12:20:50.676][gpt_init_model_parameters.py:update_common():943][INFO] use_all_gather: False
+[process-22109][root][2025-11-19 12:20:50.676][gpt_init_model_parameters.py:update_common():954][INFO] phy_exp_num: 0
+[process-22109][root][2025-11-19 12:20:50.676][gpt_init_model_parameters.py:update_common():977][INFO] max_seq_len: 150000
+[process-22109][root][2025-11-19 12:20:50.676][gpt_init_model_parameters.py:update_task_type_use_kvcache():904][INFO] model task type: TaskType.LANGUAGE_MODEL, use_kvcache: True
+[process-22109][root][2025-11-19 12:20:50.676][gpt_init_model_parameters.py:update_common():1006][INFO] config_mode = ConfigMode.ComplexMode
+[process-22109][root][2025-11-19 12:20:50.676][gang_info.py:get_gang_info():305][INFO] local rank 0 vs 0,                          new_member: 10.67.77.202 vs 10.67.77.202,                          server port 6789 vs 6789
+[process-22109][root][2025-11-19 12:20:50.676][gpt_init_model_parameters.py:update_worker_addrs():518][INFO] member world rank: 0, member local rank: 0, local rank: 0, tp_size: 1, dp_size: 1, dp_rank: 0, use_all_gather: False
+[process-22109][root][2025-11-19 12:20:50.676][gpt_init_model_parameters.py:update_worker_addrs():527][INFO] append member for pd sep 10.67.77.202:6790, 6791, 6793 to local rank 0, world rank 0
+[process-22109][root][2025-11-19 12:20:50.676][gpt_init_model_parameters.py:update_config_with_sparse_config():803][INFO] read sparse config from: /mnt/raid0/pretrained_model/rtp_ci/Qwen3-32B/config.json
+[process-22109][root][2025-11-19 12:20:50.676][gpt_init_model_parameters.py:check():164][INFO] sparse config layer_num must not be empty
+[process-22109][root][2025-11-19 12:20:50.676][gpt_init_model_parameters.py:update_inter_padding_size():866][INFO] update_inter_padding_size: 25600, moe_inter_padding_size: 25600, layer_inter_size: []
+[process-22109][root][2025-11-19 12:20:50.677][cutlass_config.py:load_cutlass_gemm_config():76][WARNING] load cutlass gemm config failed: quant info not supported
+[process-22109][root][2025-11-19 12:20:50.677][gpt_init_model_parameters.py:update_common():1030][INFO] seq_size_per_block: 16
+[process-22109][root][2025-11-19 12:20:50.677][gpt_init_model_parameters.py:update_common():1035][INFO] max_generate_batch_size: 1024
+[process-22109][root][2025-11-19 12:20:50.677][gpt_init_model_parameters.py:update_common():1037][INFO] max_context_batch_size: 1
+[process-22109][root][2025-11-19 12:20:50.677][gpt_init_model_parameters.py:update_common():1041][INFO] reserve_runtime_mem_mb: 102400
+[process-22109][root][2025-11-19 12:20:50.677][gpt_init_model_parameters.py:update_common():1043][INFO] kv_cache_mem_mb: -1
+[process-22109][root][2025-11-19 12:20:50.677][gpt_init_model_parameters.py:update_common():1045][INFO] block_nums: 0
+[process-22109][root][2025-11-19 12:20:50.677][gpt_init_model_parameters.py:update_common():1049][INFO] enable_partial_fallback: False
+[process-22109][root][2025-11-19 12:20:50.677][gpt_init_model_parameters.py:update_common():1051][INFO] enable_fast_gen: False
+[process-22109][root][2025-11-19 12:20:50.677][gpt_init_model_parameters.py:update_common():1053][INFO] warm_up: False
+[process-22109][root][2025-11-19 12:20:50.677][gpt_init_model_parameters.py:update_common():1057][INFO] warm_up_with_loss: False
+[process-22109][root][2025-11-19 12:20:50.677][gpt_init_model_parameters.py:update_common():1064][INFO] fast_gen_max_context_len: 0
+[process-22109][root][2025-11-19 12:20:50.677][gpt_init_model_parameters.py:update_common():1067][INFO] max_rpc_timeout_ms: 0
+[process-22109][root][2025-11-19 12:20:50.677][gpt_init_model_parameters.py:update_common():1074][INFO] max_batch_tokens_size: 150000
+[process-22109][root][2025-11-19 12:20:50.677][gpt_init_model_parameters.py:update_common():1143][INFO] scheduler_reserve_resource_ratio: 5
+[process-22109][root][2025-11-19 12:20:50.677][gpt_init_model_parameters.py:update_common():1148][INFO] reuse_cache: False
+[process-22109][root][2025-11-19 12:20:50.677][gpt_init_model_parameters.py:update_common():1150][INFO] pre_allocate_op_mem: True
+[process-22109][root][2025-11-19 12:20:50.677][gpt_init_model_parameters.py:update_common():1151][INFO] tp_split_emb_and_lm_head: True
+[process-22109][root][2025-11-19 12:20:50.677][gpt_init_model_parameters.py:update_common():1174][INFO] use stop_words_str_list [[]], stop_words_id_list [[[151645], [151644]]]
+[process-22109][root][2025-11-19 12:20:50.999][time_util.py:wrapped():47][INFO] init mutlimodal took: 0s
+[process-22109][root][2025-11-19 12:20:50.999][qwen_v3.py:_init_custom_module():31][INFO] task_type : TaskType.LANGUAGE_MODEL
+[process-22109][root][2025-11-19 12:20:50.999][time_util.py:wrapped():47][INFO] init custom_module took: 0s
+[process-22109][root][2025-11-19 12:20:51.002][database.py:_parse_weight_style():273][INFO] read weight style from: /mnt/raid0/pretrained_model/rtp_ci/Qwen3-32B/model.safetensors.index.json
+[process-22109][root][2025-11-19 12:20:51.003][qwen_v2.py:_process_meta():64][INFO] weight_style: WeightStyle.NONE
+[process-22109][root][2025-11-19 12:20:51.007][model_weight_info.py:get_weight_info():256][INFO] fix merge_w13
+[process-22109][root][2025-11-19 12:20:51.007][model_weight_info.py:__update_weight_config():376][INFO] src_weights: &lt;class &#x27;rtp_llm.model_loader.ffn_weight.FfnWeight&#x27;&gt;[__ffn_weights__]{&#x27;ffn_weights.intermediate_weight2.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight2.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.down_proj.weight]], &#x27;ffn_weights.intermediate_weight13.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight13.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.gate_proj.weight], CkptWeightInfo[model.layers.{i}.mlp.up_proj.weight]]}
+[process-22109][root][2025-11-19 12:20:51.008][model_weight_info.py:__update_weight_config():376][INFO] src_weights: &lt;class &#x27;rtp_llm.model_loader.ffn_weight.FfnWeight&#x27;&gt;[__ffn_weights__]{&#x27;ffn_weights.intermediate_weight2.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight2.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.down_proj.weight]], &#x27;ffn_weights.intermediate_weight13.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight13.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.gate_proj.weight], CkptWeightInfo[model.layers.{i}.mlp.up_proj.weight]]}
+[process-22109][root][2025-11-19 12:20:51.008][model_weight_info.py:__update_weight_config():376][INFO] src_weights: &lt;class &#x27;rtp_llm.model_loader.ffn_weight.FfnWeight&#x27;&gt;[__ffn_weights__]{&#x27;ffn_weights.intermediate_weight2.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight2.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.down_proj.weight]], &#x27;ffn_weights.intermediate_weight13.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight13.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.gate_proj.weight], CkptWeightInfo[model.layers.{i}.mlp.up_proj.weight]]}
+[process-22109][root][2025-11-19 12:20:51.008][model_weight_info.py:__update_weight_config():376][INFO] src_weights: &lt;class &#x27;rtp_llm.model_loader.ffn_weight.FfnWeight&#x27;&gt;[__ffn_weights__]{&#x27;ffn_weights.intermediate_weight2.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight2.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.down_proj.weight]], &#x27;ffn_weights.intermediate_weight13.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight13.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.gate_proj.weight], CkptWeightInfo[model.layers.{i}.mlp.up_proj.weight]]}
+[process-22109][root][2025-11-19 12:20:51.008][model_weight_info.py:__update_weight_config():376][INFO] src_weights: &lt;class &#x27;rtp_llm.model_loader.ffn_weight.FfnWeight&#x27;&gt;[__ffn_weights__]{&#x27;ffn_weights.intermediate_weight2.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight2.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.down_proj.weight]], &#x27;ffn_weights.intermediate_weight13.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight13.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.gate_proj.weight], CkptWeightInfo[model.layers.{i}.mlp.up_proj.weight]]}
+[process-22109][root][2025-11-19 12:20:51.008][model_weight_info.py:__update_weight_config():376][INFO] src_weights: &lt;class &#x27;rtp_llm.model_loader.ffn_weight.FfnWeight&#x27;&gt;[__ffn_weights__]{&#x27;ffn_weights.intermediate_weight2.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight2.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.down_proj.weight]], &#x27;ffn_weights.intermediate_weight13.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight13.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.gate_proj.weight], CkptWeightInfo[model.layers.{i}.mlp.up_proj.weight]]}
+[process-22109][root][2025-11-19 12:20:51.008][model_weight_info.py:__update_weight_config():376][INFO] src_weights: &lt;class &#x27;rtp_llm.model_loader.ffn_weight.FfnWeight&#x27;&gt;[__ffn_weights__]{&#x27;ffn_weights.intermediate_weight2.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight2.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.down_proj.weight]], &#x27;ffn_weights.intermediate_weight13.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight13.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.gate_proj.weight], CkptWeightInfo[model.layers.{i}.mlp.up_proj.weight]]}
+[process-22109][root][2025-11-19 12:20:51.008][model_weight_info.py:__update_weight_config():376][INFO] src_weights: &lt;class &#x27;rtp_llm.model_loader.ffn_weight.FfnWeight&#x27;&gt;[__ffn_weights__]{&#x27;ffn_weights.intermediate_weight2.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight2.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.down_proj.weight]], &#x27;ffn_weights.intermediate_weight13.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight13.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.gate_proj.weight], CkptWeightInfo[model.layers.{i}.mlp.up_proj.weight]]}
+[process-22109][root][2025-11-19 12:20:51.008][model_weight_info.py:__update_weight_config():376][INFO] src_weights: &lt;class &#x27;rtp_llm.model_loader.ffn_weight.FfnWeight&#x27;&gt;[__ffn_weights__]{&#x27;ffn_weights.intermediate_weight2.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight2.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.down_proj.weight]], &#x27;ffn_weights.intermediate_weight13.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight13.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.gate_proj.weight], CkptWeightInfo[model.layers.{i}.mlp.up_proj.weight]]}
+[process-22109][root][2025-11-19 12:20:51.008][model_weight_info.py:__update_weight_config():376][INFO] src_weights: &lt;class &#x27;rtp_llm.model_loader.ffn_weight.FfnWeight&#x27;&gt;[__ffn_weights__]{&#x27;ffn_weights.intermediate_weight2.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight2.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.down_proj.weight]], &#x27;ffn_weights.intermediate_weight13.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight13.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.gate_proj.weight], CkptWeightInfo[model.layers.{i}.mlp.up_proj.weight]]}
+[process-22109][root][2025-11-19 12:20:51.008][model_weight_info.py:__update_weight_config():376][INFO] src_weights: &lt;class &#x27;rtp_llm.model_loader.ffn_weight.FfnWeight&#x27;&gt;[__ffn_weights__]{&#x27;ffn_weights.intermediate_weight2.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight2.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.down_proj.weight]], &#x27;ffn_weights.intermediate_weight13.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight13.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.gate_proj.weight], CkptWeightInfo[model.layers.{i}.mlp.up_proj.weight]]}
+[process-22109][root][2025-11-19 12:20:51.008][model_weight_info.py:__update_weight_config():376][INFO] src_weights: &lt;class &#x27;rtp_llm.model_loader.ffn_weight.FfnWeight&#x27;&gt;[__ffn_weights__]{&#x27;ffn_weights.intermediate_weight2.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight2.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.down_proj.weight]], &#x27;ffn_weights.intermediate_weight13.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight13.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.gate_proj.weight], CkptWeightInfo[model.layers.{i}.mlp.up_proj.weight]]}
+[process-22109][root][2025-11-19 12:20:51.008][model_weight_info.py:__update_weight_config():376][INFO] src_weights: &lt;class &#x27;rtp_llm.model_loader.ffn_weight.FfnWeight&#x27;&gt;[__ffn_weights__]{&#x27;ffn_weights.intermediate_weight2.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight2.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.down_proj.weight]], &#x27;ffn_weights.intermediate_weight13.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight13.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.gate_proj.weight], CkptWeightInfo[model.layers.{i}.mlp.up_proj.weight]]}
+[process-22109][root][2025-11-19 12:20:51.008][model_weight_info.py:__update_weight_config():376][INFO] src_weights: &lt;class &#x27;rtp_llm.model_loader.ffn_weight.FfnWeight&#x27;&gt;[__ffn_weights__]{&#x27;ffn_weights.intermediate_weight2.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight2.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.down_proj.weight]], &#x27;ffn_weights.intermediate_weight13.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight13.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.gate_proj.weight], CkptWeightInfo[model.layers.{i}.mlp.up_proj.weight]]}
+[process-22109][root][2025-11-19 12:20:51.008][model_weight_info.py:__update_weight_config():376][INFO] src_weights: &lt;class &#x27;rtp_llm.model_loader.ffn_weight.FfnWeight&#x27;&gt;[__ffn_weights__]{&#x27;ffn_weights.intermediate_weight2.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight2.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.down_proj.weight]], &#x27;ffn_weights.intermediate_weight13.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight13.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.gate_proj.weight], CkptWeightInfo[model.layers.{i}.mlp.up_proj.weight]]}
+[process-22109][root][2025-11-19 12:20:51.009][model_weight_info.py:__update_weight_config():376][INFO] src_weights: &lt;class &#x27;rtp_llm.model_loader.ffn_weight.FfnWeight&#x27;&gt;[__ffn_weights__]{&#x27;ffn_weights.intermediate_weight2.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight2.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.down_proj.weight]], &#x27;ffn_weights.intermediate_weight13.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight13.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.gate_proj.weight], CkptWeightInfo[model.layers.{i}.mlp.up_proj.weight]]}
+[process-22109][root][2025-11-19 12:20:51.009][model_weight_info.py:__update_weight_config():376][INFO] src_weights: &lt;class &#x27;rtp_llm.model_loader.ffn_weight.FfnWeight&#x27;&gt;[__ffn_weights__]{&#x27;ffn_weights.intermediate_weight2.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight2.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.down_proj.weight]], &#x27;ffn_weights.intermediate_weight13.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight13.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.gate_proj.weight], CkptWeightInfo[model.layers.{i}.mlp.up_proj.weight]]}
+[process-22109][root][2025-11-19 12:20:51.009][model_weight_info.py:__update_weight_config():376][INFO] src_weights: &lt;class &#x27;rtp_llm.model_loader.ffn_weight.FfnWeight&#x27;&gt;[__ffn_weights__]{&#x27;ffn_weights.intermediate_weight2.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight2.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.down_proj.weight]], &#x27;ffn_weights.intermediate_weight13.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight13.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.gate_proj.weight], CkptWeightInfo[model.layers.{i}.mlp.up_proj.weight]]}
+[process-22109][root][2025-11-19 12:20:51.009][model_weight_info.py:__update_weight_config():376][INFO] src_weights: &lt;class &#x27;rtp_llm.model_loader.ffn_weight.FfnWeight&#x27;&gt;[__ffn_weights__]{&#x27;ffn_weights.intermediate_weight2.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight2.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.down_proj.weight]], &#x27;ffn_weights.intermediate_weight13.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight13.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.gate_proj.weight], CkptWeightInfo[model.layers.{i}.mlp.up_proj.weight]]}
+[process-22109][root][2025-11-19 12:20:51.009][model_weight_info.py:__update_weight_config():376][INFO] src_weights: &lt;class &#x27;rtp_llm.model_loader.ffn_weight.FfnWeight&#x27;&gt;[__ffn_weights__]{&#x27;ffn_weights.intermediate_weight2.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight2.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.down_proj.weight]], &#x27;ffn_weights.intermediate_weight13.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight13.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.gate_proj.weight], CkptWeightInfo[model.layers.{i}.mlp.up_proj.weight]]}
+[process-22109][root][2025-11-19 12:20:51.009][model_weight_info.py:__update_weight_config():376][INFO] src_weights: &lt;class &#x27;rtp_llm.model_loader.ffn_weight.FfnWeight&#x27;&gt;[__ffn_weights__]{&#x27;ffn_weights.intermediate_weight2.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight2.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.down_proj.weight]], &#x27;ffn_weights.intermediate_weight13.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight13.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.gate_proj.weight], CkptWeightInfo[model.layers.{i}.mlp.up_proj.weight]]}
+[process-22109][root][2025-11-19 12:20:51.009][model_weight_info.py:__update_weight_config():376][INFO] src_weights: &lt;class &#x27;rtp_llm.model_loader.ffn_weight.FfnWeight&#x27;&gt;[__ffn_weights__]{&#x27;ffn_weights.intermediate_weight2.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight2.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.down_proj.weight]], &#x27;ffn_weights.intermediate_weight13.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight13.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.gate_proj.weight], CkptWeightInfo[model.layers.{i}.mlp.up_proj.weight]]}
+[process-22109][root][2025-11-19 12:20:51.009][model_weight_info.py:__update_weight_config():376][INFO] src_weights: &lt;class &#x27;rtp_llm.model_loader.ffn_weight.FfnWeight&#x27;&gt;[__ffn_weights__]{&#x27;ffn_weights.intermediate_weight2.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight2.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.down_proj.weight]], &#x27;ffn_weights.intermediate_weight13.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight13.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.gate_proj.weight], CkptWeightInfo[model.layers.{i}.mlp.up_proj.weight]]}
+[process-22109][root][2025-11-19 12:20:51.009][model_weight_info.py:__update_weight_config():376][INFO] src_weights: &lt;class &#x27;rtp_llm.model_loader.ffn_weight.FfnWeight&#x27;&gt;[__ffn_weights__]{&#x27;ffn_weights.intermediate_weight2.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight2.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.down_proj.weight]], &#x27;ffn_weights.intermediate_weight13.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight13.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.gate_proj.weight], CkptWeightInfo[model.layers.{i}.mlp.up_proj.weight]]}
+[process-22109][root][2025-11-19 12:20:51.009][model_weight_info.py:__update_weight_config():376][INFO] src_weights: &lt;class &#x27;rtp_llm.model_loader.ffn_weight.FfnWeight&#x27;&gt;[__ffn_weights__]{&#x27;ffn_weights.intermediate_weight2.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight2.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.down_proj.weight]], &#x27;ffn_weights.intermediate_weight13.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight13.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.gate_proj.weight], CkptWeightInfo[model.layers.{i}.mlp.up_proj.weight]]}
+[process-22109][root][2025-11-19 12:20:51.009][model_weight_info.py:__update_weight_config():376][INFO] src_weights: &lt;class &#x27;rtp_llm.model_loader.ffn_weight.FfnWeight&#x27;&gt;[__ffn_weights__]{&#x27;ffn_weights.intermediate_weight2.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight2.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.down_proj.weight]], &#x27;ffn_weights.intermediate_weight13.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight13.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.gate_proj.weight], CkptWeightInfo[model.layers.{i}.mlp.up_proj.weight]]}
+[process-22109][root][2025-11-19 12:20:51.009][model_weight_info.py:__update_weight_config():376][INFO] src_weights: &lt;class &#x27;rtp_llm.model_loader.ffn_weight.FfnWeight&#x27;&gt;[__ffn_weights__]{&#x27;ffn_weights.intermediate_weight2.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight2.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.down_proj.weight]], &#x27;ffn_weights.intermediate_weight13.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight13.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.gate_proj.weight], CkptWeightInfo[model.layers.{i}.mlp.up_proj.weight]]}
+[process-22109][root][2025-11-19 12:20:51.009][model_weight_info.py:__update_weight_config():376][INFO] src_weights: &lt;class &#x27;rtp_llm.model_loader.ffn_weight.FfnWeight&#x27;&gt;[__ffn_weights__]{&#x27;ffn_weights.intermediate_weight2.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight2.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.down_proj.weight]], &#x27;ffn_weights.intermediate_weight13.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight13.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.gate_proj.weight], CkptWeightInfo[model.layers.{i}.mlp.up_proj.weight]]}
+[process-22109][root][2025-11-19 12:20:51.009][model_weight_info.py:__update_weight_config():376][INFO] src_weights: &lt;class &#x27;rtp_llm.model_loader.ffn_weight.FfnWeight&#x27;&gt;[__ffn_weights__]{&#x27;ffn_weights.intermediate_weight2.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight2.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.down_proj.weight]], &#x27;ffn_weights.intermediate_weight13.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight13.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.gate_proj.weight], CkptWeightInfo[model.layers.{i}.mlp.up_proj.weight]]}
+[process-22109][root][2025-11-19 12:20:51.009][model_weight_info.py:__update_weight_config():376][INFO] src_weights: &lt;class &#x27;rtp_llm.model_loader.ffn_weight.FfnWeight&#x27;&gt;[__ffn_weights__]{&#x27;ffn_weights.intermediate_weight2.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight2.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.down_proj.weight]], &#x27;ffn_weights.intermediate_weight13.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight13.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.gate_proj.weight], CkptWeightInfo[model.layers.{i}.mlp.up_proj.weight]]}
+[process-22109][root][2025-11-19 12:20:51.010][model_weight_info.py:__update_weight_config():376][INFO] src_weights: &lt;class &#x27;rtp_llm.model_loader.ffn_weight.FfnWeight&#x27;&gt;[__ffn_weights__]{&#x27;ffn_weights.intermediate_weight2.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight2.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.down_proj.weight]], &#x27;ffn_weights.intermediate_weight13.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight13.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.gate_proj.weight], CkptWeightInfo[model.layers.{i}.mlp.up_proj.weight]]}
+[process-22109][root][2025-11-19 12:20:51.010][model_weight_info.py:__update_weight_config():376][INFO] src_weights: &lt;class &#x27;rtp_llm.model_loader.ffn_weight.FfnWeight&#x27;&gt;[__ffn_weights__]{&#x27;ffn_weights.intermediate_weight2.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight2.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.down_proj.weight]], &#x27;ffn_weights.intermediate_weight13.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight13.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.gate_proj.weight], CkptWeightInfo[model.layers.{i}.mlp.up_proj.weight]]}
+[process-22109][root][2025-11-19 12:20:51.010][model_weight_info.py:__update_weight_config():376][INFO] src_weights: &lt;class &#x27;rtp_llm.model_loader.ffn_weight.FfnWeight&#x27;&gt;[__ffn_weights__]{&#x27;ffn_weights.intermediate_weight2.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight2.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.down_proj.weight]], &#x27;ffn_weights.intermediate_weight13.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight13.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.gate_proj.weight], CkptWeightInfo[model.layers.{i}.mlp.up_proj.weight]]}
+[process-22109][root][2025-11-19 12:20:51.010][model_weight_info.py:__update_weight_config():376][INFO] src_weights: &lt;class &#x27;rtp_llm.model_loader.ffn_weight.FfnWeight&#x27;&gt;[__ffn_weights__]{&#x27;ffn_weights.intermediate_weight2.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight2.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.down_proj.weight]], &#x27;ffn_weights.intermediate_weight13.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight13.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.gate_proj.weight], CkptWeightInfo[model.layers.{i}.mlp.up_proj.weight]]}
+[process-22109][root][2025-11-19 12:20:51.010][model_weight_info.py:__update_weight_config():376][INFO] src_weights: &lt;class &#x27;rtp_llm.model_loader.ffn_weight.FfnWeight&#x27;&gt;[__ffn_weights__]{&#x27;ffn_weights.intermediate_weight2.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight2.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.down_proj.weight]], &#x27;ffn_weights.intermediate_weight13.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight13.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.gate_proj.weight], CkptWeightInfo[model.layers.{i}.mlp.up_proj.weight]]}
+[process-22109][root][2025-11-19 12:20:51.010][model_weight_info.py:__update_weight_config():376][INFO] src_weights: &lt;class &#x27;rtp_llm.model_loader.ffn_weight.FfnWeight&#x27;&gt;[__ffn_weights__]{&#x27;ffn_weights.intermediate_weight2.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight2.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.down_proj.weight]], &#x27;ffn_weights.intermediate_weight13.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight13.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.gate_proj.weight], CkptWeightInfo[model.layers.{i}.mlp.up_proj.weight]]}
+[process-22109][root][2025-11-19 12:20:51.010][model_weight_info.py:__update_weight_config():376][INFO] src_weights: &lt;class &#x27;rtp_llm.model_loader.ffn_weight.FfnWeight&#x27;&gt;[__ffn_weights__]{&#x27;ffn_weights.intermediate_weight2.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight2.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.down_proj.weight]], &#x27;ffn_weights.intermediate_weight13.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight13.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.gate_proj.weight], CkptWeightInfo[model.layers.{i}.mlp.up_proj.weight]]}
+[process-22109][root][2025-11-19 12:20:51.010][model_weight_info.py:__update_weight_config():376][INFO] src_weights: &lt;class &#x27;rtp_llm.model_loader.ffn_weight.FfnWeight&#x27;&gt;[__ffn_weights__]{&#x27;ffn_weights.intermediate_weight2.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight2.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.down_proj.weight]], &#x27;ffn_weights.intermediate_weight13.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight13.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.gate_proj.weight], CkptWeightInfo[model.layers.{i}.mlp.up_proj.weight]]}
+[process-22109][root][2025-11-19 12:20:51.010][model_weight_info.py:__update_weight_config():376][INFO] src_weights: &lt;class &#x27;rtp_llm.model_loader.ffn_weight.FfnWeight&#x27;&gt;[__ffn_weights__]{&#x27;ffn_weights.intermediate_weight2.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight2.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.down_proj.weight]], &#x27;ffn_weights.intermediate_weight13.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight13.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.gate_proj.weight], CkptWeightInfo[model.layers.{i}.mlp.up_proj.weight]]}
+[process-22109][root][2025-11-19 12:20:51.010][model_weight_info.py:__update_weight_config():376][INFO] src_weights: &lt;class &#x27;rtp_llm.model_loader.ffn_weight.FfnWeight&#x27;&gt;[__ffn_weights__]{&#x27;ffn_weights.intermediate_weight2.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight2.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.down_proj.weight]], &#x27;ffn_weights.intermediate_weight13.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight13.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.gate_proj.weight], CkptWeightInfo[model.layers.{i}.mlp.up_proj.weight]]}
+[process-22109][root][2025-11-19 12:20:51.010][model_weight_info.py:__update_weight_config():376][INFO] src_weights: &lt;class &#x27;rtp_llm.model_loader.ffn_weight.FfnWeight&#x27;&gt;[__ffn_weights__]{&#x27;ffn_weights.intermediate_weight2.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight2.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.down_proj.weight]], &#x27;ffn_weights.intermediate_weight13.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight13.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.gate_proj.weight], CkptWeightInfo[model.layers.{i}.mlp.up_proj.weight]]}
+[process-22109][root][2025-11-19 12:20:51.010][model_weight_info.py:__update_weight_config():376][INFO] src_weights: &lt;class &#x27;rtp_llm.model_loader.ffn_weight.FfnWeight&#x27;&gt;[__ffn_weights__]{&#x27;ffn_weights.intermediate_weight2.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight2.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.down_proj.weight]], &#x27;ffn_weights.intermediate_weight13.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight13.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.gate_proj.weight], CkptWeightInfo[model.layers.{i}.mlp.up_proj.weight]]}
+[process-22109][root][2025-11-19 12:20:51.010][model_weight_info.py:__update_weight_config():376][INFO] src_weights: &lt;class &#x27;rtp_llm.model_loader.ffn_weight.FfnWeight&#x27;&gt;[__ffn_weights__]{&#x27;ffn_weights.intermediate_weight2.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight2.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.down_proj.weight]], &#x27;ffn_weights.intermediate_weight13.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight13.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.gate_proj.weight], CkptWeightInfo[model.layers.{i}.mlp.up_proj.weight]]}
+[process-22109][root][2025-11-19 12:20:51.010][model_weight_info.py:__update_weight_config():376][INFO] src_weights: &lt;class &#x27;rtp_llm.model_loader.ffn_weight.FfnWeight&#x27;&gt;[__ffn_weights__]{&#x27;ffn_weights.intermediate_weight2.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight2.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.down_proj.weight]], &#x27;ffn_weights.intermediate_weight13.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight13.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.gate_proj.weight], CkptWeightInfo[model.layers.{i}.mlp.up_proj.weight]]}
+[process-22109][root][2025-11-19 12:20:51.010][model_weight_info.py:__update_weight_config():376][INFO] src_weights: &lt;class &#x27;rtp_llm.model_loader.ffn_weight.FfnWeight&#x27;&gt;[__ffn_weights__]{&#x27;ffn_weights.intermediate_weight2.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight2.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.down_proj.weight]], &#x27;ffn_weights.intermediate_weight13.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight13.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.gate_proj.weight], CkptWeightInfo[model.layers.{i}.mlp.up_proj.weight]]}
+[process-22109][root][2025-11-19 12:20:51.011][model_weight_info.py:__update_weight_config():376][INFO] src_weights: &lt;class &#x27;rtp_llm.model_loader.ffn_weight.FfnWeight&#x27;&gt;[__ffn_weights__]{&#x27;ffn_weights.intermediate_weight2.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight2.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.down_proj.weight]], &#x27;ffn_weights.intermediate_weight13.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight13.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.gate_proj.weight], CkptWeightInfo[model.layers.{i}.mlp.up_proj.weight]]}
+[process-22109][root][2025-11-19 12:20:51.011][model_weight_info.py:__update_weight_config():376][INFO] src_weights: &lt;class &#x27;rtp_llm.model_loader.ffn_weight.FfnWeight&#x27;&gt;[__ffn_weights__]{&#x27;ffn_weights.intermediate_weight2.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight2.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.down_proj.weight]], &#x27;ffn_weights.intermediate_weight13.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight13.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.gate_proj.weight], CkptWeightInfo[model.layers.{i}.mlp.up_proj.weight]]}
+[process-22109][root][2025-11-19 12:20:51.011][model_weight_info.py:__update_weight_config():376][INFO] src_weights: &lt;class &#x27;rtp_llm.model_loader.ffn_weight.FfnWeight&#x27;&gt;[__ffn_weights__]{&#x27;ffn_weights.intermediate_weight2.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight2.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.down_proj.weight]], &#x27;ffn_weights.intermediate_weight13.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight13.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.gate_proj.weight], CkptWeightInfo[model.layers.{i}.mlp.up_proj.weight]]}
+[process-22109][root][2025-11-19 12:20:51.011][model_weight_info.py:__update_weight_config():376][INFO] src_weights: &lt;class &#x27;rtp_llm.model_loader.ffn_weight.FfnWeight&#x27;&gt;[__ffn_weights__]{&#x27;ffn_weights.intermediate_weight2.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight2.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.down_proj.weight]], &#x27;ffn_weights.intermediate_weight13.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight13.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.gate_proj.weight], CkptWeightInfo[model.layers.{i}.mlp.up_proj.weight]]}
+[process-22109][root][2025-11-19 12:20:51.011][model_weight_info.py:__update_weight_config():376][INFO] src_weights: &lt;class &#x27;rtp_llm.model_loader.ffn_weight.FfnWeight&#x27;&gt;[__ffn_weights__]{&#x27;ffn_weights.intermediate_weight2.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight2.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.down_proj.weight]], &#x27;ffn_weights.intermediate_weight13.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight13.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.gate_proj.weight], CkptWeightInfo[model.layers.{i}.mlp.up_proj.weight]]}
+[process-22109][root][2025-11-19 12:20:51.011][model_weight_info.py:__update_weight_config():376][INFO] src_weights: &lt;class &#x27;rtp_llm.model_loader.ffn_weight.FfnWeight&#x27;&gt;[__ffn_weights__]{&#x27;ffn_weights.intermediate_weight2.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight2.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.down_proj.weight]], &#x27;ffn_weights.intermediate_weight13.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight13.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.gate_proj.weight], CkptWeightInfo[model.layers.{i}.mlp.up_proj.weight]]}
+[process-22109][root][2025-11-19 12:20:51.011][model_weight_info.py:__update_weight_config():376][INFO] src_weights: &lt;class &#x27;rtp_llm.model_loader.ffn_weight.FfnWeight&#x27;&gt;[__ffn_weights__]{&#x27;ffn_weights.intermediate_weight2.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight2.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.down_proj.weight]], &#x27;ffn_weights.intermediate_weight13.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight13.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.gate_proj.weight], CkptWeightInfo[model.layers.{i}.mlp.up_proj.weight]]}
+[process-22109][root][2025-11-19 12:20:51.011][model_weight_info.py:__update_weight_config():376][INFO] src_weights: &lt;class &#x27;rtp_llm.model_loader.ffn_weight.FfnWeight&#x27;&gt;[__ffn_weights__]{&#x27;ffn_weights.intermediate_weight2.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight2.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.down_proj.weight]], &#x27;ffn_weights.intermediate_weight13.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight13.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.gate_proj.weight], CkptWeightInfo[model.layers.{i}.mlp.up_proj.weight]]}
+[process-22109][root][2025-11-19 12:20:51.011][model_weight_info.py:__update_weight_config():376][INFO] src_weights: &lt;class &#x27;rtp_llm.model_loader.ffn_weight.FfnWeight&#x27;&gt;[__ffn_weights__]{&#x27;ffn_weights.intermediate_weight2.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight2.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.down_proj.weight]], &#x27;ffn_weights.intermediate_weight13.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight13.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.gate_proj.weight], CkptWeightInfo[model.layers.{i}.mlp.up_proj.weight]]}
+[process-22109][root][2025-11-19 12:20:51.011][model_weight_info.py:__update_weight_config():376][INFO] src_weights: &lt;class &#x27;rtp_llm.model_loader.ffn_weight.FfnWeight&#x27;&gt;[__ffn_weights__]{&#x27;ffn_weights.intermediate_weight2.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight2.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.down_proj.weight]], &#x27;ffn_weights.intermediate_weight13.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight13.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.gate_proj.weight], CkptWeightInfo[model.layers.{i}.mlp.up_proj.weight]]}
+[process-22109][root][2025-11-19 12:20:51.011][model_weight_info.py:__update_weight_config():376][INFO] src_weights: &lt;class &#x27;rtp_llm.model_loader.ffn_weight.FfnWeight&#x27;&gt;[__ffn_weights__]{&#x27;ffn_weights.intermediate_weight2.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight2.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.down_proj.weight]], &#x27;ffn_weights.intermediate_weight13.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight13.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.gate_proj.weight], CkptWeightInfo[model.layers.{i}.mlp.up_proj.weight]]}
+[process-22109][root][2025-11-19 12:20:51.011][model_weight_info.py:__update_weight_config():376][INFO] src_weights: &lt;class &#x27;rtp_llm.model_loader.ffn_weight.FfnWeight&#x27;&gt;[__ffn_weights__]{&#x27;ffn_weights.intermediate_weight2.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight2.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.down_proj.weight]], &#x27;ffn_weights.intermediate_weight13.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight13.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.gate_proj.weight], CkptWeightInfo[model.layers.{i}.mlp.up_proj.weight]]}
+[process-22109][root][2025-11-19 12:20:51.011][model_weight_info.py:__update_weight_config():376][INFO] src_weights: &lt;class &#x27;rtp_llm.model_loader.ffn_weight.FfnWeight&#x27;&gt;[__ffn_weights__]{&#x27;ffn_weights.intermediate_weight2.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight2.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.down_proj.weight]], &#x27;ffn_weights.intermediate_weight13.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight13.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.gate_proj.weight], CkptWeightInfo[model.layers.{i}.mlp.up_proj.weight]]}
+[process-22109][root][2025-11-19 12:20:51.011][model_weight_info.py:__update_weight_config():376][INFO] src_weights: &lt;class &#x27;rtp_llm.model_loader.ffn_weight.FfnWeight&#x27;&gt;[__ffn_weights__]{&#x27;ffn_weights.intermediate_weight2.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight2.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.down_proj.weight]], &#x27;ffn_weights.intermediate_weight13.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight13.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.gate_proj.weight], CkptWeightInfo[model.layers.{i}.mlp.up_proj.weight]]}
+[process-22109][root][2025-11-19 12:20:51.011][model_weight_info.py:__update_weight_config():376][INFO] src_weights: &lt;class &#x27;rtp_llm.model_loader.ffn_weight.FfnWeight&#x27;&gt;[__ffn_weights__]{&#x27;ffn_weights.intermediate_weight2.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight2.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.down_proj.weight]], &#x27;ffn_weights.intermediate_weight13.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight13.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.gate_proj.weight], CkptWeightInfo[model.layers.{i}.mlp.up_proj.weight]]}
+[process-22109][root][2025-11-19 12:20:51.012][model_weight_info.py:__update_weight_config():376][INFO] src_weights: &lt;class &#x27;rtp_llm.model_loader.ffn_weight.FfnWeight&#x27;&gt;[__ffn_weights__]{&#x27;ffn_weights.intermediate_weight2.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight2.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.down_proj.weight]], &#x27;ffn_weights.intermediate_weight13.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight13.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.gate_proj.weight], CkptWeightInfo[model.layers.{i}.mlp.up_proj.weight]]}
+[process-22109][root][2025-11-19 12:20:51.012][model_weight_info.py:__update_weight_config():376][INFO] src_weights: &lt;class &#x27;rtp_llm.model_loader.ffn_weight.FfnWeight&#x27;&gt;[__ffn_weights__]{&#x27;ffn_weights.intermediate_weight2.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight2.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.down_proj.weight]], &#x27;ffn_weights.intermediate_weight13.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight13.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.gate_proj.weight], CkptWeightInfo[model.layers.{i}.mlp.up_proj.weight]]}
+[process-22109][root][2025-11-19 12:20:51.012][model_weight_info.py:__update_weight_config():376][INFO] src_weights: &lt;class &#x27;rtp_llm.model_loader.ffn_weight.FfnWeight&#x27;&gt;[__ffn_weights__]{&#x27;ffn_weights.intermediate_weight2.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight2.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.down_proj.weight]], &#x27;ffn_weights.intermediate_weight13.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight13.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.gate_proj.weight], CkptWeightInfo[model.layers.{i}.mlp.up_proj.weight]]}
+[process-22109][root][2025-11-19 12:20:51.012][model_weight_info.py:__update_weight_config():376][INFO] src_weights: &lt;class &#x27;rtp_llm.model_loader.ffn_weight.FfnWeight&#x27;&gt;[__ffn_weights__]{&#x27;ffn_weights.intermediate_weight2.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight2.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.down_proj.weight]], &#x27;ffn_weights.intermediate_weight13.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight13.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.gate_proj.weight], CkptWeightInfo[model.layers.{i}.mlp.up_proj.weight]]}
+[process-22109][root][2025-11-19 12:20:51.012][model_weight_info.py:_fix_merge_w1_w3():390][INFO] fix weight config when need_merge_w13 [AtomicWeight[pre_layernorm_weights.gamma]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.input_layernorm.weight]], AtomicWeight[self_attention_weights.query_weight.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.self_attn.q_proj.weight], CkptWeightInfo[model.layers.{i}.self_attn.k_proj.weight], CkptWeightInfo[model.layers.{i}.self_attn.v_proj.weight]], AtomicWeight[self_attention_weights.attention_output_weight.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.self_attn.o_proj.weight]], AtomicWeight[post_layernorm_weights.gamma]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.post_attention_layernorm.weight]], AtomicWeight[self_attention_weights.q_layernorm.gamma]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.self_attn.q_norm.weight]], AtomicWeight[self_attention_weights.k_layernorm.gamma]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.self_attn.k_norm.weight]], &lt;class &#x27;rtp_llm.model_loader.ffn_weight.FfnWeight&#x27;&gt;[__ffn_weights__]{&#x27;ffn_weights.intermediate_weight2.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight2.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.down_proj.weight]], &#x27;ffn_weights.intermediate_weight13.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight13.kernel]-WeightStyle.NONE-[CkptWeightInfo[model.layers.{i}.mlp.gate_proj.weight], CkptWeightInfo[model.layers.{i}.mlp.up_proj.weight]]}]
+[process-22109][root][2025-11-19 12:20:51.012][fuser.py:fetch_remote_file_to_local():283][INFO] Local path  use directly.
+[process-22109][root][2025-11-19 12:20:51.012][py_config_modules.py:update_from_env():880][INFO] [server_config]
+frontend_server_count: 4
+start_port: 6789
+timeout_keep_alive: 5
+frontend_server_id: 0
+rank_id: 0
+
+[profiling_debug_config]
+trace_memory: 0
+trace_malloc_stack: 0
+enable_device_perf: 0
+ft_core_dump_on_exception: 0
+ft_alog_conf_path: /mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/config/alog.conf
+log_level: INFO
+gen_timeline_sync: 0
+torch_cuda_profiler_dir
+log_path: logs
+log_file_backup_count: 16
+nccl_debug_file: 
+debug_load_server: 0
+hack_layer_num: 0
+debug_start_fake_process: 0
+dg_print_reg_reuse: 0
+qwen_agent_debug0
+disable_dpc_random0
+check_nan0
+
+
+[model_config]
+extra_data_path: 
+local_extra_data_path: None
+tokenizer_path: /mnt/raid0/pretrained_model/rtp_ci/Qwen3-32B
+act_type: bf16
+use_float32: False
+original_checkpoint_path: None
+mla_ops_type: AUTO
+ft_plugin_path: None
+weight_type: None
+task_type: None
+model_type: qwen_3
+checkpoint_path: /mnt/raid0/pretrained_model/rtp_ci/Qwen3-32B
+oss_endpoint: 
+ptuning_path: None
+openai_api_key: EMPTY
+dashscope_api_key: EMPTY
+dashscope_http_url: None
+dashscope_websocket_url: None
+json_model_override_args: {}
+
+[py_speculative_execution_config]
+gen_num_per_circle: 1
+sp_quantization: None
+sp_checkpoint_path: None
+sp_type: 
+sp_model_type: sp_kv_cache_dtype: None
+sp_checkpoint_path: None
+
+[lora_config]
+lora_info: {}
+merge_lora: True
+
+
+[load_config]
+phy2log_path: 
+converter_num_per_gpu: 4
+tokenizers_parallelism: False
+load_ckpt_num_process: 0
+load_method: auto
+
+[render_config]
+model_template_type: None
+default_chat_template_key: default
+default_tool_use_template_key: tool_use
+llava_chat_template: 
+
+[gang_config]
+fake_gang_env: False
+gang_annocation_path: /etc/podinfo/annotations
+gang_config_string: None
+zone_name: 
+distribute_config_file: 
+dist_barrier_timeout: 45
+gang_sleep_time: 10
+gang_timeout_min: 30
+json_gang_parts: None
+lead_address: None
+
+
+[vit_config]
+vit_separation: 0
+vit_trt: 0
+trt_cache_enabled: 0
+trt_cache_path: /mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/trt_cache
+download_headers: 
+mm_cache_item_num: 10
+url_cache_item_num: 100
+use_igraph_cache: True
+igraph_search_dom: com.taobao.search.igraph.common
+igraph_vipserver: 0
+igraph_table_name: 
+igraph_default_key: None
+
+[generate_env_config]
+think_end_tag: &lt;/think&gt;
+
+
+think_end_token_id: -1
+think_mode: 0
+force_stop_words: False
+stop_words_list: None
+stop_words_str: None
+think_start_tag: &lt;think&gt;\n
+generation_config_path: None
+
+[quantization_config]
+int8_mode: 0
+quantization: 
+
+[py_eplb_config]
+eplb_mode: NONE
+eplb_update_time: 5000
+redundant_expert: 0
+hack_ep_single_entry: 0
+balance_method: mix
+eplb_force_repack: 0
+eplb_stats_window_size: 10
+
+[py_kv_cache_config]
+int8_kv_cache: 0
+fp8_kv_cache: 0
+kv_cache_dtype: auto
+kv_cache_mem_mb: -1
+seq_size_per_block: 16
+test_block_num: 0
+use_block_cache: None
+blockwise_use_fp8_kv_cache: 0
+reuse_cache: False
+
+[py_device_resource_config]
+reserver_runtime_mem_mb: 102400
+specify_gpu_arch: 
+acext_gemm_config_dir: None
+device_reserve_memory_bytes: -2048000000
+
+[sparse_config]
+sparse_config_file: None
+
+[engine_config]
+warm_up: 0
+warm_up_with_loss: 0
+max_seq_len: 150000
+
+[embedding_config]
+embedding_model: 0
+extra_input_in_mm_embedding: 
+
+[worker_config]
+worker_info_port_num: 7
+
+[role_config]
+role_type: PDFUSION
+
+[pd_separation_config]
+prefill_retry_times: 0
+prefill_retry_timeout_ms: 0
+prefill_max_wait_timeout_ms: 600000
+decode_retry_times: 100
+decode_retry_timeout_ms: 100
+decode_retry_interval_ms: 100
+decode_polling_kv_cache_step_ms: 30
+decode_entrance: 0
+rdma_connect_retry_times: 0
+load_cache_timeout_ms: 5000
+
+[parallelism_distributed_config]
+tp_size: 1
+ep_size: 1
+dp_size: 1
+world_size: 1
+world_rank: 0
+pp_size: 1
+local_world_size: 1
+ffn_sp_size1
+
+[model_specific_config]
+max_lora_model_size: -1
+load_python_model:0
+
+
+[fmha_config]
+enable_fmha: 1
+enable_trt_fmha: 1
+enable_paged_trt_fmha: 1
+enable_open_source_fmha: 1
+enable_paged_open_source_fmha: 1
+enable_trtv1_fmha: 1
+fmha_perf_instrument: 0
+fmha_show_params: 0
+disable_flash_infer: 0
+enable_xqa: 1
+
+
+[misc_config]
+disable_pdl1
+aux_string: 
+
+
+[concurrency_config]
+concurrency_with_block: 0
+concurrency_limit: 1024
+
+[jit_config]
+remote_jit_dir: 
+
+[py_hw_kernel_config]
+deep_gemm_num_sm: -1
+arm_gemm_use_kai: False
+enable_stable_scatter_add: False
+enable_multi_block_mode: True
+ft_disable_custom_ar: False
+rocm_hipblaslt_config: gemm_config.csv
+use_swizzleA: False
+enable_cuda_graph: False
+enable_cuda_graph_debug_mode: False
+use_aiter_pa: True
+use_asm_pa: True
+enable_native_cuda_graph: False
+num_native_cuda_graph: 200
+
+
+[process-22109][root][2025-11-19 12:20:51.246][loader.py:_load_weight():240][INFO] load method: auto, finally choose load method: scratch
+[process-22109][root][2025-11-19 12:20:51.247][loader.py:_load_from_scratch():420][INFO] load weight by device: cpu
+[process-21851][root][2025-11-19 12:21:12.717][vipserver_proxy.py:refresh_srv_lst():86][ERROR] failed to refresh vipserver server list, exception : HTTPConnectionPool(host=&#x27;jmenv.tbsite.net&#x27;, port=8080): Max retries exceeded with url: /vipserver/serverlist?nofix=1&amp;labels=&amp; (Caused by NewConnectionError(&#x27;&lt;urllib3.connection.HTTPConnection object at 0x7f12fb551e70&gt;: Failed to establish a new connection: [Errno -2] Name or service not known&#x27;))
+[process-22109][root][2025-11-19 12:21:19.193][vipserver_proxy.py:refresh_srv_lst():86][ERROR] failed to refresh vipserver server list, exception : HTTPConnectionPool(host=&#x27;jmenv.tbsite.net&#x27;, port=8080): Max retries exceeded with url: /vipserver/serverlist?nofix=1&amp;labels=&amp; (Caused by NewConnectionError(&#x27;&lt;urllib3.connection.HTTPConnection object at 0x7fafee888790&gt;: Failed to establish a new connection: [Errno -2] Name or service not known&#x27;))
+[process-21851][root][2025-11-19 12:21:35.639][vipserver_proxy.py:refresh_srv_lst():86][ERROR] failed to refresh vipserver server list, exception : HTTPConnectionPool(host=&#x27;jmenv.tbsite.net&#x27;, port=8080): Max retries exceeded with url: /vipserver/serverlist?nofix=1&amp;labels=&amp; (Caused by NewConnectionError(&#x27;&lt;urllib3.connection.HTTPConnection object at 0x7f12fb552ec0&gt;: Failed to establish a new connection: [Errno -2] Name or service not known&#x27;))
+[process-22109][root][2025-11-19 12:21:45.880][vipserver_proxy.py:refresh_srv_lst():86][ERROR] failed to refresh vipserver server list, exception : HTTPConnectionPool(host=&#x27;jmenv.tbsite.net&#x27;, port=8080): Max retries exceeded with url: /vipserver/serverlist?nofix=1&amp;labels=&amp; (Caused by NewConnectionError(&#x27;&lt;urllib3.connection.HTTPConnection object at 0x7fafee888550&gt;: Failed to establish a new connection: [Errno -2] Name or service not known&#x27;))
+[process-21851][root][2025-11-19 12:22:02.273][vipserver_proxy.py:refresh_srv_lst():86][ERROR] failed to refresh vipserver server list, exception : HTTPConnectionPool(host=&#x27;jmenv.tbsite.net&#x27;, port=8080): Max retries exceeded with url: /vipserver/serverlist?nofix=1&amp;labels=&amp; (Caused by NewConnectionError(&#x27;&lt;urllib3.connection.HTTPConnection object at 0x7f12fb553c10&gt;: Failed to establish a new connection: [Errno -2] Name or service not known&#x27;))
+[process-22109][root][2025-11-19 12:22:09.550][vipserver_proxy.py:refresh_srv_lst():86][ERROR] failed to refresh vipserver server list, exception : HTTPConnectionPool(host=&#x27;jmenv.tbsite.net&#x27;, port=8080): Max retries exceeded with url: /vipserver/serverlist?nofix=1&amp;labels=&amp; (Caused by NewConnectionError(&#x27;&lt;urllib3.connection.HTTPConnection object at 0x7fafee8887c0&gt;: Failed to establish a new connection: [Errno -2] Name or service not known&#x27;))
+[process-21851][root][2025-11-19 12:22:32.306][vipserver_proxy.py:refresh_srv_lst():86][ERROR] failed to refresh vipserver server list, exception : HTTPConnectionPool(host=&#x27;jmenv.tbsite.net&#x27;, port=8080): Max retries exceeded with url: /vipserver/serverlist?nofix=1&amp;labels=&amp; (Caused by NewConnectionError(&#x27;&lt;urllib3.connection.HTTPConnection object at 0x7f27e789aaa0&gt;: Failed to establish a new connection: [Errno -2] Name or service not known&#x27;))
+[process-22109][root][2025-11-19 12:22:36.107][vipserver_proxy.py:refresh_srv_lst():86][ERROR] failed to refresh vipserver server list, exception : HTTPConnectionPool(host=&#x27;jmenv.tbsite.net&#x27;, port=8080): Max retries exceeded with url: /vipserver/serverlist?nofix=1&amp;labels=&amp; (Caused by NewConnectionError(&#x27;&lt;urllib3.connection.HTTPConnection object at 0x7fafee8883a0&gt;: Failed to establish a new connection: [Errno -2] Name or service not known&#x27;))
+[process-21851][root][2025-11-19 12:23:02.338][vipserver_proxy.py:refresh_srv_lst():86][ERROR] failed to refresh vipserver server list, exception : HTTPConnectionPool(host=&#x27;jmenv.tbsite.net&#x27;, port=8080): Max retries exceeded with url: /vipserver/serverlist?nofix=1&amp;labels=&amp; (Caused by NewConnectionError(&#x27;&lt;urllib3.connection.HTTPConnection object at 0x7f12fb56c880&gt;: Failed to establish a new connection: [Errno -2] Name or service not known&#x27;))
+[process-22109][root][2025-11-19 12:23:06.332][vipserver_proxy.py:refresh_srv_lst():86][ERROR] failed to refresh vipserver server list, exception : HTTPConnectionPool(host=&#x27;jmenv.tbsite.net&#x27;, port=8080): Max retries exceeded with url: /vipserver/serverlist?nofix=1&amp;labels=&amp; (Caused by NewConnectionError(&#x27;&lt;urllib3.connection.HTTPConnection object at 0x7fafee888d00&gt;: Failed to establish a new connection: [Errno -2] Name or service not known&#x27;))
+[process-21851][root][2025-11-19 12:23:28.905][vipserver_proxy.py:refresh_srv_lst():86][ERROR] failed to refresh vipserver server list, exception : HTTPConnectionPool(host=&#x27;jmenv.tbsite.net&#x27;, port=8080): Max retries exceeded with url: /vipserver/serverlist?nofix=1&amp;labels=&amp; (Caused by NewConnectionError(&#x27;&lt;urllib3.connection.HTTPConnection object at 0x7f12fb56e260&gt;: Failed to establish a new connection: [Errno -2] Name or service not known&#x27;))
+[process-22109][root][2025-11-19 12:23:36.358][vipserver_proxy.py:refresh_srv_lst():86][ERROR] failed to refresh vipserver server list, exception : HTTPConnectionPool(host=&#x27;jmenv.tbsite.net&#x27;, port=8080): Max retries exceeded with url: /vipserver/serverlist?nofix=1&amp;labels=&amp; (Caused by NewConnectionError(&#x27;&lt;urllib3.connection.HTTPConnection object at 0x7fafee888dc0&gt;: Failed to establish a new connection: [Errno -2] Name or service not known&#x27;))
+[process-21851][root][2025-11-19 12:23:52.952][vipserver_proxy.py:refresh_srv_lst():86][ERROR] failed to refresh vipserver server list, exception : HTTPConnectionPool(host=&#x27;jmenv.tbsite.net&#x27;, port=8080): Max retries exceeded with url: /vipserver/serverlist?nofix=1&amp;labels=&amp; (Caused by NewConnectionError(&#x27;&lt;urllib3.connection.HTTPConnection object at 0x7f12fb56ca30&gt;: Failed to establish a new connection: [Errno -2] Name or service not known&#x27;))
+[process-22109][root][2025-11-19 12:24:03.181][vipserver_proxy.py:refresh_srv_lst():86][ERROR] failed to refresh vipserver server list, exception : HTTPConnectionPool(host=&#x27;jmenv.tbsite.net&#x27;, port=8080): Max retries exceeded with url: /vipserver/serverlist?nofix=1&amp;labels=&amp; (Caused by NewConnectionError(&#x27;&lt;urllib3.connection.HTTPConnection object at 0x7fafee888130&gt;: Failed to establish a new connection: [Errno -2] Name or service not known&#x27;))
+[process-21851][root][2025-11-19 12:24:19.555][vipserver_proxy.py:refresh_srv_lst():86][ERROR] failed to refresh vipserver server list, exception : HTTPConnectionPool(host=&#x27;jmenv.tbsite.net&#x27;, port=8080): Max retries exceeded with url: /vipserver/serverlist?nofix=1&amp;labels=&amp; (Caused by NewConnectionError(&#x27;&lt;urllib3.connection.HTTPConnection object at 0x7f12fb553a60&gt;: Failed to establish a new connection: [Errno -2] Name or service not known&#x27;))
+[process-22109][root][2025-11-19 12:24:29.422][vipserver_proxy.py:refresh_srv_lst():86][ERROR] failed to refresh vipserver server list, exception : HTTPConnectionPool(host=&#x27;jmenv.tbsite.net&#x27;, port=8080): Max retries exceeded with url: /vipserver/serverlist?nofix=1&amp;labels=&amp; (Caused by NewConnectionError(&#x27;&lt;urllib3.connection.HTTPConnection object at 0x7fafee888370&gt;: Failed to establish a new connection: [Errno -2] Name or service not known&#x27;))
+[process-21851][root][2025-11-19 12:24:47.491][start_server.py:monitor_and_release_process():137][INFO] all process = [&lt;Process name=&#x27;backend_server&#x27; pid=22109 parent=21851 stopped exitcode=-SIGKILL&gt;]
+[process-21851][root][2025-11-19 12:24:47.491][start_server.py:monitor_and_release_process():150][INFO] all process exit
+[process-21851][root][2025-11-19 12:24:47.491][start_server.py:start_server():208][ERROR] start failed, trace: Traceback (most recent call last):
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/start_server.py&quot;, line 197, in start_server
+    backend_process = start_backend_server_impl(global_controller)
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/start_server.py&quot;, line 62, in start_backend_server_impl
+    raise Exception(&quot;backend server is not alive&quot;)
+Exception: backend server is not alive
+
+[process-21851][root][2025-11-19 12:24:47.492][start_server.py:monitor_and_release_process():137][INFO] all process = []
+[process-21851][root][2025-11-19 12:24:47.492][start_server.py:monitor_and_release_process():150][INFO] all process exit
+</pre>
