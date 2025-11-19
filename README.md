@@ -12,7 +12,7 @@
 | [**Contact Us**](#contact-us) |
 
 ## News
-- [2025/09] 🔥 RTP-LLM 0.2.0 release with enhanced performance and new features
+- [2025/09] 🔥 RTP-LLM 0.2.0 release with enhanced performance and new features....
 - [2025/01] 🚀 RTP-LLM now supports Prefill/Decode separation with detailed technical report
 - [2025/01] 🌟 Qwen series model and bert embedding model now supported on Yitian ARM CPU
 - [2024/06] 🔄 Major refactor: Scheduling and batching framework rewritten in C++, complete GPU memory management, and new Device backend
