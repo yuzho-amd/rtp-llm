@@ -1,0 +1,1482 @@
+# server_Qwen3_30B_A3B_fp8_ptpc_moe_llmcompressor
+<pre>
+running server command: USE_AITER_PA=1 SEQ_SIZE_PER_BLOCK=16 MODEL_TYPE=qwen_3_moe KV_CACHE_DTYPE=fp8 ACT_TYPE=bf16 TOKENIZER_PATH=/mnt/raid0/pretrained_model/rtp_ci/Qwen3-30B-A3B-Thinking-2507-FP8-Dynamic CHECKPOINT_PATH=/mnt/raid0/pretrained_model/rtp_ci/Qwen3-30B-A3B-Thinking-2507-FP8-Dynamic CUDA_VISIBLE_DEVICES=4,5,6,7 START_PORT=6789 /opt/conda310/bin/python3.10 -m rtp_llm.start_server
+/opt/conda310/lib/python3.10/site-packages/torch/cuda/__init__.py:58: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  import pynvml  # type: ignore[import]
+[process-30880][root][2025-11-20 16:30:10.023][__init__.py:&lt;module&gt;():61][INFO] failed to load libth_transformer_config.so from libs, try use another path
+[process-30880][root][2025-11-20 16:30:10.023][__init__.py:find_th_transformer():31][INFO] find_th_transformer: /mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/../bazel-bin
+[process-30880][root][2025-11-20 16:30:10.023][__init__.py:&lt;module&gt;():67][INFO] failed to find libth_transformer_config.so in /mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/../bazel-bin
+[process-30880][root][2025-11-20 16:30:10.023][__init__.py:&lt;module&gt;():71][INFO] so path: /mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/../bazel-bin
+[process-30880][root][2025-11-20 16:30:10.023][__init__.py:&lt;module&gt;():94][INFO] torch path: [&#x27;/opt/conda310/lib/python3.10/site-packages/torch&#x27;]
+[process-30880][root][2025-11-20 16:30:10.023][__init__.py:&lt;module&gt;():100][INFO] loaded libcaffe2_nvrtc.so from /opt/conda310/lib/python3.10/site-packages/torch/lib/libcaffe2_nvrtc.so
+[process-30880][root][2025-11-20 16:30:10.356][hippo_helper.py:HippoHelper():15][INFO] get container_ip from socket:10.67.77.202
+[process-30880][root][2025-11-20 16:30:10.358][fuser.py:_check_valid():97][WARNING] fuse is not valid: connet http://0:28006 error
+[process-30880][root][2025-11-20 16:30:10.359][fuser.py:fetch_remote_file_to_local():283][INFO] Local path  use directly.
+[process-30880][root][2025-11-20 16:30:10.359][py_config_modules.py:update_from_env():880][INFO] [server_config]
+frontend_server_count: 4
+start_port: 6789
+timeout_keep_alive: 5
+frontend_server_id: 0
+rank_id: 0
+
+[profiling_debug_config]
+trace_memory: 0
+trace_malloc_stack: 0
+enable_device_perf: 0
+ft_core_dump_on_exception: 0
+ft_alog_conf_path: 
+log_level: INFO
+gen_timeline_sync: 0
+torch_cuda_profiler_dir
+log_path: logs
+log_file_backup_count: 16
+nccl_debug_file: 
+debug_load_server: 0
+hack_layer_num: 0
+debug_start_fake_process: 0
+dg_print_reg_reuse: 0
+qwen_agent_debug0
+disable_dpc_random0
+check_nan0
+
+
+[model_config]
+extra_data_path: 
+local_extra_data_path: None
+tokenizer_path: /mnt/raid0/pretrained_model/rtp_ci/Qwen3-30B-A3B-Thinking-2507-FP8-Dynamic
+act_type: bf16
+use_float32: False
+original_checkpoint_path: None
+mla_ops_type: AUTO
+ft_plugin_path: None
+weight_type: None
+task_type: None
+model_type: qwen_3_moe
+checkpoint_path: /mnt/raid0/pretrained_model/rtp_ci/Qwen3-30B-A3B-Thinking-2507-FP8-Dynamic
+oss_endpoint: 
+ptuning_path: None
+openai_api_key: EMPTY
+dashscope_api_key: EMPTY
+dashscope_http_url: None
+dashscope_websocket_url: None
+json_model_override_args: {}
+
+[py_speculative_execution_config]
+gen_num_per_circle: 5
+sp_quantization: None
+sp_checkpoint_path: None
+sp_type: None
+sp_model_type: Nonesp_kv_cache_dtype: None
+sp_checkpoint_path: None
+
+[lora_config]
+lora_info: {}
+merge_lora: True
+
+
+[load_config]
+phy2log_path: 
+converter_num_per_gpu: 4
+tokenizers_parallelism: False
+load_ckpt_num_process: 0
+load_method: auto
+
+[render_config]
+model_template_type: None
+default_chat_template_key: default
+default_tool_use_template_key: tool_use
+llava_chat_template: 
+
+[gang_config]
+fake_gang_env: False
+gang_annocation_path: /etc/podinfo/annotations
+gang_config_string: None
+zone_name: 
+distribute_config_file: 
+dist_barrier_timeout: None
+gang_sleep_time: 10
+gang_timeout_min: 30
+json_gang_parts: None
+lead_address: None
+
+
+[vit_config]
+vit_separation: 0
+vit_trt: 0
+trt_cache_enabled: 0
+trt_cache_path: None
+download_headers: 
+mm_cache_item_num: 10
+url_cache_item_num: 100
+use_igraph_cache: True
+igraph_search_dom: com.taobao.search.igraph.common
+igraph_vipserver: 0
+igraph_table_name: 
+igraph_default_key: None
+
+[generate_env_config]
+think_end_tag: &lt;/think&gt;
+
+
+think_end_token_id: -1
+think_mode: 0
+force_stop_words: False
+stop_words_list: None
+stop_words_str: None
+think_start_tag: &lt;think&gt;
+
+generation_config_path: None
+
+[quantization_config]
+int8_mode: 0
+quantization: 
+
+[py_eplb_config]
+eplb_mode: NONE
+eplb_update_time: 5000
+redundant_expert: 0
+hack_ep_single_entry: 0
+balance_method: mix
+eplb_force_repack: 0
+eplb_stats_window_size: 10
+
+[py_kv_cache_config]
+int8_kv_cache: 0
+fp8_kv_cache: 0
+kv_cache_dtype: fp8
+kv_cache_mem_mb: -1
+seq_size_per_block: 16
+test_block_num: 0
+use_block_cache: None
+blockwise_use_fp8_kv_cache: 0
+reuse_cache: False
+
+[py_device_resource_config]
+reserver_runtime_mem_mb: 1024
+specify_gpu_arch: 
+acext_gemm_config_dir: None
+device_reserve_memory_bytes: 0
+
+[sparse_config]
+sparse_config_file: None
+
+[engine_config]
+warm_up: 1
+warm_up_with_loss: 0
+max_seq_len: 0
+
+[embedding_config]
+embedding_model: 0
+extra_input_in_mm_embedding: 
+
+[worker_config]
+worker_info_port_num: 7
+
+[role_config]
+role_type: PDFUSION
+
+[pd_separation_config]
+prefill_retry_times: 0
+prefill_retry_timeout_ms: 20
+prefill_max_wait_timeout_ms: 600000
+decode_retry_times: 100
+decode_retry_timeout_ms: 100
+decode_retry_interval_ms: 1
+decode_polling_kv_cache_step_ms: 30
+decode_entrance: 0
+rdma_connect_retry_times: 0
+load_cache_timeout_ms: 5000
+
+[parallelism_distributed_config]
+tp_size: 1
+ep_size: 1
+dp_size: 1
+world_size: 1
+world_rank: 0
+pp_size: 1
+local_world_size: 1
+ffn_sp_size1
+
+[model_specific_config]
+max_lora_model_size: -1
+load_python_model:0
+
+
+[fmha_config]
+enable_fmha: 1
+enable_trt_fmha: 1
+enable_paged_trt_fmha: 1
+enable_open_source_fmha: 1
+enable_paged_open_source_fmha: 1
+enable_trtv1_fmha: 1
+fmha_perf_instrument: 0
+fmha_show_params: 0
+disable_flash_infer: 0
+enable_xqa: 1
+
+
+[misc_config]
+disable_pdl1
+aux_string: 
+
+
+[concurrency_config]
+concurrency_with_block: 0
+concurrency_limit: 32
+
+[jit_config]
+remote_jit_dir: 
+
+[py_hw_kernel_config]
+deep_gemm_num_sm: -1
+arm_gemm_use_kai: False
+enable_stable_scatter_add: False
+enable_multi_block_mode: True
+ft_disable_custom_ar: True
+rocm_hipblaslt_config: gemm_config.csv
+use_swizzleA: False
+enable_cuda_graph: False
+enable_cuda_graph_debug_mode: False
+use_aiter_pa: True
+use_asm_pa: True
+enable_native_cuda_graph: False
+num_native_cuda_graph: 200
+
+
+[aiter] import [module_aiter_enum] under /opt/conda310/lib/python3.10/site-packages/aiter/jit/module_aiter_enum.so
+/opt/conda310/lib/python3.10/site-packages/torchvision/io/image.py:14: UserWarning: Failed to load image Python extension: &#x27;libjpeg.so.8: cannot open shared object file: No such file or directory&#x27;If you don&#x27;t plan on using image functionality from `torchvision.io`, you can ignore this warning. Otherwise, there might be something wrong with your environment. Did you have `libjpeg` or `libpng` installed before building `torchvision` from source?
+  warn(
+successfully set NCCL_DEBUG_FILE path to logs/nccl.log
+successfully init logger config {&#x27;version&#x27;: 1, &#x27;disable_existing_loggers&#x27;: False, &#x27;formatters&#x27;: {&#x27;default&#x27;: {&#x27;format&#x27;: &#x27;[%(name)s][%(asctime)s.%(msecs)03d][%(process)d][%(threadName)s][%(pathname)s:%(funcName)s():%(lineno)s][%(levelname)s] %(message)s&#x27;, &#x27;datefmt&#x27;: &#x27;%Y-%m-%d %H:%M:%S&#x27;}}, &#x27;handlers&#x27;: {&#x27;file_handler&#x27;: {&#x27;formatter&#x27;: &#x27;default&#x27;, &#x27;class&#x27;: &#x27;logging.handlers.RotatingFileHandler&#x27;, &#x27;filename&#x27;: &#x27;logs/main_0.log&#x27;, &#x27;maxBytes&#x27;: 268435456, &#x27;backupCount&#x27;: 20}, &#x27;route_file_handler&#x27;: {&#x27;formatter&#x27;: &#x27;default&#x27;, &#x27;class&#x27;: &#x27;logging.handlers.RotatingFileHandler&#x27;, &#x27;filename&#x27;: &#x27;logs/route.log&#x27;, &#x27;maxBytes&#x27;: 268435456, &#x27;backupCount&#x27;: 20}}, &#x27;loggers&#x27;: {&#x27;&#x27;: {&#x27;handlers&#x27;: [&#x27;file_handler&#x27;], &#x27;level&#x27;: &#x27;INFO&#x27;, &#x27;propagate&#x27;: True}, &#x27;route_logger&#x27;: {&#x27;handlers&#x27;: [&#x27;route_file_handler&#x27;], &#x27;level&#x27;: &#x27;INFO&#x27;, &#x27;propagate&#x27;: False}}}
+/opt/conda310/lib/python3.10/site-packages/torch/cuda/__init__.py:58: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  import pynvml  # type: ignore[import]
+[process-31116][root][2025-11-20 16:30:42.789][__init__.py:&lt;module&gt;():61][INFO] failed to load libth_transformer_config.so from libs, try use another path
+[process-31116][root][2025-11-20 16:30:42.789][__init__.py:find_th_transformer():31][INFO] find_th_transformer: /mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/../bazel-bin
+[process-31116][root][2025-11-20 16:30:42.789][__init__.py:&lt;module&gt;():67][INFO] failed to find libth_transformer_config.so in /mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/../bazel-bin
+[process-31116][root][2025-11-20 16:30:42.789][__init__.py:&lt;module&gt;():71][INFO] so path: /mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/../bazel-bin
+[process-31116][root][2025-11-20 16:30:42.789][__init__.py:&lt;module&gt;():94][INFO] torch path: [&#x27;/opt/conda310/lib/python3.10/site-packages/torch&#x27;]
+[process-31116][root][2025-11-20 16:30:42.789][__init__.py:&lt;module&gt;():100][INFO] loaded libcaffe2_nvrtc.so from /opt/conda310/lib/python3.10/site-packages/torch/lib/libcaffe2_nvrtc.so
+[process-31116][root][2025-11-20 16:30:43.124][hippo_helper.py:HippoHelper():15][INFO] get container_ip from socket:10.67.77.202
+[process-31116][root][2025-11-20 16:30:43.126][fuser.py:_check_valid():97][WARNING] fuse is not valid: connet http://0:28006 error
+[process-31116][root][2025-11-20 16:30:43.127][fuser.py:fetch_remote_file_to_local():283][INFO] Local path  use directly.
+[process-31116][root][2025-11-20 16:30:43.127][py_config_modules.py:update_from_env():880][INFO] [server_config]
+frontend_server_count: 4
+start_port: 6789
+timeout_keep_alive: 5
+frontend_server_id: 0
+rank_id: 0
+
+[profiling_debug_config]
+trace_memory: 0
+trace_malloc_stack: 0
+enable_device_perf: 0
+ft_core_dump_on_exception: 0
+ft_alog_conf_path: /mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/config/alog.conf
+log_level: INFO
+gen_timeline_sync: 0
+torch_cuda_profiler_dir
+log_path: logs
+log_file_backup_count: 16
+nccl_debug_file: logs/nccl.log
+debug_load_server: 0
+hack_layer_num: 0
+debug_start_fake_process: 0
+dg_print_reg_reuse: 0
+qwen_agent_debug0
+disable_dpc_random0
+check_nan0
+
+
+[model_config]
+extra_data_path: 
+local_extra_data_path: None
+tokenizer_path: /mnt/raid0/pretrained_model/rtp_ci/Qwen3-30B-A3B-Thinking-2507-FP8-Dynamic
+act_type: bf16
+use_float32: False
+original_checkpoint_path: None
+mla_ops_type: AUTO
+ft_plugin_path: None
+weight_type: None
+task_type: None
+model_type: qwen_3_moe
+checkpoint_path: /mnt/raid0/pretrained_model/rtp_ci/Qwen3-30B-A3B-Thinking-2507-FP8-Dynamic
+oss_endpoint: 
+ptuning_path: None
+openai_api_key: EMPTY
+dashscope_api_key: EMPTY
+dashscope_http_url: None
+dashscope_websocket_url: None
+json_model_override_args: {}
+
+[py_speculative_execution_config]
+gen_num_per_circle: 1
+sp_quantization: None
+sp_checkpoint_path: None
+sp_type: 
+sp_model_type: sp_kv_cache_dtype: None
+sp_checkpoint_path: None
+
+[lora_config]
+lora_info: {}
+merge_lora: True
+
+
+[load_config]
+phy2log_path: 
+converter_num_per_gpu: 4
+tokenizers_parallelism: False
+load_ckpt_num_process: 0
+load_method: auto
+
+[render_config]
+model_template_type: None
+default_chat_template_key: default
+default_tool_use_template_key: tool_use
+llava_chat_template: 
+
+[gang_config]
+fake_gang_env: False
+gang_annocation_path: /etc/podinfo/annotations
+gang_config_string: None
+zone_name: 
+distribute_config_file: 
+dist_barrier_timeout: 45
+gang_sleep_time: 10
+gang_timeout_min: 30
+json_gang_parts: None
+lead_address: None
+
+
+[vit_config]
+vit_separation: 0
+vit_trt: 0
+trt_cache_enabled: 0
+trt_cache_path: /mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/trt_cache
+download_headers: 
+mm_cache_item_num: 10
+url_cache_item_num: 100
+use_igraph_cache: True
+igraph_search_dom: com.taobao.search.igraph.common
+igraph_vipserver: 0
+igraph_table_name: 
+igraph_default_key: None
+
+[generate_env_config]
+think_end_tag: &lt;/think&gt;
+
+
+think_end_token_id: -1
+think_mode: 0
+force_stop_words: False
+stop_words_list: None
+stop_words_str: None
+think_start_tag: &lt;think&gt;\n
+generation_config_path: None
+
+[quantization_config]
+int8_mode: 0
+quantization: 
+
+[py_eplb_config]
+eplb_mode: NONE
+eplb_update_time: 5000
+redundant_expert: 0
+hack_ep_single_entry: 0
+balance_method: mix
+eplb_force_repack: 0
+eplb_stats_window_size: 10
+
+[py_kv_cache_config]
+int8_kv_cache: 0
+fp8_kv_cache: 0
+kv_cache_dtype: fp8
+kv_cache_mem_mb: -1
+seq_size_per_block: 16
+test_block_num: 0
+use_block_cache: None
+blockwise_use_fp8_kv_cache: 0
+reuse_cache: False
+
+[py_device_resource_config]
+reserver_runtime_mem_mb: 1024
+specify_gpu_arch: 
+acext_gemm_config_dir: None
+device_reserve_memory_bytes: 0
+
+[sparse_config]
+sparse_config_file: None
+
+[engine_config]
+warm_up: 1
+warm_up_with_loss: 0
+max_seq_len: 0
+
+[embedding_config]
+embedding_model: 0
+extra_input_in_mm_embedding: 
+
+[worker_config]
+worker_info_port_num: 7
+
+[role_config]
+role_type: PDFUSION
+
+[pd_separation_config]
+prefill_retry_times: 0
+prefill_retry_timeout_ms: 0
+prefill_max_wait_timeout_ms: 600000
+decode_retry_times: 100
+decode_retry_timeout_ms: 100
+decode_retry_interval_ms: 100
+decode_polling_kv_cache_step_ms: 30
+decode_entrance: 0
+rdma_connect_retry_times: 0
+load_cache_timeout_ms: 5000
+
+[parallelism_distributed_config]
+tp_size: 1
+ep_size: 1
+dp_size: 1
+world_size: 1
+world_rank: 0
+pp_size: 1
+local_world_size: 1
+ffn_sp_size1
+
+[model_specific_config]
+max_lora_model_size: -1
+load_python_model:0
+
+
+[fmha_config]
+enable_fmha: 1
+enable_trt_fmha: 1
+enable_paged_trt_fmha: 1
+enable_open_source_fmha: 1
+enable_paged_open_source_fmha: 1
+enable_trtv1_fmha: 1
+fmha_perf_instrument: 0
+fmha_show_params: 0
+disable_flash_infer: 0
+enable_xqa: 1
+
+
+[misc_config]
+disable_pdl1
+aux_string: 
+
+
+[concurrency_config]
+concurrency_with_block: 0
+concurrency_limit: 32
+
+[jit_config]
+remote_jit_dir: 
+
+[py_hw_kernel_config]
+deep_gemm_num_sm: -1
+arm_gemm_use_kai: False
+enable_stable_scatter_add: False
+enable_multi_block_mode: True
+ft_disable_custom_ar: False
+rocm_hipblaslt_config: gemm_config.csv
+use_swizzleA: False
+enable_cuda_graph: False
+enable_cuda_graph_debug_mode: False
+use_aiter_pa: True
+use_asm_pa: True
+enable_native_cuda_graph: False
+num_native_cuda_graph: 200
+
+
+[aiter] import [module_aiter_enum] under /opt/conda310/lib/python3.10/site-packages/aiter/jit/module_aiter_enum.so
+/opt/conda310/lib/python3.10/site-packages/torchvision/io/image.py:14: UserWarning: Failed to load image Python extension: &#x27;libjpeg.so.8: cannot open shared object file: No such file or directory&#x27;If you don&#x27;t plan on using image functionality from `torchvision.io`, you can ignore this warning. Otherwise, there might be something wrong with your environment. Did you have `libjpeg` or `libpng` installed before building `torchvision` from source?
+  warn(
+initLogger log_file_path: /mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/config/alog.conf
+[BLAS] Gemm config not find: gemm_config.csv 
+[aiter] hipModuleLoad: /opt/conda310/lib/python3.10/site-packages/aiter_meta/hsa/gfx942/fmoe_2stages/fmoe_stage1_bf16_pertokenFp8_g1u1_128x128_pf2.co GetFunction: _ZN5aiter45fmoe_stage1_bf16_pertokenFp8_g1u1_128x128_pf2E Success
+/opt/conda310/lib/python3.10/site-packages/torch/cuda/__init__.py:58: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  import pynvml  # type: ignore[import]
+/opt/conda310/lib/python3.10/site-packages/torch/cuda/__init__.py:58: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  import pynvml  # type: ignore[import]
+/opt/conda310/lib/python3.10/site-packages/torch/cuda/__init__.py:58: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  import pynvml  # type: ignore[import]
+/opt/conda310/lib/python3.10/site-packages/torch/cuda/__init__.py:58: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  import pynvml  # type: ignore[import]
+[process-32375][root][2025-11-20 16:38:23.544][__init__.py:&lt;module&gt;():61][INFO] failed to load libth_transformer_config.so from libs, try use another path
+[process-32375][root][2025-11-20 16:38:23.544][__init__.py:find_th_transformer():31][INFO] find_th_transformer: /mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/../bazel-bin
+[process-32375][root][2025-11-20 16:38:23.544][__init__.py:&lt;module&gt;():67][INFO] failed to find libth_transformer_config.so in /mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/../bazel-bin
+[process-32375][root][2025-11-20 16:38:23.544][__init__.py:&lt;module&gt;():71][INFO] so path: /mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/../bazel-bin
+[process-32375][root][2025-11-20 16:38:23.544][__init__.py:&lt;module&gt;():94][INFO] torch path: [&#x27;/opt/conda310/lib/python3.10/site-packages/torch&#x27;]
+[process-32375][root][2025-11-20 16:38:23.544][__init__.py:&lt;module&gt;():100][INFO] loaded libcaffe2_nvrtc.so from /opt/conda310/lib/python3.10/site-packages/torch/lib/libcaffe2_nvrtc.so
+[process-32374][root][2025-11-20 16:38:23.551][__init__.py:&lt;module&gt;():61][INFO] failed to load libth_transformer_config.so from libs, try use another path
+[process-32374][root][2025-11-20 16:38:23.551][__init__.py:find_th_transformer():31][INFO] find_th_transformer: /mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/../bazel-bin
+[process-32374][root][2025-11-20 16:38:23.551][__init__.py:&lt;module&gt;():67][INFO] failed to find libth_transformer_config.so in /mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/../bazel-bin
+[process-32374][root][2025-11-20 16:38:23.551][__init__.py:&lt;module&gt;():71][INFO] so path: /mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/../bazel-bin
+[process-32374][root][2025-11-20 16:38:23.551][__init__.py:&lt;module&gt;():94][INFO] torch path: [&#x27;/opt/conda310/lib/python3.10/site-packages/torch&#x27;]
+[process-32374][root][2025-11-20 16:38:23.551][__init__.py:&lt;module&gt;():100][INFO] loaded libcaffe2_nvrtc.so from /opt/conda310/lib/python3.10/site-packages/torch/lib/libcaffe2_nvrtc.so
+[process-32373][root][2025-11-20 16:38:23.553][__init__.py:&lt;module&gt;():61][INFO] failed to load libth_transformer_config.so from libs, try use another path
+[process-32373][root][2025-11-20 16:38:23.553][__init__.py:find_th_transformer():31][INFO] find_th_transformer: /mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/../bazel-bin
+[process-32373][root][2025-11-20 16:38:23.553][__init__.py:&lt;module&gt;():67][INFO] failed to find libth_transformer_config.so in /mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/../bazel-bin
+[process-32373][root][2025-11-20 16:38:23.553][__init__.py:&lt;module&gt;():71][INFO] so path: /mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/../bazel-bin
+[process-32373][root][2025-11-20 16:38:23.553][__init__.py:&lt;module&gt;():94][INFO] torch path: [&#x27;/opt/conda310/lib/python3.10/site-packages/torch&#x27;]
+[process-32373][root][2025-11-20 16:38:23.553][__init__.py:&lt;module&gt;():100][INFO] loaded libcaffe2_nvrtc.so from /opt/conda310/lib/python3.10/site-packages/torch/lib/libcaffe2_nvrtc.so
+[process-32372][root][2025-11-20 16:38:23.557][__init__.py:&lt;module&gt;():61][INFO] failed to load libth_transformer_config.so from libs, try use another path
+[process-32372][root][2025-11-20 16:38:23.557][__init__.py:find_th_transformer():31][INFO] find_th_transformer: /mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/../bazel-bin
+[process-32372][root][2025-11-20 16:38:23.557][__init__.py:&lt;module&gt;():67][INFO] failed to find libth_transformer_config.so in /mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/../bazel-bin
+[process-32372][root][2025-11-20 16:38:23.557][__init__.py:&lt;module&gt;():71][INFO] so path: /mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/../bazel-bin
+[process-32372][root][2025-11-20 16:38:23.557][__init__.py:&lt;module&gt;():94][INFO] torch path: [&#x27;/opt/conda310/lib/python3.10/site-packages/torch&#x27;]
+[process-32372][root][2025-11-20 16:38:23.557][__init__.py:&lt;module&gt;():100][INFO] loaded libcaffe2_nvrtc.so from /opt/conda310/lib/python3.10/site-packages/torch/lib/libcaffe2_nvrtc.so
+[process-32374][root][2025-11-20 16:38:23.869][hippo_helper.py:HippoHelper():15][INFO] get container_ip from socket:10.67.77.202
+[process-32375][root][2025-11-20 16:38:23.869][hippo_helper.py:HippoHelper():15][INFO] get container_ip from socket:10.67.77.202
+[process-32373][root][2025-11-20 16:38:23.869][hippo_helper.py:HippoHelper():15][INFO] get container_ip from socket:10.67.77.202
+[process-32375][root][2025-11-20 16:38:23.870][fuser.py:_check_valid():97][WARNING] fuse is not valid: connet http://0:28006 error
+[process-32373][root][2025-11-20 16:38:23.870][fuser.py:_check_valid():97][WARNING] fuse is not valid: connet http://0:28006 error
+[process-32374][root][2025-11-20 16:38:23.870][fuser.py:_check_valid():97][WARNING] fuse is not valid: connet http://0:28006 error
+[process-32372][root][2025-11-20 16:38:23.871][hippo_helper.py:HippoHelper():15][INFO] get container_ip from socket:10.67.77.202
+[process-32375][root][2025-11-20 16:38:23.871][fuser.py:fetch_remote_file_to_local():283][INFO] Local path  use directly.
+[process-32373][root][2025-11-20 16:38:23.871][fuser.py:fetch_remote_file_to_local():283][INFO] Local path  use directly.
+[process-32374][root][2025-11-20 16:38:23.871][fuser.py:fetch_remote_file_to_local():283][INFO] Local path  use directly.
+[process-32375][root][2025-11-20 16:38:23.871][py_config_modules.py:update_from_env():880][INFO] [server_config]
+frontend_server_count: 4
+start_port: 6789
+timeout_keep_alive: 5
+frontend_server_id: 0
+rank_id: 0
+
+[profiling_debug_config]
+trace_memory: 0
+trace_malloc_stack: 0
+enable_device_perf: 0
+ft_core_dump_on_exception: 0
+ft_alog_conf_path: /mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/config/alog.conf
+log_level: INFO
+gen_timeline_sync: 0
+torch_cuda_profiler_dir
+log_path: logs
+log_file_backup_count: 16
+nccl_debug_file: logs/nccl.log
+debug_load_server: 0
+hack_layer_num: 0
+debug_start_fake_process: 0
+dg_print_reg_reuse: 0
+qwen_agent_debug0
+disable_dpc_random0
+check_nan0
+
+
+[model_config]
+extra_data_path: 
+local_extra_data_path: None
+tokenizer_path: /mnt/raid0/pretrained_model/rtp_ci/Qwen3-30B-A3B-Thinking-2507-FP8-Dynamic
+act_type: bf16
+use_float32: False
+original_checkpoint_path: None
+mla_ops_type: AUTO
+ft_plugin_path: None
+weight_type: None
+task_type: None
+model_type: qwen_3_moe
+checkpoint_path: /mnt/raid0/pretrained_model/rtp_ci/Qwen3-30B-A3B-Thinking-2507-FP8-Dynamic
+oss_endpoint: 
+ptuning_path: None
+openai_api_key: EMPTY
+dashscope_api_key: EMPTY
+dashscope_http_url: None
+dashscope_websocket_url: None
+json_model_override_args: {}
+
+[py_speculative_execution_config]
+gen_num_per_circle: 1
+sp_quantization: None
+sp_checkpoint_path: None
+sp_type: 
+sp_model_type: sp_kv_cache_dtype: None
+sp_checkpoint_path: None
+
+[lora_config]
+lora_info: {}
+merge_lora: True
+
+
+[load_config]
+phy2log_path: 
+converter_num_per_gpu: 4
+tokenizers_parallelism: False
+load_ckpt_num_process: 0
+load_method: auto
+
+[render_config]
+model_template_type: None
+default_chat_template_key: default
+default_tool_use_template_key: tool_use
+llava_chat_template: 
+
+[gang_config]
+fake_gang_env: False
+gang_annocation_path: /etc/podinfo/annotations
+gang_config_string: None
+zone_name: 
+distribute_config_file: 
+dist_barrier_timeout: 45
+gang_sleep_time: 10
+gang_timeout_min: 30
+json_gang_parts: None
+lead_address: None
+
+
+[vit_config]
+vit_separation: 0
+vit_trt: 0
+trt_cache_enabled: 0
+trt_cache_path: /mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/trt_cache
+download_headers: 
+mm_cache_item_num: 10
+url_cache_item_num: 100
+use_igraph_cache: True
+igraph_search_dom: com.taobao.search.igraph.common
+igraph_vipserver: 0
+igraph_table_name: 
+igraph_default_key: None
+
+[generate_env_config]
+think_end_tag: &lt;/think&gt;
+
+
+think_end_token_id: -1
+think_mode: 0
+force_stop_words: False
+stop_words_list: None
+stop_words_str: None
+think_start_tag: &lt;think&gt;\n
+generation_config_path: None
+
+[quantization_config]
+int8_mode: 0
+quantization: 
+
+[py_eplb_config]
+eplb_mode: NONE
+eplb_update_time: 5000
+redundant_expert: 0
+hack_ep_single_entry: 0
+balance_method: mix
+eplb_force_repack: 0
+eplb_stats_window_size: 10
+
+[py_kv_cache_config]
+int8_kv_cache: 0
+fp8_kv_cache: 0
+kv_cache_dtype: fp8
+kv_cache_mem_mb: -1
+seq_size_per_block: 16
+test_block_num: 0
+use_block_cache: None
+blockwise_use_fp8_kv_cache: 0
+reuse_cache: False
+
+[py_device_resource_config]
+reserver_runtime_mem_mb: 1024
+specify_gpu_arch: 
+acext_gemm_config_dir: None
+device_reserve_memory_bytes: 0
+
+[sparse_config]
+sparse_config_file: None
+
+[engine_config]
+warm_up: 1
+warm_up_with_loss: 0
+max_seq_len: 0
+
+[embedding_config]
+embedding_model: 0
+extra_input_in_mm_embedding: 
+
+[worker_config]
+worker_info_port_num: 7
+
+[role_config]
+role_type: PDFUSION
+
+[pd_separation_config]
+prefill_retry_times: 0
+prefill_retry_timeout_ms: 0
+prefill_max_wait_timeout_ms: 600000
+decode_retry_times: 100
+decode_retry_timeout_ms: 100
+decode_retry_interval_ms: 100
+decode_polling_kv_cache_step_ms: 30
+decode_entrance: 0
+rdma_connect_retry_times: 0
+load_cache_timeout_ms: 5000
+
+[parallelism_distributed_config]
+tp_size: 1
+ep_size: 1
+dp_size: 1
+world_size: 1
+world_rank: 0
+pp_size: 1
+local_world_size: 1
+ffn_sp_size1
+
+[model_specific_config]
+max_lora_model_size: -1
+load_python_model:0
+
+
+[fmha_config]
+enable_fmha: 1
+enable_trt_fmha: 1
+enable_paged_trt_fmha: 1
+enable_open_source_fmha: 1
+enable_paged_open_source_fmha: 1
+enable_trtv1_fmha: 1
+fmha_perf_instrument: 0
+fmha_show_params: 0
+disable_flash_infer: 0
+enable_xqa: 1
+
+
+[misc_config]
+disable_pdl1
+aux_string: 
+
+
+[concurrency_config]
+concurrency_with_block: 0
+concurrency_limit: 32
+
+[jit_config]
+remote_jit_dir: 
+
+[py_hw_kernel_config]
+deep_gemm_num_sm: -1
+arm_gemm_use_kai: False
+enable_stable_scatter_add: False
+enable_multi_block_mode: True
+ft_disable_custom_ar: False
+rocm_hipblaslt_config: gemm_config.csv
+use_swizzleA: False
+enable_cuda_graph: False
+enable_cuda_graph_debug_mode: False
+use_aiter_pa: True
+use_asm_pa: True
+enable_native_cuda_graph: False
+num_native_cuda_graph: 200
+
+
+[process-32373][root][2025-11-20 16:38:23.871][py_config_modules.py:update_from_env():880][INFO] [server_config]
+frontend_server_count: 4
+start_port: 6789
+timeout_keep_alive: 5
+frontend_server_id: 0
+rank_id: 0
+
+[profiling_debug_config]
+trace_memory: 0
+trace_malloc_stack: 0
+enable_device_perf: 0
+ft_core_dump_on_exception: 0
+ft_alog_conf_path: /mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/config/alog.conf
+log_level: INFO
+gen_timeline_sync: 0
+torch_cuda_profiler_dir
+log_path: logs
+log_file_backup_count: 16
+nccl_debug_file: logs/nccl.log
+debug_load_server: 0
+hack_layer_num: 0
+debug_start_fake_process: 0
+dg_print_reg_reuse: 0
+qwen_agent_debug0
+disable_dpc_random0
+check_nan0
+
+
+[model_config]
+extra_data_path: 
+local_extra_data_path: None
+tokenizer_path: /mnt/raid0/pretrained_model/rtp_ci/Qwen3-30B-A3B-Thinking-2507-FP8-Dynamic
+act_type: bf16
+use_float32: False
+original_checkpoint_path: None
+mla_ops_type: AUTO
+ft_plugin_path: None
+weight_type: None
+task_type: None
+model_type: qwen_3_moe
+checkpoint_path: /mnt/raid0/pretrained_model/rtp_ci/Qwen3-30B-A3B-Thinking-2507-FP8-Dynamic
+oss_endpoint: 
+ptuning_path: None
+openai_api_key: EMPTY
+dashscope_api_key: EMPTY
+dashscope_http_url: None
+dashscope_websocket_url: None
+json_model_override_args: {}
+
+[py_speculative_execution_config]
+gen_num_per_circle: 1
+sp_quantization: None
+sp_checkpoint_path: None
+sp_type: 
+sp_model_type: sp_kv_cache_dtype: None
+sp_checkpoint_path: None
+
+[lora_config]
+lora_info: {}
+merge_lora: True
+
+
+[load_config]
+phy2log_path: 
+converter_num_per_gpu: 4
+tokenizers_parallelism: False
+load_ckpt_num_process: 0
+load_method: auto
+
+[render_config]
+model_template_type: None
+default_chat_template_key: default
+default_tool_use_template_key: tool_use
+llava_chat_template: 
+
+[gang_config]
+fake_gang_env: False
+gang_annocation_path: /etc/podinfo/annotations
+gang_config_string: None
+zone_name: 
+distribute_config_file: 
+dist_barrier_timeout: 45
+gang_sleep_time: 10
+gang_timeout_min: 30
+json_gang_parts: None
+lead_address: None
+
+
+[vit_config]
+vit_separation: 0
+vit_trt: 0
+trt_cache_enabled: 0
+trt_cache_path: /mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/trt_cache
+download_headers: 
+mm_cache_item_num: 10
+url_cache_item_num: 100
+use_igraph_cache: True
+igraph_search_dom: com.taobao.search.igraph.common
+igraph_vipserver: 0
+igraph_table_name: 
+igraph_default_key: None
+
+[generate_env_config]
+think_end_tag: &lt;/think&gt;
+
+
+think_end_token_id: -1
+think_mode: 0
+force_stop_words: False
+stop_words_list: None
+stop_words_str: None
+think_start_tag: &lt;think&gt;\n
+generation_config_path: None
+
+[quantization_config]
+int8_mode: 0
+quantization: 
+
+[py_eplb_config]
+eplb_mode: NONE
+eplb_update_time: 5000
+redundant_expert: 0
+hack_ep_single_entry: 0
+balance_method: mix
+eplb_force_repack: 0
+eplb_stats_window_size: 10
+
+[py_kv_cache_config]
+int8_kv_cache: 0
+fp8_kv_cache: 0
+kv_cache_dtype: fp8
+kv_cache_mem_mb: -1
+seq_size_per_block: 16
+test_block_num: 0
+use_block_cache: None
+blockwise_use_fp8_kv_cache: 0
+reuse_cache: False
+
+[py_device_resource_config]
+reserver_runtime_mem_mb: 1024
+specify_gpu_arch: 
+acext_gemm_config_dir: None
+device_reserve_memory_bytes: 0
+
+[sparse_config]
+sparse_config_file: None
+
+[engine_config]
+warm_up: 1
+warm_up_with_loss: 0
+max_seq_len: 0
+
+[embedding_config]
+embedding_model: 0
+extra_input_in_mm_embedding: 
+
+[worker_config]
+worker_info_port_num: 7
+
+[role_config]
+role_type: PDFUSION
+
+[pd_separation_config]
+prefill_retry_times: 0
+prefill_retry_timeout_ms: 0
+prefill_max_wait_timeout_ms: 600000
+decode_retry_times: 100
+decode_retry_timeout_ms: 100
+decode_retry_interval_ms: 100
+decode_polling_kv_cache_step_ms: 30
+decode_entrance: 0
+rdma_connect_retry_times: 0
+load_cache_timeout_ms: 5000
+
+[parallelism_distributed_config]
+tp_size: 1
+ep_size: 1
+dp_size: 1
+world_size: 1
+world_rank: 0
+pp_size: 1
+local_world_size: 1
+ffn_sp_size1
+
+[model_specific_config]
+max_lora_model_size: -1
+load_python_model:0
+
+
+[fmha_config]
+enable_fmha: 1
+enable_trt_fmha: 1
+enable_paged_trt_fmha: 1
+enable_open_source_fmha: 1
+enable_paged_open_source_fmha: 1
+enable_trtv1_fmha: 1
+fmha_perf_instrument: 0
+fmha_show_params: 0
+disable_flash_infer: 0
+enable_xqa: 1
+
+
+[misc_config]
+disable_pdl1
+aux_string: 
+
+
+[concurrency_config]
+concurrency_with_block: 0
+concurrency_limit: 32
+
+[jit_config]
+remote_jit_dir: 
+
+[py_hw_kernel_config]
+deep_gemm_num_sm: -1
+arm_gemm_use_kai: False
+enable_stable_scatter_add: False
+enable_multi_block_mode: True
+ft_disable_custom_ar: False
+rocm_hipblaslt_config: gemm_config.csv
+use_swizzleA: False
+enable_cuda_graph: False
+enable_cuda_graph_debug_mode: False
+use_aiter_pa: True
+use_asm_pa: True
+enable_native_cuda_graph: False
+num_native_cuda_graph: 200
+
+
+[process-32374][root][2025-11-20 16:38:23.871][py_config_modules.py:update_from_env():880][INFO] [server_config]
+frontend_server_count: 4
+start_port: 6789
+timeout_keep_alive: 5
+frontend_server_id: 0
+rank_id: 0
+
+[profiling_debug_config]
+trace_memory: 0
+trace_malloc_stack: 0
+enable_device_perf: 0
+ft_core_dump_on_exception: 0
+ft_alog_conf_path: /mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/config/alog.conf
+log_level: INFO
+gen_timeline_sync: 0
+torch_cuda_profiler_dir
+log_path: logs
+log_file_backup_count: 16
+nccl_debug_file: logs/nccl.log
+debug_load_server: 0
+hack_layer_num: 0
+debug_start_fake_process: 0
+dg_print_reg_reuse: 0
+qwen_agent_debug0
+disable_dpc_random0
+check_nan0
+
+
+[model_config]
+extra_data_path: 
+local_extra_data_path: None
+tokenizer_path: /mnt/raid0/pretrained_model/rtp_ci/Qwen3-30B-A3B-Thinking-2507-FP8-Dynamic
+act_type: bf16
+use_float32: False
+original_checkpoint_path: None
+mla_ops_type: AUTO
+ft_plugin_path: None
+weight_type: None
+task_type: None
+model_type: qwen_3_moe
+checkpoint_path: /mnt/raid0/pretrained_model/rtp_ci/Qwen3-30B-A3B-Thinking-2507-FP8-Dynamic
+oss_endpoint: 
+ptuning_path: None
+openai_api_key: EMPTY
+dashscope_api_key: EMPTY
+dashscope_http_url: None
+dashscope_websocket_url: None
+json_model_override_args: {}
+
+[py_speculative_execution_config]
+gen_num_per_circle: 1
+sp_quantization: None
+sp_checkpoint_path: None
+sp_type: 
+sp_model_type: sp_kv_cache_dtype: None
+sp_checkpoint_path: None
+
+[lora_config]
+lora_info: {}
+merge_lora: True
+
+
+[load_config]
+phy2log_path: 
+converter_num_per_gpu: 4
+tokenizers_parallelism: False
+load_ckpt_num_process: 0
+load_method: auto
+
+[render_config]
+model_template_type: None
+default_chat_template_key: default
+default_tool_use_template_key: tool_use
+llava_chat_template: 
+
+[gang_config]
+fake_gang_env: False
+gang_annocation_path: /etc/podinfo/annotations
+gang_config_string: None
+zone_name: 
+distribute_config_file: 
+dist_barrier_timeout: 45
+gang_sleep_time: 10
+gang_timeout_min: 30
+json_gang_parts: None
+lead_address: None
+
+
+[vit_config]
+vit_separation: 0
+vit_trt: 0
+trt_cache_enabled: 0
+trt_cache_path: /mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/trt_cache
+download_headers: 
+mm_cache_item_num: 10
+url_cache_item_num: 100
+use_igraph_cache: True
+igraph_search_dom: com.taobao.search.igraph.common
+igraph_vipserver: 0
+igraph_table_name: 
+igraph_default_key: None
+
+[generate_env_config]
+think_end_tag: &lt;/think&gt;
+
+
+think_end_token_id: -1
+think_mode: 0
+force_stop_words: False
+stop_words_list: None
+stop_words_str: None
+think_start_tag: &lt;think&gt;\n
+generation_config_path: None
+
+[quantization_config]
+int8_mode: 0
+quantization: 
+
+[py_eplb_config]
+eplb_mode: NONE
+eplb_update_time: 5000
+redundant_expert: 0
+hack_ep_single_entry: 0
+balance_method: mix
+eplb_force_repack: 0
+eplb_stats_window_size: 10
+
+[py_kv_cache_config]
+int8_kv_cache: 0
+fp8_kv_cache: 0
+kv_cache_dtype: fp8
+kv_cache_mem_mb: -1
+seq_size_per_block: 16
+test_block_num: 0
+use_block_cache: None
+blockwise_use_fp8_kv_cache: 0
+reuse_cache: False
+
+[py_device_resource_config]
+reserver_runtime_mem_mb: 1024
+specify_gpu_arch: 
+acext_gemm_config_dir: None
+device_reserve_memory_bytes: 0
+
+[sparse_config]
+sparse_config_file: None
+
+[engine_config]
+warm_up: 1
+warm_up_with_loss: 0
+max_seq_len: 0
+
+[embedding_config]
+embedding_model: 0
+extra_input_in_mm_embedding: 
+
+[worker_config]
+worker_info_port_num: 7
+
+[role_config]
+role_type: PDFUSION
+
+[pd_separation_config]
+prefill_retry_times: 0
+prefill_retry_timeout_ms: 0
+prefill_max_wait_timeout_ms: 600000
+decode_retry_times: 100
+decode_retry_timeout_ms: 100
+decode_retry_interval_ms: 100
+decode_polling_kv_cache_step_ms: 30
+decode_entrance: 0
+rdma_connect_retry_times: 0
+load_cache_timeout_ms: 5000
+
+[parallelism_distributed_config]
+tp_size: 1
+ep_size: 1
+dp_size: 1
+world_size: 1
+world_rank: 0
+pp_size: 1
+local_world_size: 1
+ffn_sp_size1
+
+[model_specific_config]
+max_lora_model_size: -1
+load_python_model:0
+
+
+[fmha_config]
+enable_fmha: 1
+enable_trt_fmha: 1
+enable_paged_trt_fmha: 1
+enable_open_source_fmha: 1
+enable_paged_open_source_fmha: 1
+enable_trtv1_fmha: 1
+fmha_perf_instrument: 0
+fmha_show_params: 0
+disable_flash_infer: 0
+enable_xqa: 1
+
+
+[misc_config]
+disable_pdl1
+aux_string: 
+
+
+[concurrency_config]
+concurrency_with_block: 0
+concurrency_limit: 32
+
+[jit_config]
+remote_jit_dir: 
+
+[py_hw_kernel_config]
+deep_gemm_num_sm: -1
+arm_gemm_use_kai: False
+enable_stable_scatter_add: False
+enable_multi_block_mode: True
+ft_disable_custom_ar: False
+rocm_hipblaslt_config: gemm_config.csv
+use_swizzleA: False
+enable_cuda_graph: False
+enable_cuda_graph_debug_mode: False
+use_aiter_pa: True
+use_asm_pa: True
+enable_native_cuda_graph: False
+num_native_cuda_graph: 200
+
+
+[process-32372][root][2025-11-20 16:38:23.873][fuser.py:_check_valid():97][WARNING] fuse is not valid: connet http://0:28006 error
+[process-32372][root][2025-11-20 16:38:23.874][fuser.py:fetch_remote_file_to_local():283][INFO] Local path  use directly.
+[process-32372][root][2025-11-20 16:38:23.874][py_config_modules.py:update_from_env():880][INFO] [server_config]
+frontend_server_count: 4
+start_port: 6789
+timeout_keep_alive: 5
+frontend_server_id: 0
+rank_id: 0
+
+[profiling_debug_config]
+trace_memory: 0
+trace_malloc_stack: 0
+enable_device_perf: 0
+ft_core_dump_on_exception: 0
+ft_alog_conf_path: /mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/config/alog.conf
+log_level: INFO
+gen_timeline_sync: 0
+torch_cuda_profiler_dir
+log_path: logs
+log_file_backup_count: 16
+nccl_debug_file: logs/nccl.log
+debug_load_server: 0
+hack_layer_num: 0
+debug_start_fake_process: 0
+dg_print_reg_reuse: 0
+qwen_agent_debug0
+disable_dpc_random0
+check_nan0
+
+
+[model_config]
+extra_data_path: 
+local_extra_data_path: None
+tokenizer_path: /mnt/raid0/pretrained_model/rtp_ci/Qwen3-30B-A3B-Thinking-2507-FP8-Dynamic
+act_type: bf16
+use_float32: False
+original_checkpoint_path: None
+mla_ops_type: AUTO
+ft_plugin_path: None
+weight_type: None
+task_type: None
+model_type: qwen_3_moe
+checkpoint_path: /mnt/raid0/pretrained_model/rtp_ci/Qwen3-30B-A3B-Thinking-2507-FP8-Dynamic
+oss_endpoint: 
+ptuning_path: None
+openai_api_key: EMPTY
+dashscope_api_key: EMPTY
+dashscope_http_url: None
+dashscope_websocket_url: None
+json_model_override_args: {}
+
+[py_speculative_execution_config]
+gen_num_per_circle: 1
+sp_quantization: None
+sp_checkpoint_path: None
+sp_type: 
+sp_model_type: sp_kv_cache_dtype: None
+sp_checkpoint_path: None
+
+[lora_config]
+lora_info: {}
+merge_lora: True
+
+
+[load_config]
+phy2log_path: 
+converter_num_per_gpu: 4
+tokenizers_parallelism: False
+load_ckpt_num_process: 0
+load_method: auto
+
+[render_config]
+model_template_type: None
+default_chat_template_key: default
+default_tool_use_template_key: tool_use
+llava_chat_template: 
+
+[gang_config]
+fake_gang_env: False
+gang_annocation_path: /etc/podinfo/annotations
+gang_config_string: None
+zone_name: 
+distribute_config_file: 
+dist_barrier_timeout: 45
+gang_sleep_time: 10
+gang_timeout_min: 30
+json_gang_parts: None
+lead_address: None
+
+
+[vit_config]
+vit_separation: 0
+vit_trt: 0
+trt_cache_enabled: 0
+trt_cache_path: /mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/trt_cache
+download_headers: 
+mm_cache_item_num: 10
+url_cache_item_num: 100
+use_igraph_cache: True
+igraph_search_dom: com.taobao.search.igraph.common
+igraph_vipserver: 0
+igraph_table_name: 
+igraph_default_key: None
+
+[generate_env_config]
+think_end_tag: &lt;/think&gt;
+
+
+think_end_token_id: -1
+think_mode: 0
+force_stop_words: False
+stop_words_list: None
+stop_words_str: None
+think_start_tag: &lt;think&gt;\n
+generation_config_path: None
+
+[quantization_config]
+int8_mode: 0
+quantization: 
+
+[py_eplb_config]
+eplb_mode: NONE
+eplb_update_time: 5000
+redundant_expert: 0
+hack_ep_single_entry: 0
+balance_method: mix
+eplb_force_repack: 0
+eplb_stats_window_size: 10
+
+[py_kv_cache_config]
+int8_kv_cache: 0
+fp8_kv_cache: 0
+kv_cache_dtype: fp8
+kv_cache_mem_mb: -1
+seq_size_per_block: 16
+test_block_num: 0
+use_block_cache: None
+blockwise_use_fp8_kv_cache: 0
+reuse_cache: False
+
+[py_device_resource_config]
+reserver_runtime_mem_mb: 1024
+specify_gpu_arch: 
+acext_gemm_config_dir: None
+device_reserve_memory_bytes: 0
+
+[sparse_config]
+sparse_config_file: None
+
+[engine_config]
+warm_up: 1
+warm_up_with_loss: 0
+max_seq_len: 0
+
+[embedding_config]
+embedding_model: 0
+extra_input_in_mm_embedding: 
+
+[worker_config]
+worker_info_port_num: 7
+
+[role_config]
+role_type: PDFUSION
+
+[pd_separation_config]
+prefill_retry_times: 0
+prefill_retry_timeout_ms: 0
+prefill_max_wait_timeout_ms: 600000
+decode_retry_times: 100
+decode_retry_timeout_ms: 100
+decode_retry_interval_ms: 100
+decode_polling_kv_cache_step_ms: 30
+decode_entrance: 0
+rdma_connect_retry_times: 0
+load_cache_timeout_ms: 5000
+
+[parallelism_distributed_config]
+tp_size: 1
+ep_size: 1
+dp_size: 1
+world_size: 1
+world_rank: 0
+pp_size: 1
+local_world_size: 1
+ffn_sp_size1
+
+[model_specific_config]
+max_lora_model_size: -1
+load_python_model:0
+
+
+[fmha_config]
+enable_fmha: 1
+enable_trt_fmha: 1
+enable_paged_trt_fmha: 1
+enable_open_source_fmha: 1
+enable_paged_open_source_fmha: 1
+enable_trtv1_fmha: 1
+fmha_perf_instrument: 0
+fmha_show_params: 0
+disable_flash_infer: 0
+enable_xqa: 1
+
+
+[misc_config]
+disable_pdl1
+aux_string: 
+
+
+[concurrency_config]
+concurrency_with_block: 0
+concurrency_limit: 32
+
+[jit_config]
+remote_jit_dir: 
+
+[py_hw_kernel_config]
+deep_gemm_num_sm: -1
+arm_gemm_use_kai: False
+enable_stable_scatter_add: False
+enable_multi_block_mode: True
+ft_disable_custom_ar: False
+rocm_hipblaslt_config: gemm_config.csv
+use_swizzleA: False
+enable_cuda_graph: False
+enable_cuda_graph_debug_mode: False
+use_aiter_pa: True
+use_asm_pa: True
+enable_native_cuda_graph: False
+num_native_cuda_graph: 200
+
+
+[aiter] import [module_aiter_enum] under /opt/conda310/lib/python3.10/site-packages/aiter/jit/module_aiter_enum.so
+[aiter] import [module_aiter_enum] under /opt/conda310/lib/python3.10/site-packages/aiter/jit/module_aiter_enum.so
+[aiter] import [module_aiter_enum] under /opt/conda310/lib/python3.10/site-packages/aiter/jit/module_aiter_enum.so
+[aiter] import [module_aiter_enum] under /opt/conda310/lib/python3.10/site-packages/aiter/jit/module_aiter_enum.so
+/opt/conda310/lib/python3.10/site-packages/torchvision/io/image.py:14: UserWarning: Failed to load image Python extension: &#x27;libjpeg.so.8: cannot open shared object file: No such file or directory&#x27;If you don&#x27;t plan on using image functionality from `torchvision.io`, you can ignore this warning. Otherwise, there might be something wrong with your environment. Did you have `libjpeg` or `libpng` installed before building `torchvision` from source?
+  warn(
+/opt/conda310/lib/python3.10/site-packages/torchvision/io/image.py:14: UserWarning: Failed to load image Python extension: &#x27;libjpeg.so.8: cannot open shared object file: No such file or directory&#x27;If you don&#x27;t plan on using image functionality from `torchvision.io`, you can ignore this warning. Otherwise, there might be something wrong with your environment. Did you have `libjpeg` or `libpng` installed before building `torchvision` from source?
+  warn(
+/opt/conda310/lib/python3.10/site-packages/torchvision/io/image.py:14: UserWarning: Failed to load image Python extension: &#x27;libjpeg.so.8: cannot open shared object file: No such file or directory&#x27;If you don&#x27;t plan on using image functionality from `torchvision.io`, you can ignore this warning. Otherwise, there might be something wrong with your environment. Did you have `libjpeg` or `libpng` installed before building `torchvision` from source?
+  warn(
+/opt/conda310/lib/python3.10/site-packages/torchvision/io/image.py:14: UserWarning: Failed to load image Python extension: &#x27;libjpeg.so.8: cannot open shared object file: No such file or directory&#x27;If you don&#x27;t plan on using image functionality from `torchvision.io`, you can ignore this warning. Otherwise, there might be something wrong with your environment. Did you have `libjpeg` or `libpng` installed before building `torchvision` from source?
+  warn(
+[aiter] hipModuleLoad: /opt/conda310/lib/python3.10/site-packages/aiter_meta/hsa/gfx942/fmoe_2stages/fmoe_stage1_bf16_pertokenFp8_g1u1_32x256_2tg_pf3.co GetFunction: _ZN5aiter48fmoe_stage1_bf16_pertokenFp8_g1u1_32x256_2tg_pf3E Success
+[aiter] hipModuleLoad: /opt/conda310/lib/python3.10/site-packages/aiter_meta/hsa/gfx942/pa/pa_bf16_pertokenFp8_gqa8_2tg_4w.co GetFunction: _ZN5aiter31pa_bf16_pertokenFp8_gqa8_2tg_4wE Success
+/mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/utils/grpc_util.py:35: UserWarning: The given buffer is not writable, and PyTorch does not support non-writable tensors. This means you can write to the underlying (supposedly non-writable) buffer using the tensor. You may want to copy the buffer to protect its data or make it writable before converting it to a tensor. This type of warning will be suppressed for the rest of this program. (Triggered internally at /pytorch/torch/csrc/utils/tensor_new.cpp:1544.)
+  return torch.frombuffer(t.int32_data, dtype=torch.int32).reshape(list(t.shape))
+/opt/conda310/lib/python3.10/site-packages/pydantic/main.py:464: UserWarning: Pydantic serializer warnings:
+  PydanticSerializationUnexpectedValue(Expected `list[float]` - serialized value may not be as expected [field_name=&#x27;top_p&#x27;, input_value=0, input_type=int])
+  PydanticSerializationUnexpectedValue(Unexpected Value)
+  return self.__pydantic_serializer__.to_python(
+</pre>
