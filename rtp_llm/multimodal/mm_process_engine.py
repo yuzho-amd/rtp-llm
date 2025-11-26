@@ -436,7 +436,49 @@ class MMProcessEngine:
         return res
 
     def mm_embedding_impl(self, mm_inputs: List[MultimodalInput]) -> MMEmbeddingRes:
-        """Core implementation for multimodal embedding processing."""
+        """
+        Core implementation for multimodal embedding processing.
+
+        When `MM_TRACE` is set, wraps the whole call with `torch.profiler` and exports a Chrome trace json.
+        This is intended for ad-hoc performance debugging and should be off by default.
+        """
+        trace_prefix = os.environ.get("MM_TRACE")
+        if trace_prefix:
+            # keep the same semantics as the legacy implementation: count per forward call
+            if not hasattr(self, "_forward_call_count"):
+                self._forward_call_count = 0
+            else:
+                self._forward_call_count += 1
+
+            try:
+                from torch.profiler import (  # type: ignore
+                    ProfilerActivity,
+                    profile,
+                    record_function,
+                )
+
+                with profile(
+                    activities=[ProfilerActivity.CPU, ProfilerActivity.CUDA],
+                    with_stack=True,
+                    record_shapes=True,
+                ) as prof:
+                    with record_function("MMProcessEngine.mm_embedding_impl"):
+                        ret = self._mm_embedding_impl_no_trace(mm_inputs)
+
+                trace_file_name = f"{trace_prefix}_fwd{self._forward_call_count}.json"
+                prof.export_chrome_trace(trace_file_name)
+                return ret
+            except Exception as e:
+                # If profiler fails (missing build flags, runtime error, etc.), fall back to normal path.
+                logging.warning(
+                    "MM_TRACE enabled but torch.profiler failed (%s), fallback to normal execution",
+                    e,
+                )
+
+        return self._mm_embedding_impl_no_trace(mm_inputs)
+
+    def _mm_embedding_impl_no_trace(self, mm_inputs: List[MultimodalInput]) -> MMEmbeddingRes:
+        """Core implementation for multimodal embedding processing (no profiler wrapper)."""
         logging.debug(f"{self.server_id} request received")
         try:
             # 如果不是 proxy 模式（即 standalone 模式），记录 QPS
