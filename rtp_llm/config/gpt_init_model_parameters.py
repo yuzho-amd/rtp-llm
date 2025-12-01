@@ -23,6 +23,7 @@ from rtp_llm.config.quant_config import (
     Fp8PerChannelCompressedQuantConfig,
     Fp8PerChannelQuarkQuantConfig,
     Fp8PerTensorCompressedQuantConfig,
+    Fp8PerChannelQuarkQuantConfig,
     QuantizationConfig,
     init_quant_config,
 )
