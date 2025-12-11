@@ -84,7 +84,6 @@ genrule(
     outs = [
         "module_aiter_enum.so",
         "module_custom_all_reduce.so",
-        "module_quick_all_reduce.so",
         "module_moe_sorting.so",
         "module_moe_asm.so",
         "module_gemm_a8w8_bpreshuffle.so",
@@ -95,7 +94,6 @@ genrule(
         "module_activation.so",
         "module_attention_asm.so",
         "module_mha_fwd.so",
-        "module_fmha_v3_varlen_fwd.so",
         "module_norm.so",
         "module_rmsnorm.so",
         "module_gemm_a8w8.so",
@@ -104,7 +102,6 @@ genrule(
     cmd = """
         cp external/aiter/aiter/jit/module_aiter_enum.so $(location module_aiter_enum.so);
         cp external/aiter/aiter/jit/module_custom_all_reduce.so $(location module_custom_all_reduce.so);
-        cp external/aiter/aiter/jit/module_quick_all_reduce.so $(location module_quick_all_reduce.so);
         cp external/aiter/aiter/jit/module_moe_sorting.so $(location module_moe_sorting.so);
         cp external/aiter/aiter/jit/module_moe_asm.so $(location module_moe_asm.so);
         cp external/aiter/aiter/jit/module_gemm_a8w8_bpreshuffle.so $(location module_gemm_a8w8_bpreshuffle.so);
@@ -115,7 +112,6 @@ genrule(
         cp external/aiter/aiter/jit/module_activation.so $(location module_activation.so);
         cp external/aiter/aiter/jit/module_attention_asm.so $(location module_attention_asm.so);
         cp external/aiter/aiter/jit/module_mha_fwd.so $(location module_mha_fwd.so);
-        cp external/aiter/aiter/jit/module_fmha_v3_varlen_fwd.so $(location module_fmha_v3_varlen_fwd.so);
         cp external/aiter/aiter/jit/module_norm.so $(location module_norm.so);
         cp external/aiter/aiter/jit/module_rmsnorm.so $(location module_rmsnorm.so);
         cp external/aiter/aiter/jit/module_gemm_a8w8.so $(location module_gemm_a8w8.so);

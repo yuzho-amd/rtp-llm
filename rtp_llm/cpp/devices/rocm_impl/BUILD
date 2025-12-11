@@ -59,7 +59,7 @@ cc_library(
             "@aiter//:module_rmsnorm",
             "@aiter//:module_norm",
             "@aiter//:module_mha_fwd",
-            "@aiter//:module_fmha_v3_varlen_fwd",
+            # "@aiter//:module_fmha_v3_varlen_fwd",
             "@aiter//:module_moe_ck2stages",
         ],
     }),
