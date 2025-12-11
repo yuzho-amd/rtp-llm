@@ -14,11 +14,14 @@ namespace rtp_llm {
 class AiterWrapper {
 public:
     AiterWrapper(const DeviceInitParams& params);
-    void mtp(const AttentionModuleParams& params, rtp_llm::DeviceBase* device, Buffer& q_mtp);
+    void runTritonPA(const AttentionModuleParams& params, rtp_llm::DeviceBase* device, Buffer& q_mtp, hipStream_t stream);
+    void runHipPA(const AttentionModuleParams& params, rtp_llm::DeviceBase* device, Buffer& q_tmp);
 private:
-    py::object aiter_module;
-    py::object pa_func;
-    bool use_asm_pa_;
+    py::object  aiter_module;
+    py::object  paged_attention_rocm;
+    py::module_ pa_gluon_aot_api;
+    py::object  load_all_libs;
+    bool use_asm_pa_    = true;
 };
 
 void runAiterAsmPA(const AttentionModuleParams& params,
