@@ -37,7 +37,8 @@ public:
     void recordHistory(bool                                          enabled,
                        at::hip::HIPCachingAllocator::CreateContextFn context_recorder,
                        size_t                                        alloc_trace_max_entries,
-                       at::hip::HIPCachingAllocator::RecordContext   when) override {}
+                       at::hip::HIPCachingAllocator::RecordContext   when,
+                       bool                                          clearHistory) override {}
 
     bool isHistoryEnabled() override {
         return false;
@@ -51,7 +52,7 @@ public:
 
     void attachOutOfMemoryObserver(at::hip::HIPCachingAllocator::OutOfMemoryObserver observer) override {}
 
-    void emptyCache() override {}
+    void emptyCache(at::hip::MempoolId_t mempool_id = {0, 0}) override {}
 
     void* getBaseAllocation(void* ptr, size_t* outSize) override {
         return ptr;
@@ -59,7 +60,7 @@ public:
 
     void recordStream(const at::DataPtr& ptr, at::hip::HIPStream stream) override {}
 
-    at::hip::HIPCachingAllocator::SnapshotInfo snapshot() override {
+    at::hip::HIPCachingAllocator::SnapshotInfo snapshot(at::hip::MempoolId_t mempool_id = {0, 0}) override {
         at::hip::HIPCachingAllocator::SnapshotInfo result;
         return result;
     }
@@ -161,6 +162,14 @@ public:
     }
 
     void attachAllocatorTraceTracker(c10::hip::HIPCachingAllocator::AllocatorTraceTracker tracker) override {};
+
+    double getMemoryFraction(c10::DeviceIndex device) override {};
+
+    void enable(bool value) override {};
+
+    bool isEnabled() const override {};
+
+    c10::hip::HIPCachingAllocator::ShareableHandle shareIpcHandle(void* ptr) override {};
 
 #endif
 };
