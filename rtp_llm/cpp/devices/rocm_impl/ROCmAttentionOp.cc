@@ -631,10 +631,11 @@ AttentionModuleOutput ROCmDevice::contextAttention(const AttentionModuleParams& 
     // int8
     float* scale_out_ptr = nullptr;
     int    int8_mode     = 0;
+    bool   use_asm_pa    = shouldUseAsmPA(init_params_.aiter_pa_type, batch_size);
 
     if (prefix_prompt_param.max_prefix_prompt_length > 0) {
         if (init_params_.use_aiter_pa) {
-            if (init_params_.use_asm_pa) {
+            if (use_asm_pa) {
                 DISPATCH_CUDA_FUNCTION_DATA_TYPE(datatype,
                                                  invokeLoadPrefixKVCacheAiter,
                                                  q_output->data(),
@@ -696,7 +697,7 @@ AttentionModuleOutput ROCmDevice::contextAttention(const AttentionModuleParams& 
         auto rope_cache = getRopeCacheOnce(params.configs.rope_config, init_params_.max_seq_len, false);
 
         if (init_params_.use_aiter_pa) {
-            if (init_params_.use_asm_pa) {
+            if (use_asm_pa) {
                 DISPATCH_CUDA_FUNCTION_DATA_TYPE(
                     datatype,
                     invokeAddFusedQKVBiasTransposePrefill,
@@ -1134,11 +1135,12 @@ AttentionModuleOutput ROCmDevice::decoderSelfAttention(const AttentionModulePara
 
         bool skip_add_bias_transpose = (params.configs.rope_config.style == RopeStyle::No && !params.common.kv_cache
                                         && !params.configs.fuse_qkv_add_bias);
+        bool use_asm_pa = shouldUseAsmPA(init_params_.aiter_pa_type, batch_size);
         printBufferData(*params.common.input_lengths, "input_lengths");
         if (!skip_add_bias_transpose) {
             auto rope_cache = getRopeCacheOnce(params.configs.rope_config, init_params_.max_seq_len, false);
 
-            if (init_params_.use_asm_pa) {
+            if (use_asm_pa) {
                 DISPATCH_CUDA_FUNCTION_DATA_TYPE(
                     datatype,
                     invokeAddFusedQKVBiasTransposeDecode,
@@ -1213,7 +1215,7 @@ AttentionModuleOutput ROCmDevice::decoderSelfAttention(const AttentionModulePara
             }
             check_cuda_error();
             DEBUG_PRINT_PARAMS(params, this, "decode_writeKVCache", q_output);
-            if (init_params_.use_asm_pa) {
+            if (use_asm_pa) {
                 runAiterAsmPA(params, this, *q_output);
             } else {
                 runAiterPA(params, this, *q_output);

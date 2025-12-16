@@ -96,7 +96,7 @@ struct HWKernelConfig {
     bool        enable_cuda_graph            = false;
     bool        enable_cuda_graph_debug_mode = false;
     bool        use_aiter_pa                 = true;
-    bool        use_asm_pa                   = true;
+    std::string aiter_pa_type                = "auto";
     bool        enable_native_cuda_graph     = false;
     int         num_native_cuda_graph        = 200;
     // Prefill CUDA Graph capture configuration

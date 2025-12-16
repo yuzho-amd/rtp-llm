@@ -168,13 +168,21 @@ class AiterPrefillAttnOp:
         return final_result
 
 
+def should_use_asm_pa(aiter_pa_type: str, batch_size: int) -> bool:
+    if aiter_pa_type in ("asm", "asm_pa"):
+        return True
+    if aiter_pa_type in ("hip", "hip_pa"):
+        return False
+    return batch_size > 4
+
+
 class AiterDecodeAttnOp:
     def __init__(self, config: GptInitModelParameters):
         self.head_num = config.head_num // config.tp_size
         self.head_dim = config.size_per_head
         self.head_num_kv = config.head_num_kv // config.tp_size
         self.kv_cache_data_type = config.kv_cache_data_type
-        self.use_asm_pa = config.hw_kernel_config.use_asm_pa
+        self.aiter_pa_type = config.hw_kernel_config.aiter_pa_type
         self.enable_cuda_graph = (
             config.gpt_init_params.hw_kernel_config.enable_cuda_graph
         )
@@ -198,8 +206,10 @@ class AiterDecodeAttnOp:
         value_cache = kv_cache.k_cache_base.select(1, 1)
         block_tables_id_device = fmha_params.kv_cache_block_id_device
         max_num_blocks = block_tables_id_device.shape[1]
+        batch_size = query.shape[0]
+        use_asm_pa = should_use_asm_pa(self.aiter_pa_type, batch_size)
         # for now not support fp8
-        if self.use_asm_pa:
+        if use_asm_pa:
             output = aiter.pa_fwd_asm(
                 query,  # [num_seqs, num_heads, head_size]
                 key_cache,  # [num_blocks, num_kv_heads, block_size, head_size/x, x]

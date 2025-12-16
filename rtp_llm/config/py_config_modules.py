@@ -767,7 +767,7 @@ class PyHwKernelConfig:
         self.enable_cuda_graph: bool = False
         self.enable_cuda_graph_debug_mode: bool = False
         self.use_aiter_pa: bool = True
-        self.use_asm_pa: bool = True
+        self.aiter_pa_type: str = "auto"
         self.enable_native_cuda_graph: bool = False
         self.num_native_cuda_graph: int = 200
         self.prefill_capture_seq_lens: List[int] = []
@@ -797,7 +797,7 @@ class PyHwKernelConfig:
             "ENABLE_CUDA_GRAPH_DEBUG_MODE", self.enable_cuda_graph_debug_mode
         )
         self.use_aiter_pa = get_env_bool("USE_AITER_PA", self.use_aiter_pa)
-        self.use_asm_pa = get_env_bool("USE_ASM_PA", self.use_asm_pa)
+        self.aiter_pa_type = get_env_str("AITER_PA_TYPE", self.aiter_pa_type)
         self.enable_native_cuda_graph = get_env_bool(
             "ENABLE_NATIVE_CUDA_GRAPH", self.enable_native_cuda_graph
         )
@@ -823,7 +823,7 @@ class PyHwKernelConfig:
             f"enable_cuda_graph: {self.enable_cuda_graph}\n"
             f"enable_cuda_graph_debug_mode: {self.enable_cuda_graph_debug_mode}\n"
             f"use_aiter_pa: {self.use_aiter_pa}\n"
-            f"use_asm_pa: {self.use_asm_pa}\n"
+            f"aiter_pa_type: {self.aiter_pa_type}\n"
             f"enable_native_cuda_graph: {self.enable_native_cuda_graph}\n"
             f"num_native_cuda_graph: {self.num_native_cuda_graph}\n"
             f"prefill_capture_seq_lens: {self.prefill_capture_seq_lens}\n"

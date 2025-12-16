@@ -6,6 +6,7 @@
 #include <string>
 #include "rtp_llm/cpp/model_utils/RopeConfig.h"
 #include "rtp_llm/cpp/kernels/kv_cache/kv_cache_utils.h"
+#include "rtp_llm/cpp/devices/OpData.h"
 #include "rtp_llm/cpp/devices/utils/RopeCache.h"
 #include "rtp_llm/cpp/devices/utils/DebugUtils.h"
 
@@ -130,8 +131,10 @@ std::tuple<torch::Tensor, torch::Tensor, torch::Tensor> FusedRopeKVCachePrefillO
         // int8
         float* scale_out_ptr = nullptr;
         int    int8_mode     = 0;
+        bool   use_asm_pa    = shouldUseAsmPA(hw_kernel_config_.aiter_pa_type, batch_size);
         if (hw_kernel_config_.use_aiter_pa) {
-            if (hw_kernel_config_.use_asm_pa) {
+            if (use_asm_pa) {
+                printf("yilin2 use asm pa\n");
                 DISPATCH_CUDA_FUNCTION_DATA_TYPE(torchDTypeToDataType(qkv.dtype()),
                                                  invokeLoadPrefixKVCacheAiter,
                                                  q_output.data_ptr(),
@@ -147,6 +150,7 @@ std::tuple<torch::Tensor, torch::Tensor, torch::Tensor> FusedRopeKVCachePrefillO
                                                  int8_mode,
                                                  device_->getStream());
             } else {
+                printf("yilin3 use hip pa\n");
                 DISPATCH_CUDA_FUNCTION_DATA_TYPE(torchDTypeToDataType(qkv.dtype()),
                                                  invokeLoadPrefixKVCacheAiterV1,
                                                  q_output.data_ptr(),
@@ -187,6 +191,7 @@ std::tuple<torch::Tensor, torch::Tensor, torch::Tensor> FusedRopeKVCachePrefillO
     // int8
     float* scale_out_ptr = nullptr;
     int    int8_mode     = 0;
+    bool   use_asm_pa    = shouldUseAsmPA(hw_kernel_config_.aiter_pa_type, batch_size);
     if (hw_kernel_config_.use_aiter_pa) {
         hipStream_t stream_ = device_->getStream();
         // 添加 FP8 缓冲区支持
@@ -196,7 +201,8 @@ std::tuple<torch::Tensor, torch::Tensor, torch::Tensor> FusedRopeKVCachePrefillO
             qkv_buf_fp8 = torch::empty(qkv.sizes(), torch::TensorOptions(torch::kFloat8_e4m3fn).device(qkv.device()));
         }
 
-        if (hw_kernel_config_.use_asm_pa) {
+        if (use_asm_pa) {
+            printf("yilin4 use asm pa\n");
             DISPATCH_CUDA_FUNCTION_DATA_TYPE(torchDTypeToDataType(qkv.dtype()),
                                              invokeAddFusedQKVBiasTransposePrefill,
                                              q_output.data_ptr(),
@@ -228,6 +234,7 @@ std::tuple<torch::Tensor, torch::Tensor, torch::Tensor> FusedRopeKVCachePrefillO
                                              stream_  // 必须作为最后一个参数
             );
         } else {
+            printf("yilin5 use hip pa\n");
             DISPATCH_CUDA_FUNCTION_DATA_TYPE(torchDTypeToDataType(qkv.dtype()),
                                              invokeAddFusedQKVBiasTransposePrefillV1,
                                              q_output.data_ptr(),
@@ -392,9 +399,10 @@ torch::Tensor FusedRopeKVCacheDecodeOp::forward(const torch::Tensor&            
     bool   store_kv    = false;
     bool   store_cache = kv_cache.has_value();
 
+    bool use_asm_pa = shouldUseAsmPA(hw_kernel_config_.aiter_pa_type, batch_size);
     if (hw_kernel_config_.use_aiter_pa) {
-        if (hw_kernel_config_.use_asm_pa) {
-
+        if (use_asm_pa) {
+            printf("yilin6 use asm pa\n");
             DISPATCH_CUDA_FUNCTION_DATA_TYPE(
                 torchDTypeToDataType(qkv.dtype()),
                 invokeAddFusedQKVBiasTransposeDecode,
@@ -430,7 +438,7 @@ torch::Tensor FusedRopeKVCacheDecodeOp::forward(const torch::Tensor&            
                 nullptr,
                 device_->getStream());
         } else {
-
+            printf("yilin7 use hip pa\n");
             DISPATCH_CUDA_FUNCTION_DATA_TYPE(
                 torchDTypeToDataType(qkv.dtype()),
                 invokeAddFusedQKVBiasTransposeDecodeV1,

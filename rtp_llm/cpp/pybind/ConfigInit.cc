@@ -246,7 +246,7 @@ void register_hwkernel_config(pybind11::module& m) {
                             bool,
                             bool,
                             bool,
-                            bool,
+                            std::string,
                             bool,
                             int,
                             std::vector<int>,
@@ -261,7 +261,7 @@ void register_hwkernel_config(pybind11::module& m) {
              pybind11::arg("enable_cuda_graph")            = false,
              pybind11::arg("enable_cuda_graph_debug_mode") = false,
              pybind11::arg("use_aiter_pa")                 = true,
-             pybind11::arg("use_asm_pa")                   = true,
+             pybind11::arg("aiter_pa_type")                = "auto",
              pybind11::arg("enable_native_cuda_graph")     = false,
              pybind11::arg("num_native_cuda_graph")        = 200,
              pybind11::arg("prefill_capture_seq_lens")     = std::vector<int>(),
@@ -278,7 +278,7 @@ void register_hwkernel_config(pybind11::module& m) {
         .def_readwrite("enable_cuda_graph", &HWKernelConfig::enable_cuda_graph)
         .def_readwrite("enable_cuda_graph_debug_mode", &HWKernelConfig::enable_cuda_graph_debug_mode)
         .def_readwrite("use_aiter_pa", &HWKernelConfig::use_aiter_pa)
-        .def_readwrite("use_asm_pa", &HWKernelConfig::use_asm_pa)
+        .def_readwrite("aiter_pa_type", &HWKernelConfig::aiter_pa_type)
         .def_readwrite("enable_native_cuda_graph", &HWKernelConfig::enable_native_cuda_graph)
         .def_readwrite("num_native_cuda_graph", &HWKernelConfig::num_native_cuda_graph)
         .def_readwrite("prefill_capture_seq_lens", &HWKernelConfig::prefill_capture_seq_lens)

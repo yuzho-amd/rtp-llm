@@ -49,6 +49,18 @@ enum class DeviceStream {
     DEFAULT = 0,
 };
 
+enum class AiterPAType : int8_t {
+    Auto  = 0,
+    HipPA = 1,
+    AsmPA = 2,
+};
+
+inline bool shouldUseAsmPA(const std::string& type, size_t batch_size) {
+    if (type == "asm" || type == "asm_pa") return true;
+    if (type == "hip" || type == "hip_pa") return false;
+    return batch_size > 4;
+}
+
 class OpStatus {
 public:
     OpStatus(OpErrorType, const std::string& message = ""):

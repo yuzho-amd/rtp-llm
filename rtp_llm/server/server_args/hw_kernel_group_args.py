@@ -96,11 +96,11 @@ def init_hw_kernel_group_args(parser):
     )
 
     hw_kernel_group.add_argument(
-        "--use_asm_pa",
-        env_name="USE_ASM_PA",
-        type=str2bool,
-        default=True,
-        help="Rocm是否使用AITER ASM Attention",
+        "--aiter_pa_type",
+        env_name="AITER_PA_TYPE",
+        type=str,
+        default="auto",
+        help="Rocm使用的AITER Paged Attention 类型",
     )
 
     hw_kernel_group.add_argument(
