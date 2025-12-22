@@ -176,8 +176,11 @@ class QWen2_5_VL(QWen2_VL):
     def _load_mm_weight(self, vit_params: VitParameters, ctype, device: str):
         """
         重写权重加载方法，将 gate_proj 和 up_proj 的权重合并到 up_gate_proj
+        并对 qkv 和 proj 权重进行 swizzle 处理
         """
         from rtp_llm.utils.util import to_torch_dtype
+        from rtp_llm.utils.swizzle_utils import swizzle_tensor
+        import os
         
         # 确保 ctype 是 torch.dtype 类型
         if isinstance(ctype, str):
@@ -187,6 +190,9 @@ class QWen2_5_VL(QWen2_VL):
         ft_prefix = vit_weight.ft_prefix
         ckpt_prefix = vit_weight.ckpt_prefix
         weight_names = vit_weight.weight_names
+
+        # 检查是否启用 swizzle
+        has_swizzle = os.environ.get("USE_SWIZZLEA", None) == "1"
 
         def _safe_load_from_module(
             param: torch.nn.Parameter, fname: str, ctype: torch.dtype
@@ -215,23 +221,50 @@ class QWen2_5_VL(QWen2_VL):
                         f"gate_proj={gate_proj_name}, up_proj={up_proj_name}"
                     )
                 
-                # 合并权重：在输出维度上拼接
+                # merge weights: concatenate in output dimension
                 # gate_proj: (intermediate_size, hidden_size)
                 # up_proj: (intermediate_size, hidden_size)
                 # merged: (intermediate_size * 2, hidden_size)
                 merged_weight = torch.cat([gate_proj_weight, up_proj_weight], dim=0)
                 
-                # 加载到对应的参数
+                # load to corresponding parameter
                 w_name = ft_prefix + w
                 w_name = re.sub(r"\.\d+\.", lambda x: "[" + x.group(0)[1:-1] + "].", w_name)
                 param = eval(w_name)
                 param.data = merged_weight.reshape(param.data.shape).to(ctype).to(device)
+            # check if it is qkv or proj weight (need swizzle) and swizzle it
+            elif has_swizzle and "attn" in w and ("qkv" in w or "proj" in w) and "weight" in w and "bias" not in w:
+                # swizzle qkv and proj weights
+                # reference test: w_swizzled = swizzle_tensor(w.t(), False, MiM=16).t()
+                t = self.weight.get_global_weight_or_none(w)
+                if t is None:
+                    raise Exception(f"failed to get tensor from name {w}")
+                
+                # load to corresponding parameter
+                w_name = ft_prefix + w
+                w_name = re.sub(r"\.\d+\.", lambda x: "[" + x.group(0)[1:-1] + "].", w_name)
+                param = eval(w_name)
+                
+                # ensure 2d weight
+                if t.dim() == 2:
+                    # checkpoint weight t (N,K)
+                    t_swizzled = swizzle_tensor(t, False, MiM=16).t()  # t_swizzled shape (K,N)
+                    param.data = t_swizzled.to(ctype).to(device)
+                else:
+                    # non 2d weight, load directly
+                    param.data = t.to(ctype).to(device)
             else:
                 # 对于其他权重，使用默认的加载方式
                 w_name = ft_prefix + w
                 w_name = re.sub(r"\.\d+\.", lambda x: "[" + x.group(0)[1:-1] + "].", w_name)
                 param = eval(w_name)
                 _safe_load_from_module(param, w, ctype)
+        
+        # After all weights are loaded, replace nn.Linear with RocmF16Linear for attention layers
+        if hasattr(self.mm_part, 'visual') and hasattr(self.mm_part.visual, 'blocks'):
+            for block in self.mm_part.visual.blocks:
+                if hasattr(block, 'attn') and hasattr(block.attn, '_replace_with_rocm_linear'):
+                    block.attn._replace_with_rocm_linear()
 
 
 register_model("qwen2_5_vl", QWen2_5_VL, ["Qwen2_5_VLForConditionalGeneration"])
