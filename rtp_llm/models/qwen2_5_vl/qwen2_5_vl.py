@@ -168,10 +168,21 @@ class QWen2_5_VL(QWen2_VL):
         config.mm_related_params.vit_weights = QwenVL2VitWeight(
             {"vit": self.mm_part.visual}
         )
-    
+
     @staticmethod
     def get_weight_cls():
         return QWen2_5_VLWeightInfo
+
+    @staticmethod
+    def can_shuffle(n: int, k: int, layout: tuple[int, int]) -> bool:
+        IN, IK = layout
+        BK = IK * 2
+        return (n % IN == 0) and (k % BK == 0)
+
+    @staticmethod
+    def get_next_multiple(x: int, base: int = 32) -> int:
+        """Calculate the next multiple of base that is >= x"""
+        return ((x + base - 1) // base) * base
 
     def _load_mm_weight(self, vit_params: VitParameters, ctype, device: str):
         """
@@ -181,6 +192,7 @@ class QWen2_5_VL(QWen2_VL):
         from rtp_llm.utils.util import to_torch_dtype
         from rtp_llm.utils.swizzle_utils import swizzle_tensor
         import os
+        from rtp_llm.utils.model_weight import pad
         
         # 确保 ctype 是 torch.dtype 类型
         if isinstance(ctype, str):
@@ -239,22 +251,25 @@ class QWen2_5_VL(QWen2_VL):
                 t = self.weight.get_global_weight_or_none(w)
                 if t is None:
                     raise Exception(f"failed to get tensor from name {w}")
-                
+                assert t.dim() == 2, f"weight {w} is not 2d, shape: {t.shape}"
                 # load to corresponding parameter
                 w_name = ft_prefix + w
                 w_name = re.sub(r"\.\d+\.", lambda x: "[" + x.group(0)[1:-1] + "].", w_name)
                 param = eval(w_name)
                 
-                # ensure 2d weight
-                if t.dim() == 2:
-                    # checkpoint weight t (N,K)
+                # check if dimensions can be swizzled, t shape (N,K)
+                if  self.can_shuffle(t.shape[0], t.shape[1], (16, 16)):
                     t_swizzled = swizzle_tensor(t, False, MiM=16).t()  # t_swizzled shape (K,N)
                     param.data = t_swizzled.to(ctype).to(device)
+
                 else:
-                    # non 2d weight, load directly
-                    param.data = t.to(ctype).to(device)
+                    # cannot shuffle, pad K dimension to next multiple of 32
+                    target_k = self.get_next_multiple(t.shape[1], base=32)
+                    t = pad([t], inter_padding_size=target_k, dim=1)
+                    t_swizzled = swizzle_tensor(t, False, MiM=16).t()  # t_swizzled shape (K,N)
+                    param.data = t_swizzled.to(ctype).to(device)
             else:
-                # 对于其他权重，使用默认的加载方式
+                # load other weights directly
                 w_name = ft_prefix + w
                 w_name = re.sub(r"\.\d+\.", lambda x: "[" + x.group(0)[1:-1] + "].", w_name)
                 param = eval(w_name)
