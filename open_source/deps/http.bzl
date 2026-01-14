@@ -52,7 +52,7 @@ def http_deps():
         name = "torch_rocm",
         sha256 = "b2694d4d5c5b57e518701d316ba78389b71ce19d215aab4013a4f61f6c07f926",
         urls = [
-            "http://10.170.168.22:9000/rocm7.0.1/nightly/torch/20260113/torch-2.8.0+git675f868-cp310-cp310-linux_x86_64.whl"
+            "file:///mnt/raid0/yilin/tmp/whl/torch-2.8.0+git675f868-cp310-cp310-linux_x86_64.whl"
         ],
         type = "zip",
         build_file = clean_dep("//:BUILD.pytorch"),
@@ -60,9 +60,9 @@ def http_deps():
 
     http_archive(
         name = "aiter",
-        sha256 = "5d5b73d1134157e93f850a243118664cb4cbc5bb75beead002dedc3914e63489",
+        sha256 = "b30d046cf55cbbc72238dd05042f442031f22807d0a1ce73b4f72ce95cd12d65",
         urls = [
-	        "https://search-ad-cn-hangzhou.oss-cn-hangzhou.aliyuncs.com/xiebaijie.xbj/qwenvl/aiter-0.1.5.post5.dev3%2Bg007fe7aa0.d20251201-cp310-cp310-linux_x86_64.whl",
+	        "file:///mnt/raid0/zhaoan12/cache/aiter_whl/aiter-0.1.10+git.a75b522b.date.202512311754-cp310-cp310-linux_x86_64.whl",
 	    ],
         type = "zip",
         build_file = clean_dep("//:BUILD.aiter"),
