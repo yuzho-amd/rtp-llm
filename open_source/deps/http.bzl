@@ -72,7 +72,7 @@ def http_deps():
         name = "aiter",
         sha256 = "6d33841c68c9e0146d619f899b93c8074c1ce49f49233623d911044d3719ed64",
         urls = [
-	        "file:///mnt/raid0/zhiqchen/aiter-0.1.11+git.371a22f0.date.202601191754-cp310-cp310-linux_x86_64.whl",
+	        "https://amd-afde.top/home/anzhao/aiter_whls/aiter-0.1.11+git.371a22f0.date.202601191754-cp310-cp310-linux_x86_64.whl",
 	    ],
         type = "zip",
         build_file = clean_dep("//:BUILD.aiter"),
