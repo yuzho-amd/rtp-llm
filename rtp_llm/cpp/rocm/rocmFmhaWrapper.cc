@@ -225,6 +225,7 @@ uint32_t rocmFmhaWrapper::runCKFmha(void*  q,
                              nullptr, //seqlen_k_ptr
                              nullptr, //cu_seqlen_q_ptr
                              nullptr, // cu_seqlen_k_ptr
+                             nullptr, // sink_ptr
                              shape_seqlen_q,
                              shape_seqlen_k,
                              batch,
@@ -490,6 +491,7 @@ uint32_t rocmFmhaWrapper::runCKFmhaV2(void*  q,
                              nullptr, //seqlen_k_ptr
                              nullptr, //cu_seqlen_q_ptr
                              nullptr, // cu_seqlen_k_ptr
+                             nullptr, // sink_ptr
                              shape_seqlen_q,
                              shape_seqlen_k,
                              batch,
@@ -757,6 +759,7 @@ uint32_t rocmFmhaWrapper::runCKFmhaMLA(void*  q,
                              nullptr, //seqlen_k_ptr
                              nullptr, //cu_seqlen_q_ptr
                              nullptr, // cu_seqlen_k_ptr
+                             nullptr, // sink_ptr
                              shape_seqlen_q,
                              shape_seqlen_k,
                              batch,
