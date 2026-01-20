@@ -132,7 +132,7 @@ ROCmDevice::ROCmDevice(const DeviceInitParams& params): DeviceBase(params) {
         hipDataType::HIP_R_16F, hipDataType::HIP_R_16F, hipDataType::HIP_R_16F, hipDataType::HIP_R_32F);
 
     hipblas_mm_wrapper_->setStream(stream_);
-    aiter_wrapper_.reset(new AiterWrapper(params));
+    // aiter_wrapper_.reset(new AiterWrapper(params));
     fmha_runner_.reset(new rocmFmhaWrapper());
     fmha_runner_->init(stream_);
     // moe_runner_.reset(new rocmMoeWrapper());
@@ -234,7 +234,7 @@ bool ROCmDevice::checkSpecDecode(const DevicePrepParams& params, bool skip_no_pr
             return false;
         }
     }
-    return has_prefix;
+    return false;
 }
 
 DevicePrepOutput ROCmDevice::prepareModelRun(const DevicePrepParams& params) {

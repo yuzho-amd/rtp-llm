@@ -616,7 +616,6 @@ AttentionModuleOutput ROCmDevice::contextAttention(const AttentionModuleParams& 
     auto head_num      = params.configs.head_num;
     auto kv_head_num   = params.configs.kv_head_num;
     auto size_per_head = params.configs.size_per_head;
-
     auto q_output = use_mtp_pa_ ?
                         allocateBuffer({params.input.type(), {token_num, head_num, size_per_head}, AllocationType::DEVICE},
                                        {"q_output"}) :
@@ -820,15 +819,15 @@ AttentionModuleOutput ROCmDevice::contextAttention(const AttentionModuleParams& 
         writeCacheStore(params);
     }
 
-    if (use_mtp_pa_) {
-        if (seq_len <= 4) {
-            aiter_wrapper_->runTritonPA(params, this, *q_output, stream_);
-        }
-        else {
-            aiter_wrapper_->runHipPA(params, this, *q_output, stream_);
-        }
-        return;
-    }
+    // if (use_mtp_pa_) {
+    //     if (seq_len <= 4) {
+    //         aiter_wrapper_->runTritonPA(params, this, *q_output, stream_);
+    //     }
+    //     else {
+    //         aiter_wrapper_->runHipPA(params, this, *q_output, stream_);
+    //     }
+    //     return;
+    // }
 
     if (use_fmha_fp8) {
         fmha_runner_->setup(DataType::TYPE_FP8_E4M3,
@@ -896,9 +895,8 @@ AttentionModuleOutput ROCmDevice::contextAttention(const AttentionModuleParams& 
 
             auto kv_cache_t = Buffer2torchTensor(params.common.kv_cache->kv_cache_buffer, false);
             // kv_cache layout in RTP is typically [NumBlocks, 2, NumHeads, PageSize, HeadDim] (K/V split in dim=1).
-            // mha_batch_prefill expects (linear 4D) K/V: [NumBlocks, PageSize, NumHeads, HeadDim] when k.dim()==4.
-            auto k_cache_t  = kv_cache_t.select(1, 0).permute({0, 2, 1, 3});
-            auto v_cache_t  = kv_cache_t.select(1, 1).permute({0, 2, 1, 3});
+            auto k_cache_t  = kv_cache_t.select(1, 0);
+            auto v_cache_t  = kv_cache_t.select(1, 1);
 
             auto cu_seqlens_q_t = Buffer2torchTensor(params.common.cu_seqlens, false);
             // Use vLLM-style 2D block_table to avoid building (kv_indptr, kv_page_indices, kv_last_page_lens) on host.
@@ -1277,7 +1275,7 @@ AttentionModuleOutput ROCmDevice::decoderSelfAttention(const AttentionModulePara
             if (init_params_.use_asm_pa) {
                 runAiterAsmPA(params, this, *q_output);
             } else {
-                aiter_wrapper_->runHipPA(params, this, *q_output, stream_);
+                runAiterPA(params, this, *q_output);
             }
             check_cuda_error();
         }
