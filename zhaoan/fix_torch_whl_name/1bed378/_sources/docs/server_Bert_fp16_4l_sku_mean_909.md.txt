@@ -1,0 +1,16 @@
+# server_Bert_fp16_4l_sku_mean_909
+<pre>
+running server command: MAX_CONTEXT_BATCH_SIZE=128 TASK_TYPE=SEQ_CLASSIFICATION EMBEDDING_MODEL=1 FT_SERVER_TEST=1 TOKENIZER_PATH=/mnt/raid0/pretrained_model/rtp_ci/tokenizer/ CHECKPOINT_PATH=/mnt/raid0/pretrained_model/rtp_ci/4l_sku_mean_909/ MODEL_TYPE=bert  WORLD_SIZE=1 DP_SIZE=1 TP_SIZE=1 CUDA_VISIBLE_DEVICES=4,5,6,7 START_PORT=6789 /opt/conda310/bin/python3.10 -m rtp_llm.start_server
+Traceback (most recent call last):
+  File &quot;/opt/conda310/lib/python3.10/runpy.py&quot;, line 187, in _run_module_as_main
+    mod_name, mod_spec, code = _get_module_details(mod_name, _Error)
+  File &quot;/opt/conda310/lib/python3.10/runpy.py&quot;, line 110, in _get_module_details
+    __import__(pkg_name)
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/__init__.py&quot;, line 6, in &lt;module&gt;
+    from rtp_llm.utils.torch_patch import *
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/utils/torch_patch.py&quot;, line 4, in &lt;module&gt;
+    import torch
+  File &quot;/opt/conda310/lib/python3.10/site-packages/torch/__init__.py&quot;, line 424, in &lt;module&gt;
+    from torch._C import *  # noqa: F403
+ImportError: /lib64/libstdc++.so.6: version `GLIBCXX_3.4.30&#x27; not found (required by /opt/conda310/lib/python3.10/site-packages/torch/lib/libtorch_python.so)
+</pre>
