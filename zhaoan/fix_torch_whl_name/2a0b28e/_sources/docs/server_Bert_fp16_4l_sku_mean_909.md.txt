@@ -1,0 +1,67 @@
+# server_Bert_fp16_4l_sku_mean_909
+<pre>
+running server command: MAX_CONTEXT_BATCH_SIZE=128 TASK_TYPE=SEQ_CLASSIFICATION EMBEDDING_MODEL=1 FT_SERVER_TEST=1 TOKENIZER_PATH=/mnt/raid0/pretrained_model/rtp_ci/tokenizer/ CHECKPOINT_PATH=/mnt/raid0/pretrained_model/rtp_ci/4l_sku_mean_909/ MODEL_TYPE=bert  WORLD_SIZE=1 DP_SIZE=1 TP_SIZE=1 CUDA_VISIBLE_DEVICES=4,5,6,7 START_PORT=6789 /opt/conda310/bin/python3.10 -m rtp_llm.start_server
+WARNING:root:fuse is not valid: connet http://0:28006 error
+[process-27089][root][2026-01-22 13:46:21.366][log_config.py:setup_logging():92][INFO] successfully set NCCL_DEBUG_FILE path to logs/nccl.log
+[process-27089][root][2026-01-22 13:46:21.369][server_args.py:parse_args():244][INFO] Parsing arguments and applying config bindings...
+[process-27089][root][2026-01-22 13:46:21.369][hw_kernel_group_args.py:_parse_prefill_capture_config():300][INFO] Generated 80 sequence lengths from range (step=3, max=240)
+[process-27089][root][2026-01-22 13:46:21.370][server_config_setup.py:setup_default_args():202][INFO] [MI308X] enable FT_DISABLE_CUSTOM_AR by default, as amd has own implementation.
+[process-27089][root][2026-01-22 13:46:21.370][server_config_setup.py:setup_default_args():208][INFO] [MI308X] set SEQ_SIZE_PER_BLOCK 16 by default, as it just support 16 now.
+[process-27089][root][2026-01-22 13:46:21.371][fuser.py:fetch_remote_file_to_local():283][INFO] Local path /mnt/raid0/pretrained_model/rtp_ci/4l_sku_mean_909/ use directly.
+[process-27089][root][2026-01-22 13:46:21.371][fuser.py:fetch_remote_file_to_local():283][INFO] Local path /mnt/raid0/pretrained_model/rtp_ci/tokenizer/ use directly.
+[process-27089][root][2026-01-22 13:46:21.371][server_config_setup.py:fetch_model_files_to_local():274][INFO] Fetched model files - checkpoint_path: /mnt/raid0/pretrained_model/rtp_ci/4l_sku_mean_909/, tokenizer_path: /mnt/raid0/pretrained_model/rtp_ci/tokenizer/, ptuning_path: , extra_data_path: , phy2log_path: 
+[process-27089][root][2026-01-22 13:46:21.371][worker_info.py:__init__():49][INFO] ParallelInfo worker_info_port_num: 8
+[process-27089][root][2026-01-22 13:46:21.371][worker_info.py:__init__():56][INFO] ParallelInfo:[ tp_size=1 ep_size=1 pp_size=1 world_size=1 world_rank=0 local_world_size=1 ffn_sp_size=1 ffn_tp_size=1]
+[process-27089][root][2026-01-22 13:46:21.371][worker_info.py:from_params():173][INFO] ParallelInfo from_params: ParallelInfo:[ tp_size=1 pp_size=1 world_size=1 world_rank=0 local_world_size=1 tp_rank=0 dp_rank=0 ep_size=1 dp_size=1 ep_rank=0 local_rank=0 ffn_sp_size=1 worker_info_port_num=8]
+[process-27089][root][2026-01-22 13:46:21.371][worker_info.py:reload():184][INFO] ParallelInfo reload: ParallelInfo:[ tp_size=1 pp_size=1 world_size=1 world_rank=0 local_world_size=1 tp_rank=0 dp_rank=0 ep_size=1 dp_size=1 ep_rank=0 local_rank=0 ffn_sp_size=1 worker_info_port_num=8]
+[process-27089][root][2026-01-22 13:46:21.371][worker_info.py:from_env():313][INFO] WorkerInfo from_env: 
+        WorkerInfo: [ip=10.67.77.202
+        server_port=6789 (offset 0)
+        rpc_server_port=6790 (offset 1)
+        cache_store_listen_port=6791 (offset 2)
+        gang_hb_port=6792 (offset 3)
+        cache_store_rdma_listen_port=6793 (offset 4)
+        http_port=6794 (offset 5)
+        backend_server_port=6795 (offset 6)
+        embedding_rpc_server_port=6796 (offset 7)
+        remote_rpc_server_port=1
+        cache_store_connect_port=2
+        cache_store_rdma_connect_port=4
+        local_rank=0 world_rank=0 name= info=None ]
+        , worker_info_port_num: 8, local_rank: 0
+[process-27089][root][2026-01-22 13:46:21.371][worker_info.py:reload():414][INFO] WorkerInfo reload: 
+        WorkerInfo: [ip=10.67.77.202
+        server_port=6789 (offset 0)
+        rpc_server_port=6790 (offset 1)
+        cache_store_listen_port=6791 (offset 2)
+        gang_hb_port=6792 (offset 3)
+        cache_store_rdma_listen_port=6793 (offset 4)
+        http_port=6794 (offset 5)
+        backend_server_port=6795 (offset 6)
+        embedding_rpc_server_port=6796 (offset 7)
+        remote_rpc_server_port=1
+        cache_store_connect_port=2
+        cache_store_rdma_connect_port=4
+        local_rank=0 world_rank=0 name= info=None ]
+        
+[process-27089][root][2026-01-22 13:46:21.371][server_config_setup.py:auto_configure_deepep():60][INFO] USE_ALL_GATHER is enabled (use_all_gather=True), all DeepEP settings are disabled (0, 0, 0)
+[process-27089][root][2026-01-22 13:46:21.371][start_server.py:start_server():183][INFO] [PROCESS_START]Start server
+[process-27089][root][2026-01-22 13:46:21.371][concurrency_controller.py:init_controller():67][INFO] concurrency_limit : 32, global_concurrency_limit : 32
+[process-27089][root][2026-01-22 13:46:21.373][start_server.py:start_server():218][INFO] start backend server
+[process-27089][root][2026-01-22 13:46:21.374][start_server.py:start_server():241][ERROR] start failed, trace: Traceback (most recent call last):
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/start_server.py&quot;, line 219, in start_server
+    backend_process = start_backend_server_impl(
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/utils/time_util.py&quot;, line 45, in wrapped
+    result = func(*args, **kwargs)
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/start_server.py&quot;, line 47, in start_backend_server_impl
+    from rtp_llm.start_backend_server import start_backend_server
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/start_backend_server.py&quot;, line 15, in &lt;module&gt;
+    from setproctitle import setproctitle
+ModuleNotFoundError: No module named &#x27;setproctitle&#x27;
+
+[process-27089][root][2026-01-22 13:46:21.374][process_manager.py:monitor_and_release_processes():154][INFO] No processes to monitor
+[RTP-LLM TRITON COMPILE MONITOR] enable triton compile monitor (DEBUG MODE OFF (set RTP_LLM_TRITON_DEBUG=1 to enable))
+[CHECK] internal_source directory: /mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/internal_source, found: False
+import in __init__ took 1.48s
+import rtp_llm.ops took 0.00s
+</pre>
