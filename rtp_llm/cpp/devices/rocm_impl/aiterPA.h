@@ -24,7 +24,7 @@ private:
 };
 
 void runAiterAsmPA(const AttentionModuleParams& params,
-                rtp_llm::DeviceBase* device, Buffer& q_tmp);
+                rtp_llm::DeviceBase* device, Buffer& q_tmp, bool dump_pa_inputs = false);
 void runAiterPA(const AttentionModuleParams& params,
                 rtp_llm::DeviceBase* device, Buffer& q_tmp);
 }  // namespace rtp_llm

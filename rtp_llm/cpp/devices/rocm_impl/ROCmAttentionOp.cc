@@ -12,10 +12,590 @@
 #include "rtp_llm/cpp/devices/rocm_impl/aiterPA.h"
 #include "rtp_llm/cpp/config/StaticConfig.h"
 #include <filesystem>
+#include <mutex>
+#include <unordered_map>
+#include <unordered_set>
+#include <chrono>
+#include <map>
+#include <set>
 
 using namespace std;
 namespace fs = std::filesystem;
 namespace rtp_llm {
+
+// ============== Tensor Dump for Debugging ==============
+static std::unordered_set<std::string> g_saved_prefill_tensors;
+static std::mutex g_saved_tensors_mutex;
+static std::unordered_map<int64_t, int> g_decode_step_counter;
+static std::mutex g_decode_counter_mutex;
+
+static void logBatchGrouping(const int64_t* req_ids, size_t batch_size, const char* stage) {
+    if (batch_size == 0 || !req_ids) return;
+    
+    int round = static_cast<int>(req_ids[0] / 1000000);
+    
+    static std::mutex log_mutex;
+    static std::map<std::string, std::set<int64_t>> stage_round_last_batch;
+    static std::map<std::string, int> stage_round_call_count;
+    static std::map<std::string, int> stage_round_change_count;
+    
+    std::lock_guard<std::mutex> lock(log_mutex);
+    
+    std::string key = std::string(stage) + "_" + std::to_string(round);
+    
+    std::set<int64_t> current_batch;
+    for (size_t i = 0; i < batch_size; i++) {
+        current_batch.insert(req_ids[i]);
+    }
+    
+    int call_num = ++stage_round_call_count[key];
+    
+    bool changed = (stage_round_last_batch[key] != current_batch);
+    if (changed) {
+        stage_round_change_count[key]++;
+        stage_round_last_batch[key] = current_batch;
+        
+        std::string log_path = "/mnt/raid0/yilin/rtp-llm/zztmp/batch_grouping.log";
+        FILE* fp = fopen(log_path.c_str(), "a");
+        if (!fp) return;
+        
+        fprintf(fp, "[%s] R%d call#%d CHANGE#%d size=%zu: [", 
+                stage, round, call_num, stage_round_change_count[key], batch_size);
+        for (size_t i = 0; i < batch_size; i++) {
+            int req_idx = static_cast<int>(req_ids[i] % 1000000);
+            fprintf(fp, "%d%s", req_idx, i + 1 < batch_size ? "," : "");
+        }
+        fprintf(fp, "]\n");
+        fclose(fp);
+    }
+}
+
+static bool shouldSaveRound(int round) {
+    return (round >= 1 && round <= 3) || (round == 49) || (round >= 95 && round <= 102);
+}
+
+static bool shouldSaveLayer(int layer_id) {
+    return layer_id == 0 || layer_id == 27;
+}
+
+static bool shouldSaveDecodeStep(int step) {
+    return step == 1 || step == 10 || step == 25;
+}
+
+// output shape: [token_num, hidden_size], slice by cu_seqlens
+static void savePrefillTensorPerRequest(
+    const AttentionModuleParams& params,
+    const Buffer& output,
+    const std::string& stage,
+    ROCmDevice* device) {
+    
+    int layer_id = params.layer_id;
+    if (!shouldSaveLayer(layer_id)) return;
+    if (!params.common.request_id) return;
+    
+    size_t context_batch_size = params.common.context_batch_size;
+    if (context_batch_size == 0) return;
+    
+    auto request_id_host = device->clone({*params.common.request_id, AllocationType::HOST});
+    device->syncAndCheck();
+    auto cu_seqlens_host = device->clone({*params.common.cu_seqlens, AllocationType::HOST});
+    device->syncAndCheck();
+    auto output_host = device->clone({output, AllocationType::HOST});
+    device->syncAndCheck();
+    
+    const int* cu_seqlens_data = cu_seqlens_host->data<int>();
+    const int64_t* request_ids = request_id_host->data<int64_t>();
+    
+    for (size_t i = 0; i < context_batch_size; i++) {
+        int64_t req_id = request_ids[i];
+        int round = static_cast<int>(req_id / 1000000);
+        
+        if (!shouldSaveRound(round)) continue;
+        
+        std::string key = std::to_string(round) + "_" + std::to_string(req_id) + 
+                          "_L" + std::to_string(layer_id) + "_" + stage;
+        {
+            std::lock_guard<std::mutex> lock(g_saved_tensors_mutex);
+            if (g_saved_prefill_tensors.count(key)) continue;
+            g_saved_prefill_tensors.insert(key);
+        }
+        
+        int token_start = cu_seqlens_data[i];
+        int token_end = cu_seqlens_data[i + 1];
+        int token_count = token_end - token_start;
+        if (token_count <= 0) continue;
+        
+        std::string dir = "/mnt/raid0/yilin/rtp-llm/zztmp/tensor_round" + std::to_string(round);
+        if (!fs::exists(dir)) {
+            fs::create_directories(dir);
+        }
+        
+        size_t hidden_size = output_host->shape()[1];
+        size_t elem_size = output_host->typeSize();
+        
+        auto slice_buffer = device->allocateBuffer(
+            {output_host->type(), {(size_t)token_count, hidden_size}, AllocationType::HOST},
+            {"prefill_slice"});
+        
+        const char* src_ptr = static_cast<const char*>(output_host->data()) + 
+                              token_start * hidden_size * elem_size;
+        char* dst_ptr = static_cast<char*>(slice_buffer->data());
+        std::memcpy(dst_ptr, src_ptr, token_count * hidden_size * elem_size);
+        
+        std::string filename = dir + "/req" + std::to_string(req_id) + 
+                               "_L" + std::to_string(layer_id) + 
+                               "_" + stage + "_attn.pt";
+        
+        saveBufferDataToTorch(*slice_buffer, nullptr, filename);
+    }
+}
+
+// output shape: [batch_size, head_num, size_per_head] or [batch_size, hidden_size]
+static void saveDecodeTensorPerRequest(
+    const AttentionModuleParams& params,
+    const Buffer& output,
+    const std::string& stage,
+    ROCmDevice* device) {
+    
+    int layer_id = params.layer_id;
+    if (!shouldSaveLayer(layer_id)) return;
+    if (!params.common.decode_request_id) return;
+    
+    size_t decoder_batch_size = params.common.decoder_batch_size;
+    if (decoder_batch_size == 0) return;
+    
+    auto request_id_host = device->clone({*params.common.decode_request_id, AllocationType::HOST});
+    device->syncAndCheck();
+    
+    const int64_t* request_ids = request_id_host->data<int64_t>();
+    
+    std::vector<std::pair<size_t, int>> requests_to_save;
+    
+    for (size_t i = 0; i < decoder_batch_size; i++) {
+        int64_t req_id = request_ids[i];
+        int round = static_cast<int>(req_id / 1000000);
+        if (!shouldSaveRound(round)) continue;
+        
+        int decode_step = 0;
+        {
+            std::lock_guard<std::mutex> lock(g_decode_counter_mutex);
+            if (layer_id == 0) {
+                g_decode_step_counter[req_id]++;
+            }
+            decode_step = g_decode_step_counter[req_id];
+        }
+        
+        if (!shouldSaveDecodeStep(decode_step)) continue;
+        
+        std::string key = std::to_string(req_id) + "_L" + std::to_string(layer_id) + 
+                          "_step" + std::to_string(decode_step) + "_" + stage;
+        {
+            std::lock_guard<std::mutex> lock(g_saved_tensors_mutex);
+            if (g_saved_prefill_tensors.count(key)) continue;
+            g_saved_prefill_tensors.insert(key);
+        }
+        
+        requests_to_save.push_back({i, decode_step});
+    }
+    
+    if (requests_to_save.empty()) return;
+    
+    auto output_host = device->clone({output, AllocationType::HOST});
+    device->syncAndCheck();
+    
+    const auto& shape = output_host->shape();
+    size_t elem_size = output_host->typeSize();
+    size_t per_request_elems = 1;
+    for (size_t d = 1; d < shape.size(); d++) {
+        per_request_elems *= shape[d];
+    }
+    size_t per_request_size = per_request_elems * elem_size;
+    
+    for (const auto& [batch_idx, decode_step] : requests_to_save) {
+        int64_t req_id = request_ids[batch_idx];
+        int round = static_cast<int>(req_id / 1000000);
+        
+        std::string dir = "/mnt/raid0/yilin/rtp-llm/zztmp/tensor_round" + std::to_string(round);
+        if (!fs::exists(dir)) {
+            fs::create_directories(dir);
+        }
+        
+        std::vector<size_t> slice_shape;
+        for (size_t d = 1; d < shape.size(); d++) {
+            slice_shape.push_back(shape[d]);
+        }
+        auto slice_buffer = device->allocateBuffer(
+            {output_host->type(), slice_shape, AllocationType::HOST},
+            {"decode_slice"});
+        
+        const char* src_ptr = static_cast<const char*>(output_host->data()) + batch_idx * per_request_size;
+        char* dst_ptr = static_cast<char*>(slice_buffer->data());
+        std::memcpy(dst_ptr, src_ptr, per_request_size);
+        
+        std::string filename = dir + "/req" + std::to_string(req_id) + 
+                               "_L" + std::to_string(layer_id) + 
+                               "_" + stage + "_step" + std::to_string(decode_step) + ".pt";
+        
+        saveBufferDataToTorch(*slice_buffer, nullptr, filename);
+    }
+}
+
+// q: [batch, head_num, seq_len_max, size_per_head], k/v: [batch, kv_head_num, seq_max, size_per_head]
+static void savePrefillQKVTensors(
+    const AttentionModuleParams& params,
+    const Buffer& q_output,
+    const Buffer& k_output,
+    const Buffer& v_output,
+    ROCmDevice* device) {
+    
+    int layer_id = params.layer_id;
+    if (!shouldSaveLayer(layer_id)) return;
+    if (!params.common.request_id) return;
+    if (!params.common.cu_seqlens) return;
+    
+    size_t context_batch_size = params.common.context_batch_size;
+    if (context_batch_size == 0) return;
+    
+    auto request_id_host = device->clone({*params.common.request_id, AllocationType::HOST});
+    auto cu_seqlens_host = device->clone({*params.common.cu_seqlens, AllocationType::HOST});
+    device->syncAndCheck();
+    
+    const int64_t* request_ids = request_id_host->data<int64_t>();
+    const int32_t* cu_seqlens = cu_seqlens_host->data<int32_t>();
+    
+    const int32_t* cu_kv_seqlens = nullptr;
+    BufferPtr cu_kv_seqlens_host = nullptr;
+    if (params.common.cu_kv_seqlens) {
+        cu_kv_seqlens_host = device->clone({*params.common.cu_kv_seqlens, AllocationType::HOST});
+        device->syncAndCheck();
+        cu_kv_seqlens = cu_kv_seqlens_host->data<int32_t>();
+    }
+    
+    auto q_host = device->clone({q_output, AllocationType::HOST});
+    auto k_host = device->clone({k_output, AllocationType::HOST});
+    auto v_host = device->clone({v_output, AllocationType::HOST});
+    device->syncAndCheck();
+    
+    const auto& q_shape = q_host->shape();
+    size_t head_num = q_shape[1];
+    size_t q_seq_len_max = q_shape[2];
+    size_t size_per_head = q_shape[3];
+    size_t q_elem_size = q_host->typeSize();
+    
+    const auto& k_shape = k_host->shape();
+    size_t kv_head_num = k_shape[1];
+    size_t kv_seq_len_max = k_shape[2];
+    size_t k_elem_size = k_host->typeSize();
+    
+    size_t q_batch_stride = head_num * q_seq_len_max * size_per_head;
+    size_t kv_batch_stride = kv_head_num * kv_seq_len_max * size_per_head;
+    size_t max_prefix_length = params.common.max_prefix_length;
+    
+    for (size_t i = 0; i < context_batch_size; i++) {
+        int64_t req_id = request_ids[i];
+        int round = static_cast<int>(req_id / 1000000);
+        if (!shouldSaveRound(round)) continue;
+        
+        std::string key = std::to_string(req_id) + "_L" + std::to_string(layer_id) + "_prefill_qkv";
+        {
+            std::lock_guard<std::mutex> lock(g_saved_tensors_mutex);
+            if (g_saved_prefill_tensors.count(key)) continue;
+            g_saved_prefill_tensors.insert(key);
+        }
+        
+        int32_t actual_seq_len = cu_seqlens[i + 1] - cu_seqlens[i];
+        int32_t actual_kv_seq_len;
+        if (cu_kv_seqlens) {
+            actual_kv_seq_len = cu_kv_seqlens[i + 1] - cu_kv_seqlens[i];
+        } else {
+            actual_kv_seq_len = actual_seq_len + static_cast<int32_t>(max_prefix_length);
+        }
+        
+        if (actual_seq_len <= 0 || actual_kv_seq_len <= 0) continue;
+        if (static_cast<size_t>(actual_seq_len) > q_seq_len_max) {
+            actual_seq_len = static_cast<int32_t>(q_seq_len_max);
+        }
+        if (static_cast<size_t>(actual_kv_seq_len) > kv_seq_len_max) {
+            actual_kv_seq_len = static_cast<int32_t>(kv_seq_len_max);
+        }
+        
+        std::string dir = "/mnt/raid0/yilin/rtp-llm/zztmp/tensor_round" + std::to_string(round);
+        if (!fs::exists(dir)) {
+            fs::create_directories(dir);
+        }
+        
+        // Save Q: [head_num, actual_seq_len, size_per_head]
+        std::vector<size_t> q_slice_shape = {head_num, static_cast<size_t>(actual_seq_len), size_per_head};
+        auto q_slice = device->allocateBuffer({q_host->type(), q_slice_shape, AllocationType::HOST}, {"q_slice"});
+        
+        const char* q_src = static_cast<const char*>(q_host->data()) + i * q_batch_stride * q_elem_size;
+        char* q_dst = static_cast<char*>(q_slice->data());
+        for (size_t h = 0; h < head_num; h++) {
+            const char* head_src = q_src + h * q_seq_len_max * size_per_head * q_elem_size;
+            char* head_dst = q_dst + h * actual_seq_len * size_per_head * q_elem_size;
+            std::memcpy(head_dst, head_src, actual_seq_len * size_per_head * q_elem_size);
+        }
+        std::string q_filename = dir + "/req" + std::to_string(req_id) + "_L" + std::to_string(layer_id) + "_prefill_Q.pt";
+        saveBufferDataToTorch(*q_slice, nullptr, q_filename);
+        
+        // Save K/V: [kv_head_num, actual_kv_seq_len, size_per_head]
+        std::vector<size_t> kv_slice_shape = {kv_head_num, static_cast<size_t>(actual_kv_seq_len), size_per_head};
+        auto k_slice = device->allocateBuffer({k_host->type(), kv_slice_shape, AllocationType::HOST}, {"k_slice"});
+        
+        const char* k_src = static_cast<const char*>(k_host->data()) + i * kv_batch_stride * k_elem_size;
+        char* k_dst = static_cast<char*>(k_slice->data());
+        for (size_t h = 0; h < kv_head_num; h++) {
+            const char* head_src = k_src + h * kv_seq_len_max * size_per_head * k_elem_size;
+            char* head_dst = k_dst + h * actual_kv_seq_len * size_per_head * k_elem_size;
+            std::memcpy(head_dst, head_src, actual_kv_seq_len * size_per_head * k_elem_size);
+        }
+        std::string k_filename = dir + "/req" + std::to_string(req_id) + "_L" + std::to_string(layer_id) + "_prefill_K.pt";
+        saveBufferDataToTorch(*k_slice, nullptr, k_filename);
+        
+        auto v_slice = device->allocateBuffer({v_host->type(), kv_slice_shape, AllocationType::HOST}, {"v_slice"});
+        const char* v_src = static_cast<const char*>(v_host->data()) + i * kv_batch_stride * k_elem_size;
+        char* v_dst = static_cast<char*>(v_slice->data());
+        for (size_t h = 0; h < kv_head_num; h++) {
+            const char* head_src = v_src + h * kv_seq_len_max * size_per_head * k_elem_size;
+            char* head_dst = v_dst + h * actual_kv_seq_len * size_per_head * k_elem_size;
+            std::memcpy(head_dst, head_src, actual_kv_seq_len * size_per_head * k_elem_size);
+        }
+        std::string v_filename = dir + "/req" + std::to_string(req_id) + "_L" + std::to_string(layer_id) + "_prefill_V.pt";
+        saveBufferDataToTorch(*v_slice, nullptr, v_filename);
+    }
+}
+
+static void saveDecodeQKVInput(
+    const AttentionModuleParams& params,
+    const Buffer& input,
+    ROCmDevice* device) {
+    
+    int layer_id = params.layer_id;
+    if (!shouldSaveLayer(layer_id)) return;
+    if (!params.common.decode_request_id) return;
+    
+    size_t decoder_batch_size = params.common.decoder_batch_size;
+    if (decoder_batch_size == 0) return;
+    
+    auto request_id_host = device->clone({*params.common.decode_request_id, AllocationType::HOST});
+    device->syncAndCheck();
+    
+    const int64_t* request_ids = request_id_host->data<int64_t>();
+    std::vector<std::pair<size_t, int>> requests_to_save;
+    
+    for (size_t i = 0; i < decoder_batch_size; i++) {
+        int64_t req_id = request_ids[i];
+        int round = static_cast<int>(req_id / 1000000);
+        if (!shouldSaveRound(round)) continue;
+        
+        int decode_step = 0;
+        {
+            std::lock_guard<std::mutex> lock(g_decode_counter_mutex);
+            decode_step = g_decode_step_counter[req_id];
+        }
+        
+        if (!shouldSaveDecodeStep(decode_step)) continue;
+        
+        std::string key = std::to_string(req_id) + "_L" + std::to_string(layer_id) + 
+                          "_decode_qkv_step" + std::to_string(decode_step);
+        {
+            std::lock_guard<std::mutex> lock(g_saved_tensors_mutex);
+            if (g_saved_prefill_tensors.count(key)) continue;
+            g_saved_prefill_tensors.insert(key);
+        }
+        
+        requests_to_save.push_back({i, decode_step});
+    }
+    
+    if (requests_to_save.empty()) return;
+    
+    auto input_host = device->clone({input, AllocationType::HOST});
+    device->syncAndCheck();
+    
+    const auto& shape = input_host->shape();
+    size_t elem_size = input_host->typeSize();
+    size_t per_request_elems = 1;
+    for (size_t d = 1; d < shape.size(); d++) {
+        per_request_elems *= shape[d];
+    }
+    size_t per_request_size = per_request_elems * elem_size;
+    
+    for (const auto& [batch_idx, decode_step] : requests_to_save) {
+        int64_t req_id = request_ids[batch_idx];
+        int round = static_cast<int>(req_id / 1000000);
+        
+        std::string dir = "/mnt/raid0/yilin/rtp-llm/zztmp/tensor_round" + std::to_string(round);
+        if (!fs::exists(dir)) {
+            fs::create_directories(dir);
+        }
+        
+        std::vector<size_t> slice_shape;
+        for (size_t d = 1; d < shape.size(); d++) {
+            slice_shape.push_back(shape[d]);
+        }
+        auto slice_buffer = device->allocateBuffer({input_host->type(), slice_shape, AllocationType::HOST}, {"qkv_slice"});
+        std::memcpy(slice_buffer->data(),
+                   static_cast<const char*>(input_host->data()) + batch_idx * per_request_size,
+                   per_request_size);
+        
+        std::string filename = dir + "/req" + std::to_string(req_id) + "_L" + std::to_string(layer_id) + 
+                               "_decode_QKV_step" + std::to_string(decode_step) + ".pt";
+        saveBufferDataToTorch(*slice_buffer, nullptr, filename);
+    }
+}
+
+static std::unordered_map<int64_t, int> g_kvcache_step_counter;
+static std::mutex g_kvcache_counter_mutex;
+
+// stage: "prefill_after" or "decode_before"
+static void saveKVCacheInfo(
+    const AttentionModuleParams& params,
+    const std::string& stage,
+    ROCmDevice* device) {
+    
+    int layer_id = params.layer_id;
+    if (layer_id != 0) return;
+    if (!params.common.kv_cache || !params.common.kv_cache->kv_cache_block_id) return;
+    
+    bool is_prefill = (stage.find("prefill") != std::string::npos);
+    BufferPtr request_id_ptr = is_prefill ? params.common.request_id : params.common.decode_request_id;
+    size_t batch_size = is_prefill ? params.common.context_batch_size : params.common.decoder_batch_size;
+    if (!request_id_ptr || batch_size == 0) return;
+    
+    auto request_id_host = device->clone({*request_id_ptr, AllocationType::HOST});
+    auto block_id_host = device->clone({*params.common.kv_cache->kv_cache_block_id, AllocationType::HOST});
+    auto seq_lens_host = params.common.sequence_lengths ? 
+        device->clone({*params.common.sequence_lengths, AllocationType::HOST}) : nullptr;
+    auto kv_seqlens_host = params.common.kv_seqlens ?
+        device->clone({*params.common.kv_seqlens, AllocationType::HOST}) : nullptr;
+    auto input_lens_host = params.common.input_lengths ?
+        device->clone({*params.common.input_lengths, AllocationType::HOST}) : nullptr;
+    auto prefix_lens_host = params.common.prefix_prompt_lengths ?
+        device->clone({*params.common.prefix_prompt_lengths, AllocationType::HOST}) : nullptr;
+    device->syncAndCheck();
+    
+    const int64_t* request_ids = request_id_host->data<int64_t>();
+    const int32_t* block_ids = block_id_host->data<int32_t>();
+    
+    const auto& block_shape = block_id_host->shape();
+    size_t total_batch = block_shape[0];
+    size_t max_blocks_per_batch = block_shape.size() > 1 ? block_shape[1] : 1;
+    
+    for (size_t i = 0; i < batch_size; i++) {
+        int64_t req_id = request_ids[i];
+        int round = static_cast<int>(req_id / 1000000);
+        if (!shouldSaveRound(round)) continue;
+        
+        int decode_step = 0;
+        std::string actual_stage = stage;
+        if (!is_prefill) {
+            std::lock_guard<std::mutex> lock(g_kvcache_counter_mutex);
+            decode_step = ++g_kvcache_step_counter[req_id];
+            if (decode_step != 1) continue;
+            actual_stage = "decode_step1_before";
+        }
+        
+        int seq_len = 0;
+        if (is_prefill) {
+            if (kv_seqlens_host && i < kv_seqlens_host->size() && 
+                kv_seqlens_host->data<uint32_t>()[i] > 0) {
+                seq_len = kv_seqlens_host->data<uint32_t>()[i];
+            } else {
+                if (input_lens_host) {
+                    size_t idx = params.common.decoder_batch_size + i;
+                    if (idx < input_lens_host->size()) {
+                        seq_len = input_lens_host->data<int32_t>()[idx];
+                    }
+                }
+                if (prefix_lens_host && i < prefix_lens_host->size()) {
+                    seq_len += prefix_lens_host->data<int32_t>()[i];
+                }
+            }
+        } else {
+            if (seq_lens_host && i < seq_lens_host->size()) {
+                seq_len = seq_lens_host->data<int32_t>()[i];
+            }
+        }
+        
+        std::string dir = "/mnt/raid0/yilin/rtp-llm/zztmp/tensor_round" + std::to_string(round);
+        if (!fs::exists(dir)) {
+            fs::create_directories(dir);
+        }
+        
+        size_t block_row = i;
+        if (block_row >= total_batch) continue;
+        
+        const int32_t* req_block_ids = block_ids + block_row * max_blocks_per_batch;
+        
+        size_t num_valid_blocks = 0;
+        for (size_t b = 0; b < max_blocks_per_batch; b++) {
+            if (req_block_ids[b] >= 0) num_valid_blocks++;
+            else break;
+        }
+        
+        int input_len = 0, prefix_len = 0;
+        if (input_lens_host) {
+            size_t idx = is_prefill ? (params.common.decoder_batch_size + i) : i;
+            if (idx < input_lens_host->size()) {
+                input_len = input_lens_host->data<int32_t>()[idx];
+            }
+        }
+        if (is_prefill && prefix_lens_host && i < prefix_lens_host->size()) {
+            prefix_len = prefix_lens_host->data<int32_t>()[i];
+        }
+        
+        std::string info_filename = dir + "/req" + std::to_string(req_id) + "_kvcache_" + actual_stage + ".txt";
+        FILE* fp = fopen(info_filename.c_str(), "w");
+        if (fp) {
+            fprintf(fp, "request_id: %ld\n", req_id);
+            fprintf(fp, "round: %d\n", round);
+            fprintf(fp, "stage: %s\n", actual_stage.c_str());
+            fprintf(fp, "kv_cache_seq_len: %d\n", seq_len);
+            fprintf(fp, "input_len: %d\n", input_len);
+            fprintf(fp, "prefix_len: %d\n", prefix_len);
+            fprintf(fp, "num_valid_blocks: %zu\n", num_valid_blocks);
+            fprintf(fp, "max_blocks_per_batch: %zu\n", max_blocks_per_batch);
+            fprintf(fp, "first_block_id: %d\n", num_valid_blocks > 0 ? req_block_ids[0] : -1);
+            fprintf(fp, "block_ids: [");
+            for (size_t b = 0; b < num_valid_blocks; b++) {
+                fprintf(fp, "%d%s", req_block_ids[b], b + 1 < num_valid_blocks ? ", " : "");
+            }
+            fprintf(fp, "]\n");
+            fclose(fp);
+        }
+        
+        auto kv_cache = params.common.kv_cache;
+        for (size_t b = 0; b < num_valid_blocks && b < 3; b++) {
+            int32_t block_id = req_block_ids[b];
+            if (block_id < 0) continue;
+            
+            BufferPtr kv_block = kv_cache->kv_cache_buffer->index(block_id);
+            if (!kv_block) continue;
+            
+            auto kv_block_host = device->clone({*kv_block, AllocationType::HOST});
+            device->syncAndCheck();
+            
+            if (kv_block_host->dim() > 0 && kv_block_host->shape()[0] >= 2) {
+                BufferPtr k_block = kv_block_host->index(0);
+                BufferPtr v_block = kv_block_host->index(1);
+                
+                std::string k_filename = dir + "/req" + std::to_string(req_id) + 
+                                         "_kvcache_" + actual_stage + "_block" + std::to_string(block_id) + "_K.pt";
+                std::string v_filename = dir + "/req" + std::to_string(req_id) + 
+                                         "_kvcache_" + actual_stage + "_block" + std::to_string(block_id) + "_V.pt";
+                
+                saveBufferDataToTorch(*k_block, nullptr, k_filename);
+                saveBufferDataToTorch(*v_block, nullptr, v_filename);
+            }
+        }
+        
+        printf("[KVCache] %s req%ld kv_len=%d(%d+%d) blocks=%zu first=%d\n", 
+               actual_stage.c_str(), req_id, seq_len, input_len, prefix_len,
+               num_valid_blocks, num_valid_blocks > 0 ? req_block_ids[0] : -1);
+    }
+}
+
+// ============== End Tensor Dump ==============
 
 // #define DEBUG_PRINT_PARAMS(...) printParams(__VA_ARGS__)
 #define DEBUG_PRINT_PARAMS(...)                                                                                        \
@@ -614,6 +1194,12 @@ AttentionModuleOutput ROCmDevice::contextAttention(const AttentionModuleParams& 
     auto head_num      = params.configs.head_num;
     auto kv_head_num   = params.configs.kv_head_num;
     auto size_per_head = params.configs.size_per_head;
+    
+    if (params.common.request_id && batch_size > 0) {
+        auto req_id_host = clone({*params.common.request_id, AllocationType::HOST});
+        syncAndCheck();
+        logBatchGrouping(req_id_host->data<int64_t>(), batch_size, "PREFILL");
+    }
 
     auto q_output = use_mtp_pa_ ?
                         allocateBuffer({params.input.type(), {token_num, head_num, size_per_head}, AllocationType::DEVICE},
@@ -796,6 +1382,7 @@ AttentionModuleOutput ROCmDevice::contextAttention(const AttentionModuleParams& 
             check_cuda_error();
         }
         writeCacheStore(params);
+        saveKVCacheInfo(params, "prefill_after", this);
     }
 
     if (use_mtp_pa_) {
@@ -836,6 +1423,7 @@ AttentionModuleOutput ROCmDevice::contextAttention(const AttentionModuleParams& 
     printBufferData(*k_output, "run_ck_k_output");
     printBufferData(*v_output, "run_ck_v_output");
     printBufferData(params.input, "run_ck_input");
+    savePrefillQKVTensors(params, *q_output, *k_output, *v_output, this);
 
     if (skip_add_bias_transpose || prefix_prompt_param.max_prefix_prompt_length <= 0) {
         // not implemented reuse cache for this branch
@@ -858,6 +1446,7 @@ AttentionModuleOutput ROCmDevice::contextAttention(const AttentionModuleParams& 
                                 false,
                                 false);
         printBufferData(params.output, "run_ck_data_output");
+        savePrefillTensorPerRequest(params, params.output, "runCKFmha_output", this);
     } else {
         // Processing continuous/variable-length sequences
         torch::Tensor q_output_tensor, k_output_tensor, v_output_tensor;
@@ -920,6 +1509,7 @@ AttentionModuleOutput ROCmDevice::contextAttention(const AttentionModuleParams& 
                                       true,
                                       false)) {
             printBufferData(params.output, "run_ck_data_output");
+            savePrefillTensorPerRequest(params, params.output, "runCKFmhaV2_output", this);
             return;
         } else {
             RTP_LLM_CHECK_WITH_INFO(
@@ -969,6 +1559,7 @@ AttentionModuleOutput ROCmDevice::contextAttention(const AttentionModuleParams& 
                                              0,
                                              stream_);
             printBufferData(params.output, "run_ck_data_output");
+            savePrefillTensorPerRequest(params, params.output, "runCKFmhaV2_output", this);
             return;
         }
     }
@@ -1135,6 +1726,8 @@ AttentionModuleOutput ROCmDevice::decoderSelfAttention(const AttentionModulePara
                 q_buf_fp8 = allocateBuffer({DataType::TYPE_FP8_E4M3, q_output->shape(), AllocationType::DEVICE}, {"q_buf_fp8"});
             }
             auto rope_cache = getRopeCacheOnce(params.configs.rope_config, init_params_.max_seq_len, false);
+            saveDecodeQKVInput(params, params.input, this);
+            saveKVCacheInfo(params, "decode_before", this);
 
             DISPATCH_CUDA_FUNCTION_DATA_TYPE(
                 datatype,
@@ -1173,8 +1766,20 @@ AttentionModuleOutput ROCmDevice::decoderSelfAttention(const AttentionModulePara
                 stream_);
             check_cuda_error();
             DEBUG_PRINT_PARAMS(params, this, "decode_writeKVCache", q_output);
+            
+            bool dump_pa = false;
+            if (params.common.decode_request_id && params.common.decoder_batch_size > 0) {
+                auto req_id_host = clone({*params.common.decode_request_id, AllocationType::HOST});
+                syncAndCheck();
+                const int64_t* req_ids = req_id_host->data<int64_t>();
+                int64_t first_req_id = req_ids[0];
+                int round = static_cast<int>(first_req_id / 1000000);
+                logBatchGrouping(req_ids, params.common.decoder_batch_size, "DECODE");
+                dump_pa = shouldSaveRound(round);
+            }
+            
             if (init_params_.use_asm_pa) {
-                runAiterAsmPA(params, this, *q_output);
+                runAiterAsmPA(params, this, *q_output, dump_pa);
             } else {
                 aiter_wrapper_->runHipPA(params, this, *q_output, stream_);
             }
@@ -1201,6 +1806,7 @@ AttentionModuleOutput ROCmDevice::decoderSelfAttention(const AttentionModulePara
         check_cuda_error();
         DEBUG_PRINT_PARAMS(params, this, "decode_attn");
     }
+    saveDecodeTensorPerRequest(params, params.output, "decode_attn_output", this);
 }
 
 }  // namespace rtp_llm

@@ -45,6 +45,7 @@ absl::StatusOr<GptModelInputs> NormalBatchStreamProcessor::gatherModelInput(cons
         model_input.cache_keys              = CACHED_HOST_BUF(TYPE_INT64, {total_context_batch_size, max_blocks_num});
     }
     model_input.request_id            = CACHED_HOST_BUF(TYPE_INT64, {total_context_batch_size});
+    model_input.decode_request_id     = CACHED_HOST_BUF(TYPE_INT64, {total_decode_batch_size});
     model_input.request_pd_separation = CACHED_HOST_BUF(TYPE_BOOL, {total_context_batch_size});
     model_input.input_lengths         = CACHED_HOST_BUF(TYPE_INT32, {total_batch_size});
     model_input.lora_ids              = CACHED_HOST_BUF(TYPE_INT32, {total_batch_size});
@@ -127,6 +128,7 @@ absl::StatusOr<GptModelInputs> NormalBatchStreamProcessor::gatherModelInput(cons
                 std::memcpy(
                     (*model_input.kv_cache_block_id)[batch_idx].data(), blocks.data(), blocks.size() * sizeof(int));
             }
+            *(model_input.decode_request_id->dataWithOffset<int64_t>(batch_idx)) = stream->streamId();
             batch_idx += 1;
         }
 

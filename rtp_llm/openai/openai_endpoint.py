@@ -467,6 +467,7 @@ class OpenaiEndpoint(object):
         )
         rendered_input = self.render_chat(chat_request)
         generate_config = self._extract_generation_config(chat_request)
+        generate_config.inter_request_id = request_id
 
         mm_inputs = rendered_input.multimodal_inputs
 

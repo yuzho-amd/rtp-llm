@@ -2,8 +2,13 @@
 #include "rtp_llm/cpp/devices/rocm_impl/atrexPA.h"
 #include "rtp_llm/cpp/core/torch_utils/BufferTorchUtils.h"
 #include "rtp_llm/cpp/devices/rocm_impl/ROCmDevice.h"
+#include "rtp_llm/cpp/devices/utils/DebugUtils.h"
+#include <filesystem>
+#include <set>
+#include <unordered_map>
 
 using namespace pybind11::literals;
+namespace fs = std::filesystem;
 
 namespace rtp_llm {
 
@@ -415,7 +420,7 @@ inline torch::Tensor Buffer2torchTensorCustom(const Buffer& buf, std::vector<int
     return torch::from_blob((void*)((char*)(buf.data()) + offset), shape, option);
 }
 
-void runAiterAsmPA(const AttentionModuleParams& params, rtp_llm::DeviceBase* device, Buffer& q_tmp) {
+void runAiterAsmPA(const AttentionModuleParams& params, rtp_llm::DeviceBase* device, Buffer& q_tmp, bool dump_pa_inputs) {
     auto out   = Buffer2torchTensor(params.output, false);
     auto query = Buffer2torchTensor(q_tmp, false);
 
@@ -441,6 +446,218 @@ void runAiterAsmPA(const AttentionModuleParams& params, rtp_llm::DeviceBase* dev
     std::optional<torch::Tensor> K_QScale       = std::nullopt;
     std::optional<torch::Tensor> V_QScale       = std::nullopt;
     std::optional<torch::Tensor> out_opt        = out;
+    
+    if (dump_pa_inputs) {
+        static std::unordered_map<int64_t, int> pa_step_counter;
+        static std::set<std::string> layer_requests_saved;
+        static std::mutex pa_step_mutex;
+        static int last_saved_round = -1;
+        
+        auto req_id_host = device->clone({*params.common.decode_request_id, AllocationType::HOST});
+        auto bt_host = device->clone({*params.common.kv_cache->kv_cache_block_id, AllocationType::HOST});
+        auto sl_host = device->clone({*params.common.sequence_lengths, AllocationType::HOST});
+        ((ROCmDevice*)device)->syncAndCheck();
+        
+        const int64_t* req_ids = req_id_host->data<int64_t>();
+        const int32_t* bt_data = bt_host->data<int32_t>();
+        const int32_t* sl_data = sl_host->data<int32_t>();
+        size_t batch_size = params.common.decoder_batch_size;
+        size_t bt_cols = bt_host->shape().size() > 1 ? bt_host->shape()[1] : 1;
+        
+        int round = static_cast<int>(req_ids[0] / 1000000);
+        int layer_id = params.layer_id;
+        
+        if (round != last_saved_round) {
+            layer_requests_saved.clear();
+            last_saved_round = round;
+        }
+        
+        bool should_save_layer = (layer_id == 0 || layer_id == 1 || layer_id == 13 || layer_id == 27);
+        
+        bool need_save_blocks = false;
+        if (should_save_layer) {
+            for (size_t i = 0; i < batch_size; i++) {
+                std::string key = std::to_string(layer_id) + "_" + std::to_string(req_ids[i]);
+                if (layer_requests_saved.find(key) == layer_requests_saved.end()) {
+                    need_save_blocks = true;
+                    break;
+                }
+            }
+        }
+        
+        if (should_save_layer && need_save_blocks) {
+            std::string kv_dir = "/mnt/raid0/yilin/rtp-llm/zztmp/pa_inputs/round" + std::to_string(round) + "/layer" + std::to_string(layer_id);
+            if (!fs::exists(kv_dir)) {
+                fs::create_directories(kv_dir);
+            }
+            
+            auto kv_buffer = params.common.kv_cache->kv_cache_buffer;
+            ((ROCmDevice*)device)->syncAndCheck();
+            
+            saveBufferDataToTorch(*bt_host, nullptr, kv_dir + "/block_tables.pt");
+            saveBufferDataToTorch(*sl_host, nullptr, kv_dir + "/sequence_lengths.pt");
+            
+            std::set<int> all_used_blocks;
+            int total_saved_blocks = 0;
+            int new_requests_count = 0;
+            
+            for (size_t i = 0; i < batch_size; i++) {
+                int64_t req_id = req_ids[i];
+                
+                std::string layer_req_key = std::to_string(layer_id) + "_" + std::to_string(req_id);
+                if (layer_requests_saved.find(layer_req_key) != layer_requests_saved.end()) {
+                    continue;
+                }
+                
+                new_requests_count++;
+                
+                std::string req_dir = kv_dir + "/req" + std::to_string(req_id);
+                fs::create_directories(req_dir);
+                
+                int32_t seq_len = sl_data[i];
+                int tokens_per_block = 16;
+                int valid_blocks = (seq_len + tokens_per_block) / tokens_per_block;
+                int start_block = std::max(0, valid_blocks - 3);
+                
+                std::vector<int> saved_blocks;
+                int req_block_count = 0;
+                
+                for (int b = start_block; b < valid_blocks && b < (int)bt_cols; b++) {
+                    int block_id = bt_data[i * bt_cols + b];
+                    if (block_id < 0) break;
+                    
+                    all_used_blocks.insert(block_id);
+                    
+                    if (block_id < (int)kv_buffer->shape()[0]) {
+                        BufferPtr block = kv_buffer->index(block_id);
+                        auto block_host = device->clone({*block, AllocationType::HOST});
+                        ((ROCmDevice*)device)->syncAndCheck();
+                        
+                        if (block_host->dim() > 0 && block_host->shape()[0] >= 2) {
+                            BufferPtr k_block = block_host->index(0);
+                            BufferPtr v_block = block_host->index(1);
+                            saveBufferDataToTorch(*k_block, nullptr, req_dir + "/block" + std::to_string(block_id) + "_K.pt");
+                            saveBufferDataToTorch(*v_block, nullptr, req_dir + "/block" + std::to_string(block_id) + "_V.pt");
+                            saved_blocks.push_back(block_id);
+                            req_block_count++;
+                            total_saved_blocks++;
+                        }
+                    }
+                }
+                
+                FILE* req_fp = fopen((req_dir + "/block_info.txt").c_str(), "w");
+                if (req_fp) {
+                    fprintf(req_fp, "request_id: %ld\n", req_id);
+                    fprintf(req_fp, "layer_id: %d\n", layer_id);
+                    fprintf(req_fp, "seq_len: %d\n", seq_len);
+                    fprintf(req_fp, "valid_blocks: %d\n", valid_blocks);
+                    fprintf(req_fp, "saved_blocks (last 3): [");
+                    for (size_t sb = 0; sb < saved_blocks.size(); sb++) {
+                        fprintf(req_fp, "%d%s", saved_blocks[sb], sb + 1 < saved_blocks.size() ? "," : "");
+                    }
+                    fprintf(req_fp, "]\n");
+                    fclose(req_fp);
+                }
+                
+                layer_requests_saved.insert(layer_req_key);
+            }
+            
+            FILE* kv_fp = fopen((kv_dir + "/kv_cache_info.txt").c_str(), "w");
+            if (kv_fp) {
+                fprintf(kv_fp, "round: %d\n", round);
+                fprintf(kv_fp, "layer_id: %d\n", layer_id);
+                fprintf(kv_fp, "kv_cache_buffer_shape: [");
+                for (size_t d = 0; d < kv_buffer->shape().size(); d++) {
+                    fprintf(kv_fp, "%zu%s", kv_buffer->shape()[d], d + 1 < kv_buffer->shape().size() ? ", " : "");
+                }
+                fprintf(kv_fp, "]\n");
+                fprintf(kv_fp, "block_tables_shape: [");
+                for (size_t d = 0; d < bt_host->shape().size(); d++) {
+                    fprintf(kv_fp, "%zu%s", bt_host->shape()[d], d + 1 < bt_host->shape().size() ? ", " : "");
+                }
+                fprintf(kv_fp, "]\n");
+                fprintf(kv_fp, "batch_size: %zu\n", batch_size);
+                fprintf(kv_fp, "total_saved_blocks: %d\n", total_saved_blocks);
+                fprintf(kv_fp, "\n");
+                for (size_t i = 0; i < batch_size; i++) {
+                    int64_t req_id = req_ids[i];
+                    int32_t seq_len = sl_data[i];
+                    fprintf(kv_fp, "req%ld: seq_len=%d, blocks=[", req_id, seq_len);
+                    for (size_t b = 0; b < bt_cols; b++) {
+                        int bid = bt_data[i * bt_cols + b];
+                        if (bid < 0) break;
+                        fprintf(kv_fp, "%d%s", bid, (b + 1 < bt_cols && bt_data[i * bt_cols + b + 1] >= 0) ? "," : "");
+                    }
+                    fprintf(kv_fp, "]\n");
+                }
+                fclose(kv_fp);
+            }
+            
+            ((ROCmDevice*)device)->syncAndCheck();
+            
+            printf("[PA_DUMP] R%d L%d: Saved %d blocks for %d requests\n", 
+                   round, layer_id, total_saved_blocks, new_requests_count);
+        }
+        
+        auto q_host = device->clone({q_tmp, AllocationType::HOST});
+        ((ROCmDevice*)device)->syncAndCheck();
+        size_t q_per_req = q_host->size() / batch_size;
+        
+        int saved_count = 0;
+        
+        for (size_t i = 0; i < batch_size; i++) {
+            int64_t req_id = req_ids[i];
+            
+            int step;
+            {
+                std::lock_guard<std::mutex> lock(pa_step_mutex);
+                step = ++pa_step_counter[req_id];
+            }
+            
+            if (step != 1 && step != 10 && step != 25) continue;
+            
+            std::string dir = "/mnt/raid0/yilin/rtp-llm/zztmp/pa_inputs/round" + std::to_string(round) + 
+                              "/req" + std::to_string(req_id) + "_step" + std::to_string(step);
+            if (!fs::exists(dir)) {
+                fs::create_directories(dir);
+            }
+            
+            std::vector<size_t> q_shape;
+            for (size_t d = 1; d < q_host->shape().size(); d++) {
+                q_shape.push_back(q_host->shape()[d]);
+            }
+            auto q_slice = device->allocateBuffer({q_host->type(), q_shape, AllocationType::HOST}, {"q_slice"});
+            std::memcpy(q_slice->data(), 
+                       static_cast<const char*>(q_host->data()) + i * q_per_req * q_host->typeSize(),
+                       q_per_req * q_host->typeSize());
+            saveBufferDataToTorch(*q_slice, nullptr, dir + "/query.pt");
+            
+            int32_t seq_len = sl_data[i];
+            
+            FILE* fp = fopen((dir + "/pa_info.txt").c_str(), "w");
+            if (fp) {
+                fprintf(fp, "request_id: %ld\n", req_id);
+                fprintf(fp, "round: %d\n", round);
+                fprintf(fp, "decode_step: %d\n", step);
+                fprintf(fp, "batch_idx: %zu\n", i);
+                fprintf(fp, "sequence_length: %d (context_lens = %d)\n", seq_len, seq_len + 1);
+                fprintf(fp, "block_ids: [");
+                for (int b = 0; b < (int)bt_cols; b++) {
+                    int bid = bt_data[i * bt_cols + b];
+                    if (bid < 0) break;
+                    fprintf(fp, "%d%s", bid, (b + 1 < (int)bt_cols && bt_data[i * bt_cols + b + 1] >= 0) ? ", " : "");
+                }
+                fprintf(fp, "]\n");
+                fclose(fp);
+            }
+            saved_count++;
+        }
+        
+        if (saved_count > 0) {
+            printf("[PA_DUMP] R%d: Saved %d requests (step 1/10/25) query to pa_inputs/\n", round, saved_count);
+        }
+    }
+    
     if (key_cache.dtype() == at::kFloat8_e4m3fnuz) {
         K_QScale = Buffer2torchTensor(params.common.kv_cache->kv_scale_buffer, false);
         V_QScale = K_QScale;

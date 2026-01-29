@@ -75,6 +75,7 @@ GptModelInputs NativeGraphRunnerBase<GptModelInputs, GptModelOutputs>::prepareIn
     auto mm_features_locs =
         old.mm_features_locs ? device_->allocateBufferLike(*old.mm_features_locs, AllocationType::HOST) : nullptr;
     auto request_id = old.request_id ? device_->allocateBufferLike(*old.request_id, AllocationType::HOST) : nullptr;
+    auto decode_request_id = old.decode_request_id ? device_->allocateBufferLike(*old.decode_request_id, AllocationType::HOST) : nullptr;
     auto request_pd_separation = old.request_pd_separation ?
                                      device_->allocateBufferLike(*old.request_pd_separation, AllocationType::HOST) :
                                      nullptr;
@@ -105,6 +106,7 @@ GptModelInputs NativeGraphRunnerBase<GptModelInputs, GptModelOutputs>::prepareIn
             std::nullopt,  // input_embeddings
             nullptr,       // input_embeddings_locs
             request_id,
+            decode_request_id,
             request_pd_separation,
             cache_keys,
             old.kv_block_stride_bytes,

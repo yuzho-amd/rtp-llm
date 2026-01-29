@@ -136,6 +136,7 @@ struct GptModelInputs {
     rtp_llm::BufferPtr input_embeddings_locs;  // input embeddings index
 
     rtp_llm::BufferPtr request_id;             // int64, [context_batch_size]
+    rtp_llm::BufferPtr decode_request_id;      // int64, [decoder_batch_size], for tensor dump
     rtp_llm::BufferPtr request_pd_separation;  // bool, [context_batch_size]
     rtp_llm::BufferPtr cache_keys;             // [context_batch_size]
     size_t             kv_block_stride_bytes;
@@ -600,6 +601,11 @@ struct AttentionCommonInputs {
 
     // rocm
     ParamsPtr decode_aiter_attn;
+
+    // tensor dump: request_id for prefill batch, int64, [context_batch_size]
+    BufferPtr request_id;
+    // tensor dump: request_id for decode batch, int64, [decoder_batch_size]
+    BufferPtr decode_request_id;
 };
 
 using AttentionModuleOutput = void;
