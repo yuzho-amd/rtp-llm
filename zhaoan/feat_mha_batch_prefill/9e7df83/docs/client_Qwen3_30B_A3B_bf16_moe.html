@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>server_Qwen3_30B_A3B_fp8_ptpc_moe_llmcompressor &#8212; rtp-llm-private  documentation</title>
+    <title>client_Qwen3_30B_A3B_bf16_moe &#8212; rtp-llm-private  documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8e8a900e" />
       <link rel="stylesheet" type="text/css" href="../_static/css/pdj.css?v=4abe0d83" />
 
@@ -20,8 +20,8 @@
     <script type="module" src="../_static/js/dark-mode-toggle.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="server_Qwen3_32B_bf16_dense" href="server_Qwen3_32B_bf16_dense.html" />
-    <link rel="prev" title="server_Qwen3_30B_A3B_fp8_ptpc_moe_Quark" href="server_Qwen3_30B_A3B_fp8_ptpc_moe_Quark.html" /> 
+    <link rel="next" title="client_Qwen3_30B_A3B_fp8_ptpc_moe_Quark" href="client_Qwen3_30B_A3B_fp8_ptpc_moe_Quark.html" />
+    <link rel="prev" title="client_Qwen3-32B_FP8_ptpc_dense_Quark" href="client_Qwen3-32B_FP8_ptpc_dense_Quark.html" /> 
   </head>  <body class="wy-body-for-nav" role="document"> 
 <div class="menu-overlay"></div>
 <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
@@ -49,31 +49,19 @@
 	    </dark-mode-toggle>
 	  </div>
 	  <div role="main">
-  <section id="server-qwen3-30b-a3b-fp8-ptpc-moe-llmcompressor">
-<h1>server_Qwen3_30B_A3B_fp8_ptpc_moe_llmcompressor<a class="headerlink" href="#server-qwen3-30b-a3b-fp8-ptpc-moe-llmcompressor" title="Link to this heading">¶</a></h1>
+  <section id="client-qwen3-30b-a3b-bf16-moe">
+<h1>client_Qwen3_30B_A3B_bf16_moe<a class="headerlink" href="#client-qwen3-30b-a3b-bf16-moe" title="Link to this heading">¶</a></h1>
 <pre>
-running server command: USE_AITER_PA=1 SEQ_SIZE_PER_BLOCK=16 MODEL_TYPE=qwen_3_moe FP8_KV_CACHE=1 ACT_TYPE=bf16 TOKENIZER_PATH=/mnt/raid0/pretrained_model/rtp_ci/Qwen3-30B-A3B-Thinking-2507-FP8-Dynamic CHECKPOINT_PATH=/mnt/raid0/pretrained_model/rtp_ci/Qwen3-30B-A3B-Thinking-2507-FP8-Dynamic CUDA_VISIBLE_DEVICES=4,5,6,7 START_PORT=6789 /opt/conda310/bin/python3.10 -m rtp_llm.start_server
-WARNING:root:fuse is not valid: connet http://0:28006 error
-[process-34488][root][2026-02-06 18:53:00.180][log_config.py:setup_logging():92][INFO] successfully set NCCL_DEBUG_FILE path to logs/nccl.log
-[CHECK] internal_source directory: /mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/internal_source, found: False
-import in __init__ took 1.55s
-import rtp_llm.ops took 0.00s
-WARNING:root:fuse is not valid: connet http://0:28006 error
-WARNING:root:fuse is not valid: connet http://0:28006 error
-WARNING:root:fuse is not valid: connet http://0:28006 error
-WARNING:root:fuse is not valid: connet http://0:28006 error
-WARNING:root:fuse is not valid: connet http://0:28006 error
-[aiter] import [module_aiter_enum] under /opt/conda310/lib/python3.10/site-packages/aiter/jit/module_aiter_enum.so
-[aiter] import [module_aiter_enum] under /opt/conda310/lib/python3.10/site-packages/aiter/jit/module_aiter_enum.so
-[aiter] import [module_aiter_enum] under /opt/conda310/lib/python3.10/site-packages/aiter/jit/module_aiter_enum.so
-[aiter] import [module_aiter_enum] under /opt/conda310/lib/python3.10/site-packages/aiter/jit/module_aiter_enum.so
-[aiter] import [module_aiter_enum] under /opt/conda310/lib/python3.10/site-packages/aiter/jit/module_aiter_enum.so
-initLogger log_file_path: /mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/config/alog.conf
-[BLAS] Gemm config not find: gemm_config.csv 
-[aiter] hipModuleLoad: /opt/conda310/lib/python3.10/site-packages/aiter_meta/hsa//gfx942/fmoe_2stages/fmoe_stage1_bf16_pertokenFp8_g1u1_128x128_pf2.co GetFunction: _ZN5aiter45fmoe_stage1_bf16_pertokenFp8_g1u1_128x128_pf2E Success
-[aiter] hipModuleLoad: /opt/conda310/lib/python3.10/site-packages/aiter_meta/hsa//gfx942/fmoe_2stages/fmoe_stage1_bf16_pertokenFp8_g1u1_32x256_2tg_pf3.co GetFunction: _ZN5aiter48fmoe_stage1_bf16_pertokenFp8_g1u1_32x256_2tg_pf3E Success
-/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/utils/grpc_util.py:35: UserWarning: The given buffer is not writable, and PyTorch does not support non-writable tensors. This means you can write to the underlying (supposedly non-writable) buffer using the tensor. You may want to copy the buffer to protect its data or make it writable before converting it to a tensor. This type of warning will be suppressed for the rest of this program. (Triggered internally at /opt/pytorch/torch/csrc/utils/tensor_new.cpp:1577.)
-  return torch.frombuffer(t.int32_data, dtype=torch.int32).reshape(list(t.shape))
+CASE: Qwen3_30B_A3B_bf16_moe
+SERVER_PARAMS: USE_AITER_PA=1 SEQ_SIZE_PER_BLOCK=16 DEVICE_RESERVE_MEMORY_BYTES=-2048000000 RESERVER_RUNTIME_MEM_MB=102400 AITER_ASM_DIR=$(bazelisk info output_base)/external/aiter/aiter_meta/hsa/gfx942/ MAX_SEQ_LEN=150000 CONCURRENCY_LIMIT=1024 WORLD_SIZE=1 DP_SIZE=1 TP_SIZE=1 WARM_UP=0 ACT_TYPE=bf16 TOKENIZER_PATH=/mnt/raid0/pretrained_model/rtp_ci/Qwen3-30B-A3B CHECKPOINT_PATH=/mnt/raid0/pretrained_model/rtp_ci/Qwen3-30B-A3B MODEL_TYPE=qwen_3_moe FT_SERVER_TEST=1
+TEST_TIME: 2026-02-06T18:52:20+08:00
+PROMPT: Explain the benefits of renewable energy
+GENERATE_CONFIG: {&quot;max_new_tokens&quot;: 50, &quot;seed&quot;: 42, &quot;topk&quot;: 1, &quot;top_p&quot;: 0, &quot;temperature&quot;: 0.0}
+EXPECTED_RESPONSE:  sources and how they can help reduce carbon emissions.
+
+Renewable energy sources, such as solar, wind, hydro, and geothermal power, offer numerous benefits that make them a crucial component of a sustainable energy future. One of the most significant advantages
+ACTUAL_RESPONSE:  sources and how they can help reduce carbon emissions.  Renewable energy sources, such as solar, wind, hydro, and geothermal power, offer numerous benefits that make them a crucial component of a sustainable energy future. One of the most significant advantages 
+CHECK: MATCH
 </pre></section>
 
 
@@ -86,10 +74,10 @@ initLogger log_file_path: /mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-
   
   <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
     
-    <a href="server_Qwen3_32B_bf16_dense.html" class="btn btn-neutral float-right" title="server_Qwen3_32B_bf16_dense">Next <span class="fa fa-arrow-circle-right"></span></a>
+    <a href="client_Qwen3_30B_A3B_fp8_ptpc_moe_Quark.html" class="btn btn-neutral float-right" title="client_Qwen3_30B_A3B_fp8_ptpc_moe_Quark">Next <span class="fa fa-arrow-circle-right"></span></a>
     
     
-    <a href="server_Qwen3_30B_A3B_fp8_ptpc_moe_Quark.html" class="btn btn-neutral" title="server_Qwen3_30B_A3B_fp8_ptpc_moe_Quark"><span class="fa fa-arrow-circle-left"></span>Previous</a>
+    <a href="client_Qwen3-32B_FP8_ptpc_dense_Quark.html" class="btn btn-neutral" title="client_Qwen3-32B_FP8_ptpc_dense_Quark"><span class="fa fa-arrow-circle-left"></span>Previous</a>
     
   </div>
   
@@ -148,7 +136,7 @@ initLogger log_file_path: /mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-
 <li class="toctree-l1"><a class="reference internal" href="client_Bert_fp8_4l_sku_mean_909.html">client_Bert_fp8_4l_sku_mean_909</a></li>
 <li class="toctree-l1"><a class="reference internal" href="client_Bert_int8.html">client_Bert_int8</a></li>
 <li class="toctree-l1"><a class="reference internal" href="client_Qwen3-32B_FP8_ptpc_dense_Quark.html">client_Qwen3-32B_FP8_ptpc_dense_Quark</a></li>
-<li class="toctree-l1"><a class="reference internal" href="client_Qwen3_30B_A3B_bf16_moe.html">client_Qwen3_30B_A3B_bf16_moe</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">client_Qwen3_30B_A3B_bf16_moe</a></li>
 <li class="toctree-l1"><a class="reference internal" href="client_Qwen3_30B_A3B_fp8_ptpc_moe_Quark.html">client_Qwen3_30B_A3B_fp8_ptpc_moe_Quark</a></li>
 <li class="toctree-l1"><a class="reference internal" href="client_Qwen3_30B_A3B_fp8_ptpc_moe_llmcompressor.html">client_Qwen3_30B_A3B_fp8_ptpc_moe_llmcompressor</a></li>
 <li class="toctree-l1"><a class="reference internal" href="client_Qwen3_32B_bf16_dense.html">client_Qwen3_32B_bf16_dense</a></li>
@@ -162,7 +150,7 @@ initLogger log_file_path: /mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-
 <li class="toctree-l1"><a class="reference internal" href="server_Qwen3-32B_FP8_ptpc_dense_Quark.html">server_Qwen3-32B_FP8_ptpc_dense_Quark</a></li>
 <li class="toctree-l1"><a class="reference internal" href="server_Qwen3_30B_A3B_bf16_moe.html">server_Qwen3_30B_A3B_bf16_moe</a></li>
 <li class="toctree-l1"><a class="reference internal" href="server_Qwen3_30B_A3B_fp8_ptpc_moe_Quark.html">server_Qwen3_30B_A3B_fp8_ptpc_moe_Quark</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">server_Qwen3_30B_A3B_fp8_ptpc_moe_llmcompressor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server_Qwen3_30B_A3B_fp8_ptpc_moe_llmcompressor.html">server_Qwen3_30B_A3B_fp8_ptpc_moe_llmcompressor</a></li>
 <li class="toctree-l1"><a class="reference internal" href="server_Qwen3_32B_bf16_dense.html">server_Qwen3_32B_bf16_dense</a></li>
 <li class="toctree-l1"><a class="reference internal" href="server_Qwen3_8B_FP8_ptpc_dense_llmcompressor.html">server_Qwen3_8B_FP8_ptpc_dense_llmcompressor</a></li>
 <li class="toctree-l1"><a class="reference internal" href="server_Qwen3_8B_FP8_ptpc_dense_llmcompressor_reuseCache.html">server_Qwen3_8B_FP8_ptpc_dense_llmcompressor_reuseCache</a></li>
@@ -178,20 +166,20 @@ initLogger log_file_path: /mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-
   
   <div>
     <h4>Previous topic</h4>
-    <p class="topless"><a href="server_Qwen3_30B_A3B_fp8_ptpc_moe_Quark.html"
-                          title="previous chapter">server_Qwen3_30B_A3B_fp8_ptpc_moe_Quark</a></p>
+    <p class="topless"><a href="client_Qwen3-32B_FP8_ptpc_dense_Quark.html"
+                          title="previous chapter">client_Qwen3-32B_FP8_ptpc_dense_Quark</a></p>
   </div>
   <div>
     <h4>Next topic</h4>
-    <p class="topless"><a href="server_Qwen3_32B_bf16_dense.html"
-                          title="next chapter">server_Qwen3_32B_bf16_dense</a></p>
+    <p class="topless"><a href="client_Qwen3_30B_A3B_fp8_ptpc_moe_Quark.html"
+                          title="next chapter">client_Qwen3_30B_A3B_fp8_ptpc_moe_Quark</a></p>
   </div>
   
   
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
-      <li><a href="../_sources/docs/server_Qwen3_30B_A3B_fp8_ptpc_moe_llmcompressor.md.txt"
+      <li><a href="../_sources/docs/client_Qwen3_30B_A3B_bf16_moe.md.txt"
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
