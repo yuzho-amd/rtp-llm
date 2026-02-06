@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>server_Qwen3_32B_bf16_dense &#8212; rtp-llm-private  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8e8a900e" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/pdj.css?v=4abe0d83" />
+
+<link rel="stylesheet" href="../_static/css/darker.css" type="text/css"
+      media="(prefers-color-scheme: dark)"/>
+    <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'/>
+    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/pdj.js"></script>
+
+    <script type="module" src="../_static/js/dark-mode-toggle.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="server_Qwen3_8B_FP8_ptpc_dense_llmcompressor" href="server_Qwen3_8B_FP8_ptpc_dense_llmcompressor.html" />
+    <link rel="prev" title="server_Qwen3_30B_A3B_fp8_ptpc_moe_llmcompressor" href="server_Qwen3_30B_A3B_fp8_ptpc_moe_llmcompressor.html" /> 
+  </head>  <body class="wy-body-for-nav" role="document"> 
+<div class="menu-overlay"></div>
+<section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+  <nav class="wy-nav-top" id="barra-mobile" role="navigation" aria-label="top navigation">
+    <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+    <a href="#">rtp-llm-private </a>
+  </nav>
+
+  <div class="wy-nav-content">
+    <div class="fundo-claro">
+    </div>
+    <div class="fundo-escuro">
+    </div>
+
+    <div class="rst-content">
+      <div role="navigation" aria-label="breadcrumbs navigation">
+      </div>
+      <div class="">
+
+	
+	<div id="content" class="hfeed entry-container hentry">
+      	  <div id="dark-mode-toggle-container">
+	    <dark-mode-toggle appearance="toggle" class="slider" dark="" light="">
+	    </dark-mode-toggle>
+	  </div>
+	  <div role="main">
+  <section id="server-qwen3-32b-bf16-dense">
+<h1>server_Qwen3_32B_bf16_dense<a class="headerlink" href="#server-qwen3-32b-bf16-dense" title="Link to this heading">¶</a></h1>
+<pre>
+running server command: USE_AITER_PA=1 SEQ_SIZE_PER_BLOCK=16 DEVICE_RESERVE_MEMORY_BYTES=-2048000000 RESERVER_RUNTIME_MEM_MB=102400 AITER_ASM_DIR=$(bazelisk info output_base)/external/aiter/aiter_meta/hsa/gfx942/ MAX_SEQ_LEN=150000 CONCURRENCY_LIMIT=1024 WORLD_SIZE=1 DP_SIZE=1 TP_SIZE=1 WARM_UP=0 ACT_TYPE=bf16 TOKENIZER_PATH=/mnt/raid0/pretrained_model/rtp_ci/Qwen3-32B CHECKPOINT_PATH=/mnt/raid0/pretrained_model/rtp_ci/Qwen3-32B MODEL_TYPE=qwen_3 FT_SERVER_TEST=1 CUDA_VISIBLE_DEVICES=4,5,6,7 START_PORT=6789 /opt/conda310/bin/python3.10 -m rtp_llm.start_server
+WARNING:root:fuse is not valid: connet http://0:28006 error
+[process-22439][root][2026-02-06 17:21:05.759][log_config.py:setup_logging():92][INFO] successfully set NCCL_DEBUG_FILE path to logs/nccl.log
+[process-22439][root][2026-02-06 17:21:05.762][server_args.py:parse_args():244][INFO] Parsing arguments and applying config bindings...
+[process-22439][root][2026-02-06 17:21:05.763][hw_kernel_group_args.py:_parse_prefill_capture_config():300][INFO] Generated 80 sequence lengths from range (step=3, max=240)
+[process-22439][root][2026-02-06 17:21:05.764][server_config_setup.py:setup_default_args():198][INFO] [MI308X] enable FT_DISABLE_CUSTOM_AR by default, as amd has own implementation.
+[process-22439][root][2026-02-06 17:21:05.764][fuser.py:fetch_remote_file_to_local():283][INFO] Local path /mnt/raid0/pretrained_model/rtp_ci/Qwen3-32B use directly.
+[process-22439][root][2026-02-06 17:21:05.764][fuser.py:fetch_remote_file_to_local():283][INFO] Local path /mnt/raid0/pretrained_model/rtp_ci/Qwen3-32B use directly.
+[process-22439][root][2026-02-06 17:21:05.765][server_config_setup.py:fetch_model_files_to_local():270][INFO] Fetched model files - checkpoint_path: /mnt/raid0/pretrained_model/rtp_ci/Qwen3-32B, tokenizer_path: /mnt/raid0/pretrained_model/rtp_ci/Qwen3-32B, ptuning_path: , extra_data_path: , phy2log_path: 
+[process-22439][root][2026-02-06 17:21:05.765][worker_info.py:__init__():49][INFO] ParallelInfo worker_info_port_num: 8
+[process-22439][root][2026-02-06 17:21:05.765][worker_info.py:__init__():56][INFO] ParallelInfo:[ tp_size=1 ep_size=1 pp_size=1 world_size=1 world_rank=0 local_world_size=1 ffn_sp_size=1 ffn_tp_size=1]
+[process-22439][root][2026-02-06 17:21:05.765][worker_info.py:from_params():173][INFO] ParallelInfo from_params: ParallelInfo:[ tp_size=1 pp_size=1 world_size=1 world_rank=0 local_world_size=1 tp_rank=0 dp_rank=0 ep_size=1 dp_size=1 ep_rank=0 local_rank=0 ffn_sp_size=1 worker_info_port_num=8]
+[process-22439][root][2026-02-06 17:21:05.765][worker_info.py:reload():184][INFO] ParallelInfo reload: ParallelInfo:[ tp_size=1 pp_size=1 world_size=1 world_rank=0 local_world_size=1 tp_rank=0 dp_rank=0 ep_size=1 dp_size=1 ep_rank=0 local_rank=0 ffn_sp_size=1 worker_info_port_num=8]
+[process-22439][root][2026-02-06 17:21:05.765][worker_info.py:from_env():313][INFO] WorkerInfo from_env: 
+        WorkerInfo: [ip=10.67.77.202
+        server_port=6789 (offset 0)
+        rpc_server_port=6790 (offset 1)
+        cache_store_listen_port=6791 (offset 2)
+        gang_hb_port=6792 (offset 3)
+        cache_store_rdma_listen_port=6793 (offset 4)
+        http_port=6794 (offset 5)
+        backend_server_port=6795 (offset 6)
+        embedding_rpc_server_port=6796 (offset 7)
+        remote_rpc_server_port=1
+        cache_store_connect_port=2
+        cache_store_rdma_connect_port=4
+        local_rank=0 world_rank=0 name= info=None ]
+        , worker_info_port_num: 8, local_rank: 0
+[process-22439][root][2026-02-06 17:21:05.765][worker_info.py:reload():414][INFO] WorkerInfo reload: 
+        WorkerInfo: [ip=10.67.77.202
+        server_port=6789 (offset 0)
+        rpc_server_port=6790 (offset 1)
+        cache_store_listen_port=6791 (offset 2)
+        gang_hb_port=6792 (offset 3)
+        cache_store_rdma_listen_port=6793 (offset 4)
+        http_port=6794 (offset 5)
+        backend_server_port=6795 (offset 6)
+        embedding_rpc_server_port=6796 (offset 7)
+        remote_rpc_server_port=1
+        cache_store_connect_port=2
+        cache_store_rdma_connect_port=4
+        local_rank=0 world_rank=0 name= info=None ]
+        
+[process-22439][root][2026-02-06 17:21:05.765][server_config_setup.py:auto_configure_deepep():61][INFO] USE_ALL_GATHER is enabled (use_all_gather=True), all DeepEP settings are disabled (0, 0, 0)
+[process-22439][root][2026-02-06 17:21:05.765][start_server.py:start_server():199][INFO] [PROCESS_START]Start server
+[process-22439][root][2026-02-06 17:21:05.765][concurrency_controller.py:init_controller():67][INFO] concurrency_limit : 1024, global_concurrency_limit : 1024
+[process-22439][root][2026-02-06 17:21:05.768][start_server.py:start_server():234][INFO] start backend server
+[process-22439][root][2026-02-06 17:21:05.770][start_server.py:start_backend_server_impl():62][INFO] [PROCESS_SPAWN]Start backend server process outer
+[CHECK] internal_source directory: /mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/internal_source, found: False
+import in __init__ took 1.55s
+import rtp_llm.ops took 0.00s
+[process-22439][root][2026-02-06 17:21:05.771][time_util.py:wrapped():47][INFO] start backend server took: 0.00s
+[process-22439][root][2026-02-06 17:21:05.771][start_server.py:start_server():240][INFO] start frontend server
+[process-22439][root][2026-02-06 17:21:05.772][start_server.py:start_frontend_server_impl():150][INFO] multi rank starts with default local world size: 1, world size = 1
+[process-22439][root][2026-02-06 17:21:05.772][start_server.py:start_frontend_server_impl():162][INFO] [PROCESS_SPAWN]Start frontend server process rank_0_server_0 outer
+[process-22439][root][2026-02-06 17:21:05.772][start_server.py:start_frontend_server_impl():162][INFO] [PROCESS_SPAWN]Start frontend server process rank_0_server_1 outer
+[process-22439][root][2026-02-06 17:21:05.773][start_server.py:start_frontend_server_impl():162][INFO] [PROCESS_SPAWN]Start frontend server process rank_0_server_2 outer
+[process-22439][root][2026-02-06 17:21:05.773][start_server.py:start_frontend_server_impl():162][INFO] [PROCESS_SPAWN]Start frontend server process rank_0_server_3 outer
+[process-22439][root][2026-02-06 17:21:05.774][time_util.py:wrapped():47][INFO] start frontend server took: 0.00s
+[process-22439][root][2026-02-06 17:21:05.774][process_manager.py:start_parallel_health_checks():245][INFO] Starting parallel health checks for 2 processes
+[process-22439][root][2026-02-06 17:21:05.775][process_manager.py:wait_for_health_checks():273][INFO] Waiting for 2 health checks to complete...
+WARNING:root:fuse is not valid: connet http://0:28006 error
+[process-22535][root][2026-02-06 17:21:16.154][start_backend_server.py:start_backend_server():335][INFO] [PROCESS_START]Start backend server process
+[process-22535][root][2026-02-06 17:21:16.156][start_backend_server.py:load_gpu_nic_affinity():294][INFO] get gpu nic affinity failed, run /usr/local/bin/run_affinity failed, exception is [Errno 8] Exec format error: &#x27;/usr/local/bin/run_affinity&#x27;
+[process-22535][root][2026-02-06 17:21:16.156][worker_info.py:__init__():49][INFO] ParallelInfo worker_info_port_num: 8
+[process-22535][root][2026-02-06 17:21:16.157][worker_info.py:__init__():56][INFO] ParallelInfo:[ tp_size=1 ep_size=1 pp_size=1 world_size=1 world_rank=0 local_world_size=1 ffn_sp_size=1 ffn_tp_size=1]
+[process-22535][root][2026-02-06 17:21:16.157][worker_info.py:from_params():173][INFO] ParallelInfo from_params: ParallelInfo:[ tp_size=1 pp_size=1 world_size=1 world_rank=0 local_world_size=1 tp_rank=0 dp_rank=0 ep_size=1 dp_size=1 ep_rank=0 local_rank=0 ffn_sp_size=1 worker_info_port_num=8]
+[process-22535][root][2026-02-06 17:21:16.157][worker_info.py:reload():184][INFO] ParallelInfo reload: ParallelInfo:[ tp_size=1 pp_size=1 world_size=1 world_rank=0 local_world_size=1 tp_rank=0 dp_rank=0 ep_size=1 dp_size=1 ep_rank=0 local_rank=0 ffn_sp_size=1 worker_info_port_num=8]
+[process-22535][root][2026-02-06 17:21:16.157][worker_info.py:from_env():313][INFO] WorkerInfo from_env: 
+        WorkerInfo: [ip=10.67.77.202
+        server_port=6789 (offset 0)
+        rpc_server_port=6790 (offset 1)
+        cache_store_listen_port=6791 (offset 2)
+        gang_hb_port=6792 (offset 3)
+        cache_store_rdma_listen_port=6793 (offset 4)
+        http_port=6794 (offset 5)
+        backend_server_port=6795 (offset 6)
+        embedding_rpc_server_port=6796 (offset 7)
+        remote_rpc_server_port=1
+        cache_store_connect_port=2
+        cache_store_rdma_connect_port=4
+        local_rank=0 world_rank=0 name= info=None ]
+        , worker_info_port_num: 8, local_rank: 0
+[process-22535][root][2026-02-06 17:21:16.157][worker_info.py:reload():414][INFO] WorkerInfo reload: 
+        WorkerInfo: [ip=10.67.77.202
+        server_port=6789 (offset 0)
+        rpc_server_port=6790 (offset 1)
+        cache_store_listen_port=6791 (offset 2)
+        gang_hb_port=6792 (offset 3)
+        cache_store_rdma_listen_port=6793 (offset 4)
+        http_port=6794 (offset 5)
+        backend_server_port=6795 (offset 6)
+        embedding_rpc_server_port=6796 (offset 7)
+        remote_rpc_server_port=1
+        cache_store_connect_port=2
+        cache_store_rdma_connect_port=4
+        local_rank=0 world_rank=0 name= info=None ]
+        
+[process-22535][root][2026-02-06 17:21:16.157][start_backend_server.py:local_rank_start():45][INFO] [PROCESS_START]Start local rank process
+WARNING:root:fuse is not valid: connet http://0:28006 error
+WARNING:root:fuse is not valid: connet http://0:28006 error
+[process-22536][root][2026-02-06 17:21:16.329][start_frontend_server.py:start_frontend_server():31][INFO] [PROCESS_START]Start frontend server process rank_0_server_0
+[process-22539][root][2026-02-06 17:21:16.329][start_frontend_server.py:start_frontend_server():31][INFO] [PROCESS_START]Start frontend server process rank_0_server_3
+WARNING:root:fuse is not valid: connet http://0:28006 error
+WARNING:root:fuse is not valid: connet http://0:28006 error
+[process-22537][root][2026-02-06 17:21:16.339][start_frontend_server.py:start_frontend_server():31][INFO] [PROCESS_START]Start frontend server process rank_0_server_1
+[process-22538][root][2026-02-06 17:21:16.339][start_frontend_server.py:start_frontend_server():31][INFO] [PROCESS_START]Start frontend server process rank_0_server_2
+[process-22535][root][2026-02-06 17:21:16.630][__init__.py:&lt;module&gt;():8][INFO] internal devices not found
+[process-22537][root][2026-02-06 17:21:17.760][__init__.py:&lt;module&gt;():8][INFO] internal devices not found
+[process-22539][root][2026-02-06 17:21:17.760][__init__.py:&lt;module&gt;():8][INFO] internal devices not found
+[process-22536][root][2026-02-06 17:21:17.760][__init__.py:&lt;module&gt;():8][INFO] internal devices not found
+[process-22538][root][2026-02-06 17:21:17.760][__init__.py:&lt;module&gt;():8][INFO] internal devices not found
+[process-22535][root][2026-02-06 17:21:18.165][report_worker.py:__init__():32][INFO] kmonitor report default tags: {}
+[process-22535][root][2026-02-06 17:21:18.166][report_worker.py:__init__():52][INFO] test mode, kmonitor metrics not reported.
+[process-22539][root][2026-02-06 17:21:18.405][report_worker.py:__init__():32][INFO] kmonitor report default tags: {}
+[process-22538][root][2026-02-06 17:21:18.405][report_worker.py:__init__():32][INFO] kmonitor report default tags: {}
+[process-22539][root][2026-02-06 17:21:18.406][report_worker.py:__init__():52][INFO] test mode, kmonitor metrics not reported.
+[process-22538][root][2026-02-06 17:21:18.406][report_worker.py:__init__():52][INFO] test mode, kmonitor metrics not reported.
+[process-22537][root][2026-02-06 17:21:18.406][report_worker.py:__init__():32][INFO] kmonitor report default tags: {}
+[process-22537][root][2026-02-06 17:21:18.406][report_worker.py:__init__():52][INFO] test mode, kmonitor metrics not reported.
+[process-22536][root][2026-02-06 17:21:18.408][report_worker.py:__init__():32][INFO] kmonitor report default tags: {}
+[process-22536][root][2026-02-06 17:21:18.408][report_worker.py:__init__():52][INFO] test mode, kmonitor metrics not reported.
+[process-22537][root][2026-02-06 17:21:30.444][vipserver_proxy.py:refresh_srv_lst():86][ERROR] failed to refresh vipserver server list, exception : HTTPConnectionPool(host=&#x27;jmenv.tbsite.net&#x27;, port=8080): Max retries exceeded with url: /vipserver/serverlist?nofix=1&amp;labels=&amp; (Caused by NewConnectionError(&#x27;&lt;urllib3.connection.HTTPConnection object at 0x7ee6f1cae710&gt;: Failed to establish a new connection: [Errno -2] Name or service not known&#x27;))
+[process-22537][root][2026-02-06 17:21:30.445][host_reactor.py:start():32][INFO] vipserver domain update thread started. to refresh domains: &lt;bound method HostReactor.refresh_cache_domain_srv_lst of &lt;rtp_llm.vipserver.host_reactor.HostReactor object at 0x7ee6f1cadcf0&gt;&gt;
+[process-22439][root][2026-02-06 17:21:30.523][process_manager.py:_health_check_worker():215][ERROR] backend_server process manager is not available
+[process-22439][root][2026-02-06 17:21:30.576][process_manager.py:_health_check_worker():215][ERROR] frontend_server process manager is not available
+[process-22439][root][2026-02-06 17:21:30.576][process_manager.py:wait_for_health_checks():288][ERROR] backend_server health check failed
+[process-22439][root][2026-02-06 17:21:30.576][process_manager.py:wait_for_health_checks():288][ERROR] frontend_server health check failed
+[process-22439][root][2026-02-06 17:21:30.576][start_server.py:start_server():248][ERROR] Health checks failed
+[process-22439][root][2026-02-06 17:21:30.576][start_server.py:start_server():257][ERROR] start failed, trace: Traceback (most recent call last):
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/start_server.py&quot;, line 249, in start_server
+    raise Exception(&quot;Health checks failed&quot;)
+Exception: Health checks failed
+
+[process-22439][root][2026-02-06 17:21:30.576][process_manager.py:monitor_and_release_processes():157][INFO] Monitoring 5 processes
+[process-22439][root][2026-02-06 17:21:30.576][process_manager.py:_terminate_processes():61][INFO] Shutdown requested, terminating processes...
+[process-22439][root][2026-02-06 17:21:30.576][process_manager.py:_terminate_processes():64][INFO] Sending SIGTERM to process 22536
+[process-22439][root][2026-02-06 17:21:30.576][process_manager.py:_terminate_processes():64][INFO] Sending SIGTERM to process 22537
+[process-22439][root][2026-02-06 17:21:30.577][process_manager.py:_terminate_processes():64][INFO] Sending SIGTERM to process 22538
+[process-22439][root][2026-02-06 17:21:30.578][process_manager.py:_terminate_processes():64][INFO] Sending SIGTERM to process 22539
+[process-22439][root][2026-02-06 17:21:31.580][process_manager.py:_join_all_processes():121][INFO] All processes joined
+[process-22439][root][2026-02-06 17:21:31.580][process_manager.py:monitor_and_release_processes():160][INFO] Process monitoring completed
+</pre></section>
+
+
+	  </div>
+	</div>
+      </div>
+      
+      
+      <footer>
+  
+  <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+    
+    <a href="server_Qwen3_8B_FP8_ptpc_dense_llmcompressor.html" class="btn btn-neutral float-right" title="server_Qwen3_8B_FP8_ptpc_dense_llmcompressor">Next <span class="fa fa-arrow-circle-right"></span></a>
+    
+    
+    <a href="server_Qwen3_30B_A3B_fp8_ptpc_moe_llmcompressor.html" class="btn btn-neutral" title="server_Qwen3_30B_A3B_fp8_ptpc_moe_llmcompressor"><span class="fa fa-arrow-circle-left"></span>Previous</a>
+    
+  </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+      &copy; Copyright 2023, Advanced Micro Devices, Inc. All rights reserved.
+    </p>
+  </div>
+
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/jucacrispim/sphinx_pdj_theme">theme</a> provided by <a href="https://poraodojuca.dev">Porão do Juca</a>.
+
+</footer>
+      
+
+      <div class="clearer"></div>
+    </div>
+  </div>
+
+</section>
+
+<nav data-toggle="wy-nav-shift" class="wy-nav-side">
+  <div class="wy-side-nav-search">
+    
+    <a href="../index.html" class="fa fa-home"> rtp-llm-private </a>
+    
+    
+    <div role="search">
+      
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+      
+    </div>
+  </div>
+
+  <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+    
+
+    
+      
+      
+	  <p class="caption" role="heading"><span class="caption-text">LogFiles:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="bazelbuild.html">bazelbuild</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bazeltest_py_all.html">bazeltest_py_all</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bazeltest_rocmimpl_all.html">bazeltest_rocmimpl_all</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bazeltest_rocmimpl_gemm_op_swizzle.html">bazeltest_rocmimpl_gemm_op_swizzle</a></li>
+<li class="toctree-l1"><a class="reference internal" href="client_Bert_fp16_4l_sku_mean_909.html">client_Bert_fp16_4l_sku_mean_909</a></li>
+<li class="toctree-l1"><a class="reference internal" href="client_Bert_fp8_4l_sku_mean_909.html">client_Bert_fp8_4l_sku_mean_909</a></li>
+<li class="toctree-l1"><a class="reference internal" href="client_Bert_int8.html">client_Bert_int8</a></li>
+<li class="toctree-l1"><a class="reference internal" href="client_Qwen3-32B_FP8_ptpc_dense_Quark.html">client_Qwen3-32B_FP8_ptpc_dense_Quark</a></li>
+<li class="toctree-l1"><a class="reference internal" href="client_Qwen3_30B_A3B_bf16_moe.html">client_Qwen3_30B_A3B_bf16_moe</a></li>
+<li class="toctree-l1"><a class="reference internal" href="client_Qwen3_30B_A3B_fp8_ptpc_moe_Quark.html">client_Qwen3_30B_A3B_fp8_ptpc_moe_Quark</a></li>
+<li class="toctree-l1"><a class="reference internal" href="client_Qwen3_30B_A3B_fp8_ptpc_moe_llmcompressor.html">client_Qwen3_30B_A3B_fp8_ptpc_moe_llmcompressor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="client_Qwen3_32B_bf16_dense.html">client_Qwen3_32B_bf16_dense</a></li>
+<li class="toctree-l1"><a class="reference internal" href="client_Qwen3_8B_FP8_ptpc_dense_llmcompressor.html">client_Qwen3_8B_FP8_ptpc_dense_llmcompressor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="client_Qwen3_8B_FP8_ptpc_dense_llmcompressor_reuseCache.html">client_Qwen3_8B_FP8_ptpc_dense_llmcompressor_reuseCache</a></li>
+<li class="toctree-l1"><a class="reference internal" href="client_Qwen_VL_TP1.html">client_Qwen_VL_TP1</a></li>
+<li class="toctree-l1"><a class="reference internal" href="client_Qwen_VL_TP4.html">client_Qwen_VL_TP4</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server_Bert_fp16_4l_sku_mean_909.html">server_Bert_fp16_4l_sku_mean_909</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server_Bert_fp8_4l_sku_mean_909.html">server_Bert_fp8_4l_sku_mean_909</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server_Bert_int8.html">server_Bert_int8</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server_Qwen3-32B_FP8_ptpc_dense_Quark.html">server_Qwen3-32B_FP8_ptpc_dense_Quark</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server_Qwen3_30B_A3B_bf16_moe.html">server_Qwen3_30B_A3B_bf16_moe</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server_Qwen3_30B_A3B_fp8_ptpc_moe_Quark.html">server_Qwen3_30B_A3B_fp8_ptpc_moe_Quark</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server_Qwen3_30B_A3B_fp8_ptpc_moe_llmcompressor.html">server_Qwen3_30B_A3B_fp8_ptpc_moe_llmcompressor</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">server_Qwen3_32B_bf16_dense</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server_Qwen3_8B_FP8_ptpc_dense_llmcompressor.html">server_Qwen3_8B_FP8_ptpc_dense_llmcompressor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server_Qwen3_8B_FP8_ptpc_dense_llmcompressor_reuseCache.html">server_Qwen3_8B_FP8_ptpc_dense_llmcompressor_reuseCache</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server_Qwen_VL_TP1.html">server_Qwen_VL_TP1</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server_Qwen_VL_TP4.html">server_Qwen_VL_TP4</a></li>
+</ul>
+
+      
+    
+  
+  
+  
+  
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="server_Qwen3_30B_A3B_fp8_ptpc_moe_llmcompressor.html"
+                          title="previous chapter">server_Qwen3_30B_A3B_fp8_ptpc_moe_llmcompressor</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="server_Qwen3_8B_FP8_ptpc_dense_llmcompressor.html"
+                          title="next chapter">server_Qwen3_8B_FP8_ptpc_dense_llmcompressor</a></p>
+  </div>
+  
+  
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/docs/server_Qwen3_32B_bf16_dense.md.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+  
+  
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+  
+
+  </div>
+
+  &nbsp;
+</nav>
+
+  </body>
+</html>
