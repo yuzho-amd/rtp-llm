@@ -1,4 +1,5 @@
-from typing import List
+import logging
+from typing import List, Optional, Tuple, Any
 
 from rtp_llm.config.py_config_modules import VitConfig
 from rtp_llm.multimodal.multimodal_mixins.base_multimodal_mixin import VitParameters
@@ -8,6 +9,9 @@ from rtp_llm.multimodal.multimodal_mixins.multimodal_common import (
     get_bytes_io_from_url,
 )
 from rtp_llm.utils.base_model_datatypes import MMUrlType
+from rtp_llm.device import get_current_device
+from rtp_llm.models_py.utils.arch import is_hip
+from rtp_llm.utils.swizzle_utils import swizzle_tensor
 
 try:
     from decord import VideoReader, cpu
@@ -19,6 +23,7 @@ import math
 
 import torch
 import torch.library as tl
+import torch.nn as nn
 from PIL import Image
 from torchvision import transforms
 from torchvision.transforms import InterpolationMode
@@ -175,6 +180,88 @@ class Qwen2_5_VLMixin(Qwen2_VLMixin):
     @classmethod
     def _get_mm_module(cls, mm_related_params: VitParameters, vit_config: VitConfig):
         return Qwen2_5_VLImageEmbedding(mm_related_params).visual
+
+    def load_mm_weight(self, ctype: str, device: str):
+        # 先走框架默认灌权重逻辑：保持 modeling 文件“纯模型/纯 forward”，不要在 load 阶段改写 layout
+        super().load_mm_weight(ctype=ctype, device=device)
+
+        # 再在权重加载完成之后，按设备/配置做后置 patch（仅 ROCm 生效）
+        self._patch_vit_attention_linears()
+
+    def _get_hw_kernel_config(self):
+        try:
+            return get_current_device().py_env_configs.py_hw_kernel_config
+        except Exception:
+            return None
+
+    @staticmethod
+    def _can_swizzle_kn(weight_kn: torch.Tensor) -> bool:
+        # swizzle_tensor(col_maj=False) 约束：m(=N) % 16 == 0 且 k(=K) % 32 == 0（fp16/bf16）
+        if weight_kn.dim() != 2:
+            return False
+        k, n = weight_kn.shape
+        return (n % 16 == 0) and (k % 32 == 0)
+
+    def _maybe_swizzle_kn(
+        self, weight_kn: torch.Tensor, hw_kernel_config
+    ) -> Tuple[torch.Tensor, Optional[Any]]:
+        if hw_kernel_config is None or not getattr(hw_kernel_config, "use_swizzleA", False):
+            return weight_kn, hw_kernel_config
+        if not self._can_swizzle_kn(weight_kn):
+            # 不能满足 swizzle 约束时，降级为 no-swizzle（避免选到 bpreshuffle=True 的实现导致 silent wrong）
+            logging.warning(
+                "[qwen2_5_vl] weight shape %s cannot swizzle, fallback to no-swizzle linear",
+                tuple(weight_kn.shape),
+            )
+            return weight_kn, None
+        # Follow aiter's approach: transpose to (n,k), shuffle, then transpose back to (k,n)
+        return swizzle_tensor(weight_kn, False, MiM=16).t(), hw_kernel_config
+
+    def _patch_vit_attention_linears(self):
+        # 仅 ROCm：CUDA/CPU 下不做替换，避免破坏权重布局或引入无必要的差异
+        if not is_hip():
+            return
+
+        hw_kernel_config = self._get_hw_kernel_config()
+        if hw_kernel_config is None or not getattr(hw_kernel_config, "use_swizzleA", False):
+            return
+
+        if not hasattr(self, "mm_part") or not hasattr(self.mm_part, "visual"):
+            return
+        visual = self.mm_part.visual
+
+        # 避免误伤 qwen3（qwen3 继承 qwen2.5 mixin，但其 vision 来自 transformers）
+        if "multimodal_mixins.qwen2_5_vl.modeling_qwen2_5_vl" not in type(visual).__module__:
+            return
+
+        blocks = getattr(visual, "blocks", None)
+        if blocks is None:
+            return
+
+        from rtp_llm.models_py.modules.factory.linear import LinearFactory
+
+        for block in blocks:
+            attn = getattr(block, "attn", None)
+            if attn is None:
+                continue
+            for attr in ("qkv", "proj"):
+                layer = getattr(attn, attr, None)
+                if layer is None or not isinstance(layer, nn.Linear):
+                    continue
+
+                # nn.Linear.weight: (out_features, in_features) -> (k,n) for hipb_mm
+                weight_kn = layer.weight.detach()
+                bias = layer.bias.detach() if layer.bias is not None else None
+
+                weight_kn, kernel_cfg = self._maybe_swizzle_kn(weight_kn, hw_kernel_config)
+                new_linear = LinearFactory.create_linear(
+                    weight=weight_kn,
+                    bias=bias,
+                    weight_scales=None,
+                    quant_config=None,
+                    hw_kernel_config=kernel_cfg,
+                )
+                setattr(attn, attr, new_linear)
 
 
 register_multimodal_mixin(["qwen2_5_vl"], Qwen2_5_VLMixin)
