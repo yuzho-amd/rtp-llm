@@ -230,8 +230,12 @@ class Qwen2_5_VLMixin(Qwen2_VLMixin):
             return
         visual = self.mm_part.visual
 
-        # 避免误伤 qwen3（qwen3 继承 qwen2.5 mixin，但其 vision 来自 transformers）
-        if "multimodal_mixins.qwen2_5_vl.modeling_qwen2_5_vl" not in type(visual).__module__:
+        # 允许的 vision 来源：qwen2.5  + qwen3（来自 transformers）
+        allowed_modules = (
+            "rtp_llm.multimodal.multimodal_mixins.qwen2_5_vl.modeling_qwen2_5_vl",
+            "transformers.models.qwen3_vl.modeling_qwen3_vl",
+        )
+        if not any(m in type(visual).__module__ for m in allowed_modules):
             return
 
         blocks = getattr(visual, "blocks", None)
