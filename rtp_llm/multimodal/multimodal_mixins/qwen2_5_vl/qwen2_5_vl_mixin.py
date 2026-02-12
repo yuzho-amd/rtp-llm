@@ -268,5 +268,112 @@ class Qwen2_5_VLMixin(Qwen2_VLMixin):
                 )
                 setattr(attn, attr, new_linear)
 
+            # FFN: swizzle + replace gate/up/down proj
+            mlp = getattr(block, "mlp", None)
+            if mlp is None:
+                continue
+
+            # qwen3 (transformers) style FFN: linear_fc1/linear_fc2
+            for attr in ("linear_fc1", "linear_fc2"):
+                layer = getattr(mlp, attr, None)
+                if layer is None or not isinstance(layer, nn.Linear):
+                    continue
+                weight_kn = layer.weight.detach()
+                bias = layer.bias.detach() if layer.bias is not None else None
+                weight_kn, kernel_cfg = self._maybe_swizzle_kn(weight_kn, hw_kernel_config)
+                setattr(
+                    mlp,
+                    attr,
+                    LinearFactory.create_linear(
+                        weight=weight_kn,
+                        bias=bias,
+                        weight_scales=None,
+                        quant_config=None,
+                        hw_kernel_config=kernel_cfg,
+                    ),
+                )
+
+            gate = getattr(mlp, "gate_proj", None)
+            up = getattr(mlp, "up_proj", None)
+            down = getattr(mlp, "down_proj", None)
+            if (
+                gate is None
+                or up is None
+                or down is None
+                or (not isinstance(gate, nn.Linear))
+                or (not isinstance(up, nn.Linear))
+                or (not isinstance(down, nn.Linear))
+            ):
+                continue
+
+            # 目标：不 pad 输入激活。
+            # 做法：把 intermediate_size (3420) pad 到 32 的倍数（3424），
+            # gate/up 通过补零权重让额外通道恒为 0；down 只需在 K 维补零即可吃掉 padded 中间态。
+            inter = gate.weight.shape[0]  # out_features
+            inter_pad = ((inter + 32 - 1) // 32) * 32
+            pad_inter = inter_pad - inter
+
+            def _pad_out_features(layer: nn.Linear, out_pad: int):
+                w = layer.weight.detach()
+                b = layer.bias.detach() if layer.bias is not None else None
+                if out_pad <= 0:
+                    return w, b
+                w_pad = torch.zeros(
+                    (out_pad, w.shape[1]), device=w.device, dtype=w.dtype
+                )
+                w2 = torch.cat([w, w_pad], dim=0)
+                if b is None:
+                    b2 = None
+                else:
+                    b_pad = torch.zeros((out_pad,), device=b.device, dtype=b.dtype)
+                    b2 = torch.cat([b, b_pad], dim=0)
+                return w2, b2
+
+            def _pad_in_features(layer: nn.Linear, in_pad: int):
+                w = layer.weight.detach()
+                b = layer.bias.detach() if layer.bias is not None else None
+                if in_pad <= 0:
+                    return w, b
+                w_pad = torch.zeros(
+                    (w.shape[0], in_pad), device=w.device, dtype=w.dtype
+                )
+                w2 = torch.cat([w, w_pad], dim=1)
+                return w2, b
+
+            def _create_swizzled_linear_from_weight_nk(weight_nk: torch.Tensor, bias):
+                # swizzle_tensor(col_maj=False) expects (m,k) == (N,K); LinearFactory expects (K,N)
+                weight_kn = swizzle_tensor(weight_nk, False, MiM=16).t()
+                return LinearFactory.create_linear(
+                    weight=weight_kn,
+                    bias=bias,
+                    weight_scales=None,
+                    quant_config=None,
+                    hw_kernel_config=hw_kernel_config,
+                )
+
+            # gate/up: pad out_features to inter_pad (e.g., 3424) then swizzle
+            if pad_inter > 0:
+                gate_w, gate_b = _pad_out_features(gate, pad_inter)
+                up_w, up_b = _pad_out_features(up, pad_inter)
+                mlp.gate_proj = _create_swizzled_linear_from_weight_nk(gate_w, gate_b)
+                mlp.up_proj = _create_swizzled_linear_from_weight_nk(up_w, up_b)
+
+                # down: pad in_features to inter_pad (so it consumes padded intermediate without padding input)
+                down_in = down.weight.shape[1]
+                down_pad_k = inter_pad - down_in
+                down_w, down_b = _pad_in_features(down, down_pad_k)
+                mlp.down_proj = _create_swizzled_linear_from_weight_nk(down_w, down_b)
+            else:
+                # already aligned, just swizzle + replace
+                mlp.gate_proj = _create_swizzled_linear_from_weight_nk(
+                    gate.weight.detach(), gate.bias.detach() if gate.bias is not None else None
+                )
+                mlp.up_proj = _create_swizzled_linear_from_weight_nk(
+                    up.weight.detach(), up.bias.detach() if up.bias is not None else None
+                )
+                mlp.down_proj = _create_swizzled_linear_from_weight_nk(
+                    down.weight.detach(), down.bias.detach() if down.bias is not None else None
+                )
+
 
 register_multimodal_mixin(["qwen2_5_vl"], Qwen2_5_VLMixin)
