@@ -206,14 +206,14 @@ class Qwen2_5_VLMixin(Qwen2_VLMixin):
         self, weight_kn: torch.Tensor, hw_kernel_config
     ) -> Tuple[torch.Tensor, Optional[Any]]:
         if hw_kernel_config is None or not getattr(hw_kernel_config, "use_swizzleA", False):
-            return weight_kn, hw_kernel_config
+            return weight_kn.t(), hw_kernel_config
         if not self._can_swizzle_kn(weight_kn):
             # 不能满足 swizzle 约束时，降级为 no-swizzle（避免选到 bpreshuffle=True 的实现导致 silent wrong）
             logging.warning(
                 "[qwen2_5_vl] weight shape %s cannot swizzle, fallback to no-swizzle linear",
                 tuple(weight_kn.shape),
             )
-            return weight_kn, None
+            return weight_kn.t(), None
         # Follow aiter's approach: transpose to (n,k), shuffle, then transpose back to (k,n)
         return swizzle_tensor(weight_kn, False, MiM=16).t(), hw_kernel_config
 
@@ -223,6 +223,7 @@ class Qwen2_5_VLMixin(Qwen2_VLMixin):
             return
 
         hw_kernel_config = self._get_hw_kernel_config()
+        # 这里先屏蔽不开swizzle的情况，因为nn.linear和hipb_mm在不开swizzle的情况下，调用的是同一个hipblas gemm算子，耗时没变化
         if hw_kernel_config is None or not getattr(hw_kernel_config, "use_swizzleA", False):
             return
 
