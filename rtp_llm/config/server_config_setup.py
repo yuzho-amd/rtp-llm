@@ -248,7 +248,11 @@ def set_parallelism_config(
 
 
 def setup_default_args(py_env_configs):
-    set_parallelism_config(py_env_configs.parallelism_config)
+    set_parallelism_config(
+        py_env_configs.parallelism_config,
+        py_env_configs.parallelism_config.world_rank,
+        py_env_configs.ffn_disaggregate_config,
+    )
     if not py_env_configs.model_args.tokenizer_path:
         py_env_configs.model_args.tokenizer_path = py_env_configs.model_args.ckpt_path
 
