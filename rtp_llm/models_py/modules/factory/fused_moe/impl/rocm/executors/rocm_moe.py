@@ -198,7 +198,7 @@ class RocmExpertsFp8PerChannel(FusedMoeExpertExecutor):
         assert payload.expert_tokens_meta is not None
 
         global_E = self.num_experts
-        E = global_E
+        E = self.local_num_experts
         N = self.w1.size(1)
         assert payload.expert_topk_ids is not None
 
