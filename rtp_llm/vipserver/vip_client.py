@@ -1,7 +1,33 @@
+import logging
+import os
 import random
 
 from rtp_llm.vipserver.host_reactor import HostReactor
 from rtp_llm.vipserver.vipserver_proxy import VIPServerProxy
+
+
+def _vipserver_disabled() -> bool:
+    v = os.environ.get("RTP_DISABLE_VIPSERVER", "").strip().lower()
+    return v in ("1", "true", "yes", "on")
+
+
+class DisabledVipClient:
+    """Stub when not using Alibaba VIPServer: no jmenv threads or DNS noise."""
+
+    def get_host_list_by_domain_now(self, domain: str):
+        return []
+
+    def get_host_list_by_domain(self, domain: str):
+        return []
+
+    def get_one_validate_host_now(self, domain: str):
+        raise RuntimeError(
+            "VIPServer is disabled (RTP_DISABLE_VIPSERVER=1); cannot resolve domain "
+            f"{domain!r}. Use MODEL_SERVICE_CONFIG with use_local or enable VIPServer."
+        )
+
+    def get_one_validate_host(self, domain: str):
+        return self.get_one_validate_host_now(domain)
 
 
 class VipClient:
@@ -44,7 +70,17 @@ class VipClient:
         return random.choice(self.get_host_list_by_domain(domain))
 
 
-global_vip_client = VipClient(HostReactor(VIPServerProxy()))
+def _build_global_vip_client():
+    if _vipserver_disabled():
+        logging.info(
+            "VIPServer background refresh disabled (RTP_DISABLE_VIPSERVER); "
+            "safe for open-source / non-Alibaba networks."
+        )
+        return DisabledVipClient()
+    return VipClient(HostReactor(VIPServerProxy()))
+
+
+global_vip_client = _build_global_vip_client()
 
 
 def get_host_list_by_domain_now(domain: str):

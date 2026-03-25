@@ -309,7 +309,7 @@ class ModelFactory:
         if eplb_config is not None:
             model_config.eplb_config = eplb_config
 
-        logging.info("model_config: %s", model_config.to_string())
+        #logging.info("model_config: %s", model_config.to_string())
 
         return model_config
 
