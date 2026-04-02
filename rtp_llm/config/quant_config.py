@@ -146,9 +146,6 @@ class QuantizationConfig(ABC):
             quant_method = quant_config["quant_algo"].lower()
         if quant_config is None:
             return None
-        import logging
-        logging.info(f"Fuck, quant_config: {quant_config}")
-        logging.info(f"Fuck, quant_method: {quant_method}")
         group_size = quant_config["group_size"] if "group_size" in quant_config else 0
         bits = quant_config["bits"] if "bits" in quant_config else 0
         if quant_method == "fp8":

@@ -384,7 +384,13 @@ class RocmExpertsFp4PerGroup(FusedMoeExpertExecutor):
 
         resolver = MoeConfigResolver()
         quant_method = resolver.get_quant_method(config)
-        checker.check(quant_method in ("FP4_PER_GROUP",))
+        checker.check(
+            quant_method in (
+                "FP4_PER_GROUP",
+                "FP4_PER_GROUP_QUARK",
+                "modelopt_fp4",
+            )
+        )
 
     @property
     def topk_ids_dtype(self) -> torch.dtype:
@@ -412,6 +418,10 @@ class RocmExpertsFp4PerGroup(FusedMoeExpertExecutor):
         self.w2 = weights[W.moe_w2]
         self.w1_scale = weights[W.moe_s1]
         self.w2_scale = weights[W.moe_s2]
+
+        self.expert_mask = build_ep_expert_mask(
+            self.num_experts, self.ep_rank, self.ep_size, self.w1
+        )
 
     @property
     def local_num_experts(self) -> int:
@@ -465,7 +475,7 @@ class RocmExpertsFp4PerGroup(FusedMoeExpertExecutor):
             w1_scale=self.w1_scale,
             w2_scale=self.w2_scale,
             activation=_moe_activation_type(activation),
-            expert_mask=expert_map,
+            expert_mask=expert_map if expert_map is not None else self.expert_mask,
             doweight_stage1=apply_router_weight_on_input,
             hidden_pad=0,
             intermediate_pad=0,

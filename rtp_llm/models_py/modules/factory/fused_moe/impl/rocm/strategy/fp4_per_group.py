@@ -1,14 +1,7 @@
 """Rocm FP4 PerGroup quantization strategies"""
 
-from typing import Any, Dict
-
 import torch
 
-from rtp_llm.models_py.modules.factory.fused_moe.defs.config_adapter import MoEConfigAdapter
-from rtp_llm.models_py.modules.factory.fused_moe.defs.fused_moe import (
-    FusedMoeDataRouter,
-    FusedMoeExpertExecutor,
-)
 from rtp_llm.models_py.modules.factory.fused_moe.defs.priority_attributes import (
     StrategyAttributes,
 )
@@ -20,13 +13,6 @@ from rtp_llm.models_py.modules.factory.fused_moe.defs.strategy_base import MoeSt
 
 class RocmFp4PerGroupPureTPStrategy(MoeStrategy):
     """Rocm FP4 PerGroup pure TP strategy"""
-
-    def _get_block_shape(self, config: MoEConfigAdapter) -> list[int]:
-        model_quant_config = config.model_config.quant_config
-        if model_quant_config is not None and hasattr(model_quant_config, 'group_size'):
-            gs = model_quant_config.group_size()
-            return [gs, gs]
-        return [128, 128]
 
     def get_attributes(self) -> StrategyAttributes:
         from rtp_llm.models_py.modules.factory.fused_moe.impl.rocm.executors.rocm_moe import (
@@ -40,7 +26,7 @@ class RocmFp4PerGroupPureTPStrategy(MoeStrategy):
             quant_dtype=torch.float4_e2m1fn_x2,
             per_act_token_quant=False,
             per_out_ch_quant=False,
-            block_shape=[128, 128],
+            block_shape=None,
         )
         return StrategyAttributes(
             router_class=PureTpRouterFp4PerGroupPassthrough,
