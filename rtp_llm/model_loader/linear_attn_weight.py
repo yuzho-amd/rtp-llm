@@ -204,11 +204,18 @@ class LinearAttnAtomicWeight(AtomicWeight):
         if load_config.tp_size <= 1:
             return {self.name: tensor}
         else:
-            return {
-                self.name: self.split_func_factory[self.name](
-                    tensor, load_config, self.config
-                )
-            }
+            # logging.info(
+            #     f"[LinearAttn Split] name={self.name}, "
+            #     f"split_func={self.split_func_factory[self.name].__name__}, "
+            #     f"before_shape={tensor.shape}, dtype={tensor.dtype}"
+            # )
+            result = self.split_func_factory[self.name](
+                tensor, load_config, self.config
+            )
+            # logging.info(
+            #     f"[LinearAttn Split] name={self.name}, " f"after_shape={result.shape}"
+            # )
+            return {self.name: result}
 
 
 class W8A8Fp8PerBlockLinearAttnAtomicWeight(LinearAttnAtomicWeight):
