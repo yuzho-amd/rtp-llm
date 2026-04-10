@@ -1,0 +1,1534 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>server_Bert_fp16_4l_sku_mean_909 &#8212; rtp-llm-private  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8e8a900e" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/pdj.css?v=4abe0d83" />
+
+<link rel="stylesheet" href="../_static/css/darker.css" type="text/css"
+      media="(prefers-color-scheme: dark)"/>
+    <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'/>
+    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/pdj.js"></script>
+
+    <script type="module" src="../_static/js/dark-mode-toggle.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="server_Bert_fp8_4l_sku_mean_909" href="server_Bert_fp8_4l_sku_mean_909.html" />
+    <link rel="prev" title="client_Qwen_VL_TP4" href="client_Qwen_VL_TP4.html" /> 
+  </head>  <body class="wy-body-for-nav" role="document"> 
+<div class="menu-overlay"></div>
+<section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+  <nav class="wy-nav-top" id="barra-mobile" role="navigation" aria-label="top navigation">
+    <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+    <a href="#">rtp-llm-private </a>
+  </nav>
+
+  <div class="wy-nav-content">
+    <div class="fundo-claro">
+    </div>
+    <div class="fundo-escuro">
+    </div>
+
+    <div class="rst-content">
+      <div role="navigation" aria-label="breadcrumbs navigation">
+      </div>
+      <div class="">
+
+	
+	<div id="content" class="hfeed entry-container hentry">
+      	  <div id="dark-mode-toggle-container">
+	    <dark-mode-toggle appearance="toggle" class="slider" dark="" light="">
+	    </dark-mode-toggle>
+	  </div>
+	  <div role="main">
+  <section id="server-bert-fp16-4l-sku-mean-909">
+<h1>server_Bert_fp16_4l_sku_mean_909<a class="headerlink" href="#server-bert-fp16-4l-sku-mean-909" title="Link to this heading">¶</a></h1>
+<pre>
+running server command: MAX_CONTEXT_BATCH_SIZE=128 TASK_TYPE=SEQ_CLASSIFICATION EMBEDDING_MODEL=1 FT_SERVER_TEST=1 TOKENIZER_PATH=/mnt/raid0/pretrained_model/rtp_ci/tokenizer/ CHECKPOINT_PATH=/mnt/raid0/pretrained_model/rtp_ci/4l_sku_mean_909/ MODEL_TYPE=bert  WORLD_SIZE=1 DP_SIZE=1 TP_SIZE=1 CUDA_VISIBLE_DEVICES=4,5,6,7 START_PORT=6789 /opt/conda310/bin/python3.10 -m rtp_llm.start_server
+WARNING:root:fuse is not valid: connet http://0:28006 error
+[process-28673][root][2026-04-10 23:54:34.789][log_config.py:setup_logging():93][INFO] successfully set NCCL_DEBUG_FILE path to logs/nccl.log
+[process-28673][root][2026-04-10 23:54:34.792][server_args.py:parse_args():244][INFO] Parsing arguments and applying config bindings...
+[process-28673][root][2026-04-10 23:54:34.793][hw_kernel_group_args.py:_parse_prefill_capture_config():322][INFO] Generated 160 sequence lengths from range (step=1, max=160)
+[process-28673][root][2026-04-10 23:54:34.793][server_args.py:_apply_config_bindings():386][WARNING] Failed to apply config binding for reco_client_config: (): incompatible function arguments. The following argument types are supported:
+    1. (self: libth_transformer_config.KVCacheConfig, arg0: str) -&gt; None
+
+Invoked with: &lt;rtp_llm.config.kv_cache_config.KVCacheConfig object at 0x7f6a31816fc0&gt;, 2000
+[process-28673][root][2026-04-10 23:54:34.793][server_args.py:_apply_config_bindings():386][WARNING] Failed to apply config binding for max_lora_model_size: &#x27;libth_transformer_config.ModelSpecificConfig&#x27; object has no attribute &#x27;max_lora_model_size&#x27;
+[process-28673][root][2026-04-10 23:54:34.794][server_config_setup.py:set_parallelism_config():223][INFO] parallelism_config.ep_size == 0, auto set to world size
+[process-28673][root][2026-04-10 23:54:34.794][server_config_setup.py:set_parallelism_config():279][INFO] set_parallelism_config: rank None
+parallelism_config=tp_size: 1
+ep_size: 1
+dp_size: 1
+world_size: 1
+world_rank: 0
+pp_size: 1
+local_world_size: 1
+local_rank: 0
+ffn_sp_size: 1
+tp_rank: 0
+ep_rank: 0
+dp_rank: 0
+ffn_tp_size: 1
+ffn_tp_rank: 0
+enable_sp: 0
+ffn_disaggregate_config: {
+enable_ffn_disaggregate: 0
+
+}
+prefill_cp_config: {
+method: DISABLED
+ comm_buffer_size: 536870912
+}
+world_rank=None
+
+[process-28673][root][2026-04-10 23:54:34.794][server_config_setup.py:setup_default_args():310][INFO] [MI308X] enable FT_DISABLE_CUSTOM_AR by default, as amd has own implementation.
+[process-28673][root][2026-04-10 23:54:34.794][server_config_setup.py:setup_default_args():316][INFO] [MI308X] set SEQ_SIZE_PER_BLOCK 16 by default, as it just support 16 now.
+[process-28673][root][2026-04-10 23:54:44.514][fuser.py:fetch_remote_file_to_local():283][INFO] Local path /mnt/raid0/pretrained_model/rtp_ci/4l_sku_mean_909/ use directly.
+[process-28673][root][2026-04-10 23:54:44.515][fuser.py:fetch_remote_file_to_local():283][INFO] Local path /mnt/raid0/pretrained_model/rtp_ci/tokenizer/ use directly.
+[process-28673][root][2026-04-10 23:54:44.515][server_config_setup.py:fetch_model_files_to_local():406][INFO] Fetched model files - checkpoint_path: /mnt/raid0/pretrained_model/rtp_ci/4l_sku_mean_909/, tokenizer_path: /mnt/raid0/pretrained_model/rtp_ci/tokenizer/, ptuning_path: , extra_data_path: , phy2log_path: 
+[process-28673][root][2026-04-10 23:54:44.515][server_config_setup.py:auto_configure_deepep():69][INFO] USE_ALL_GATHER is enabled (use_all_gather=True), all DeepEP settings are disabled (0, 0, 0)
+[process-28673][root][2026-04-10 23:54:44.515][start_server.py:start_server():193][INFO] [PROCESS_START]Start server
+[process-28673][root][2026-04-10 23:54:44.515][start_server.py:start_server():200][INFO] dp_size:  parallelism_config=1
+[process-28673][root][2026-04-10 23:54:44.515][concurrency_controller.py:init_controller():62][INFO] concurrency_limit : 32, global_concurrency_limit : 32
+[process-28673][root][2026-04-10 23:54:44.517][start_server.py:start_server():218][INFO] start backend server
+[process-28673][root][2026-04-10 23:54:44.518][start_server.py:start_backend_server_impl():56][INFO] [PROCESS_SPAWN]Start backend server process outer
+[CHECK] internal_source directory: /mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/internal_source, found: False
+import in __init__ took 1.52s
+import rtp_llm.ops took 0.00s
+[process-28673][root][2026-04-10 23:54:44.519][time_util.py:wrapped():47][INFO] start backend server took: 0.00s
+[process-28673][root][2026-04-10 23:54:44.520][start_server.py:start_server():224][INFO] start frontend server
+[process-28673][root][2026-04-10 23:54:44.520][start_server.py:start_frontend_server_impl():144][INFO] multi rank starts with default local world size: 1, world size = 1
+[process-28673][root][2026-04-10 23:54:44.520][start_server.py:start_frontend_server_impl():153][INFO] [PROCESS_SPAWN]Start frontend server process rank_0_server_0 outer
+[process-28673][root][2026-04-10 23:54:44.520][start_server.py:start_frontend_server_impl():153][INFO] [PROCESS_SPAWN]Start frontend server process rank_0_server_1 outer
+[process-28673][root][2026-04-10 23:54:44.521][start_server.py:start_frontend_server_impl():153][INFO] [PROCESS_SPAWN]Start frontend server process rank_0_server_2 outer
+[process-28673][root][2026-04-10 23:54:44.521][start_server.py:start_frontend_server_impl():153][INFO] [PROCESS_SPAWN]Start frontend server process rank_0_server_3 outer
+[process-28673][root][2026-04-10 23:54:44.522][time_util.py:wrapped():47][INFO] start frontend server took: 0.00s
+[process-28673][root][2026-04-10 23:54:44.522][process_manager.py:start_parallel_health_checks():247][INFO] Starting parallel health checks for 2 processes
+[process-28673][root][2026-04-10 23:54:44.523][process_manager.py:wait_for_health_checks():275][INFO] Waiting for 2 health checks to complete...
+WARNING:root:fuse is not valid: connet http://0:28006 error
+[process-28765][root][2026-04-10 23:54:46.217][start_frontend_server.py:start_frontend_server():32][INFO] [PROCESS_START]Start frontend server process rank_0_server_3
+WARNING:root:fuse is not valid: connet http://0:28006 error
+WARNING:root:fuse is not valid: connet http://0:28006 error
+WARNING:root:fuse is not valid: connet http://0:28006 error
+WARNING:root:fuse is not valid: connet http://0:28006 error
+[process-28763][root][2026-04-10 23:54:46.227][start_frontend_server.py:start_frontend_server():32][INFO] [PROCESS_START]Start frontend server process rank_0_server_1
+[process-28764][root][2026-04-10 23:54:46.227][start_frontend_server.py:start_frontend_server():32][INFO] [PROCESS_START]Start frontend server process rank_0_server_2
+[process-28761][root][2026-04-10 23:54:46.227][start_backend_server.py:start_backend_server():422][INFO] [PROCESS_START]Start backend server process
+[process-28762][root][2026-04-10 23:54:46.227][start_frontend_server.py:start_frontend_server():32][INFO] [PROCESS_START]Start frontend server process rank_0_server_0
+[process-28761][root][2026-04-10 23:54:46.229][start_backend_server.py:load_gpu_nic_affinity():381][INFO] get gpu nic affinity failed, run /usr/local/bin/run_affinity failed, exception is [Errno 8] Exec format error: &#x27;/usr/local/bin/run_affinity&#x27;
+[process-28765][root][2026-04-10 23:54:46.665][__init__.py:&lt;module&gt;():8][INFO] internal devices not found
+[process-28763][root][2026-04-10 23:54:46.690][__init__.py:&lt;module&gt;():8][INFO] internal devices not found
+[process-28764][root][2026-04-10 23:54:46.691][__init__.py:&lt;module&gt;():8][INFO] internal devices not found
+[process-28762][root][2026-04-10 23:54:46.692][__init__.py:&lt;module&gt;():8][INFO] internal devices not found
+[process-28765][root][2026-04-10 23:54:48.222][report_worker.py:__init__():32][INFO] kmonitor report default tags: {}
+[process-28765][root][2026-04-10 23:54:48.222][report_worker.py:__init__():52][INFO] test mode, kmonitor metrics not reported.
+[process-28763][root][2026-04-10 23:54:48.374][report_worker.py:__init__():32][INFO] kmonitor report default tags: {}
+[process-28764][root][2026-04-10 23:54:48.374][report_worker.py:__init__():32][INFO] kmonitor report default tags: {}
+[process-28763][root][2026-04-10 23:54:48.375][report_worker.py:__init__():52][INFO] test mode, kmonitor metrics not reported.
+[process-28764][root][2026-04-10 23:54:48.375][report_worker.py:__init__():52][INFO] test mode, kmonitor metrics not reported.
+[process-28762][root][2026-04-10 23:54:48.375][report_worker.py:__init__():32][INFO] kmonitor report default tags: {}
+[process-28762][root][2026-04-10 23:54:48.376][report_worker.py:__init__():52][INFO] test mode, kmonitor metrics not reported.
+[process-28761][root][2026-04-10 23:54:55.765][start_backend_server.py:local_rank_start():43][INFO] [PROCESS_START]Start local rank process
+[process-28761][root][2026-04-10 23:54:56.203][__init__.py:&lt;module&gt;():8][INFO] internal devices not found
+[process-28761][root][2026-04-10 23:54:57.610][report_worker.py:__init__():32][INFO] kmonitor report default tags: {}
+[process-28761][root][2026-04-10 23:54:57.610][report_worker.py:__init__():52][INFO] test mode, kmonitor metrics not reported.
+[process-28765][root][2026-04-10 23:55:08.297][vipserver_proxy.py:refresh_srv_lst():86][ERROR] failed to refresh vipserver server list, exception : HTTPConnectionPool(host=&#x27;jmenv.tbsite.net&#x27;, port=8080): Max retries exceeded with url: /vipserver/serverlist?nofix=1&amp;labels=&amp; (Caused by NewConnectionError(&#x27;&lt;urllib3.connection.HTTPConnection object at 0x7f18cf7f0bb0&gt;: Failed to establish a new connection: [Errno -2] Name or service not known&#x27;))
+[process-28765][root][2026-04-10 23:55:08.298][host_reactor.py:start():32][INFO] vipserver domain update thread started. to refresh domains: &lt;bound method HostReactor.refresh_cache_domain_srv_lst of &lt;rtp_llm.vipserver.host_reactor.HostReactor object at 0x7f18cf7f0160&gt;&gt;
+[process-28763][root][2026-04-10 23:55:08.449][vipserver_proxy.py:refresh_srv_lst():86][ERROR] failed to refresh vipserver server list, exception : HTTPConnectionPool(host=&#x27;jmenv.tbsite.net&#x27;, port=8080): Max retries exceeded with url: /vipserver/serverlist?nofix=1&amp;labels=&amp; (Caused by NewConnectionError(&#x27;&lt;urllib3.connection.HTTPConnection object at 0x7f191511b2b0&gt;: Failed to establish a new connection: [Errno -2] Name or service not known&#x27;))
+[process-28764][root][2026-04-10 23:55:08.450][vipserver_proxy.py:refresh_srv_lst():86][ERROR] failed to refresh vipserver server list, exception : HTTPConnectionPool(host=&#x27;jmenv.tbsite.net&#x27;, port=8080): Max retries exceeded with url: /vipserver/serverlist?nofix=1&amp;labels=&amp; (Caused by NewConnectionError(&#x27;&lt;urllib3.connection.HTTPConnection object at 0x7fad9acff2e0&gt;: Failed to establish a new connection: [Errno -2] Name or service not known&#x27;))
+[process-28764][root][2026-04-10 23:55:08.450][host_reactor.py:start():32][INFO] vipserver domain update thread started. to refresh domains: &lt;bound method HostReactor.refresh_cache_domain_srv_lst of &lt;rtp_llm.vipserver.host_reactor.HostReactor object at 0x7fad9acfea40&gt;&gt;
+[process-28763][root][2026-04-10 23:55:08.450][host_reactor.py:start():32][INFO] vipserver domain update thread started. to refresh domains: &lt;bound method HostReactor.refresh_cache_domain_srv_lst of &lt;rtp_llm.vipserver.host_reactor.HostReactor object at 0x7f191511aa10&gt;&gt;
+[process-28762][root][2026-04-10 23:55:08.451][vipserver_proxy.py:refresh_srv_lst():86][ERROR] failed to refresh vipserver server list, exception : HTTPConnectionPool(host=&#x27;jmenv.tbsite.net&#x27;, port=8080): Max retries exceeded with url: /vipserver/serverlist?nofix=1&amp;labels=&amp; (Caused by NewConnectionError(&#x27;&lt;urllib3.connection.HTTPConnection object at 0x7ff2edacf370&gt;: Failed to establish a new connection: [Errno -2] Name or service not known&#x27;))
+[process-28762][root][2026-04-10 23:55:08.452][host_reactor.py:start():32][INFO] vipserver domain update thread started. to refresh domains: &lt;bound method HostReactor.refresh_cache_domain_srv_lst of &lt;rtp_llm.vipserver.host_reactor.HostReactor object at 0x7ff2edacead0&gt;&gt;
+[process-28761][root][2026-04-10 23:55:17.708][vipserver_proxy.py:refresh_srv_lst():86][ERROR] failed to refresh vipserver server list, exception : HTTPConnectionPool(host=&#x27;jmenv.tbsite.net&#x27;, port=8080): Max retries exceeded with url: /vipserver/serverlist?nofix=1&amp;labels=&amp; (Caused by NewConnectionError(&#x27;&lt;urllib3.connection.HTTPConnection object at 0x7f82a9e71930&gt;: Failed to establish a new connection: [Errno -2] Name or service not known&#x27;))
+[process-28761][root][2026-04-10 23:55:17.708][host_reactor.py:start():32][INFO] vipserver domain update thread started. to refresh domains: &lt;bound method HostReactor.refresh_cache_domain_srv_lst of &lt;rtp_llm.vipserver.host_reactor.HostReactor object at 0x7f82a9e70f10&gt;&gt;
+[process-28761][root][2026-04-10 23:55:19.882][start_backend_server.py:local_rank_start():48][INFO] import BackendManager took 24.12s
+[process-28761][root][2026-04-10 23:55:19.882][util.py:copy_gemm_config():175][INFO] not found gemm_config in HIPPO_APP_INST_ROOT, not copy
+[process-28761][root][2026-04-10 23:55:19.882][server_config_setup.py:set_parallelism_config():279][INFO] set_parallelism_config: rank 0
+parallelism_config=tp_size: 1
+ep_size: 1
+dp_size: 1
+world_size: 1
+world_rank: 0
+pp_size: 1
+local_world_size: 1
+local_rank: 0
+ffn_sp_size: 1
+tp_rank: 0
+ep_rank: 0
+dp_rank: 0
+ffn_tp_size: 1
+ffn_tp_rank: 0
+enable_sp: 0
+ffn_disaggregate_config: {
+enable_ffn_disaggregate: 0
+
+}
+prefill_cp_config: {
+method: DISABLED
+ comm_buffer_size: 536870912
+}
+world_rank=0
+
+[process-28761][root][2026-04-10 23:55:19.883][async_log_handler.py:__init__():85][INFO] AsyncRotatingFileHandler init complete, worker thread alive: True
+[process-28761][root][2026-04-10 23:55:19.884][async_log_handler.py:__init__():85][INFO] AsyncRotatingFileHandler init complete, worker thread alive: True
+[process-28761][root][2026-04-10 23:55:19.884][access_logger.py:__init__():44][INFO] AccessLogger created: async_mode=True, rank_id=0, server_id=0
+[process-28761][root][2026-04-10 23:55:19.884][distributed_server.py:__init__():165][INFO] init DistributedServer, rank: 0,  size: 1
+[process-28761][root][2026-04-10 23:55:19.884][distributed_server.py:__init__():181][INFO] world_size == 1, do not start distributed_server
+[process-28761][root][2026-04-10 23:55:19.884][distributed_server.py:start():354][INFO] DistributedServer start, rank: 0,  size: 1
+[process-28761][root][2026-04-10 23:55:19.884][engine_config.py:update_worker_addrs():315][INFO] append member for pd sep 10.67.77.202:6790, 6791, 6793 to local rank 0, world rank 0
+[process-28761][root][2026-04-10 23:55:19.885][model_config.py:build_model_config():810][INFO] max_seq_len: 512
+[process-28761][root][2026-04-10 23:55:19.885][model_config.py:get_task_type_from_ckpt_path():683][INFO] use SEQ_CLASSIFICATION from args
+[process-28761][root][2026-04-10 23:55:19.885][model_config.py:init_precision_config():591][INFO] act_type and config_dtype are both empty, using default: WEIGHT_TYPE.FP16
+[process-28761][root][2026-04-10 23:55:19.885][model_config.py:init_precision_config():628][INFO] Setting attn_config.kv_cache_dtype to BASE (default, no int8/fp8 kv_cache specified)
+[process-28761][root][2026-04-10 23:55:19.885][model_config.py:init_precision_config():659][INFO] Final precision configuration - quant_config: None, data_type: DataType.TYPE_FP16, attn_config.kv_cache_dtype: KvCacheDataType.BASE
+[process-28761][root][2026-04-10 23:55:19.885][model_config.py:build_model_config():840][INFO] model task type: TaskType.SEQ_CLASSIFICATION, use_kvcache: False
+[process-28761][root][2026-04-10 23:55:19.885][cutlass_config.py:load_cutlass_gemm_config():76][WARNING] load cutlass gemm config failed: quant info not supported
+[process-28761][root][2026-04-10 23:55:19.885][model_factory.py:create_model_config():317][INFO] model_config: num_layers: 4
+hidden_size: 768
+attn_config: {
+  head_num: 12
+  kv_head_num: 12
+  size_per_head: 64
+  tokens_per_block: 16
+  is_causal: 0
+  q_scaling: 1
+  fuse_qkv_add_bias: 1
+  use_logn_attn: 0
+  use_mla: 0
+  q_lora_rank: 0
+  kv_lora_rank: 0
+  nope_head_dim: 0
+  rope_head_dim: 0
+  v_head_dim: 0
+  softmax_extra_scale: 1
+  kv_cache_dtype: BASE
+  need_rope_kv_cache: 1
+  style: 0
+  dim: 0
+  base: 10000
+  scale: 1
+  factor1: 1
+  factor2: 1
+  max_pos: 0
+  extrapolation_factor: 1
+  mscale: 1
+  offset: 0
+  index_factor: 1
+  mrope_dim1: 0
+  mrope_dim2: 0
+  mrope_dim3: 0
+
+}
+mla_ops_type: AUTO
+deepseek_rope_mscale: 1
+deepseek_mscale_all_dim: 1
+moe_n_group: 1
+moe_topk_group: 1
+routed_scaling_factor: 1
+layernorm_eps: 1e-12
+layernorm_type: post_layernorm
+norm_type: layernorm
+task_type: SEQ_CLASSIFICATION
+activation_type: gelu
+data_type: fp16
+position_ids_style: 0
+partial_rotary_factor: 1
+input_embedding_scalar: 1
+residual_scalar: 1
+qk_norm: 0
+use_norm_input_residual: 0
+use_norm_attn_out_residual: 0
+max_seq_len: 512
+vocab_size: 21128
+input_vocab_size: 0
+type_vocab_size: 2
+embedding_size: 0
+expert_num: 0
+moe_k: 0
+moe_normalize_expert_scale: 0
+moe_style: 0
+scoring_func: 0
+moe_layer_index: []
+has_positional_encoding: 1
+has_pre_decoder_layernorm: 1
+has_post_decoder_layernorm: 1
+has_lm_head: 1
+use_attention_linear_bias: 0
+use_fp32_to_compute_logit: 0
+add_bias_linear: 0
+has_moe_norm: 0
+logit_scale: 1
+use_kvcache: 0
+pre_seq_len: 0
+prefix_projection: 0
+reverse_e_h_norm: 0
+tokenizer_path: /mnt/raid0/pretrained_model/rtp_ci/tokenizer/
+ckpt_path: /mnt/raid0/pretrained_model/rtp_ci/4l_sku_mean_909/
+special_tokens: {
+  bos_token_id: -1
+  eos_token_id: 0
+  pad_token_id: 0
+  decoder_start_token_id: -1
+  stop_words_id_list: []
+  stop_words_str_list: []
+}
+quant_algo: {
+  method: None
+  bits: 16
+  group_size: 0
+}
+eplb_config: {
+  enable_eplb: 0
+  eplb_update_time: 5000
+  eplb_mode: 0
+  redundant_expert: 0
+  balance_method: mix
+  eplb_force_repack: 0
+  eplb_stats_window_size: 10
+  eplb_control_step: 100
+  eplb_test_mode: 0
+  eplb_balance_layer_per_step: 1
+}
+mm_model_config: {
+  is_multimodal: false
+  include_sep_tokens: false
+  mm_position_ids_style: 0
+  mm_sep_tokens: []
+}
+extra_data_path: 
+local_extra_data_path: 
+model_type: bert
+ptuning_path: 
+[process-28761][root][2026-04-10 23:55:19.885][engine_config.py:finalize_scheduler_config():364][INFO] max_batch_tokens_size: 65536
+[process-28761][root][2026-04-10 23:55:19.925][base_model.py:from_config():262][INFO] Before loading: 4254.50 MB
+[process-28761][root][2026-04-10 23:55:19.925][time_util.py:wrapped():47][INFO] init mutlimodal took: 0.00s
+[process-28761][root][2026-04-10 23:55:19.925][bert.py:_init_custom_module():74][INFO] using BertClassifierModule as custom module
+[process-28761][root][2026-04-10 23:55:19.925][renderer_factory.py:get_renderer():156][INFO] Renderer factory try get predefined renderer via model type [bert]
+[process-28761][root][2026-04-10 23:55:19.925][renderer_factory.py:get_renderer():174][WARNING] Renderer factory found model [bert] falls back to basic renderer, this is typically unwanted.
+[process-28761][root][2026-04-10 23:55:19.925][custom_renderer.py:_setup_chat_template():376][WARNING] Tokenizer try load chat_template from chat_template.jinja.
+[process-28761][root][2026-04-10 23:55:19.925][custom_renderer.py:_setup_chat_template():390][WARNING] Default chat template not found at /mnt/raid0/pretrained_model/rtp_ci/tokenizer/chat_template.jinja, using empty template.
+[process-28761][root][2026-04-10 23:55:19.925][basic_renderer.py:__init__():84][INFO] tokenizer &lt;class &#x27;rtp_llm.frontend.tokenizer_factory.tokenizers.bert_tokenizer.BertTokenizer&#x27;&gt; has no chat_template nor default_chat_template attribute. Use default template.
+[process-28761][root][2026-04-10 23:55:19.925][basic_renderer.py:__init__():95][INFO] special token [[UNK]](unk_token) added as stop words.
+[process-28761][root][2026-04-10 23:55:19.925][basic_renderer.py:__init__():95][INFO] special token [[SEP]](sep_token) added as stop words.
+[process-28761][root][2026-04-10 23:55:19.925][basic_renderer.py:__init__():95][INFO] special token [[PAD]](pad_token) added as stop words.
+[process-28761][root][2026-04-10 23:55:19.925][basic_renderer.py:__init__():95][INFO] special token [[CLS]](cls_token) added as stop words.
+[process-28761][root][2026-04-10 23:55:19.925][basic_renderer.py:__init__():95][INFO] special token [[MASK]](mask_token) added as stop words.
+[process-28761][root][2026-04-10 23:55:19.925][basic_renderer.py:__init__():105][INFO] additional special tokens []added as stop words.
+[process-28761][root][2026-04-10 23:55:19.925][basic_renderer.py:__init__():121][INFO] found chat template to use: {% for message in messages %}{{&#x27;&lt;|im_start|&gt;&#x27; + message[&#x27;role&#x27;] + &#x27;
+&#x27; + message[&#x27;content&#x27;] + &#x27;&lt;|im_end|&gt;&#x27; + &#x27;
+&#x27;}}{% endfor %}{% if add_generation_prompt %}{{ &#x27;&lt;|im_start|&gt;assistant
+&#x27; }}{% endif %}
+[process-28761][root][2026-04-10 23:55:19.928][basic_renderer.py:__init__():148][INFO] compiled chat templates to use: dict_keys([&#x27;default&#x27;])
+[process-28761][root][2026-04-10 23:55:19.928][openai_render.py:__init__():41][INFO] Finally openai endpoint uses renderer: class_name=&#x27;BasicRenderer&#x27; renderer_model_type=&#x27;bert&#x27; extra_stop_word_ids_list=[[100], [100], [102], [0], [101], [103]] extra_stop_words_list=[&#x27;[UNK]&#x27;, &#x27;[UNK]&#x27;, &#x27;[SEP]&#x27;, &#x27;[PAD]&#x27;, &#x27;[CLS]&#x27;, &#x27;[MASK]&#x27;] template=&quot;{% for message in messages %}{{&#x27;&lt;|im_start|&gt;&#x27; + message[&#x27;role&#x27;] + &#x27;\n&#x27; + message[&#x27;content&#x27;] + &#x27;&lt;|im_end|&gt;&#x27; + &#x27;\n&#x27;}}{% endfor %}{% if add_generation_prompt %}{{ &#x27;&lt;|im_start|&gt;assistant\n&#x27; }}{% endif %}&quot; 
+[process-28761][root][2026-04-10 23:55:19.928][openai_render.py:__init__():47][INFO] chat_renderer [class_name=&#x27;BasicRenderer&#x27; renderer_model_type=&#x27;bert&#x27; extra_stop_word_ids_list=[[100], [100], [102], [0], [101], [103]] extra_stop_words_list=[&#x27;[UNK]&#x27;, &#x27;[UNK]&#x27;, &#x27;[SEP]&#x27;, &#x27;[PAD]&#x27;, &#x27;[CLS]&#x27;, &#x27;[MASK]&#x27;] template=&quot;{% for message in messages %}{{&#x27;&lt;|im_start|&gt;&#x27; + message[&#x27;role&#x27;] + &#x27;\n&#x27; + message[&#x27;content&#x27;] + &#x27;&lt;|im_end|&gt;&#x27; + &#x27;\n&#x27;}}{% endfor %}{% if add_generation_prompt %}{{ &#x27;&lt;|im_start|&gt;assistant\n&#x27; }}{% endif %}&quot;] is created.
+[process-28761][root][2026-04-10 23:55:19.928][openai_render.py:__init__():55][INFO] use stop_words_list [[&#x27;[UNK]&#x27;, &#x27;[UNK]&#x27;, &#x27;[SEP]&#x27;, &#x27;[PAD]&#x27;, &#x27;[CLS]&#x27;, &#x27;[MASK]&#x27;]]
+[process-28761][root][2026-04-10 23:55:19.937][model_weight_info.py:__init__():220][INFO] Calculated align_size: 0, moe_align_size: 64, moe_align_size_for_padding: 8
+[process-28761][root][2026-04-10 23:55:19.937][model_weight_info.py:get_weight_info():330][INFO] fix merge_w13
+[process-28761][root][2026-04-10 23:55:19.937][model_weight_info.py:__update_weight_config():450][INFO] src_weights: &lt;class &#x27;rtp_llm.model_loader.ffn_weight.FfnWeight&#x27;&gt;[__ffn_weights__]{&#x27;ffn_weights.intermediate_weight3.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight3.kernel]-WeightStyle.NONE-[CkptWeightInfo[bert.encoder.layer.{i}.intermediate.dense.weight]], &#x27;ffn_weights.intermediate_weight3.bias&#x27;: AtomicWeight[ffn_weights.intermediate_weight3.bias]-WeightStyle.NONE-[CkptWeightInfo[bert.encoder.layer.{i}.intermediate.dense.bias]], &#x27;ffn_weights.intermediate_weight2.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight2.kernel]-WeightStyle.NONE-[CkptWeightInfo[bert.encoder.layer.{i}.output.dense.weight]], &#x27;ffn_weights.intermediate_weight2.bias&#x27;: AtomicWeight[ffn_weights.intermediate_weight2.bias]-WeightStyle.NONE-[CkptWeightInfo[bert.encoder.layer.{i}.output.dense.bias]]}
+[process-28761][root][2026-04-10 23:55:19.938][model_weight_info.py:__update_weight_config():450][INFO] src_weights: &lt;class &#x27;rtp_llm.model_loader.ffn_weight.FfnWeight&#x27;&gt;[__ffn_weights__]{&#x27;ffn_weights.intermediate_weight3.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight3.kernel]-WeightStyle.NONE-[CkptWeightInfo[bert.encoder.layer.{i}.intermediate.dense.weight]], &#x27;ffn_weights.intermediate_weight3.bias&#x27;: AtomicWeight[ffn_weights.intermediate_weight3.bias]-WeightStyle.NONE-[CkptWeightInfo[bert.encoder.layer.{i}.intermediate.dense.bias]], &#x27;ffn_weights.intermediate_weight2.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight2.kernel]-WeightStyle.NONE-[CkptWeightInfo[bert.encoder.layer.{i}.output.dense.weight]], &#x27;ffn_weights.intermediate_weight2.bias&#x27;: AtomicWeight[ffn_weights.intermediate_weight2.bias]-WeightStyle.NONE-[CkptWeightInfo[bert.encoder.layer.{i}.output.dense.bias]]}
+[process-28761][root][2026-04-10 23:55:19.938][model_weight_info.py:__update_weight_config():450][INFO] src_weights: &lt;class &#x27;rtp_llm.model_loader.ffn_weight.FfnWeight&#x27;&gt;[__ffn_weights__]{&#x27;ffn_weights.intermediate_weight3.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight3.kernel]-WeightStyle.NONE-[CkptWeightInfo[bert.encoder.layer.{i}.intermediate.dense.weight]], &#x27;ffn_weights.intermediate_weight3.bias&#x27;: AtomicWeight[ffn_weights.intermediate_weight3.bias]-WeightStyle.NONE-[CkptWeightInfo[bert.encoder.layer.{i}.intermediate.dense.bias]], &#x27;ffn_weights.intermediate_weight2.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight2.kernel]-WeightStyle.NONE-[CkptWeightInfo[bert.encoder.layer.{i}.output.dense.weight]], &#x27;ffn_weights.intermediate_weight2.bias&#x27;: AtomicWeight[ffn_weights.intermediate_weight2.bias]-WeightStyle.NONE-[CkptWeightInfo[bert.encoder.layer.{i}.output.dense.bias]]}
+[process-28761][root][2026-04-10 23:55:19.938][model_weight_info.py:__update_weight_config():450][INFO] src_weights: &lt;class &#x27;rtp_llm.model_loader.ffn_weight.FfnWeight&#x27;&gt;[__ffn_weights__]{&#x27;ffn_weights.intermediate_weight3.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight3.kernel]-WeightStyle.NONE-[CkptWeightInfo[bert.encoder.layer.{i}.intermediate.dense.weight]], &#x27;ffn_weights.intermediate_weight3.bias&#x27;: AtomicWeight[ffn_weights.intermediate_weight3.bias]-WeightStyle.NONE-[CkptWeightInfo[bert.encoder.layer.{i}.intermediate.dense.bias]], &#x27;ffn_weights.intermediate_weight2.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight2.kernel]-WeightStyle.NONE-[CkptWeightInfo[bert.encoder.layer.{i}.output.dense.weight]], &#x27;ffn_weights.intermediate_weight2.bias&#x27;: AtomicWeight[ffn_weights.intermediate_weight2.bias]-WeightStyle.NONE-[CkptWeightInfo[bert.encoder.layer.{i}.output.dense.bias]]}
+[process-28761][root][2026-04-10 23:55:19.938][model_weight_info.py:_fix_merge_w1_w3():464][INFO] fix weight config when need_merge_w13 [AtomicWeight[self_attention_weights.query_weight.kernel]-WeightStyle.NONE-[CkptWeightInfo[bert.encoder.layer.{i}.attention.self.query.weight], CkptWeightInfo[bert.encoder.layer.{i}.attention.self.key.weight], CkptWeightInfo[bert.encoder.layer.{i}.attention.self.value.weight]], AtomicWeight[self_attention_weights.query_weight.bias]-WeightStyle.NONE-[CkptWeightInfo[bert.encoder.layer.{i}.attention.self.query.bias], CkptWeightInfo[bert.encoder.layer.{i}.attention.self.key.bias], CkptWeightInfo[bert.encoder.layer.{i}.attention.self.value.bias]], AtomicWeight[self_attention_weights.attention_output_weight.kernel]-WeightStyle.NONE-[CkptWeightInfo[bert.encoder.layer.{i}.attention.output.dense.weight]], AtomicWeight[self_attention_weights.attention_output_weight.bias]-WeightStyle.NONE-[CkptWeightInfo[bert.encoder.layer.{i}.attention.output.dense.bias]], AtomicWeight[post_layernorm_weights.beta]-WeightStyle.NONE-[CkptWeightInfo[bert.encoder.layer.{i}.attention.output.LayerNorm.bias]], AtomicWeight[post_layernorm_weights.gamma]-WeightStyle.NONE-[CkptWeightInfo[bert.encoder.layer.{i}.attention.output.LayerNorm.weight]], &lt;class &#x27;rtp_llm.model_loader.ffn_weight.FfnWeight&#x27;&gt;[__ffn_weights__]{&#x27;ffn_weights.intermediate_weight3.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight3.kernel]-WeightStyle.NONE-[CkptWeightInfo[bert.encoder.layer.{i}.intermediate.dense.weight]], &#x27;ffn_weights.intermediate_weight3.bias&#x27;: AtomicWeight[ffn_weights.intermediate_weight3.bias]-WeightStyle.NONE-[CkptWeightInfo[bert.encoder.layer.{i}.intermediate.dense.bias]], &#x27;ffn_weights.intermediate_weight2.kernel&#x27;: AtomicWeight[ffn_weights.intermediate_weight2.kernel]-WeightStyle.NONE-[CkptWeightInfo[bert.encoder.layer.{i}.output.dense.weight]], &#x27;ffn_weights.intermediate_weight2.bias&#x27;: AtomicWeight[ffn_weights.intermediate_weight2.bias]-WeightStyle.NONE-[CkptWeightInfo[bert.encoder.layer.{i}.output.dense.bias]]}, AtomicWeight[post_ffn_layernorm_weights.beta]-WeightStyle.NONE-[CkptWeightInfo[bert.encoder.layer.{i}.output.LayerNorm.bias]], AtomicWeight[post_ffn_layernorm_weights.gamma]-WeightStyle.NONE-[CkptWeightInfo[bert.encoder.layer.{i}.output.LayerNorm.weight]]]
+[process-28761][root][2026-04-10 23:55:19.938][loader.py:__init__():60][INFO] load use type torch.float16
+[process-28761][root][2026-04-10 23:55:19.939][loader.py:create_eplb():619][INFO] create eplb: expert_num: 0, phy_exp_num: 0
+[process-28761][root][2026-04-10 23:55:19.946][server_args.py:parse_args():244][INFO] Parsing arguments and applying config bindings...
+[process-28761][root][2026-04-10 23:55:19.946][hw_kernel_group_args.py:_parse_prefill_capture_config():322][INFO] Generated 160 sequence lengths from range (step=1, max=160)
+[process-28761][root][2026-04-10 23:55:19.947][server_args.py:_apply_config_bindings():386][WARNING] Failed to apply config binding for reco_client_config: (): incompatible function arguments. The following argument types are supported:
+    1. (self: libth_transformer_config.KVCacheConfig, arg0: str) -&gt; None
+
+Invoked with: &lt;rtp_llm.config.kv_cache_config.KVCacheConfig object at 0x7f82810ebe70&gt;, 2000
+[process-28761][root][2026-04-10 23:55:19.947][server_args.py:_apply_config_bindings():386][WARNING] Failed to apply config binding for max_lora_model_size: &#x27;libth_transformer_config.ModelSpecificConfig&#x27; object has no attribute &#x27;max_lora_model_size&#x27;
+[process-28761][root][2026-04-10 23:55:19.948][server_config_setup.py:_apply_auto_deepep_config():114][INFO] auto configure deepep work
+[process-28761][root][2026-04-10 23:55:19.948][server_config_setup.py:_apply_auto_deepep_config():172][INFO] Auto-configured DeepEP settings based on deployment scenario:
+  Role Type: RoleType.PDFUSION
+  World Size: 1
+  Local World Size: 1
+  PD Separation: False
+  USE_DEEPEP_MOE: False
+  USE_DEEPEP_LOW_LATENCY: False
+  USE_DEEPEP_INTERNODE: False
+[process-28761][root][2026-04-10 23:55:20.175][loader.py:_choose_weight_convert_device():513][INFO] free_mem: 191.71GB, estimated model_mem: 0.11GB, use device: cuda:0
+[process-28761][root][2026-04-10 23:55:20.175][loader.py:_load_weight():244][INFO] load method: scratch, finally choose load method: scratch
+[process-28761][root][2026-04-10 23:55:20.175][loader.py:_choose_weight_convert_device():513][INFO] free_mem: 191.71GB, estimated model_mem: 0.11GB, use device: cuda:0
+[process-28761][root][2026-04-10 23:55:20.175][loader.py:_load_from_scratch():523][INFO] load weight by device: cuda:0
+[process-28761][root][2026-04-10 23:55:29.940][loader.py:_load_dynamic_weights():574][INFO] embedding_size is 21128, vocab size is 21128
+[process-28761][root][2026-04-10 23:55:29.940][loader.py:_init_eplb_weight():663][INFO] don&#x27;t need to init eplb weight, skip...
+[process-28761][root][2026-04-10 23:55:29.940][time_util.py:wrapped():47][INFO] load weights took: 9.76s
+[process-28761][root][2026-04-10 23:55:29.940][time_util.py:wrapped():47][INFO] load custom module took: 0.00s
+[process-28761][root][2026-04-10 23:55:29.940][time_util.py:wrapped():47][INFO] load multimodal took: 0.00s
+[process-28761][root][2026-04-10 23:55:29.940][loader.py:cleanup_database():489][INFO] Cleaned up database resources to release host memory
+[process-28761][root][2026-04-10 23:55:30.402][base_model.py:load():154][INFO] Creating python model for /mnt/raid0/pretrained_model/rtp_ci/4l_sku_mean_909/ on cuda:0
+[process-28761][root][2026-04-10 23:55:30.402][base_model.py:load():158][INFO] python model remote_jit_dir for deep_gemm: None
+[aiter] import [module_aiter_enum] under /opt/conda310/lib/python3.10/site-packages/aiter/jit/module_aiter_enum.so
+[process-28761][aiter][2026-04-10 23:55:31.010][core.py:get_module_custom_op():484][INFO] import [module_aiter_enum] under /opt/conda310/lib/python3.10/site-packages/aiter/jit/module_aiter_enum.so
+[process-28761][root][2026-04-10 23:55:31.469][time_util.py:wrapped():47][INFO] load model took: 11.54s
+[process-28761][root][2026-04-10 23:55:31.470][base_model.py:from_config():264][INFO] After loading: 4468.77 MB
+initLogger log_file_path: /mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/config/alog.conf
+[2026-04-10 23:55:31.472641] [INFO] [28761:28761] [RANK 0][10.67.77.202][rtp_llm/cpp/pybind/common/InitEngineOps.cc:19][void rtp_llm::initEngine(std::string)] install sighandler begin
+[2026-04-10 23:55:31.472684] [INFO] [28761:28761] [RANK 0][10.67.77.202][rtp_llm/cpp/pybind/common/InitEngineOps.cc:24][void rtp_llm::initEngine(std::string)] install sighandler success
+[process-28761][root][2026-04-10 23:55:31.472][engine_creator.py:create_engine():49][INFO] create embedding engine
+[process-28761][root][2026-04-10 23:55:31.472][embedding_engine.py:__init__():15][INFO] creating cpp embedding engine
+[process-28761][root][2026-04-10 23:55:31.472][time_util.py:wrapped():47][INFO] create async engine took: 0.00s
+[2026-04-10 23:55:31.472994] [INFO] [28761:28761] [RANK 0][10.67.77.202][./rtp_llm/cpp/engine_base/EngineInitParams.h:124][void rtp_llm::EngineInitParams::showDebugInfo() const] ModelConfig: max_seq_len=512, vocab_size=21128
+[2026-04-10 23:55:31.473008] [INFO] [28761:28761] [RANK 0][10.67.77.202][./rtp_llm/cpp/engine_base/EngineInitParams.h:128][void rtp_llm::EngineInitParams::showDebugInfo() const] ParallelismConfig: tp_size=1, ep_size=1, dp_size=1
+[2026-04-10 23:55:31.473028] [INFO] [28761:28761] [RANK 0][10.67.77.202][./rtp_llm/cpp/engine_base/EngineInitParams.h:129][void rtp_llm::EngineInitParams::showDebugInfo() const] RuntimeConfig: max_generate_batch_size: 32
+pre_allocate_op_mem: 1
+max_block_size_per_item: 16
+reserve_runtime_mem_mb: 1024
+warm_up: 1
+warm_up_with_loss: 0
+use_batch_decode_scheduler: 0
+use_gather_batch_scheduler: 0
+batch_decode_scheduler_config: {
+batch_decode_scheduler_batch_size: 1
+batch_decode_scheduler_warmup_type: 0
+}
+fifo_scheduler_config: {
+max_context_batch_size: 128
+max_batch_tokens_size: 65536
+}
+model_name: Bert
+worker_grpc_addrs: [10.67.77.202:6790]
+worker_addrs: [10.67.77.202:6791:6793]
+specify_gpu_arch: 
+acext_gemm_config_dir: 
+[2026-04-10 23:55:31.473057] [INFO] [28761:28761] [RANK 0][10.67.77.202][rtp_llm/cpp/metrics/RtpLLMMetrics.cc:802][bool rtp_llm::initKmonitorFactory()] set kmonitor normal sample period [1] seconds.
+[2026-04-10 23:55:31.473185] [INFO] [28761:28761] [RANK 0][10.67.77.202][rtp_llm/cpp/metrics/RtpLLMMetrics.cc:832][bool rtp_llm::initKmonitorFactory()] KMonitorFactory::registerBuildInMetrics() finished
+[2026-04-10 23:55:31.473899] [INFO] [28761:28761] [RANK 0][10.67.77.202][rtp_llm/cpp/metrics/RtpLLMMetrics.cc:835][bool rtp_llm::initKmonitorFactory()] KMonitorFactory::Start() finished
+[2026-04-10 23:55:31.474016] [INFO] [28761:28761] [RANK 0][10.67.77.202][rtp_llm/cpp/core/ExecOps.cc:579][auto rtp_llm::initExecCtx(const ParallelismConfig &amp;, const ModelConfig &amp;, const EPLBConfig &amp;, const FMHAConfig &amp;, const DeviceResourceConfig &amp;, const MoeConfig &amp;, const SpeculativeExecutionConfig &amp;, const MiscellaneousConfig &amp;, const ProfilingDebugLoggingConfig &amp;, const HWKernelConfig &amp;, const ConcurrencyConfig &amp;, const FfnDisAggregateConfig &amp;, const RuntimeConfig &amp;, const ModelSpecificConfig &amp;, const NcclCommConfig &amp;)::(anonymous class)::operator()() const] set overlap type to be 0
+[2026-04-10 23:55:31.474024] [INFO] [28761:28761] [RANK 0][10.67.77.202][rtp_llm/cpp/core/ExecOps.cc:587][auto rtp_llm::initExecCtx(const ParallelismConfig &amp;, const ModelConfig &amp;, const EPLBConfig &amp;, const FMHAConfig &amp;, const DeviceResourceConfig &amp;, const MoeConfig &amp;, const SpeculativeExecutionConfig &amp;, const MiscellaneousConfig &amp;, const ProfilingDebugLoggingConfig &amp;, const HWKernelConfig &amp;, const ConcurrencyConfig &amp;, const FfnDisAggregateConfig &amp;, const RuntimeConfig &amp;, const ModelSpecificConfig &amp;, const NcclCommConfig &amp;)::(anonymous class)::operator()() const] enable comm overlap: 1, enable layer micro batch: 0
+[2026-04-10 23:55:31.474031] [INFO] [28761:28761] [RANK 0][10.67.77.202][rtp_llm/cpp/core/ExecOps.cc:596][auto rtp_llm::initExecCtx(const ParallelismConfig &amp;, const ModelConfig &amp;, const EPLBConfig &amp;, const FMHAConfig &amp;, const DeviceResourceConfig &amp;, const MoeConfig &amp;, const SpeculativeExecutionConfig &amp;, const MiscellaneousConfig &amp;, const ProfilingDebugLoggingConfig &amp;, const HWKernelConfig &amp;, const ConcurrencyConfig &amp;, const FfnDisAggregateConfig &amp;, const RuntimeConfig &amp;, const ModelSpecificConfig &amp;, const NcclCommConfig &amp;)::(anonymous class)::operator()() const] device_params sp_type is none
+[2026-04-10 23:55:31.474037] [INFO] [28761:28761] [RANK 0][10.67.77.202][rtp_llm/cpp/core/ExecOps.cc:597][auto rtp_llm::initExecCtx(const ParallelismConfig &amp;, const ModelConfig &amp;, const EPLBConfig &amp;, const FMHAConfig &amp;, const DeviceResourceConfig &amp;, const MoeConfig &amp;, const SpeculativeExecutionConfig &amp;, const MiscellaneousConfig &amp;, const ProfilingDebugLoggingConfig &amp;, const HWKernelConfig &amp;, const ConcurrencyConfig &amp;, const FfnDisAggregateConfig &amp;, const RuntimeConfig &amp;, const ModelSpecificConfig &amp;, const NcclCommConfig &amp;)::(anonymous class)::operator()() const] device_params sp_model_type is 
+[2026-04-10 23:55:31.474049] [INFO] [28761:28761] [RANK 0][10.67.77.202][rtp_llm/cpp/core/ExecOps.cc:612][auto rtp_llm::initExecCtx(const ParallelismConfig &amp;, const ModelConfig &amp;, const EPLBConfig &amp;, const FMHAConfig &amp;, const DeviceResourceConfig &amp;, const MoeConfig &amp;, const SpeculativeExecutionConfig &amp;, const MiscellaneousConfig &amp;, const ProfilingDebugLoggingConfig &amp;, const HWKernelConfig &amp;, const ConcurrencyConfig &amp;, const FfnDisAggregateConfig &amp;, const RuntimeConfig &amp;, const ModelSpecificConfig &amp;, const NcclCommConfig &amp;)::(anonymous class)::operator()() const] use deepep moe: 0, use deepep low latency: 0
+[2026-04-10 23:55:31.474057] [INFO] [28761:28761] [RANK 0][10.67.77.202][rtp_llm/cpp/core/ExecOps.cc:635][auto rtp_llm::initExecCtx(const ParallelismConfig &amp;, const ModelConfig &amp;, const EPLBConfig &amp;, const FMHAConfig &amp;, const DeviceResourceConfig &amp;, const MoeConfig &amp;, const SpeculativeExecutionConfig &amp;, const MiscellaneousConfig &amp;, const ProfilingDebugLoggingConfig &amp;, const HWKernelConfig &amp;, const ConcurrencyConfig &amp;, const FfnDisAggregateConfig &amp;, const RuntimeConfig &amp;, const ModelSpecificConfig &amp;, const NcclCommConfig &amp;)::(anonymous class)::operator()() const] Initialize runtime (ROCm). device_id=0
+[2026-04-10 23:55:31.474069] [INFO] [28761:28761] [RANK 0][10.67.77.202][rtp_llm/cpp/core/ExecOps.cc:655][auto rtp_llm::initExecCtx(const ParallelismConfig &amp;, const ModelConfig &amp;, const EPLBConfig &amp;, const FMHAConfig &amp;, const DeviceResourceConfig &amp;, const MoeConfig &amp;, const SpeculativeExecutionConfig &amp;, const MiscellaneousConfig &amp;, const ProfilingDebugLoggingConfig &amp;, const HWKernelConfig &amp;, const ConcurrencyConfig &amp;, const FfnDisAggregateConfig &amp;, const RuntimeConfig &amp;, const ModelSpecificConfig &amp;, const NcclCommConfig &amp;)::(anonymous class)::operator()() const] Runtime init done (communication via c10d ProcessGroup)
+[2026-04-10 23:55:31.474077] [INFO] [28761:28761] [RANK 0][10.67.77.202][rtp_llm/cpp/core/ExecOps.cc:658][ExecInitParams rtp_llm::initExecCtx(const ParallelismConfig &amp;, const ModelConfig &amp;, const EPLBConfig &amp;, const FMHAConfig &amp;, const DeviceResourceConfig &amp;, const MoeConfig &amp;, const SpeculativeExecutionConfig &amp;, const MiscellaneousConfig &amp;, const ProfilingDebugLoggingConfig &amp;, const HWKernelConfig &amp;, const ConcurrencyConfig &amp;, const FfnDisAggregateConfig &amp;, const RuntimeConfig &amp;, const ModelSpecificConfig &amp;, const NcclCommConfig &amp;)] init devices done
+[2026-04-10 23:55:31.474100] [INFO] [28761:28761] [RANK 0][10.67.77.202][rtp_llm/cpp/embedding_engine/EmbeddingExecutor.cc:70][rtp_llm::EmbeddingExecutor::EmbeddingExecutor(const rtp_llm::EngineInitParams&amp;, pybind11::object)] init executor with python model
+[2026-04-10 23:55:31.474122] [INFO] [28761:28761] [RANK 0][10.67.77.202][./rtp_llm/cpp/models/PyWrappedModel.h:134][rtp_llm::PyWrappedModel::PyWrappedModel(const rtp_llm::GptModelInitParams&amp;, pybind11::object, bool, bool, const std::vector&lt;int&gt;&amp;)] Set PYTHONUNBUFFERED=TRUE for Python interpreter.
+[2026-04-10 23:55:31.474555] [INFO] [28761:28761] [RANK 0][10.67.77.202][./rtp_llm/cpp/models/PyWrappedModel.h:253][rtp_llm::PyWrappedModel::PyWrappedModel(const rtp_llm::GptModelInitParams&amp;, pybind11::object, bool, bool, const std::vector&lt;int&gt;&amp;)] PyWrappedModel initialized done.
+[2026-04-10 23:55:31.474734] [INFO] [28761:28761] [RANK 0][10.67.77.202][rtp_llm/cpp/embedding_engine/EmbeddingEngine.cc:49][absl::lts_2020_09_23::Status rtp_llm::EmbeddingEngine::startLoop()] start embedding engine
+[2026-04-10 23:55:31.475046] [INFO] [28761:28761] [RANK 0][10.67.77.202][rtp_llm/cpp/pybind/multi_gpu_gpt/RtpEmbeddingOp.cc:225][void rtp_llm::RtpEmbeddingOp::startRpcServer(int64_t, int64_t, int64_t, int64_t, py::object, py::object, kmonitor::MetricsReporterPtr, std::shared_ptr&lt;MultimodalProcessor&gt;)] Embedding RPC not supported, skip
+[2026-04-10 23:55:31.475058] [INFO] [28761:28761] [RANK 0][10.67.77.202][rtp_llm/cpp/api_server/HttpApiServer.cc:15][void rtp_llm::HttpApiServer::init_controller(const rtp_llm::ConcurrencyConfig&amp;, const rtp_llm::ParallelismConfig&amp;)] Get concurrency_with_block: 0 from ConcurrencyConfig.
+[2026-04-10 23:55:31.475067] [INFO] [28761:28761] [RANK 0][10.67.77.202][rtp_llm/cpp/api_server/HttpApiServer.cc:19][void rtp_llm::HttpApiServer::init_controller(const rtp_llm::ConcurrencyConfig&amp;, const rtp_llm::ParallelismConfig&amp;)] CONCURRENCY_LIMIT to 32
+[2026-04-10 23:55:31.475099] [INFO] [28761:29664] [RANK 0][10.67.77.202][rtp_llm/cpp/embedding_engine/EmbeddingEngine.cc:67][void rtp_llm::EmbeddingEngine::loop()] loop begin
+[2026-04-10 23:55:31.477764] [WARN] [28761:28761] [RANK 0][10.67.77.202][rtp_llm/cpp/api_server/openai/OpenaiEndpoint.cc:33][rtp_llm::OpenaiEndpoint::OpenaiEndpoint(const std::shared_ptr&lt;rtp_llm::Tokenizer&gt;&amp;, const std::shared_ptr&lt;rtp_llm::ChatRender&gt;&amp;, const rtp_llm::ModelConfig&amp;)] chat render is null
+[2026-04-10 23:55:31.477772] [INFO] [28761:28761] [RANK 0][10.67.77.202][rtp_llm/cpp/api_server/openai/OpenaiEndpoint.cc:44][rtp_llm::OpenaiEndpoint::OpenaiEndpoint(const std::shared_ptr&lt;rtp_llm::Tokenizer&gt;&amp;, const std::shared_ptr&lt;rtp_llm::ChatRender&gt;&amp;, const rtp_llm::ModelConfig&amp;)] use stop_words_list []
+[2026-04-10 23:55:31.477821] [INFO] [28761:28761] [RANK 0][10.67.77.202][rtp_llm/cpp/api_server/HttpApiServer.cc:124][bool rtp_llm::HttpApiServer::registerServices()] HttpApiServer register services success.
+[2026-04-10 23:55:31.478005] [INFO] [28761:28761] [RANK 0][10.67.77.202][rtp_llm/cpp/api_server/HttpApiServer.cc:49][bool rtp_llm::HttpApiServer::start(const std::string&amp;)] HttpApiServer start success, listen address is tcp:0.0.0.0:6794.
+[2026-04-10 23:55:31.478012] [INFO] [28761:28761] [RANK 0][10.67.77.202][rtp_llm/cpp/pybind/multi_gpu_gpt/RtpEmbeddingOp.cc:196][void rtp_llm::RtpEmbeddingOp::startHttpServer(std::shared_ptr&lt;EmbeddingEngine&gt;, std::shared_ptr&lt;MultimodalProcessor&gt;, const EngineInitParams &amp;, py::object)] embedding HTTP Server listening on tcp:0.0.0.0:6794
+[2026-04-10 23:55:31.478363] [INFO] [28761:29699] [RANK 0][10.67.77.202][rtp_llm/cpp/pybind/multi_gpu_gpt/RtpEmbeddingOp.cc:143][void rtp_llm::RtpEmbeddingOp::initGrpcServer(int64_t, const GrpcConfig &amp;, std::shared_ptr&lt;EmbeddingEngine&gt;, py::object, py::object, std::shared_ptr&lt;MultimodalProcessor&gt;, bool)] init embedding Grpc Server, port 6796
+[2026-04-10 23:55:31.478420] [INFO] [28761:29699] [RANK 0][10.67.77.202][rtp_llm/cpp/pybind/multi_gpu_gpt/RtpEmbeddingOp.cc:153][void rtp_llm::RtpEmbeddingOp::initGrpcServer(int64_t, const GrpcConfig &amp;, std::shared_ptr&lt;EmbeddingEngine&gt;, py::object, py::object, std::shared_ptr&lt;MultimodalProcessor&gt;, bool)] grpc server add channel argument grpc.http2.max_ping_strikes: 1000
+[2026-04-10 23:55:31.478430] [INFO] [28761:29699] [RANK 0][10.67.77.202][rtp_llm/cpp/pybind/multi_gpu_gpt/RtpEmbeddingOp.cc:153][void rtp_llm::RtpEmbeddingOp::initGrpcServer(int64_t, const GrpcConfig &amp;, std::shared_ptr&lt;EmbeddingEngine&gt;, py::object, py::object, std::shared_ptr&lt;MultimodalProcessor&gt;, bool)] grpc server add channel argument grpc.http2.min_recv_ping_interval_without_data_ms: 1000
+[2026-04-10 23:55:31.478435] [INFO] [28761:29699] [RANK 0][10.67.77.202][rtp_llm/cpp/pybind/multi_gpu_gpt/RtpEmbeddingOp.cc:153][void rtp_llm::RtpEmbeddingOp::initGrpcServer(int64_t, const GrpcConfig &amp;, std::shared_ptr&lt;EmbeddingEngine&gt;, py::object, py::object, std::shared_ptr&lt;MultimodalProcessor&gt;, bool)] grpc server add channel argument grpc.max_concurrent_streams: 100000
+[2026-04-10 23:55:31.478439] [INFO] [28761:29699] [RANK 0][10.67.77.202][rtp_llm/cpp/pybind/multi_gpu_gpt/RtpEmbeddingOp.cc:153][void rtp_llm::RtpEmbeddingOp::initGrpcServer(int64_t, const GrpcConfig &amp;, std::shared_ptr&lt;EmbeddingEngine&gt;, py::object, py::object, std::shared_ptr&lt;MultimodalProcessor&gt;, bool)] grpc server add channel argument grpc.max_connection_idle_ms: 600000
+[2026-04-10 23:55:31.478443] [INFO] [28761:29699] [RANK 0][10.67.77.202][rtp_llm/cpp/pybind/multi_gpu_gpt/RtpEmbeddingOp.cc:153][void rtp_llm::RtpEmbeddingOp::initGrpcServer(int64_t, const GrpcConfig &amp;, std::shared_ptr&lt;EmbeddingEngine&gt;, py::object, py::object, std::shared_ptr&lt;MultimodalProcessor&gt;, bool)] grpc server add channel argument grpc.max_metadata_size: 1073741824
+[process-28761][root][2026-04-10 23:55:32.478][model_factory.py:from_model_configs():245][INFO] create engine done
+[process-28761][root][2026-04-10 23:55:32.478][backend_manager.py:start():118][INFO] engine created successfully: self.engine.task_type=TaskType.SEQ_CLASSIFICATION
+[process-28761][root][2026-04-10 23:55:32.479][start_backend_server.py:local_rank_start():82][INFO] Backend server initialized successfully, sending ready status
+[process-28761][root][2026-04-10 23:55:32.479][start_backend_server.py:local_rank_start():98][INFO] Entering service loop to keep backend_manager alive
+[process-28673][root][2026-04-10 23:55:32.528][start_server.py:check_backend_ready():83][INFO] Backend server started successfully: Backend server started successfully on rank 0
+[process-28673][root][2026-04-10 23:55:32.529][process_manager.py:_health_check_worker():232][INFO] backend_server is ready
+[process-28761][root][2026-04-10 23:55:32.722][backend_manager.py:serve_forever():128][INFO] BackendManager entering serve_forever loop
+[process-28763][root][2026-04-10 23:55:46.773][server_config_setup.py:set_parallelism_config():279][INFO] set_parallelism_config: rank 0
+parallelism_config=tp_size: 1
+ep_size: 1
+dp_size: 1
+world_size: 1
+world_rank: 0
+pp_size: 1
+local_world_size: 1
+local_rank: 0
+ffn_sp_size: 1
+tp_rank: 0
+ep_rank: 0
+dp_rank: 0
+ffn_tp_size: 1
+ffn_tp_rank: 0
+enable_sp: 0
+ffn_disaggregate_config: {
+enable_ffn_disaggregate: 0
+
+}
+prefill_cp_config: {
+method: DISABLED
+ comm_buffer_size: 536870912
+}
+world_rank=0
+
+[process-28763][root][2026-04-10 23:55:46.773][async_log_handler.py:__init__():85][INFO] AsyncRotatingFileHandler init complete, worker thread alive: True
+[process-28763][root][2026-04-10 23:55:46.774][async_log_handler.py:__init__():85][INFO] AsyncRotatingFileHandler init complete, worker thread alive: True
+[process-28763][root][2026-04-10 23:55:46.774][access_logger.py:__init__():44][INFO] AccessLogger created: async_mode=True, rank_id=0, server_id=1
+[process-28763][root][2026-04-10 23:55:46.774][frontend_worker.py:get_dp_addrs_from_world_info():76][INFO] frontend worker ffn_disaggregate_config: enable_ffn_disaggregate: 0
+
+[process-28763][root][2026-04-10 23:55:46.774][frontend_worker.py:get_dp_addrs_from_world_info():99][INFO] [world_rank: 0] using addresses from world_info: [&#x27;10.67.77.202:6790&#x27;]
+[process-28763][root][2026-04-10 23:55:46.774][frontend_app.py:__init__():85][INFO] frontend app rank_id = 0, server_port = 6789, frontend_server_id = 1
+[process-28763][root][2026-04-10 23:55:46.774][model_config.py:build_model_config():810][INFO] max_seq_len: 512
+[process-28763][root][2026-04-10 23:55:46.774][model_config.py:get_task_type_from_ckpt_path():683][INFO] use SEQ_CLASSIFICATION from args
+[process-28763][root][2026-04-10 23:55:46.775][model_config.py:init_precision_config():591][INFO] act_type and config_dtype are both empty, using default: WEIGHT_TYPE.FP16
+[process-28763][root][2026-04-10 23:55:46.775][model_config.py:init_precision_config():628][INFO] Setting attn_config.kv_cache_dtype to BASE (default, no int8/fp8 kv_cache specified)
+[process-28763][root][2026-04-10 23:55:46.775][model_config.py:init_precision_config():659][INFO] Final precision configuration - quant_config: None, data_type: DataType.TYPE_FP16, attn_config.kv_cache_dtype: KvCacheDataType.BASE
+[process-28763][root][2026-04-10 23:55:46.775][model_config.py:build_model_config():840][INFO] model task type: TaskType.SEQ_CLASSIFICATION, use_kvcache: False
+[process-28763][root][2026-04-10 23:55:46.775][cutlass_config.py:load_cutlass_gemm_config():76][WARNING] load cutlass gemm config failed: quant info not supported
+[process-28763][root][2026-04-10 23:55:46.775][model_factory.py:create_model_config():317][INFO] model_config: num_layers: 4
+hidden_size: 768
+attn_config: {
+  head_num: 12
+  kv_head_num: 12
+  size_per_head: 64
+  tokens_per_block: 16
+  is_causal: 0
+  q_scaling: 1
+  fuse_qkv_add_bias: 1
+  use_logn_attn: 0
+  use_mla: 0
+  q_lora_rank: 0
+  kv_lora_rank: 0
+  nope_head_dim: 0
+  rope_head_dim: 0
+  v_head_dim: 0
+  softmax_extra_scale: 1
+  kv_cache_dtype: BASE
+  need_rope_kv_cache: 1
+  style: 0
+  dim: 0
+  base: 10000
+  scale: 1
+  factor1: 1
+  factor2: 1
+  max_pos: 0
+  extrapolation_factor: 1
+  mscale: 1
+  offset: 0
+  index_factor: 1
+  mrope_dim1: 0
+  mrope_dim2: 0
+  mrope_dim3: 0
+
+}
+mla_ops_type: AUTO
+deepseek_rope_mscale: 1
+deepseek_mscale_all_dim: 1
+moe_n_group: 1
+moe_topk_group: 1
+routed_scaling_factor: 1
+layernorm_eps: 1e-12
+layernorm_type: post_layernorm
+norm_type: layernorm
+task_type: SEQ_CLASSIFICATION
+activation_type: gelu
+data_type: fp16
+position_ids_style: 0
+partial_rotary_factor: 1
+input_embedding_scalar: 1
+residual_scalar: 1
+qk_norm: 0
+use_norm_input_residual: 0
+use_norm_attn_out_residual: 0
+max_seq_len: 512
+vocab_size: 21128
+input_vocab_size: 0
+type_vocab_size: 2
+embedding_size: 0
+expert_num: 0
+moe_k: 0
+moe_normalize_expert_scale: 0
+moe_style: 0
+scoring_func: 0
+moe_layer_index: []
+has_positional_encoding: 1
+has_pre_decoder_layernorm: 1
+has_post_decoder_layernorm: 1
+has_lm_head: 1
+use_attention_linear_bias: 0
+use_fp32_to_compute_logit: 0
+add_bias_linear: 0
+has_moe_norm: 0
+logit_scale: 1
+use_kvcache: 0
+pre_seq_len: 0
+prefix_projection: 0
+reverse_e_h_norm: 0
+tokenizer_path: /mnt/raid0/pretrained_model/rtp_ci/tokenizer/
+ckpt_path: /mnt/raid0/pretrained_model/rtp_ci/4l_sku_mean_909/
+special_tokens: {
+  bos_token_id: -1
+  eos_token_id: 0
+  pad_token_id: 0
+  decoder_start_token_id: -1
+  stop_words_id_list: []
+  stop_words_str_list: []
+}
+quant_algo: {
+  method: None
+  bits: 16
+  group_size: 0
+}
+eplb_config: {
+  enable_eplb: 0
+  eplb_update_time: 5000
+  eplb_mode: 0
+  redundant_expert: 0
+  balance_method: mix
+  eplb_force_repack: 0
+  eplb_stats_window_size: 10
+  eplb_control_step: 100
+  eplb_test_mode: 0
+  eplb_balance_layer_per_step: 1
+}
+mm_model_config: {
+  is_multimodal: false
+  include_sep_tokens: false
+  mm_position_ids_style: 0
+  mm_sep_tokens: []
+}
+extra_data_path: 
+local_extra_data_path: 
+model_type: bert
+ptuning_path: 
+[process-28763][root][2026-04-10 23:55:46.775][model_config.py:update_stop_words_from_env():748][INFO] use stop_words_str_list [[]], stop_words_id_list [[]]
+[process-28763][root][2026-04-10 23:55:46.775][frontend_worker.py:__init__():114][INFO] starting frontend worker
+[process-28763][root][2026-04-10 23:55:46.812][frontend_worker.py:get_dp_addrs_from_world_info():76][INFO] frontend worker ffn_disaggregate_config: enable_ffn_disaggregate: 0
+
+[process-28763][root][2026-04-10 23:55:46.812][frontend_worker.py:get_dp_addrs_from_world_info():99][INFO] [world_rank: 0] using addresses from world_info: [&#x27;10.67.77.202:6790&#x27;]
+[process-28763][root][2026-04-10 23:55:46.812][model_rpc_client.py:__init__():365][INFO] client options: [(&#x27;grpc.max_metadata_size&#x27;, 1073741824), (&#x27;grpc.max_receive_message_length&#x27;, 1073741824)]
+[process-28763][root][2026-04-10 23:55:46.812][model_rpc_client.py:__init__():371][INFO] addresses: [&#x27;10.67.77.202:6790&#x27;]
+[process-28763][root][2026-04-10 23:55:46.812][host_service.py:create_from_env():185][INFO] Model Service Configuration:
+    Master Domain: 
+    PDFusion Domain: 
+    Prefill Domain: 
+    Decode Domain: 
+    VIT Domain: 
+    Use Local: False
+[process-28763][root][2026-04-10 23:55:46.812][backend_rpc_server_visitor.py:get_backend_role_list():90][INFO] pd_sep_config: role_type: PDFUSION
+cache_store_rdma_mode: 1
+cache_store_listen_port: 6791
+cache_store_connect_port: 2
+cache_store_rdma_listen_port: 6793
+cache_store_rdma_connect_port: 4
+remote_rpc_server_port: 1
+prefill_retry_times: 0
+prefill_retry_timeout_ms: 0
+prefill_max_wait_timeout_ms: 600000
+decode_retry_times: 100
+decode_retry_timeout_ms: 100
+decode_retry_interval_ms: 1
+decode_polling_kv_cache_step_ms: 30
+decode_polling_call_prefill_ms: 30
+rdma_connect_retry_times: 0
+load_cache_timeout_ms: 5000
+max_rpc_timeout_ms: 0
+worker_port_offset: 8
+decode_entrance: 0
+[process-28763][root][2026-04-10 23:55:46.812][backend_rpc_server_visitor.py:get_backend_role_list():122][INFO] configured backend role list: []
+[process-28763][root][2026-04-10 23:55:46.812][frontend_worker.py:__init__():157][INFO] frontend worker start done.
+[process-28763][root][2026-04-10 23:55:46.813][utils.py:create_custom_module():35][ERROR] internal module not found, using external module
+Traceback (most recent call last):
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/models/downstream_modules/utils.py&quot;, line 27, in create_custom_module
+    from internal_source.rtp_llm.models.downstream_modules.utils import (
+ModuleNotFoundError: No module named &#x27;internal_source&#x27;
+[process-28763][root][2026-04-10 23:55:46.813][renderer_factory.py:get_renderer():156][INFO] Renderer factory try get predefined renderer via model type [bert]
+[process-28763][root][2026-04-10 23:55:46.813][renderer_factory.py:get_renderer():174][WARNING] Renderer factory found model [bert] falls back to basic renderer, this is typically unwanted.
+[process-28763][root][2026-04-10 23:55:46.813][custom_renderer.py:_setup_chat_template():376][WARNING] Tokenizer try load chat_template from chat_template.jinja.
+[process-28763][root][2026-04-10 23:55:46.813][custom_renderer.py:_setup_chat_template():390][WARNING] Default chat template not found at /mnt/raid0/pretrained_model/rtp_ci/tokenizer/chat_template.jinja, using empty template.
+[process-28763][root][2026-04-10 23:55:46.813][basic_renderer.py:__init__():84][INFO] tokenizer &lt;class &#x27;rtp_llm.frontend.tokenizer_factory.tokenizers.bert_tokenizer.BertTokenizer&#x27;&gt; has no chat_template nor default_chat_template attribute. Use default template.
+[process-28763][root][2026-04-10 23:55:46.813][basic_renderer.py:__init__():95][INFO] special token [[UNK]](unk_token) added as stop words.
+[process-28763][root][2026-04-10 23:55:46.813][basic_renderer.py:__init__():95][INFO] special token [[SEP]](sep_token) added as stop words.
+[process-28763][root][2026-04-10 23:55:46.814][basic_renderer.py:__init__():95][INFO] special token [[PAD]](pad_token) added as stop words.
+[process-28763][root][2026-04-10 23:55:46.814][basic_renderer.py:__init__():95][INFO] special token [[CLS]](cls_token) added as stop words.
+[process-28763][root][2026-04-10 23:55:46.814][basic_renderer.py:__init__():95][INFO] special token [[MASK]](mask_token) added as stop words.
+[process-28763][root][2026-04-10 23:55:46.814][basic_renderer.py:__init__():105][INFO] additional special tokens []added as stop words.
+[process-28763][root][2026-04-10 23:55:46.814][basic_renderer.py:__init__():121][INFO] found chat template to use: {% for message in messages %}{{&#x27;&lt;|im_start|&gt;&#x27; + message[&#x27;role&#x27;] + &#x27;
+&#x27; + message[&#x27;content&#x27;] + &#x27;&lt;|im_end|&gt;&#x27; + &#x27;
+&#x27;}}{% endfor %}{% if add_generation_prompt %}{{ &#x27;&lt;|im_start|&gt;assistant
+&#x27; }}{% endif %}
+[process-28763][root][2026-04-10 23:55:46.816][basic_renderer.py:__init__():148][INFO] compiled chat templates to use: dict_keys([&#x27;default&#x27;])
+[process-28763][root][2026-04-10 23:55:46.817][openai_render.py:__init__():41][INFO] Finally openai endpoint uses renderer: class_name=&#x27;BasicRenderer&#x27; renderer_model_type=&#x27;bert&#x27; extra_stop_word_ids_list=[[100], [100], [102], [0], [101], [103]] extra_stop_words_list=[&#x27;[UNK]&#x27;, &#x27;[UNK]&#x27;, &#x27;[SEP]&#x27;, &#x27;[PAD]&#x27;, &#x27;[CLS]&#x27;, &#x27;[MASK]&#x27;] template=&quot;{% for message in messages %}{{&#x27;&lt;|im_start|&gt;&#x27; + message[&#x27;role&#x27;] + &#x27;\n&#x27; + message[&#x27;content&#x27;] + &#x27;&lt;|im_end|&gt;&#x27; + &#x27;\n&#x27;}}{% endfor %}{% if add_generation_prompt %}{{ &#x27;&lt;|im_start|&gt;assistant\n&#x27; }}{% endif %}&quot; 
+[process-28763][root][2026-04-10 23:55:46.817][openai_render.py:__init__():47][INFO] chat_renderer [class_name=&#x27;BasicRenderer&#x27; renderer_model_type=&#x27;bert&#x27; extra_stop_word_ids_list=[[100], [100], [102], [0], [101], [103]] extra_stop_words_list=[&#x27;[UNK]&#x27;, &#x27;[UNK]&#x27;, &#x27;[SEP]&#x27;, &#x27;[PAD]&#x27;, &#x27;[CLS]&#x27;, &#x27;[MASK]&#x27;] template=&quot;{% for message in messages %}{{&#x27;&lt;|im_start|&gt;&#x27; + message[&#x27;role&#x27;] + &#x27;\n&#x27; + message[&#x27;content&#x27;] + &#x27;&lt;|im_end|&gt;&#x27; + &#x27;\n&#x27;}}{% endfor %}{% if add_generation_prompt %}{{ &#x27;&lt;|im_start|&gt;assistant\n&#x27; }}{% endif %}&quot;] is created.
+[process-28763][root][2026-04-10 23:55:46.817][openai_render.py:__init__():55][INFO] use stop_words_list [[&#x27;[UNK]&#x27;, &#x27;[UNK]&#x27;, &#x27;[SEP]&#x27;, &#x27;[PAD]&#x27;, &#x27;[CLS]&#x27;, &#x27;[MASK]&#x27;]]
+[process-28763][root][2026-04-10 23:55:46.817][embedding_endpoint.py:__init__():58][INFO] embedding endpoint connect to rpc addresses: localhost:6796
+[process-28763][root][2026-04-10 23:55:46.817][embedding_endpoint.py:__init__():64][INFO] embedding endpoint grpc options: [(&#x27;grpc.max_metadata_size&#x27;, 1073741824), (&#x27;grpc.max_receive_message_length&#x27;, 1073741824)]
+[process-28763][root][2026-04-10 23:55:46.830][frontend_app.py:start():131][INFO] server_config.ip = 10.67.77.202, port = 6789, rank id = 0, server_id = 1, separated_frontend = False
+[process-28763][root][2026-04-10 23:55:46.831][frontend_app.py:start():147][INFO] Starting Uvicorn server on port 6789 with timeout_keep_alive=5
+[process-28764][root][2026-04-10 23:55:46.997][server_config_setup.py:set_parallelism_config():279][INFO] set_parallelism_config: rank 0
+parallelism_config=tp_size: 1
+ep_size: 1
+dp_size: 1
+world_size: 1
+world_rank: 0
+pp_size: 1
+local_world_size: 1
+local_rank: 0
+ffn_sp_size: 1
+tp_rank: 0
+ep_rank: 0
+dp_rank: 0
+ffn_tp_size: 1
+ffn_tp_rank: 0
+enable_sp: 0
+ffn_disaggregate_config: {
+enable_ffn_disaggregate: 0
+
+}
+prefill_cp_config: {
+method: DISABLED
+ comm_buffer_size: 536870912
+}
+world_rank=0
+
+[process-28764][root][2026-04-10 23:55:46.997][async_log_handler.py:__init__():85][INFO] AsyncRotatingFileHandler init complete, worker thread alive: True
+[process-28764][root][2026-04-10 23:55:46.998][async_log_handler.py:__init__():85][INFO] AsyncRotatingFileHandler init complete, worker thread alive: True
+[process-28764][root][2026-04-10 23:55:46.998][access_logger.py:__init__():44][INFO] AccessLogger created: async_mode=True, rank_id=0, server_id=2
+[process-28764][root][2026-04-10 23:55:46.998][frontend_worker.py:get_dp_addrs_from_world_info():76][INFO] frontend worker ffn_disaggregate_config: enable_ffn_disaggregate: 0
+
+[process-28764][root][2026-04-10 23:55:46.998][frontend_worker.py:get_dp_addrs_from_world_info():99][INFO] [world_rank: 0] using addresses from world_info: [&#x27;10.67.77.202:6790&#x27;]
+[process-28764][root][2026-04-10 23:55:46.998][frontend_app.py:__init__():85][INFO] frontend app rank_id = 0, server_port = 6789, frontend_server_id = 2
+[process-28764][root][2026-04-10 23:55:46.998][model_config.py:build_model_config():810][INFO] max_seq_len: 512
+[process-28764][root][2026-04-10 23:55:46.998][model_config.py:get_task_type_from_ckpt_path():683][INFO] use SEQ_CLASSIFICATION from args
+[process-28764][root][2026-04-10 23:55:46.998][model_config.py:init_precision_config():591][INFO] act_type and config_dtype are both empty, using default: WEIGHT_TYPE.FP16
+[process-28764][root][2026-04-10 23:55:46.998][model_config.py:init_precision_config():628][INFO] Setting attn_config.kv_cache_dtype to BASE (default, no int8/fp8 kv_cache specified)
+[process-28764][root][2026-04-10 23:55:46.999][model_config.py:init_precision_config():659][INFO] Final precision configuration - quant_config: None, data_type: DataType.TYPE_FP16, attn_config.kv_cache_dtype: KvCacheDataType.BASE
+[process-28764][root][2026-04-10 23:55:46.999][model_config.py:build_model_config():840][INFO] model task type: TaskType.SEQ_CLASSIFICATION, use_kvcache: False
+[process-28764][root][2026-04-10 23:55:46.999][cutlass_config.py:load_cutlass_gemm_config():76][WARNING] load cutlass gemm config failed: quant info not supported
+[process-28764][root][2026-04-10 23:55:46.999][model_factory.py:create_model_config():317][INFO] model_config: num_layers: 4
+hidden_size: 768
+attn_config: {
+  head_num: 12
+  kv_head_num: 12
+  size_per_head: 64
+  tokens_per_block: 16
+  is_causal: 0
+  q_scaling: 1
+  fuse_qkv_add_bias: 1
+  use_logn_attn: 0
+  use_mla: 0
+  q_lora_rank: 0
+  kv_lora_rank: 0
+  nope_head_dim: 0
+  rope_head_dim: 0
+  v_head_dim: 0
+  softmax_extra_scale: 1
+  kv_cache_dtype: BASE
+  need_rope_kv_cache: 1
+  style: 0
+  dim: 0
+  base: 10000
+  scale: 1
+  factor1: 1
+  factor2: 1
+  max_pos: 0
+  extrapolation_factor: 1
+  mscale: 1
+  offset: 0
+  index_factor: 1
+  mrope_dim1: 0
+  mrope_dim2: 0
+  mrope_dim3: 0
+
+}
+mla_ops_type: AUTO
+deepseek_rope_mscale: 1
+deepseek_mscale_all_dim: 1
+moe_n_group: 1
+moe_topk_group: 1
+routed_scaling_factor: 1
+layernorm_eps: 1e-12
+layernorm_type: post_layernorm
+norm_type: layernorm
+task_type: SEQ_CLASSIFICATION
+activation_type: gelu
+data_type: fp16
+position_ids_style: 0
+partial_rotary_factor: 1
+input_embedding_scalar: 1
+residual_scalar: 1
+qk_norm: 0
+use_norm_input_residual: 0
+use_norm_attn_out_residual: 0
+max_seq_len: 512
+vocab_size: 21128
+input_vocab_size: 0
+type_vocab_size: 2
+embedding_size: 0
+expert_num: 0
+moe_k: 0
+moe_normalize_expert_scale: 0
+moe_style: 0
+scoring_func: 0
+moe_layer_index: []
+has_positional_encoding: 1
+has_pre_decoder_layernorm: 1
+has_post_decoder_layernorm: 1
+has_lm_head: 1
+use_attention_linear_bias: 0
+use_fp32_to_compute_logit: 0
+add_bias_linear: 0
+has_moe_norm: 0
+logit_scale: 1
+use_kvcache: 0
+pre_seq_len: 0
+prefix_projection: 0
+reverse_e_h_norm: 0
+tokenizer_path: /mnt/raid0/pretrained_model/rtp_ci/tokenizer/
+ckpt_path: /mnt/raid0/pretrained_model/rtp_ci/4l_sku_mean_909/
+special_tokens: {
+  bos_token_id: -1
+  eos_token_id: 0
+  pad_token_id: 0
+  decoder_start_token_id: -1
+  stop_words_id_list: []
+  stop_words_str_list: []
+}
+quant_algo: {
+  method: None
+  bits: 16
+  group_size: 0
+}
+eplb_config: {
+  enable_eplb: 0
+  eplb_update_time: 5000
+  eplb_mode: 0
+  redundant_expert: 0
+  balance_method: mix
+  eplb_force_repack: 0
+  eplb_stats_window_size: 10
+  eplb_control_step: 100
+  eplb_test_mode: 0
+  eplb_balance_layer_per_step: 1
+}
+mm_model_config: {
+  is_multimodal: false
+  include_sep_tokens: false
+  mm_position_ids_style: 0
+  mm_sep_tokens: []
+}
+extra_data_path: 
+local_extra_data_path: 
+model_type: bert
+ptuning_path: 
+[process-28764][root][2026-04-10 23:55:46.999][model_config.py:update_stop_words_from_env():748][INFO] use stop_words_str_list [[]], stop_words_id_list [[]]
+[process-28764][root][2026-04-10 23:55:46.999][frontend_worker.py:__init__():114][INFO] starting frontend worker
+[process-28764][root][2026-04-10 23:55:47.035][frontend_worker.py:get_dp_addrs_from_world_info():76][INFO] frontend worker ffn_disaggregate_config: enable_ffn_disaggregate: 0
+
+[process-28764][root][2026-04-10 23:55:47.035][frontend_worker.py:get_dp_addrs_from_world_info():99][INFO] [world_rank: 0] using addresses from world_info: [&#x27;10.67.77.202:6790&#x27;]
+[process-28764][root][2026-04-10 23:55:47.035][model_rpc_client.py:__init__():365][INFO] client options: [(&#x27;grpc.max_metadata_size&#x27;, 1073741824), (&#x27;grpc.max_receive_message_length&#x27;, 1073741824)]
+[process-28764][root][2026-04-10 23:55:47.035][model_rpc_client.py:__init__():371][INFO] addresses: [&#x27;10.67.77.202:6790&#x27;]
+[process-28764][root][2026-04-10 23:55:47.035][host_service.py:create_from_env():185][INFO] Model Service Configuration:
+    Master Domain: 
+    PDFusion Domain: 
+    Prefill Domain: 
+    Decode Domain: 
+    VIT Domain: 
+    Use Local: False
+[process-28764][root][2026-04-10 23:55:47.035][backend_rpc_server_visitor.py:get_backend_role_list():90][INFO] pd_sep_config: role_type: PDFUSION
+cache_store_rdma_mode: 1
+cache_store_listen_port: 6791
+cache_store_connect_port: 2
+cache_store_rdma_listen_port: 6793
+cache_store_rdma_connect_port: 4
+remote_rpc_server_port: 1
+prefill_retry_times: 0
+prefill_retry_timeout_ms: 0
+prefill_max_wait_timeout_ms: 600000
+decode_retry_times: 100
+decode_retry_timeout_ms: 100
+decode_retry_interval_ms: 1
+decode_polling_kv_cache_step_ms: 30
+decode_polling_call_prefill_ms: 30
+rdma_connect_retry_times: 0
+load_cache_timeout_ms: 5000
+max_rpc_timeout_ms: 0
+worker_port_offset: 8
+decode_entrance: 0
+[process-28764][root][2026-04-10 23:55:47.035][backend_rpc_server_visitor.py:get_backend_role_list():122][INFO] configured backend role list: []
+[process-28764][root][2026-04-10 23:55:47.036][frontend_worker.py:__init__():157][INFO] frontend worker start done.
+[process-28764][root][2026-04-10 23:55:47.036][utils.py:create_custom_module():35][ERROR] internal module not found, using external module
+Traceback (most recent call last):
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/models/downstream_modules/utils.py&quot;, line 27, in create_custom_module
+    from internal_source.rtp_llm.models.downstream_modules.utils import (
+ModuleNotFoundError: No module named &#x27;internal_source&#x27;
+[process-28764][root][2026-04-10 23:55:47.036][renderer_factory.py:get_renderer():156][INFO] Renderer factory try get predefined renderer via model type [bert]
+[process-28764][root][2026-04-10 23:55:47.036][renderer_factory.py:get_renderer():174][WARNING] Renderer factory found model [bert] falls back to basic renderer, this is typically unwanted.
+[process-28764][root][2026-04-10 23:55:47.036][custom_renderer.py:_setup_chat_template():376][WARNING] Tokenizer try load chat_template from chat_template.jinja.
+[process-28764][root][2026-04-10 23:55:47.037][custom_renderer.py:_setup_chat_template():390][WARNING] Default chat template not found at /mnt/raid0/pretrained_model/rtp_ci/tokenizer/chat_template.jinja, using empty template.
+[process-28764][root][2026-04-10 23:55:47.037][basic_renderer.py:__init__():84][INFO] tokenizer &lt;class &#x27;rtp_llm.frontend.tokenizer_factory.tokenizers.bert_tokenizer.BertTokenizer&#x27;&gt; has no chat_template nor default_chat_template attribute. Use default template.
+[process-28764][root][2026-04-10 23:55:47.037][basic_renderer.py:__init__():95][INFO] special token [[UNK]](unk_token) added as stop words.
+[process-28764][root][2026-04-10 23:55:47.037][basic_renderer.py:__init__():95][INFO] special token [[SEP]](sep_token) added as stop words.
+[process-28764][root][2026-04-10 23:55:47.037][basic_renderer.py:__init__():95][INFO] special token [[PAD]](pad_token) added as stop words.
+[process-28764][root][2026-04-10 23:55:47.037][basic_renderer.py:__init__():95][INFO] special token [[CLS]](cls_token) added as stop words.
+[process-28764][root][2026-04-10 23:55:47.037][basic_renderer.py:__init__():95][INFO] special token [[MASK]](mask_token) added as stop words.
+[process-28764][root][2026-04-10 23:55:47.037][basic_renderer.py:__init__():105][INFO] additional special tokens []added as stop words.
+[process-28764][root][2026-04-10 23:55:47.037][basic_renderer.py:__init__():121][INFO] found chat template to use: {% for message in messages %}{{&#x27;&lt;|im_start|&gt;&#x27; + message[&#x27;role&#x27;] + &#x27;
+&#x27; + message[&#x27;content&#x27;] + &#x27;&lt;|im_end|&gt;&#x27; + &#x27;
+&#x27;}}{% endfor %}{% if add_generation_prompt %}{{ &#x27;&lt;|im_start|&gt;assistant
+&#x27; }}{% endif %}
+[process-28764][root][2026-04-10 23:55:47.039][basic_renderer.py:__init__():148][INFO] compiled chat templates to use: dict_keys([&#x27;default&#x27;])
+[process-28764][root][2026-04-10 23:55:47.040][openai_render.py:__init__():41][INFO] Finally openai endpoint uses renderer: class_name=&#x27;BasicRenderer&#x27; renderer_model_type=&#x27;bert&#x27; extra_stop_word_ids_list=[[100], [100], [102], [0], [101], [103]] extra_stop_words_list=[&#x27;[UNK]&#x27;, &#x27;[UNK]&#x27;, &#x27;[SEP]&#x27;, &#x27;[PAD]&#x27;, &#x27;[CLS]&#x27;, &#x27;[MASK]&#x27;] template=&quot;{% for message in messages %}{{&#x27;&lt;|im_start|&gt;&#x27; + message[&#x27;role&#x27;] + &#x27;\n&#x27; + message[&#x27;content&#x27;] + &#x27;&lt;|im_end|&gt;&#x27; + &#x27;\n&#x27;}}{% endfor %}{% if add_generation_prompt %}{{ &#x27;&lt;|im_start|&gt;assistant\n&#x27; }}{% endif %}&quot; 
+[process-28764][root][2026-04-10 23:55:47.040][openai_render.py:__init__():47][INFO] chat_renderer [class_name=&#x27;BasicRenderer&#x27; renderer_model_type=&#x27;bert&#x27; extra_stop_word_ids_list=[[100], [100], [102], [0], [101], [103]] extra_stop_words_list=[&#x27;[UNK]&#x27;, &#x27;[UNK]&#x27;, &#x27;[SEP]&#x27;, &#x27;[PAD]&#x27;, &#x27;[CLS]&#x27;, &#x27;[MASK]&#x27;] template=&quot;{% for message in messages %}{{&#x27;&lt;|im_start|&gt;&#x27; + message[&#x27;role&#x27;] + &#x27;\n&#x27; + message[&#x27;content&#x27;] + &#x27;&lt;|im_end|&gt;&#x27; + &#x27;\n&#x27;}}{% endfor %}{% if add_generation_prompt %}{{ &#x27;&lt;|im_start|&gt;assistant\n&#x27; }}{% endif %}&quot;] is created.
+[process-28764][root][2026-04-10 23:55:47.040][openai_render.py:__init__():55][INFO] use stop_words_list [[&#x27;[UNK]&#x27;, &#x27;[UNK]&#x27;, &#x27;[SEP]&#x27;, &#x27;[PAD]&#x27;, &#x27;[CLS]&#x27;, &#x27;[MASK]&#x27;]]
+[process-28764][root][2026-04-10 23:55:47.040][embedding_endpoint.py:__init__():58][INFO] embedding endpoint connect to rpc addresses: localhost:6796
+[process-28764][root][2026-04-10 23:55:47.040][embedding_endpoint.py:__init__():64][INFO] embedding endpoint grpc options: [(&#x27;grpc.max_metadata_size&#x27;, 1073741824), (&#x27;grpc.max_receive_message_length&#x27;, 1073741824)]
+[process-28764][root][2026-04-10 23:55:47.053][frontend_app.py:start():131][INFO] server_config.ip = 10.67.77.202, port = 6789, rank id = 0, server_id = 2, separated_frontend = False
+[process-28764][root][2026-04-10 23:55:47.054][frontend_app.py:start():147][INFO] Starting Uvicorn server on port 6789 with timeout_keep_alive=5
+[process-28763][uvicorn.error][2026-04-10 23:55:47.090][server.py:_serve():82][INFO] Started server process [28763]
+[process-28763][uvicorn.error][2026-04-10 23:55:47.091][on.py:startup():48][INFO] Waiting for application startup.
+[process-28763][uvicorn.error][2026-04-10 23:55:47.094][on.py:startup():62][INFO] Application startup complete.
+[process-28763][uvicorn.error][2026-04-10 23:55:47.094][server.py:_log_started_message():192][INFO] Uvicorn running on socket (&#x27;0.0.0.0&#x27;, 6789) (Press CTRL+C to quit)
+[process-28762][root][2026-04-10 23:55:47.152][start_frontend_server.py:start_frontend_server():39][INFO] import FrontendApp took 60.92s
+[process-28762][root][2026-04-10 23:55:47.152][server_config_setup.py:set_parallelism_config():279][INFO] set_parallelism_config: rank 0
+parallelism_config=tp_size: 1
+ep_size: 1
+dp_size: 1
+world_size: 1
+world_rank: 0
+pp_size: 1
+local_world_size: 1
+local_rank: 0
+ffn_sp_size: 1
+tp_rank: 0
+ep_rank: 0
+dp_rank: 0
+ffn_tp_size: 1
+ffn_tp_rank: 0
+enable_sp: 0
+ffn_disaggregate_config: {
+enable_ffn_disaggregate: 0
+
+}
+prefill_cp_config: {
+method: DISABLED
+ comm_buffer_size: 536870912
+}
+world_rank=0
+
+[process-28762][root][2026-04-10 23:55:47.153][async_log_handler.py:__init__():85][INFO] AsyncRotatingFileHandler init complete, worker thread alive: True
+[process-28762][root][2026-04-10 23:55:47.153][async_log_handler.py:__init__():85][INFO] AsyncRotatingFileHandler init complete, worker thread alive: True
+[process-28762][root][2026-04-10 23:55:47.153][access_logger.py:__init__():44][INFO] AccessLogger created: async_mode=True, rank_id=0, server_id=0
+[process-28762][root][2026-04-10 23:55:47.154][frontend_worker.py:get_dp_addrs_from_world_info():76][INFO] frontend worker ffn_disaggregate_config: enable_ffn_disaggregate: 0
+
+[process-28762][root][2026-04-10 23:55:47.154][frontend_worker.py:get_dp_addrs_from_world_info():99][INFO] [world_rank: 0] using addresses from world_info: [&#x27;10.67.77.202:6790&#x27;]
+[process-28762][root][2026-04-10 23:55:47.154][frontend_app.py:__init__():85][INFO] frontend app rank_id = 0, server_port = 6789, frontend_server_id = 0
+[process-28762][root][2026-04-10 23:55:47.154][model_config.py:build_model_config():810][INFO] max_seq_len: 512
+[process-28762][root][2026-04-10 23:55:47.154][model_config.py:get_task_type_from_ckpt_path():683][INFO] use SEQ_CLASSIFICATION from args
+[process-28762][root][2026-04-10 23:55:47.154][model_config.py:init_precision_config():591][INFO] act_type and config_dtype are both empty, using default: WEIGHT_TYPE.FP16
+[process-28762][root][2026-04-10 23:55:47.154][model_config.py:init_precision_config():628][INFO] Setting attn_config.kv_cache_dtype to BASE (default, no int8/fp8 kv_cache specified)
+[process-28762][root][2026-04-10 23:55:47.154][model_config.py:init_precision_config():659][INFO] Final precision configuration - quant_config: None, data_type: DataType.TYPE_FP16, attn_config.kv_cache_dtype: KvCacheDataType.BASE
+[process-28762][root][2026-04-10 23:55:47.154][model_config.py:build_model_config():840][INFO] model task type: TaskType.SEQ_CLASSIFICATION, use_kvcache: False
+[process-28762][root][2026-04-10 23:55:47.154][cutlass_config.py:load_cutlass_gemm_config():76][WARNING] load cutlass gemm config failed: quant info not supported
+[process-28762][root][2026-04-10 23:55:47.155][model_factory.py:create_model_config():317][INFO] model_config: num_layers: 4
+hidden_size: 768
+attn_config: {
+  head_num: 12
+  kv_head_num: 12
+  size_per_head: 64
+  tokens_per_block: 16
+  is_causal: 0
+  q_scaling: 1
+  fuse_qkv_add_bias: 1
+  use_logn_attn: 0
+  use_mla: 0
+  q_lora_rank: 0
+  kv_lora_rank: 0
+  nope_head_dim: 0
+  rope_head_dim: 0
+  v_head_dim: 0
+  softmax_extra_scale: 1
+  kv_cache_dtype: BASE
+  need_rope_kv_cache: 1
+  style: 0
+  dim: 0
+  base: 10000
+  scale: 1
+  factor1: 1
+  factor2: 1
+  max_pos: 0
+  extrapolation_factor: 1
+  mscale: 1
+  offset: 0
+  index_factor: 1
+  mrope_dim1: 0
+  mrope_dim2: 0
+  mrope_dim3: 0
+
+}
+mla_ops_type: AUTO
+deepseek_rope_mscale: 1
+deepseek_mscale_all_dim: 1
+moe_n_group: 1
+moe_topk_group: 1
+routed_scaling_factor: 1
+layernorm_eps: 1e-12
+layernorm_type: post_layernorm
+norm_type: layernorm
+task_type: SEQ_CLASSIFICATION
+activation_type: gelu
+data_type: fp16
+position_ids_style: 0
+partial_rotary_factor: 1
+input_embedding_scalar: 1
+residual_scalar: 1
+qk_norm: 0
+use_norm_input_residual: 0
+use_norm_attn_out_residual: 0
+max_seq_len: 512
+vocab_size: 21128
+input_vocab_size: 0
+type_vocab_size: 2
+embedding_size: 0
+expert_num: 0
+moe_k: 0
+moe_normalize_expert_scale: 0
+moe_style: 0
+scoring_func: 0
+moe_layer_index: []
+has_positional_encoding: 1
+has_pre_decoder_layernorm: 1
+has_post_decoder_layernorm: 1
+has_lm_head: 1
+use_attention_linear_bias: 0
+use_fp32_to_compute_logit: 0
+add_bias_linear: 0
+has_moe_norm: 0
+logit_scale: 1
+use_kvcache: 0
+pre_seq_len: 0
+prefix_projection: 0
+reverse_e_h_norm: 0
+tokenizer_path: /mnt/raid0/pretrained_model/rtp_ci/tokenizer/
+ckpt_path: /mnt/raid0/pretrained_model/rtp_ci/4l_sku_mean_909/
+special_tokens: {
+  bos_token_id: -1
+  eos_token_id: 0
+  pad_token_id: 0
+  decoder_start_token_id: -1
+  stop_words_id_list: []
+  stop_words_str_list: []
+}
+quant_algo: {
+  method: None
+  bits: 16
+  group_size: 0
+}
+eplb_config: {
+  enable_eplb: 0
+  eplb_update_time: 5000
+  eplb_mode: 0
+  redundant_expert: 0
+  balance_method: mix
+  eplb_force_repack: 0
+  eplb_stats_window_size: 10
+  eplb_control_step: 100
+  eplb_test_mode: 0
+  eplb_balance_layer_per_step: 1
+}
+mm_model_config: {
+  is_multimodal: false
+  include_sep_tokens: false
+  mm_position_ids_style: 0
+  mm_sep_tokens: []
+}
+extra_data_path: 
+local_extra_data_path: 
+model_type: bert
+ptuning_path: 
+[process-28762][root][2026-04-10 23:55:47.155][model_config.py:update_stop_words_from_env():748][INFO] use stop_words_str_list [[]], stop_words_id_list [[]]
+[process-28762][root][2026-04-10 23:55:47.155][frontend_worker.py:__init__():114][INFO] starting frontend worker
+[process-28762][root][2026-04-10 23:55:47.194][frontend_worker.py:get_dp_addrs_from_world_info():76][INFO] frontend worker ffn_disaggregate_config: enable_ffn_disaggregate: 0
+
+[process-28762][root][2026-04-10 23:55:47.194][frontend_worker.py:get_dp_addrs_from_world_info():99][INFO] [world_rank: 0] using addresses from world_info: [&#x27;10.67.77.202:6790&#x27;]
+[process-28762][root][2026-04-10 23:55:47.195][model_rpc_client.py:__init__():365][INFO] client options: [(&#x27;grpc.max_metadata_size&#x27;, 1073741824), (&#x27;grpc.max_receive_message_length&#x27;, 1073741824)]
+[process-28762][root][2026-04-10 23:55:47.195][model_rpc_client.py:__init__():371][INFO] addresses: [&#x27;10.67.77.202:6790&#x27;]
+[process-28762][root][2026-04-10 23:55:47.195][host_service.py:create_from_env():185][INFO] Model Service Configuration:
+    Master Domain: 
+    PDFusion Domain: 
+    Prefill Domain: 
+    Decode Domain: 
+    VIT Domain: 
+    Use Local: False
+[process-28762][root][2026-04-10 23:55:47.195][backend_rpc_server_visitor.py:get_backend_role_list():90][INFO] pd_sep_config: role_type: PDFUSION
+cache_store_rdma_mode: 1
+cache_store_listen_port: 6791
+cache_store_connect_port: 2
+cache_store_rdma_listen_port: 6793
+cache_store_rdma_connect_port: 4
+remote_rpc_server_port: 1
+prefill_retry_times: 0
+prefill_retry_timeout_ms: 0
+prefill_max_wait_timeout_ms: 600000
+decode_retry_times: 100
+decode_retry_timeout_ms: 100
+decode_retry_interval_ms: 1
+decode_polling_kv_cache_step_ms: 30
+decode_polling_call_prefill_ms: 30
+rdma_connect_retry_times: 0
+load_cache_timeout_ms: 5000
+max_rpc_timeout_ms: 0
+worker_port_offset: 8
+decode_entrance: 0
+[process-28762][root][2026-04-10 23:55:47.195][backend_rpc_server_visitor.py:get_backend_role_list():122][INFO] configured backend role list: []
+[process-28762][root][2026-04-10 23:55:47.195][frontend_worker.py:__init__():157][INFO] frontend worker start done.
+[process-28762][root][2026-04-10 23:55:47.195][utils.py:create_custom_module():35][ERROR] internal module not found, using external module
+Traceback (most recent call last):
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/models/downstream_modules/utils.py&quot;, line 27, in create_custom_module
+    from internal_source.rtp_llm.models.downstream_modules.utils import (
+ModuleNotFoundError: No module named &#x27;internal_source&#x27;
+[process-28762][root][2026-04-10 23:55:47.196][renderer_factory.py:get_renderer():156][INFO] Renderer factory try get predefined renderer via model type [bert]
+[process-28762][root][2026-04-10 23:55:47.196][renderer_factory.py:get_renderer():174][WARNING] Renderer factory found model [bert] falls back to basic renderer, this is typically unwanted.
+[process-28762][root][2026-04-10 23:55:47.196][custom_renderer.py:_setup_chat_template():376][WARNING] Tokenizer try load chat_template from chat_template.jinja.
+[process-28762][root][2026-04-10 23:55:47.196][custom_renderer.py:_setup_chat_template():390][WARNING] Default chat template not found at /mnt/raid0/pretrained_model/rtp_ci/tokenizer/chat_template.jinja, using empty template.
+[process-28762][root][2026-04-10 23:55:47.196][basic_renderer.py:__init__():84][INFO] tokenizer &lt;class &#x27;rtp_llm.frontend.tokenizer_factory.tokenizers.bert_tokenizer.BertTokenizer&#x27;&gt; has no chat_template nor default_chat_template attribute. Use default template.
+[process-28762][root][2026-04-10 23:55:47.196][basic_renderer.py:__init__():95][INFO] special token [[UNK]](unk_token) added as stop words.
+[process-28762][root][2026-04-10 23:55:47.196][basic_renderer.py:__init__():95][INFO] special token [[SEP]](sep_token) added as stop words.
+[process-28762][root][2026-04-10 23:55:47.196][basic_renderer.py:__init__():95][INFO] special token [[PAD]](pad_token) added as stop words.
+[process-28762][root][2026-04-10 23:55:47.196][basic_renderer.py:__init__():95][INFO] special token [[CLS]](cls_token) added as stop words.
+[process-28762][root][2026-04-10 23:55:47.196][basic_renderer.py:__init__():95][INFO] special token [[MASK]](mask_token) added as stop words.
+[process-28762][root][2026-04-10 23:55:47.196][basic_renderer.py:__init__():105][INFO] additional special tokens []added as stop words.
+[process-28762][root][2026-04-10 23:55:47.196][basic_renderer.py:__init__():121][INFO] found chat template to use: {% for message in messages %}{{&#x27;&lt;|im_start|&gt;&#x27; + message[&#x27;role&#x27;] + &#x27;
+&#x27; + message[&#x27;content&#x27;] + &#x27;&lt;|im_end|&gt;&#x27; + &#x27;
+&#x27;}}{% endfor %}{% if add_generation_prompt %}{{ &#x27;&lt;|im_start|&gt;assistant
+&#x27; }}{% endif %}
+[process-28762][root][2026-04-10 23:55:47.199][basic_renderer.py:__init__():148][INFO] compiled chat templates to use: dict_keys([&#x27;default&#x27;])
+[process-28762][root][2026-04-10 23:55:47.199][openai_render.py:__init__():41][INFO] Finally openai endpoint uses renderer: class_name=&#x27;BasicRenderer&#x27; renderer_model_type=&#x27;bert&#x27; extra_stop_word_ids_list=[[100], [100], [102], [0], [101], [103]] extra_stop_words_list=[&#x27;[UNK]&#x27;, &#x27;[UNK]&#x27;, &#x27;[SEP]&#x27;, &#x27;[PAD]&#x27;, &#x27;[CLS]&#x27;, &#x27;[MASK]&#x27;] template=&quot;{% for message in messages %}{{&#x27;&lt;|im_start|&gt;&#x27; + message[&#x27;role&#x27;] + &#x27;\n&#x27; + message[&#x27;content&#x27;] + &#x27;&lt;|im_end|&gt;&#x27; + &#x27;\n&#x27;}}{% endfor %}{% if add_generation_prompt %}{{ &#x27;&lt;|im_start|&gt;assistant\n&#x27; }}{% endif %}&quot; 
+[process-28762][root][2026-04-10 23:55:47.199][openai_render.py:__init__():47][INFO] chat_renderer [class_name=&#x27;BasicRenderer&#x27; renderer_model_type=&#x27;bert&#x27; extra_stop_word_ids_list=[[100], [100], [102], [0], [101], [103]] extra_stop_words_list=[&#x27;[UNK]&#x27;, &#x27;[UNK]&#x27;, &#x27;[SEP]&#x27;, &#x27;[PAD]&#x27;, &#x27;[CLS]&#x27;, &#x27;[MASK]&#x27;] template=&quot;{% for message in messages %}{{&#x27;&lt;|im_start|&gt;&#x27; + message[&#x27;role&#x27;] + &#x27;\n&#x27; + message[&#x27;content&#x27;] + &#x27;&lt;|im_end|&gt;&#x27; + &#x27;\n&#x27;}}{% endfor %}{% if add_generation_prompt %}{{ &#x27;&lt;|im_start|&gt;assistant\n&#x27; }}{% endif %}&quot;] is created.
+[process-28762][root][2026-04-10 23:55:47.200][openai_render.py:__init__():55][INFO] use stop_words_list [[&#x27;[UNK]&#x27;, &#x27;[UNK]&#x27;, &#x27;[SEP]&#x27;, &#x27;[PAD]&#x27;, &#x27;[CLS]&#x27;, &#x27;[MASK]&#x27;]]
+[process-28762][root][2026-04-10 23:55:47.200][embedding_endpoint.py:__init__():58][INFO] embedding endpoint connect to rpc addresses: localhost:6796
+[process-28762][root][2026-04-10 23:55:47.200][embedding_endpoint.py:__init__():64][INFO] embedding endpoint grpc options: [(&#x27;grpc.max_metadata_size&#x27;, 1073741824), (&#x27;grpc.max_receive_message_length&#x27;, 1073741824)]
+[process-28762][root][2026-04-10 23:55:47.213][frontend_app.py:start():131][INFO] server_config.ip = 10.67.77.202, port = 6789, rank id = 0, server_id = 0, separated_frontend = False
+[process-28762][root][2026-04-10 23:55:47.214][frontend_app.py:start():147][INFO] Starting Uvicorn server on port 6789 with timeout_keep_alive=5
+[process-28764][uvicorn.error][2026-04-10 23:55:47.232][server.py:_serve():82][INFO] Started server process [28764]
+[process-28764][uvicorn.error][2026-04-10 23:55:47.232][on.py:startup():48][INFO] Waiting for application startup.
+[process-28764][uvicorn.error][2026-04-10 23:55:47.235][on.py:startup():62][INFO] Application startup complete.
+[process-28764][uvicorn.error][2026-04-10 23:55:47.235][server.py:_log_started_message():192][INFO] Uvicorn running on socket (&#x27;0.0.0.0&#x27;, 6789) (Press CTRL+C to quit)
+[process-28762][uvicorn.error][2026-04-10 23:55:47.464][server.py:_serve():82][INFO] Started server process [28762]
+[process-28762][uvicorn.error][2026-04-10 23:55:47.465][on.py:startup():48][INFO] Waiting for application startup.
+[process-28762][uvicorn.error][2026-04-10 23:55:47.468][on.py:startup():62][INFO] Application startup complete.
+[process-28762][uvicorn.error][2026-04-10 23:55:47.468][server.py:_log_started_message():192][INFO] Uvicorn running on socket (&#x27;0.0.0.0&#x27;, 6789) (Press CTRL+C to quit)
+[process-28761][root][2026-04-10 23:55:47.860][vipserver_proxy.py:refresh_srv_lst():86][ERROR] failed to refresh vipserver server list, exception : HTTPConnectionPool(host=&#x27;jmenv.tbsite.net&#x27;, port=8080): Max retries exceeded with url: /vipserver/serverlist?nofix=1&amp;labels=&amp; (Caused by NewConnectionError(&#x27;&lt;urllib3.connection.HTTPConnection object at 0x7f82810f7a90&gt;: Failed to establish a new connection: [Errno -2] Name or service not known&#x27;))
+[process-28765][root][2026-04-10 23:55:48.980][server_config_setup.py:set_parallelism_config():279][INFO] set_parallelism_config: rank 0
+parallelism_config=tp_size: 1
+ep_size: 1
+dp_size: 1
+world_size: 1
+world_rank: 0
+pp_size: 1
+local_world_size: 1
+local_rank: 0
+ffn_sp_size: 1
+tp_rank: 0
+ep_rank: 0
+dp_rank: 0
+ffn_tp_size: 1
+ffn_tp_rank: 0
+enable_sp: 0
+ffn_disaggregate_config: {
+enable_ffn_disaggregate: 0
+
+}
+prefill_cp_config: {
+method: DISABLED
+ comm_buffer_size: 536870912
+}
+world_rank=0
+
+[process-28765][root][2026-04-10 23:55:48.981][async_log_handler.py:__init__():85][INFO] AsyncRotatingFileHandler init complete, worker thread alive: True
+[process-28765][root][2026-04-10 23:55:48.981][async_log_handler.py:__init__():85][INFO] AsyncRotatingFileHandler init complete, worker thread alive: True
+[process-28765][root][2026-04-10 23:55:48.981][access_logger.py:__init__():44][INFO] AccessLogger created: async_mode=True, rank_id=0, server_id=3
+[process-28765][root][2026-04-10 23:55:48.982][frontend_worker.py:get_dp_addrs_from_world_info():76][INFO] frontend worker ffn_disaggregate_config: enable_ffn_disaggregate: 0
+
+[process-28765][root][2026-04-10 23:55:48.982][frontend_worker.py:get_dp_addrs_from_world_info():99][INFO] [world_rank: 0] using addresses from world_info: [&#x27;10.67.77.202:6790&#x27;]
+[process-28765][root][2026-04-10 23:55:48.982][frontend_app.py:__init__():85][INFO] frontend app rank_id = 0, server_port = 6789, frontend_server_id = 3
+[process-28765][root][2026-04-10 23:55:48.982][model_config.py:build_model_config():810][INFO] max_seq_len: 512
+[process-28765][root][2026-04-10 23:55:48.982][model_config.py:get_task_type_from_ckpt_path():683][INFO] use SEQ_CLASSIFICATION from args
+[process-28765][root][2026-04-10 23:55:48.982][model_config.py:init_precision_config():591][INFO] act_type and config_dtype are both empty, using default: WEIGHT_TYPE.FP16
+[process-28765][root][2026-04-10 23:55:48.982][model_config.py:init_precision_config():628][INFO] Setting attn_config.kv_cache_dtype to BASE (default, no int8/fp8 kv_cache specified)
+[process-28765][root][2026-04-10 23:55:48.982][model_config.py:init_precision_config():659][INFO] Final precision configuration - quant_config: None, data_type: DataType.TYPE_FP16, attn_config.kv_cache_dtype: KvCacheDataType.BASE
+[process-28765][root][2026-04-10 23:55:48.982][model_config.py:build_model_config():840][INFO] model task type: TaskType.SEQ_CLASSIFICATION, use_kvcache: False
+[process-28765][root][2026-04-10 23:55:48.982][cutlass_config.py:load_cutlass_gemm_config():76][WARNING] load cutlass gemm config failed: quant info not supported
+[process-28765][root][2026-04-10 23:55:48.982][model_factory.py:create_model_config():317][INFO] model_config: num_layers: 4
+hidden_size: 768
+attn_config: {
+  head_num: 12
+  kv_head_num: 12
+  size_per_head: 64
+  tokens_per_block: 16
+  is_causal: 0
+  q_scaling: 1
+  fuse_qkv_add_bias: 1
+  use_logn_attn: 0
+  use_mla: 0
+  q_lora_rank: 0
+  kv_lora_rank: 0
+  nope_head_dim: 0
+  rope_head_dim: 0
+  v_head_dim: 0
+  softmax_extra_scale: 1
+  kv_cache_dtype: BASE
+  need_rope_kv_cache: 1
+  style: 0
+  dim: 0
+  base: 10000
+  scale: 1
+  factor1: 1
+  factor2: 1
+  max_pos: 0
+  extrapolation_factor: 1
+  mscale: 1
+  offset: 0
+  index_factor: 1
+  mrope_dim1: 0
+  mrope_dim2: 0
+  mrope_dim3: 0
+
+}
+mla_ops_type: AUTO
+deepseek_rope_mscale: 1
+deepseek_mscale_all_dim: 1
+moe_n_group: 1
+moe_topk_group: 1
+routed_scaling_factor: 1
+layernorm_eps: 1e-12
+layernorm_type: post_layernorm
+norm_type: layernorm
+task_type: SEQ_CLASSIFICATION
+activation_type: gelu
+data_type: fp16
+position_ids_style: 0
+partial_rotary_factor: 1
+input_embedding_scalar: 1
+residual_scalar: 1
+qk_norm: 0
+use_norm_input_residual: 0
+use_norm_attn_out_residual: 0
+max_seq_len: 512
+vocab_size: 21128
+input_vocab_size: 0
+type_vocab_size: 2
+embedding_size: 0
+expert_num: 0
+moe_k: 0
+moe_normalize_expert_scale: 0
+moe_style: 0
+scoring_func: 0
+moe_layer_index: []
+has_positional_encoding: 1
+has_pre_decoder_layernorm: 1
+has_post_decoder_layernorm: 1
+has_lm_head: 1
+use_attention_linear_bias: 0
+use_fp32_to_compute_logit: 0
+add_bias_linear: 0
+has_moe_norm: 0
+logit_scale: 1
+use_kvcache: 0
+pre_seq_len: 0
+prefix_projection: 0
+reverse_e_h_norm: 0
+tokenizer_path: /mnt/raid0/pretrained_model/rtp_ci/tokenizer/
+ckpt_path: /mnt/raid0/pretrained_model/rtp_ci/4l_sku_mean_909/
+special_tokens: {
+  bos_token_id: -1
+  eos_token_id: 0
+  pad_token_id: 0
+  decoder_start_token_id: -1
+  stop_words_id_list: []
+  stop_words_str_list: []
+}
+quant_algo: {
+  method: None
+  bits: 16
+  group_size: 0
+}
+eplb_config: {
+  enable_eplb: 0
+  eplb_update_time: 5000
+  eplb_mode: 0
+  redundant_expert: 0
+  balance_method: mix
+  eplb_force_repack: 0
+  eplb_stats_window_size: 10
+  eplb_control_step: 100
+  eplb_test_mode: 0
+  eplb_balance_layer_per_step: 1
+}
+mm_model_config: {
+  is_multimodal: false
+  include_sep_tokens: false
+  mm_position_ids_style: 0
+  mm_sep_tokens: []
+}
+extra_data_path: 
+local_extra_data_path: 
+model_type: bert
+ptuning_path: 
+[process-28765][root][2026-04-10 23:55:48.983][model_config.py:update_stop_words_from_env():748][INFO] use stop_words_str_list [[]], stop_words_id_list [[]]
+[process-28765][root][2026-04-10 23:55:48.983][frontend_worker.py:__init__():114][INFO] starting frontend worker
+[process-28765][root][2026-04-10 23:55:49.019][frontend_worker.py:get_dp_addrs_from_world_info():76][INFO] frontend worker ffn_disaggregate_config: enable_ffn_disaggregate: 0
+
+[process-28765][root][2026-04-10 23:55:49.019][frontend_worker.py:get_dp_addrs_from_world_info():99][INFO] [world_rank: 0] using addresses from world_info: [&#x27;10.67.77.202:6790&#x27;]
+[process-28765][root][2026-04-10 23:55:49.019][model_rpc_client.py:__init__():365][INFO] client options: [(&#x27;grpc.max_metadata_size&#x27;, 1073741824), (&#x27;grpc.max_receive_message_length&#x27;, 1073741824)]
+[process-28765][root][2026-04-10 23:55:49.019][model_rpc_client.py:__init__():371][INFO] addresses: [&#x27;10.67.77.202:6790&#x27;]
+[process-28765][root][2026-04-10 23:55:49.019][host_service.py:create_from_env():185][INFO] Model Service Configuration:
+    Master Domain: 
+    PDFusion Domain: 
+    Prefill Domain: 
+    Decode Domain: 
+    VIT Domain: 
+    Use Local: False
+[process-28765][root][2026-04-10 23:55:49.019][backend_rpc_server_visitor.py:get_backend_role_list():90][INFO] pd_sep_config: role_type: PDFUSION
+cache_store_rdma_mode: 1
+cache_store_listen_port: 6791
+cache_store_connect_port: 2
+cache_store_rdma_listen_port: 6793
+cache_store_rdma_connect_port: 4
+remote_rpc_server_port: 1
+prefill_retry_times: 0
+prefill_retry_timeout_ms: 0
+prefill_max_wait_timeout_ms: 600000
+decode_retry_times: 100
+decode_retry_timeout_ms: 100
+decode_retry_interval_ms: 1
+decode_polling_kv_cache_step_ms: 30
+decode_polling_call_prefill_ms: 30
+rdma_connect_retry_times: 0
+load_cache_timeout_ms: 5000
+max_rpc_timeout_ms: 0
+worker_port_offset: 8
+decode_entrance: 0
+[process-28765][root][2026-04-10 23:55:49.019][backend_rpc_server_visitor.py:get_backend_role_list():122][INFO] configured backend role list: []
+[process-28765][root][2026-04-10 23:55:49.020][frontend_worker.py:__init__():157][INFO] frontend worker start done.
+[process-28765][root][2026-04-10 23:55:49.020][utils.py:create_custom_module():35][ERROR] internal module not found, using external module
+Traceback (most recent call last):
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/models/downstream_modules/utils.py&quot;, line 27, in create_custom_module
+    from internal_source.rtp_llm.models.downstream_modules.utils import (
+ModuleNotFoundError: No module named &#x27;internal_source&#x27;
+[process-28765][root][2026-04-10 23:55:49.021][renderer_factory.py:get_renderer():156][INFO] Renderer factory try get predefined renderer via model type [bert]
+[process-28765][root][2026-04-10 23:55:49.021][renderer_factory.py:get_renderer():174][WARNING] Renderer factory found model [bert] falls back to basic renderer, this is typically unwanted.
+[process-28765][root][2026-04-10 23:55:49.021][custom_renderer.py:_setup_chat_template():376][WARNING] Tokenizer try load chat_template from chat_template.jinja.
+[process-28765][root][2026-04-10 23:55:49.021][custom_renderer.py:_setup_chat_template():390][WARNING] Default chat template not found at /mnt/raid0/pretrained_model/rtp_ci/tokenizer/chat_template.jinja, using empty template.
+[process-28765][root][2026-04-10 23:55:49.021][basic_renderer.py:__init__():84][INFO] tokenizer &lt;class &#x27;rtp_llm.frontend.tokenizer_factory.tokenizers.bert_tokenizer.BertTokenizer&#x27;&gt; has no chat_template nor default_chat_template attribute. Use default template.
+[process-28765][root][2026-04-10 23:55:49.021][basic_renderer.py:__init__():95][INFO] special token [[UNK]](unk_token) added as stop words.
+[process-28765][root][2026-04-10 23:55:49.021][basic_renderer.py:__init__():95][INFO] special token [[SEP]](sep_token) added as stop words.
+[process-28765][root][2026-04-10 23:55:49.021][basic_renderer.py:__init__():95][INFO] special token [[PAD]](pad_token) added as stop words.
+[process-28765][root][2026-04-10 23:55:49.021][basic_renderer.py:__init__():95][INFO] special token [[CLS]](cls_token) added as stop words.
+[process-28765][root][2026-04-10 23:55:49.021][basic_renderer.py:__init__():95][INFO] special token [[MASK]](mask_token) added as stop words.
+[process-28765][root][2026-04-10 23:55:49.021][basic_renderer.py:__init__():105][INFO] additional special tokens []added as stop words.
+[process-28765][root][2026-04-10 23:55:49.021][basic_renderer.py:__init__():121][INFO] found chat template to use: {% for message in messages %}{{&#x27;&lt;|im_start|&gt;&#x27; + message[&#x27;role&#x27;] + &#x27;
+&#x27; + message[&#x27;content&#x27;] + &#x27;&lt;|im_end|&gt;&#x27; + &#x27;
+&#x27;}}{% endfor %}{% if add_generation_prompt %}{{ &#x27;&lt;|im_start|&gt;assistant
+&#x27; }}{% endif %}
+[process-28765][root][2026-04-10 23:55:49.024][basic_renderer.py:__init__():148][INFO] compiled chat templates to use: dict_keys([&#x27;default&#x27;])
+[process-28765][root][2026-04-10 23:55:49.024][openai_render.py:__init__():41][INFO] Finally openai endpoint uses renderer: class_name=&#x27;BasicRenderer&#x27; renderer_model_type=&#x27;bert&#x27; extra_stop_word_ids_list=[[100], [100], [102], [0], [101], [103]] extra_stop_words_list=[&#x27;[UNK]&#x27;, &#x27;[UNK]&#x27;, &#x27;[SEP]&#x27;, &#x27;[PAD]&#x27;, &#x27;[CLS]&#x27;, &#x27;[MASK]&#x27;] template=&quot;{% for message in messages %}{{&#x27;&lt;|im_start|&gt;&#x27; + message[&#x27;role&#x27;] + &#x27;\n&#x27; + message[&#x27;content&#x27;] + &#x27;&lt;|im_end|&gt;&#x27; + &#x27;\n&#x27;}}{% endfor %}{% if add_generation_prompt %}{{ &#x27;&lt;|im_start|&gt;assistant\n&#x27; }}{% endif %}&quot; 
+[process-28765][root][2026-04-10 23:55:49.024][openai_render.py:__init__():47][INFO] chat_renderer [class_name=&#x27;BasicRenderer&#x27; renderer_model_type=&#x27;bert&#x27; extra_stop_word_ids_list=[[100], [100], [102], [0], [101], [103]] extra_stop_words_list=[&#x27;[UNK]&#x27;, &#x27;[UNK]&#x27;, &#x27;[SEP]&#x27;, &#x27;[PAD]&#x27;, &#x27;[CLS]&#x27;, &#x27;[MASK]&#x27;] template=&quot;{% for message in messages %}{{&#x27;&lt;|im_start|&gt;&#x27; + message[&#x27;role&#x27;] + &#x27;\n&#x27; + message[&#x27;content&#x27;] + &#x27;&lt;|im_end|&gt;&#x27; + &#x27;\n&#x27;}}{% endfor %}{% if add_generation_prompt %}{{ &#x27;&lt;|im_start|&gt;assistant\n&#x27; }}{% endif %}&quot;] is created.
+[process-28765][root][2026-04-10 23:55:49.024][openai_render.py:__init__():55][INFO] use stop_words_list [[&#x27;[UNK]&#x27;, &#x27;[UNK]&#x27;, &#x27;[SEP]&#x27;, &#x27;[PAD]&#x27;, &#x27;[CLS]&#x27;, &#x27;[MASK]&#x27;]]
+[process-28765][root][2026-04-10 23:55:49.025][embedding_endpoint.py:__init__():58][INFO] embedding endpoint connect to rpc addresses: localhost:6796
+[process-28765][root][2026-04-10 23:55:49.025][embedding_endpoint.py:__init__():64][INFO] embedding endpoint grpc options: [(&#x27;grpc.max_metadata_size&#x27;, 1073741824), (&#x27;grpc.max_receive_message_length&#x27;, 1073741824)]
+[process-28765][root][2026-04-10 23:55:49.038][frontend_app.py:start():131][INFO] server_config.ip = 10.67.77.202, port = 6789, rank id = 0, server_id = 3, separated_frontend = False
+[process-28765][root][2026-04-10 23:55:49.039][frontend_app.py:start():147][INFO] Starting Uvicorn server on port 6789 with timeout_keep_alive=5
+[process-28765][uvicorn.error][2026-04-10 23:55:49.264][server.py:_serve():82][INFO] Started server process [28765]
+[process-28765][uvicorn.error][2026-04-10 23:55:49.265][on.py:startup():48][INFO] Waiting for application startup.
+[process-28765][uvicorn.error][2026-04-10 23:55:49.268][on.py:startup():62][INFO] Application startup complete.
+[process-28765][uvicorn.error][2026-04-10 23:55:49.268][server.py:_log_started_message():192][INFO] Uvicorn running on socket (&#x27;0.0.0.0&#x27;, 6789) (Press CTRL+C to quit)
+[process-28764][root][2026-04-10 23:56:04.453][vipserver_proxy.py:refresh_srv_lst():86][ERROR] failed to refresh vipserver server list, exception : HTTPConnectionPool(host=&#x27;jmenv.tbsite.net&#x27;, port=8080): Max retries exceeded with url: /vipserver/serverlist?nofix=1&amp;labels=&amp; (Caused by NewConnectionError(&#x27;&lt;urllib3.connection.HTTPConnection object at 0x7fad86b52770&gt;: Failed to establish a new connection: [Errno -2] Name or service not known&#x27;))
+[process-28763][root][2026-04-10 23:56:04.453][vipserver_proxy.py:refresh_srv_lst():86][ERROR] failed to refresh vipserver server list, exception : HTTPConnectionPool(host=&#x27;jmenv.tbsite.net&#x27;, port=8080): Max retries exceeded with url: /vipserver/serverlist?nofix=1&amp;labels=&amp; (Caused by NewConnectionError(&#x27;&lt;urllib3.connection.HTTPConnection object at 0x7f18fdb0eb00&gt;: Failed to establish a new connection: [Errno -2] Name or service not known&#x27;))
+[process-28765][root][2026-04-10 23:56:04.458][vipserver_proxy.py:refresh_srv_lst():86][ERROR] failed to refresh vipserver server list, exception : HTTPConnectionPool(host=&#x27;jmenv.tbsite.net&#x27;, port=8080): Max retries exceeded with url: /vipserver/serverlist?nofix=1&amp;labels=&amp; (Caused by NewConnectionError(&#x27;&lt;urllib3.connection.HTTPConnection object at 0x7f18bd3b6c20&gt;: Failed to establish a new connection: [Errno -2] Name or service not known&#x27;))
+[process-28762][root][2026-04-10 23:56:04.458][vipserver_proxy.py:refresh_srv_lst():86][ERROR] failed to refresh vipserver server list, exception : HTTPConnectionPool(host=&#x27;jmenv.tbsite.net&#x27;, port=8080): Max retries exceeded with url: /vipserver/serverlist?nofix=1&amp;labels=&amp; (Caused by NewConnectionError(&#x27;&lt;urllib3.connection.HTTPConnection object at 0x7ff2e43f6bf0&gt;: Failed to establish a new connection: [Errno -2] Name or service not known&#x27;))
+[process-28761][root][2026-04-10 23:56:14.463][vipserver_proxy.py:refresh_srv_lst():86][ERROR] failed to refresh vipserver server list, exception : HTTPConnectionPool(host=&#x27;jmenv.tbsite.net&#x27;, port=8080): Max retries exceeded with url: /vipserver/serverlist?nofix=1&amp;labels=&amp; (Caused by NewConnectionError(&#x27;&lt;urllib3.connection.HTTPConnection object at 0x7f82810f7df0&gt;: Failed to establish a new connection: [Errno -2] Name or service not known&#x27;))
+[aiter] import [module_hipbsolgemm] under /opt/conda310/lib/python3.10/site-packages/aiter/jit/module_hipbsolgemm.so
+[process-28761][aiter][2026-04-10 23:56:18.420][core.py:get_module_custom_op():484][INFO] import [module_hipbsolgemm] under /opt/conda310/lib/python3.10/site-packages/aiter/jit/module_hipbsolgemm.so
+[aiter] start build [mha_varlen_fwd_fp16_nlogits_nbias_nmask_nlse_ndropout_nskip_nqscale] under /opt/conda310/lib/python3.10/site-packages/aiter/jit/build/mha_varlen_fwd_fp16_nlogits_nbias_nmask_nlse_ndropout_nskip_nqscale
+[process-28761][aiter][2026-04-10 23:56:19.511][core.py:MainFunc():532][INFO] start build [mha_varlen_fwd_fp16_nlogits_nbias_nmask_nlse_ndropout_nskip_nqscale] under /opt/conda310/lib/python3.10/site-packages/aiter/jit/build/mha_varlen_fwd_fp16_nlogits_nbias_nmask_nlse_ndropout_nskip_nqscale
+[CHECK] internal_source directory: /mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/internal_source, found: False
+import in __init__ took 1.60s
+import rtp_llm.ops took 0.00s
+[process-28764][root][2026-04-10 23:56:34.486][vipserver_proxy.py:refresh_srv_lst():86][ERROR] failed to refresh vipserver server list, exception : HTTPConnectionPool(host=&#x27;jmenv.tbsite.net&#x27;, port=8080): Max retries exceeded with url: /vipserver/serverlist?nofix=1&amp;labels=&amp; (Caused by NewConnectionError(&#x27;&lt;urllib3.connection.HTTPConnection object at 0x7fad7c295390&gt;: Failed to establish a new connection: [Errno -2] Name or service not known&#x27;))
+[process-28763][root][2026-04-10 23:56:34.487][vipserver_proxy.py:refresh_srv_lst():86][ERROR] failed to refresh vipserver server list, exception : HTTPConnectionPool(host=&#x27;jmenv.tbsite.net&#x27;, port=8080): Max retries exceeded with url: /vipserver/serverlist?nofix=1&amp;labels=&amp; (Caused by NewConnectionError(&#x27;&lt;urllib3.connection.HTTPConnection object at 0x7f08f364f700&gt;: Failed to establish a new connection: [Errno -2] Name or service not known&#x27;))
+[process-28762][root][2026-04-10 23:56:34.491][vipserver_proxy.py:refresh_srv_lst():86][ERROR] failed to refresh vipserver server list, exception : HTTPConnectionPool(host=&#x27;jmenv.tbsite.net&#x27;, port=8080): Max retries exceeded with url: /vipserver/serverlist?nofix=1&amp;labels=&amp; (Caused by NewConnectionError(&#x27;&lt;urllib3.connection.HTTPConnection object at 0x7fe2cb7cb400&gt;: Failed to establish a new connection: [Errno -2] Name or service not known&#x27;))
+[process-28765][root][2026-04-10 23:56:34.491][vipserver_proxy.py:refresh_srv_lst():86][ERROR] failed to refresh vipserver server list, exception : HTTPConnectionPool(host=&#x27;jmenv.tbsite.net&#x27;, port=8080): Max retries exceeded with url: /vipserver/serverlist?nofix=1&amp;labels=&amp; (Caused by NewConnectionError(&#x27;&lt;urllib3.connection.HTTPConnection object at 0x7f18bd3b64d0&gt;: Failed to establish a new connection: [Errno -2] Name or service not known&#x27;))
+[process-28761][root][2026-04-10 23:56:41.061][vipserver_proxy.py:refresh_srv_lst():86][ERROR] failed to refresh vipserver server list, exception : HTTPConnectionPool(host=&#x27;jmenv.tbsite.net&#x27;, port=8080): Max retries exceeded with url: /vipserver/serverlist?nofix=1&amp;labels=&amp; (Caused by NewConnectionError(&#x27;&lt;urllib3.connection.HTTPConnection object at 0x7f8234facd60&gt;: Failed to establish a new connection: [Errno -2] Name or service not known&#x27;))
+[process-28764][root][2026-04-10 23:57:04.519][vipserver_proxy.py:refresh_srv_lst():86][ERROR] failed to refresh vipserver server list, exception : HTTPConnectionPool(host=&#x27;jmenv.tbsite.net&#x27;, port=8080): Max retries exceeded with url: /vipserver/serverlist?nofix=1&amp;labels=&amp; (Caused by NewConnectionError(&#x27;&lt;urllib3.connection.HTTPConnection object at 0x7fad86b52380&gt;: Failed to establish a new connection: [Errno -2] Name or service not known&#x27;))
+[process-28763][root][2026-04-10 23:57:04.520][vipserver_proxy.py:refresh_srv_lst():86][ERROR] failed to refresh vipserver server list, exception : HTTPConnectionPool(host=&#x27;jmenv.tbsite.net&#x27;, port=8080): Max retries exceeded with url: /vipserver/serverlist?nofix=1&amp;labels=&amp; (Caused by NewConnectionError(&#x27;&lt;urllib3.connection.HTTPConnection object at 0x7f08f364d210&gt;: Failed to establish a new connection: [Errno -2] Name or service not known&#x27;))
+[process-28762][root][2026-04-10 23:57:04.524][vipserver_proxy.py:refresh_srv_lst():86][ERROR] failed to refresh vipserver server list, exception : HTTPConnectionPool(host=&#x27;jmenv.tbsite.net&#x27;, port=8080): Max retries exceeded with url: /vipserver/serverlist?nofix=1&amp;labels=&amp; (Caused by NewConnectionError(&#x27;&lt;urllib3.connection.HTTPConnection object at 0x7fe2cb7cb730&gt;: Failed to establish a new connection: [Errno -2] Name or service not known&#x27;))
+[process-28765][root][2026-04-10 23:57:04.524][vipserver_proxy.py:refresh_srv_lst():86][ERROR] failed to refresh vipserver server list, exception : HTTPConnectionPool(host=&#x27;jmenv.tbsite.net&#x27;, port=8080): Max retries exceeded with url: /vipserver/serverlist?nofix=1&amp;labels=&amp; (Caused by NewConnectionError(&#x27;&lt;urllib3.connection.HTTPConnection object at 0x7f18b03f73d0&gt;: Failed to establish a new connection: [Errno -2] Name or service not known&#x27;))
+[aiter] [32mfinish build [mha_varlen_fwd_fp16_nlogits_nbias_nmask_nlse_ndropout_nskip_nqscale], cost 47.9s [0m
+[process-28761][aiter][2026-04-10 23:57:07.383][core.py:FinalFunc():682][INFO] [32mfinish build [mha_varlen_fwd_fp16_nlogits_nbias_nmask_nlse_ndropout_nskip_nqscale], cost 47.9s [0m
+[aiter] import [mha_varlen_fwd_fp16_nlogits_nbias_nmask_nlse_ndropout_nskip_nqscale] under /opt/conda310/lib/python3.10/site-packages/aiter/jit/mha_varlen_fwd_fp16_nlogits_nbias_nmask_nlse_ndropout_nskip_nqscale.so
+[process-28761][aiter][2026-04-10 23:57:07.394][core.py:get_module_custom_op():484][INFO] import [mha_varlen_fwd_fp16_nlogits_nbias_nmask_nlse_ndropout_nskip_nqscale] under /opt/conda310/lib/python3.10/site-packages/aiter/jit/mha_varlen_fwd_fp16_nlogits_nbias_nmask_nlse_ndropout_nskip_nqscale.so
+/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/embedding/embedding_endpoint.py:40: UserWarning: The given buffer is not writable, and PyTorch does not support non-writable tensors. This means you can write to the underlying (supposedly non-writable) buffer using the tensor. You may want to copy the buffer to protect its data or make it writable before converting it to a tensor. This type of warning will be suppressed for the rest of this program. (Triggered internally at /opt/pytorch/torch/csrc/utils/tensor_new.cpp:1577.)
+  torch_tensor = torch.frombuffer(buffer, dtype=dtype).clone().reshape(shape)
+[process-28673][root][2026-04-10 23:57:08.485][process_manager.py:_health_check_worker():217][ERROR] frontend_server process manager is not available
+[process-28673][root][2026-04-10 23:57:08.485][process_manager.py:wait_for_health_checks():293][INFO] backend_server health check passed
+[process-28673][root][2026-04-10 23:57:08.485][process_manager.py:wait_for_health_checks():290][ERROR] frontend_server health check failed
+[process-28673][root][2026-04-10 23:57:08.485][start_server.py:start_server():232][ERROR] Health checks failed
+[process-28673][root][2026-04-10 23:57:08.486][start_server.py:start_server():241][ERROR] start failed, trace: Traceback (most recent call last):
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/start_server.py&quot;, line 233, in start_server
+    raise Exception(&quot;Health checks failed&quot;)
+Exception: Health checks failed
+
+[process-28673][root][2026-04-10 23:57:08.486][process_manager.py:monitor_and_release_processes():159][INFO] Monitoring 5 processes
+[process-28673][root][2026-04-10 23:57:08.486][process_manager.py:_terminate_processes():61][INFO] Shutdown requested, terminating processes...
+[process-28673][root][2026-04-10 23:57:08.486][process_manager.py:_terminate_processes():67][INFO] proc.name [backend_manager] pid[28761] is not alived
+[process-28673][root][2026-04-10 23:57:08.486][process_manager.py:_terminate_processes():64][INFO] Sending SIGTERM to process 28762
+[process-28673][root][2026-04-10 23:57:08.486][process_manager.py:_terminate_processes():64][INFO] Sending SIGTERM to process 28763
+[process-28673][root][2026-04-10 23:57:08.486][process_manager.py:_terminate_processes():64][INFO] Sending SIGTERM to process 28764
+[process-28673][root][2026-04-10 23:57:08.486][process_manager.py:_terminate_processes():64][INFO] Sending SIGTERM to process 28765
+[process-28765][uvicorn.error][2026-04-10 23:57:08.501][server.py:shutdown():258][INFO] Shutting down
+[process-28762][uvicorn.error][2026-04-10 23:57:08.508][server.py:shutdown():258][INFO] Shutting down
+[process-28763][uvicorn.error][2026-04-10 23:57:08.516][server.py:shutdown():258][INFO] Shutting down
+[process-28764][uvicorn.error][2026-04-10 23:57:08.560][server.py:shutdown():258][INFO] Shutting down
+[process-28765][uvicorn.error][2026-04-10 23:57:08.601][on.py:shutdown():67][INFO] Waiting for application shutdown.
+[process-28765][uvicorn.error][2026-04-10 23:57:08.601][on.py:shutdown():76][INFO] Application shutdown complete.
+[process-28765][uvicorn.error][2026-04-10 23:57:08.601][server.py:_serve():92][INFO] Finished server process [28765]
+[process-28762][uvicorn.error][2026-04-10 23:57:08.608][on.py:shutdown():67][INFO] Waiting for application shutdown.
+[process-28762][uvicorn.error][2026-04-10 23:57:08.608][on.py:shutdown():76][INFO] Application shutdown complete.
+[process-28762][uvicorn.error][2026-04-10 23:57:08.608][server.py:_serve():92][INFO] Finished server process [28762]
+[process-28763][uvicorn.error][2026-04-10 23:57:08.616][on.py:shutdown():67][INFO] Waiting for application shutdown.
+[process-28763][uvicorn.error][2026-04-10 23:57:08.616][on.py:shutdown():76][INFO] Application shutdown complete.
+[process-28763][uvicorn.error][2026-04-10 23:57:08.616][server.py:_serve():92][INFO] Finished server process [28763]
+[process-28764][uvicorn.error][2026-04-10 23:57:08.660][on.py:shutdown():67][INFO] Waiting for application shutdown.
+[process-28764][uvicorn.error][2026-04-10 23:57:08.660][on.py:shutdown():76][INFO] Application shutdown complete.
+[process-28764][uvicorn.error][2026-04-10 23:57:08.660][server.py:_serve():92][INFO] Finished server process [28764]
+[process-28673][root][2026-04-10 23:57:09.487][process_manager.py:_join_all_processes():123][INFO] All processes joined
+[process-28673][root][2026-04-10 23:57:09.488][process_manager.py:monitor_and_release_processes():162][INFO] Process monitoring completed
+</pre></section>
+
+
+	  </div>
+	</div>
+      </div>
+      
+      
+      <footer>
+  
+  <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+    
+    <a href="server_Bert_fp8_4l_sku_mean_909.html" class="btn btn-neutral float-right" title="server_Bert_fp8_4l_sku_mean_909">Next <span class="fa fa-arrow-circle-right"></span></a>
+    
+    
+    <a href="client_Qwen_VL_TP4.html" class="btn btn-neutral" title="client_Qwen_VL_TP4"><span class="fa fa-arrow-circle-left"></span>Previous</a>
+    
+  </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+      &copy; Copyright 2023, Advanced Micro Devices, Inc. All rights reserved.
+    </p>
+  </div>
+
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/jucacrispim/sphinx_pdj_theme">theme</a> provided by <a href="https://poraodojuca.dev">Porão do Juca</a>.
+
+</footer>
+      
+
+      <div class="clearer"></div>
+    </div>
+  </div>
+
+</section>
+
+<nav data-toggle="wy-nav-shift" class="wy-nav-side">
+  <div class="wy-side-nav-search">
+    
+    <a href="../index.html" class="fa fa-home"> rtp-llm-private </a>
+    
+    
+    <div role="search">
+      
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+      
+    </div>
+  </div>
+
+  <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+    
+
+    
+      
+      
+	  <p class="caption" role="heading"><span class="caption-text">LogFiles:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="bazelbuild.html">bazelbuild</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bazeltest_py_all.html">bazeltest_py_all</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bazeltest_rocmimpl_gemm_op_swizzle.html">bazeltest_rocmimpl_gemm_op_swizzle</a></li>
+<li class="toctree-l1"><a class="reference internal" href="client_Bert_fp16_4l_sku_mean_909.html">client_Bert_fp16_4l_sku_mean_909</a></li>
+<li class="toctree-l1"><a class="reference internal" href="client_Bert_fp8_4l_sku_mean_909.html">client_Bert_fp8_4l_sku_mean_909</a></li>
+<li class="toctree-l1"><a class="reference internal" href="client_Qwen3_30B_A3B_bf16_moe.html">client_Qwen3_30B_A3B_bf16_moe</a></li>
+<li class="toctree-l1"><a class="reference internal" href="client_Qwen3_30B_A3B_fp8_ptpc_moe_llmcompressor.html">client_Qwen3_30B_A3B_fp8_ptpc_moe_llmcompressor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="client_Qwen3_32B_bf16_dense.html">client_Qwen3_32B_bf16_dense</a></li>
+<li class="toctree-l1"><a class="reference internal" href="client_Qwen3_8B_FP8_ptpc_dense_llmcompressor.html">client_Qwen3_8B_FP8_ptpc_dense_llmcompressor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="client_Qwen3_8B_FP8_ptpc_dense_llmcompressor_reuseCache.html">client_Qwen3_8B_FP8_ptpc_dense_llmcompressor_reuseCache</a></li>
+<li class="toctree-l1"><a class="reference internal" href="client_Qwen_VL_TP1.html">client_Qwen_VL_TP1</a></li>
+<li class="toctree-l1"><a class="reference internal" href="client_Qwen_VL_TP4.html">client_Qwen_VL_TP4</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">server_Bert_fp16_4l_sku_mean_909</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server_Bert_fp8_4l_sku_mean_909.html">server_Bert_fp8_4l_sku_mean_909</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server_Bert_int8.html">server_Bert_int8</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server_Qwen3-32B_FP8_ptpc_dense_Quark.html">server_Qwen3-32B_FP8_ptpc_dense_Quark</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server_Qwen3_30B_A3B_bf16_moe.html">server_Qwen3_30B_A3B_bf16_moe</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server_Qwen3_30B_A3B_fp8_ptpc_moe_Quark.html">server_Qwen3_30B_A3B_fp8_ptpc_moe_Quark</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server_Qwen3_30B_A3B_fp8_ptpc_moe_llmcompressor.html">server_Qwen3_30B_A3B_fp8_ptpc_moe_llmcompressor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server_Qwen3_32B_bf16_dense.html">server_Qwen3_32B_bf16_dense</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server_Qwen3_8B_FP8_ptpc_dense_llmcompressor.html">server_Qwen3_8B_FP8_ptpc_dense_llmcompressor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server_Qwen3_8B_FP8_ptpc_dense_llmcompressor_reuseCache.html">server_Qwen3_8B_FP8_ptpc_dense_llmcompressor_reuseCache</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server_Qwen_VL_TP1.html">server_Qwen_VL_TP1</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server_Qwen_VL_TP4.html">server_Qwen_VL_TP4</a></li>
+</ul>
+
+      
+    
+  
+  
+  
+  
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="client_Qwen_VL_TP4.html"
+                          title="previous chapter">client_Qwen_VL_TP4</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="server_Bert_fp8_4l_sku_mean_909.html"
+                          title="next chapter">server_Bert_fp8_4l_sku_mean_909</a></p>
+  </div>
+  
+  
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/docs/server_Bert_fp16_4l_sku_mean_909.md.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+  
+  
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+  
+
+  </div>
+
+  &nbsp;
+</nav>
+
+  </body>
+</html>
