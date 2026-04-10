@@ -4,6 +4,7 @@
 #include "rtp_llm/cpp/core/torch_utils/BufferTorchUtils.h"
 #include <stdexcept>
 #include <string>
+#include <vector>
 #include "rtp_llm/cpp/model_utils/RopeConfig.h"
 #include "rtp_llm/cpp/kernels/kv_cache/kv_cache_utils.h"
 #include "rtp_llm/cpp/kernels/kv_cache_kernels.h"
@@ -19,6 +20,119 @@ static at::ScalarType get_fp8_dtype(ROCmDevice* device) {
     }
     return torch::kFloat8_e4m3fnuz;  // gfx942 and default
 }
+
+static torch::Tensor allocateFlatBuffer(int64_t elements, const torch::TensorOptions& options, bool zero_init) {
+    if (elements < 0) {
+        throw std::runtime_error("allocateFlatBuffer expects non-negative element count");
+    }
+    if (zero_init) {
+        return torch::zeros({elements}, options);
+    }
+    return torch::empty({elements}, options);
+}
+
+static torch::Tensor flatToView(const torch::Tensor& flat,
+                                int64_t              elements,
+                                std::vector<int64_t> shape,
+                                const char*          name) {
+    if (!flat.defined()) {
+        throw std::runtime_error(std::string(name) + " is not allocated");
+    }
+    if (elements > flat.numel()) {
+        throw std::runtime_error(std::string(name) + " capacity is insufficient for replay");
+    }
+    return flat.narrow(0, 0, elements).view(shape);
+}
+
+static void ensurePrefillCaptureBuffers(const CKAttnPtr&       params,
+                                        const AttentionConfigs& attn_configs,
+                                        ROCmDevice*             device,
+                                        const torch::Tensor&    qkv) {
+    if (params->prefill_capture_buffer_initialized) {
+        return;
+    }
+    c10::Device prefill_device = qkv.device();
+    const auto  q_dtype        = dataTypeToTorchType(params->attn_type);
+    const auto  q_opts         = torch::TensorOptions().dtype(q_dtype).device(prefill_device);
+    const auto  fp8_opts       = torch::TensorOptions().dtype(get_fp8_dtype(device)).device(prefill_device);
+
+    const int batch_size          = params->prefill_capture_batch_size;
+    const int seq_len             = params->prefill_capture_max_seq_len;
+    const int seq_len_with_prefix = params->prefill_capture_seq_len_with_prefix;
+    const int token_num           = params->prefill_capture_token_num;
+    const int q_output_token_cap  = params->prefill_capture_q_output_token_cap;
+    const bool use_fmha_fp8       = params->prefill_capture_use_fmha_fp8;
+    const bool paged_fp8          = params->prefill_capture_use_paged_fp8;
+    const bool use_paged_fmha     = params->prefill_capture_use_paged_fmha;
+
+    const int64_t q_output_elements =
+        use_paged_fmha ? static_cast<int64_t>(q_output_token_cap) * attn_configs.head_num * attn_configs.size_per_head
+                       : static_cast<int64_t>(batch_size) * attn_configs.head_num * seq_len * attn_configs.size_per_head;
+    const int64_t kv_output_elements =
+        static_cast<int64_t>(batch_size) * attn_configs.kv_head_num * seq_len_with_prefix * attn_configs.size_per_head;
+    const int64_t qkv_fp8_elements = static_cast<int64_t>(token_num)
+                                     * (attn_configs.head_num + 2 * attn_configs.kv_head_num)
+                                     * attn_configs.size_per_head;
+    const int64_t q_contiguous_elements = static_cast<int64_t>(attn_configs.head_num) * seq_len * batch_size
+                                          * attn_configs.size_per_head;
+    const int64_t kv_contiguous_elements = static_cast<int64_t>(attn_configs.kv_head_num) * seq_len_with_prefix
+                                           * batch_size * attn_configs.size_per_head;
+
+    params->prefill_q_output_buf = allocateFlatBuffer(q_output_elements, q_opts, true);
+    if (use_paged_fmha) {
+        // Align CUDA behavior: paged prefill only needs q output.
+        params->prefill_k_output_buf = torch::Tensor();
+        params->prefill_v_output_buf = torch::Tensor();
+    } else {
+        params->prefill_k_output_buf = allocateFlatBuffer(kv_output_elements, q_opts, true);
+        params->prefill_v_output_buf = allocateFlatBuffer(kv_output_elements, q_opts, true);
+    }
+    if (paged_fp8) {
+        params->prefill_q_fp8_buf = allocateFlatBuffer(
+            static_cast<int64_t>(q_output_token_cap) * attn_configs.head_num * attn_configs.size_per_head, fp8_opts, false);
+    } else {
+        params->prefill_q_fp8_buf = torch::Tensor();
+    }
+    if (use_fmha_fp8 && !paged_fp8) {
+        params->prefill_qkv_fp8_buf = allocateFlatBuffer(qkv_fp8_elements, fp8_opts, false);
+    } else {
+        params->prefill_qkv_fp8_buf = torch::Tensor();
+    }
+    if (!use_paged_fmha && !use_fmha_fp8) {
+        params->prefill_q_contiguous_buf = allocateFlatBuffer(q_contiguous_elements, q_opts, true);
+        params->prefill_k_contiguous_buf = allocateFlatBuffer(kv_contiguous_elements, q_opts, true);
+        params->prefill_v_contiguous_buf = allocateFlatBuffer(kv_contiguous_elements, q_opts, true);
+    } else {
+        params->prefill_q_contiguous_buf = torch::Tensor();
+        params->prefill_k_contiguous_buf = torch::Tensor();
+        params->prefill_v_contiguous_buf = torch::Tensor();
+    }
+    params->prefill_capture_buffer_initialized = true;
+}
+
+static void copyTensorExactInPlace(torch::Tensor& dst, const torch::Tensor& src, const char* name) {
+    if (!src.defined()) {
+        throw std::runtime_error(std::string("update_prefill_runtime expects defined tensor: ") + name);
+    }
+    torch::Tensor src_flat = src.contiguous().reshape({-1});
+    if (!dst.defined()) {
+        dst = src_flat.clone();
+        return;
+    }
+    torch::Tensor dst_flat = dst.reshape({-1});
+    if (dst_flat.numel() != src_flat.numel()) {
+        throw std::runtime_error(
+            std::string("update_prefill_runtime tensor size mismatch for ")
+            + name + ": capture=" + std::to_string(dst_flat.numel()) + ", replay=" + std::to_string(src_flat.numel()));
+    }
+
+    torch::Tensor src_match = src_flat;
+    if (src_match.scalar_type() != dst.scalar_type() || src_match.device() != dst.device()) {
+        src_match = src_match.to(dst.options(), true, false).reshape({-1});
+    }
+    dst_flat.copy_(src_match, true);
+}
+
 void updateKvCacheOffset(CKAttn& params, const torch::Tensor& kv_cache_block_id_device) {
     if (!params.kv_cache_offset || !kv_cache_block_id_device.defined() || kv_cache_block_id_device.numel() == 0) {
         return;
@@ -34,6 +148,27 @@ void updateKvCacheOffset(CKAttn& params, const torch::Tensor& kv_cache_block_id_
                                         batch_size,
                                         max_blocks_per_bs,
                                         stream);
+}
+
+void updatePrefillRuntime(CKAttn&              params,
+                          const torch::Tensor& input_lengths,
+                          const torch::Tensor& cu_seqlens,
+                          const torch::Tensor& cu_kv_seqlens,
+                          const torch::Tensor& prefix_lengths,
+                          int                  max_seq_len,
+                          int                  max_prefix_len) {
+    if (max_seq_len < 0 || max_prefix_len < 0) {
+        throw std::runtime_error("update_prefill_runtime expects non-negative max_seq_len/max_prefix_len");
+    }
+    copyTensorExactInPlace(params.input_lengths, input_lengths, "input_lengths");
+    copyTensorExactInPlace(params.cu_seqlens, cu_seqlens, "cu_seqlens");
+    copyTensorExactInPlace(params.cu_kv_seqlens, cu_kv_seqlens, "cu_kv_seqlens");
+    copyTensorExactInPlace(params.prefix_lengths, prefix_lengths, "prefix_lengths");
+
+    params.max_seq_len                        = max_seq_len;
+    params.prefill_runtime_max_seq_len        = max_seq_len;
+    params.prefill_runtime_max_prefix_len     = max_prefix_len;
+    params.prefill_runtime_seq_len_with_prefix = max_seq_len + max_prefix_len;
 }
 
 FusedRopeKVCachePrefillOpBase::FusedRopeKVCachePrefillOpBase(const AttentionConfigs& attn_configs):
@@ -55,8 +190,7 @@ CKAttnPtr FusedRopeKVCachePrefillOpBase::prepare(torch_ext::PyAttentionInputs at
 
     bool has_prefix = attn_inputs.prefix_lengths.defined() && attn_inputs.prefix_lengths.numel() > 0;
 
-    bool use_fmha_fp8 = false;
-    use_fmha_fp8      = attn_configs_.kv_cache_dtype == KvCacheDataType::FP8;
+    const bool use_fmha_fp8 = attn_configs_.kv_cache_dtype == KvCacheDataType::FP8;
     CKAttnPtr attn_params;
     auto      params = device_->PrepareCKAttn(
         attn_configs_, kv_cache_kernel_block_id_device, attn_inputs.input_lengths.size(0), use_fmha_fp8);
@@ -68,6 +202,7 @@ CKAttnPtr FusedRopeKVCachePrefillOpBase::prepare(torch_ext::PyAttentionInputs at
     attn_params->attn_type      = torchDTypeToDataType(attn_inputs.dtype);
     attn_params->cu_seqlens     = attn_inputs.cu_seqlens;
     attn_params->cu_kv_seqlens  = attn_inputs.cu_kv_seqlens;
+    attn_params->input_lengths  = attn_inputs.input_lengths;
     attn_params->max_seq_len    = attn_inputs.input_lengths.max().item<int32_t>();
     attn_params->padding_offset = attn_inputs.padding_offset;
     // 处理 prefix_lengths：确保在 CUDA 上且连续
@@ -81,43 +216,129 @@ CKAttnPtr FusedRopeKVCachePrefillOpBase::prepare(torch_ext::PyAttentionInputs at
         attn_params->prefix_lengths = attn_inputs.prefix_lengths;
     }
     attn_params->kv_block_array.cache_type = attn_configs_.kv_cache_dtype;
+
+    const int token_num = attn_inputs.input_lengths.sum().item<int32_t>();
+    int       max_prefix_length = 0;
+    if (has_prefix && attn_params->prefix_lengths.defined() && attn_params->prefix_lengths.numel() > 0) {
+        max_prefix_length = attn_params->prefix_lengths.max().item<int32_t>();
+    }
+    const int seq_len_with_prefix = attn_params->max_seq_len + max_prefix_length;
+    const bool paged_fp8          = use_paged_fmha && use_fmha_fp8;
+    const int q_output_token_cap  = use_paged_fmha ? (batch_size * attn_params->max_seq_len) : token_num;
+
+    std::optional<c10::Device> prefill_device;
+    if (attn_inputs.kv_cache_kernel_block_id_device.defined()) {
+        prefill_device = attn_inputs.kv_cache_kernel_block_id_device.device();
+    } else if (attn_params->kv_cache_kernel_block_id_device.defined()) {
+        prefill_device = attn_params->kv_cache_kernel_block_id_device.device();
+    } else if (attn_params->cu_seqlens.defined() && attn_params->cu_seqlens.is_cuda()) {
+        prefill_device = attn_params->cu_seqlens.device();
+    }
+    if (!prefill_device.has_value()) {
+        throw std::runtime_error(
+            "FusedRopeKVCachePrefillOp::prepare cannot infer prefill device from inputs");
+    }
+    if (!prefill_device->is_cuda()) {
+        throw std::runtime_error(
+            "FusedRopeKVCachePrefillOp::prepare expects CUDA device tensors for prefill buffers");
+    }
+    attn_params->prefill_capture_device_index = prefill_device->index();
+
+    attn_params->prefill_q_output_buf = torch::Tensor();
+    attn_params->prefill_k_output_buf = torch::Tensor();
+    attn_params->prefill_v_output_buf = torch::Tensor();
+    attn_params->prefill_q_fp8_buf = torch::Tensor();
+    attn_params->prefill_qkv_fp8_buf = torch::Tensor();
+    attn_params->prefill_q_contiguous_buf = torch::Tensor();
+    attn_params->prefill_k_contiguous_buf = torch::Tensor();
+    attn_params->prefill_v_contiguous_buf = torch::Tensor();
+
+    attn_params->prefill_capture_batch_size          = batch_size;
+    attn_params->prefill_capture_max_seq_len         = attn_params->max_seq_len;
+    attn_params->prefill_capture_max_prefix_len      = max_prefix_length;
+    attn_params->prefill_capture_token_num           = token_num;
+    attn_params->prefill_capture_seq_len_with_prefix = seq_len_with_prefix;
+    attn_params->prefill_capture_q_output_token_cap  = q_output_token_cap;
+    attn_params->prefill_runtime_max_seq_len         = attn_params->max_seq_len;
+    attn_params->prefill_runtime_max_prefix_len      = max_prefix_length;
+    attn_params->prefill_runtime_seq_len_with_prefix = seq_len_with_prefix;
+    attn_params->prefill_capture_use_paged_fmha      = use_paged_fmha;
+    attn_params->prefill_capture_use_fmha_fp8        = use_fmha_fp8;
+    attn_params->prefill_capture_use_paged_fp8       = paged_fp8;
+    attn_params->prefill_capture_buffer_initialized  = false;
     return attn_params;
 }
 
 std::tuple<torch::Tensor, torch::Tensor, torch::Tensor> FusedRopeKVCachePrefillOpBase::forward(
     const torch::Tensor& qkv, std::optional<torch_ext::LayerKVCache> kv_cache, const CKAttnPtr& params) {
+    if (!qkv.is_cuda()) {
+        throw std::runtime_error("FusedRopeKVCachePrefillOp: qkv must be on CUDA/HIP device");
+    }
+    ensurePrefillCaptureBuffers(params, attn_configs_, device_, qkv);
+    if (params->prefill_capture_device_index >= 0 && qkv.get_device() != params->prefill_capture_device_index) {
+        throw std::runtime_error("FusedRopeKVCachePrefillOp: qkv.device does not match capture-time device");
+    }
+
     const int local_head_num    = attn_configs_.head_num;
     const int local_head_num_kv = attn_configs_.kv_head_num;
     const int size_per_head     = attn_configs_.size_per_head;
     const int token_num         = qkv.size(0);
     const int batch_size        = params->cu_seqlens.size(0) - 1;
-    const int seq_len           = params->max_seq_len;
+    const int seq_len = params->prefill_runtime_max_seq_len >= 0 ? params->prefill_runtime_max_seq_len : params->max_seq_len;
 
     // 计算包含 prefix 的序列长度
-    int max_prefix_length = 0;
-    if (params->prefix_lengths.size(0)) {
-        max_prefix_length = params->prefix_lengths.max().item<int>();
+    int max_prefix_length = params->prefill_runtime_max_prefix_len >= 0 ? params->prefill_runtime_max_prefix_len
+                                                                         : params->prefill_capture_max_prefix_len;
+    int seq_len_with_prefix = params->prefill_runtime_seq_len_with_prefix >= 0
+                                  ? params->prefill_runtime_seq_len_with_prefix
+                                  : (seq_len + max_prefix_length);
+    if (seq_len_with_prefix != seq_len + max_prefix_length) {
+        seq_len_with_prefix = seq_len + max_prefix_length;
     }
-    const int seq_len_with_prefix = seq_len + max_prefix_length;
+    if (seq_len < 0 || max_prefix_length < 0 || seq_len_with_prefix < 0) {
+        throw std::runtime_error("FusedRopeKVCachePrefillOp: invalid runtime seq/prefix lengths");
+    }
+    if (batch_size > params->prefill_capture_batch_size || seq_len > params->prefill_capture_max_seq_len
+        || seq_len_with_prefix > params->prefill_capture_seq_len_with_prefix) {
+        throw std::runtime_error("FusedRopeKVCachePrefillOp: replay shape exceeds capture-time preallocated capacity");
+    }
 
     const int q_output_token_num = (use_paged_fmha && pad_query) ? batch_size * seq_len : token_num;
     const bool paged_fp8 = use_paged_fmha
                         && attn_configs_.kv_cache_dtype == KvCacheDataType::FP8;
-    torch::Tensor q_output = use_paged_fmha ?
-        torch::zeros({q_output_token_num, local_head_num, size_per_head},
-                     torch::TensorOptions(qkv.dtype()).device(qkv.device())) :
-        torch::zeros({batch_size, local_head_num, seq_len, size_per_head},
-                     torch::TensorOptions(qkv.dtype()).device(qkv.device()));
+    if (q_output_token_num > params->prefill_capture_q_output_token_cap) {
+        throw std::runtime_error("FusedRopeKVCachePrefillOp: q_output token size exceeds capture-time capacity");
+    }
+    torch::Tensor q_output = use_paged_fmha
+                                 ? flatToView(params->prefill_q_output_buf,
+                                              static_cast<int64_t>(q_output_token_num) * local_head_num * size_per_head,
+                                              {q_output_token_num, local_head_num, size_per_head},
+                                              "prefill_q_output_buf")
+                                 : flatToView(params->prefill_q_output_buf,
+                                              static_cast<int64_t>(batch_size) * local_head_num * seq_len * size_per_head,
+                                              {batch_size, local_head_num, seq_len, size_per_head},
+                                              "prefill_q_output_buf");
     torch::Tensor q_fp8_buf;
     if (paged_fp8) {
-        q_fp8_buf = torch::empty(
-            {q_output_token_num, local_head_num, size_per_head},
-            torch::TensorOptions(get_fp8_dtype(device_)).device(qkv.device()));
+        q_fp8_buf = flatToView(params->prefill_q_fp8_buf,
+                               static_cast<int64_t>(q_output_token_num) * local_head_num * size_per_head,
+                               {q_output_token_num, local_head_num, size_per_head},
+                               "prefill_q_fp8_buf");
     }
-    torch::Tensor k_output = torch::zeros({batch_size, local_head_num_kv, seq_len_with_prefix, size_per_head},
-                                          torch::TensorOptions(qkv.dtype()).device(qkv.device()));
-    torch::Tensor v_output = torch::zeros({batch_size, local_head_num_kv, seq_len_with_prefix, size_per_head},
-                                          torch::TensorOptions(qkv.dtype()).device(qkv.device()));
+    torch::Tensor k_output;
+    torch::Tensor v_output;
+    if (!use_paged_fmha) {
+        k_output = flatToView(params->prefill_k_output_buf,
+                              static_cast<int64_t>(batch_size) * local_head_num_kv * seq_len_with_prefix
+                                  * size_per_head,
+                              {batch_size, local_head_num_kv, seq_len_with_prefix, size_per_head},
+                              "prefill_k_output_buf");
+        v_output = flatToView(params->prefill_v_output_buf,
+                              static_cast<int64_t>(batch_size) * local_head_num_kv * seq_len_with_prefix
+                                  * size_per_head,
+                              {batch_size, local_head_num_kv, seq_len_with_prefix, size_per_head},
+                              "prefill_v_output_buf");
+    }
 
     PrefixPromptBatchWeightsParam prefix_prompt_param{};
     bool                          use_fmha_fp8 = false;
@@ -129,9 +350,6 @@ std::tuple<torch::Tensor, torch::Tensor, torch::Tensor> FusedRopeKVCachePrefillO
 
         auto  kv_block_array = params->kv_block_array;
         void* k_cache_ptr    = kv_cache.value().kv_cache_base.data_ptr();
-        if (k_cache_ptr == nullptr) {
-            throw std::runtime_error("FusedRopeKVCachePrefillOp: kv_cache_base data pointer is null");
-        }
 
         kv_block_array.mPrimaryPoolPtr = k_cache_ptr;
         if (kv_cache.value().kv_scale_base.defined() && kv_cache.value().kv_scale_base.numel() > 0) {
@@ -146,10 +364,10 @@ std::tuple<torch::Tensor, torch::Tensor, torch::Tensor> FusedRopeKVCachePrefillO
 
     // 设置 prefix_lengths 参数
     if (max_prefix_length > 0) {
-        int* prefix_lengths_ptr = params->prefix_lengths.data_ptr<int>();
-        if (prefix_lengths_ptr == nullptr) {
-            throw std::runtime_error("FusedRopeKVCachePrefillOp: prefix_lengths data pointer is null");
+        if (!params->prefix_lengths.defined() || params->prefix_lengths.numel() < batch_size) {
+            throw std::runtime_error("FusedRopeKVCachePrefillOp: prefix_lengths is not ready for runtime replay");
         }
+        int* prefix_lengths_ptr = params->prefix_lengths.data_ptr<int>();
 
         prefix_prompt_param.d_prefix_prompt_lengths  = prefix_lengths_ptr;
         prefix_prompt_param.max_prefix_prompt_length = max_prefix_length;
@@ -201,6 +419,8 @@ std::tuple<torch::Tensor, torch::Tensor, torch::Tensor> FusedRopeKVCachePrefillO
     bool store_q     = true;             // 存储到独立 Q 缓冲区
     bool store_kv    = !use_paged_fmha;  // 存储到独立 K、V 缓冲区
     bool store_cache = kv_cache.has_value();
+    void* k_output_ptr = store_kv ? k_output.data_ptr() : nullptr;
+    void* v_output_ptr = store_kv ? v_output.data_ptr() : nullptr;
 
     // int8
     float* scale_out_ptr = nullptr;
@@ -210,15 +430,19 @@ std::tuple<torch::Tensor, torch::Tensor, torch::Tensor> FusedRopeKVCachePrefillO
     // 添加 FP8 缓冲区支持
     torch::Tensor qkv_buf_fp8;
     if (use_fmha_fp8) {
-        qkv_buf_fp8 = torch::empty(qkv.sizes(), torch::TensorOptions(get_fp8_dtype(device_)).device(qkv.device()));
+        if (paged_fp8) {
+            qkv_buf_fp8 = torch::Tensor();
+        } else {
+            qkv_buf_fp8 = flatToView(params->prefill_qkv_fp8_buf, qkv.numel(), qkv.sizes().vec(), "prefill_qkv_fp8_buf");
+        }
     }
 
     if (use_asm()) {
         DISPATCH_CUDA_FUNCTION_DATA_TYPE(torchDTypeToDataType(qkv.dtype()),
                                          invokeAddFusedQKVBiasTransposePrefill,
                                          q_output.data_ptr(),
-                                         k_output.data_ptr(),
-                                         v_output.data_ptr(),
+                                         k_output_ptr,
+                                         v_output_ptr,
                                          &prefix_prompt_param,
                                          qkv.data_ptr(),
                                          paged_fp8 ? q_fp8_buf.data_ptr() :
@@ -250,8 +474,8 @@ std::tuple<torch::Tensor, torch::Tensor, torch::Tensor> FusedRopeKVCachePrefillO
         DISPATCH_CUDA_FUNCTION_DATA_TYPE(torchDTypeToDataType(qkv.dtype()),
                                          invokeAddFusedQKVBiasTransposePrefillV1,
                                          q_output.data_ptr(),
-                                         k_output.data_ptr(),
-                                         v_output.data_ptr(),
+                                         k_output_ptr,
+                                         v_output_ptr,
                                          &prefix_prompt_param,
                                          qkv.data_ptr(),
                                          nullptr,
@@ -288,12 +512,20 @@ std::tuple<torch::Tensor, torch::Tensor, torch::Tensor> FusedRopeKVCachePrefillO
         return std::make_tuple(qkv_buf_fp8, torch::Tensor(), torch::Tensor());
     }
     // local_head_num, seq_len * batch_size, size_per_head
-    torch::Tensor q_contiguous = torch::zeros({local_head_num, seq_len * batch_size, size_per_head},
-                                              torch::TensorOptions(qkv.dtype()).device(qkv.device()));
-    torch::Tensor k_contiguous = torch::zeros({local_head_num_kv, seq_len_with_prefix * batch_size, size_per_head},
-                                              torch::TensorOptions(qkv.dtype()).device(qkv.device()));
-    torch::Tensor v_contiguous = torch::zeros({local_head_num_kv, seq_len_with_prefix * batch_size, size_per_head},
-                                              torch::TensorOptions(qkv.dtype()).device(qkv.device()));
+    torch::Tensor q_contiguous = flatToView(params->prefill_q_contiguous_buf,
+                                            static_cast<int64_t>(local_head_num) * seq_len * batch_size * size_per_head,
+                                            {local_head_num, seq_len * batch_size, size_per_head},
+                                            "prefill_q_contiguous_buf");
+    torch::Tensor k_contiguous = flatToView(
+        params->prefill_k_contiguous_buf,
+        static_cast<int64_t>(local_head_num_kv) * seq_len_with_prefix * batch_size * size_per_head,
+        {local_head_num_kv, seq_len_with_prefix * batch_size, size_per_head},
+        "prefill_k_contiguous_buf");
+    torch::Tensor v_contiguous = flatToView(
+        params->prefill_v_contiguous_buf,
+        static_cast<int64_t>(local_head_num_kv) * seq_len_with_prefix * batch_size * size_per_head,
+        {local_head_num_kv, seq_len_with_prefix * batch_size, size_per_head},
+        "prefill_v_contiguous_buf");
     DISPATCH_CUDA_FUNCTION_DATA_TYPE(torchDTypeToDataType(qkv.dtype()),
                                      invokeGatherSequencesCombined,
                                      q_contiguous.data_ptr(),
@@ -490,7 +722,15 @@ void registerFusedRopeKVCacheOp(const py::module& m) {
     pybind11::class_<KVBlockArray>(m, "KVBlockArray").def(pybind11::init<>());
     pybind11::class_<CKAttn, std::shared_ptr<CKAttn>>(m, "CKAttn")
         .def(pybind11::init<>())
-        .def("update_kv_cache_offset", &updateKvCacheOffset, py::arg("kv_cache_block_id_device"));
+        .def("update_kv_cache_offset", &updateKvCacheOffset, py::arg("kv_cache_block_id_device"))
+        .def("update_prefill_runtime",
+             &updatePrefillRuntime,
+             py::arg("input_lengths"),
+             py::arg("cu_seqlens"),
+             py::arg("cu_kv_seqlens"),
+             py::arg("prefix_lengths"),
+             py::arg("max_seq_len"),
+             py::arg("max_prefix_len"));
 
     // Prefill ASM
     pybind11::class_<FusedRopeKVCachePrefillOpAsm>(m, "FusedRopeKVCachePrefillOpAsm")

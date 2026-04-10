@@ -33,6 +33,7 @@ struct GraphNcclCaptureContext {
     uintptr_t comm_handle{0};
     int       rank{0};
     int       world_size{1};
+    bool      is_prefill_capture{false};
 };
 
 #if USING_ROCM

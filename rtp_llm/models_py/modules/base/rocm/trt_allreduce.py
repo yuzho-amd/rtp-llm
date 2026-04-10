@@ -64,6 +64,7 @@ class TrtllmDistEnv:
         self.disabled = False
         self._is_capturing = False
         self._is_captured = False
+        self._capture_handles_pending = False
         torch.cuda.set_device(self.device_id)
 
         if self.world_size == 1:
@@ -114,6 +115,8 @@ class TrtllmDistEnv:
         dist.barrier(group=self.group)
 
     def _consume_capture(self):
+        if not self._capture_handles_pending:
+            return
         self._barrier()
         handles = self.handle.get_captured_handles()
         offsets = self.handle.get_captured_offsets()
@@ -128,6 +131,7 @@ class TrtllmDistEnv:
             self.handle.open_captured_handles(handle_list, offset_list, idx)
         self.handle.capture_clear()
         self._barrier()
+        self._capture_handles_pending = False
 
     @contextmanager
     def capture(self):
@@ -144,6 +148,7 @@ class TrtllmDistEnv:
         """Handle graph capture state transitions for input tensor."""
         if torch.cuda.is_current_stream_capturing():
             self._is_captured = True
+            self._capture_handles_pending = True
         else:
             if self._is_captured:
                 self._consume_capture()
@@ -324,12 +329,27 @@ def allreduce(
 
 def consume_capture() -> None:
     """Notify the TRT-LLM comm manager to finalize IPC pointers after graph capture."""
+    if torch.cuda.is_current_stream_capturing():
+        raise RuntimeError(
+            "consume_capture must not run during stream capture."
+        )
     if (
         _trtllm_comm_manager is not None
         and _trtllm_comm_manager.initialized
         and not _trtllm_comm_manager.dist_env.disabled
     ):
         _trtllm_comm_manager.dist_env._consume_capture()
+
+
+def has_pending_capture() -> bool:
+    if (
+        _trtllm_comm_manager is None
+        or not _trtllm_comm_manager.initialized
+        or _trtllm_comm_manager.dist_env is None
+        or _trtllm_comm_manager.dist_env.disabled
+    ):
+        return False
+    return bool(_trtllm_comm_manager.dist_env._capture_handles_pending)
 
 
 def allreduce_residual_rmsnorm(

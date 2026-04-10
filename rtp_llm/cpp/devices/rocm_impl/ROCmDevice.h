@@ -152,6 +152,30 @@ struct CKAttn {
     torch::Tensor input_lengths;
     torch::Tensor sequence_lengths;
     torch::Tensor padding_offset;
+    // Prefill CUDA graph buffer reuse state.
+    torch::Tensor prefill_q_output_buf;
+    torch::Tensor prefill_q_fp8_buf;
+    torch::Tensor prefill_k_output_buf;
+    torch::Tensor prefill_v_output_buf;
+    torch::Tensor prefill_qkv_fp8_buf;
+    torch::Tensor prefill_q_contiguous_buf;
+    torch::Tensor prefill_k_contiguous_buf;
+    torch::Tensor prefill_v_contiguous_buf;
+    int           prefill_capture_batch_size          = 0;
+    int           prefill_capture_max_seq_len         = 0;
+    int           prefill_capture_max_prefix_len      = 0;
+    int           prefill_capture_token_num           = 0;
+    int           prefill_capture_seq_len_with_prefix = 0;
+    int           prefill_capture_q_output_token_cap  = 0;
+    // Runtime (replay-time) values, updated from live tensors before replay.
+    int           prefill_runtime_max_seq_len         = -1;
+    int           prefill_runtime_max_prefix_len      = -1;
+    int           prefill_runtime_seq_len_with_prefix = -1;
+    bool          prefill_capture_use_paged_fmha      = false;
+    bool          prefill_capture_use_fmha_fp8        = false;
+    bool          prefill_capture_use_paged_fp8       = false;
+    bool          prefill_capture_buffer_initialized  = false;
+    int           prefill_capture_device_index        = -1;
     int           max_seq_len;
     bool          decode_plan;
 

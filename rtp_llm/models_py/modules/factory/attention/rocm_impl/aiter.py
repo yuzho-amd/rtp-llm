@@ -247,6 +247,31 @@ class AiterPrefillAttnOp:
         return final_result
 
 
+def _infer_cuda_graph_device(
+    attn_inputs: PyAttentionInputs,
+    fmha_params: FMHAParams,
+    fallback_tensor: Optional[torch.Tensor],
+) -> torch.device:
+    # Prefer device-side runtime tensors instead of host-side metadata.
+    candidates = [
+        getattr(attn_inputs, "input_lengths_d", None),
+        getattr(attn_inputs, "prefix_lengths_d", None),
+        getattr(attn_inputs, "decode_cu_seqlens_d", None),
+        getattr(attn_inputs, "sequence_lengths_plus_1_d", None),
+        getattr(attn_inputs, "kv_cache_kernel_block_id_device", None),
+        getattr(attn_inputs, "kv_cache_block_id_device", None),
+        getattr(fmha_params, "cu_seqlens_q", None),
+        getattr(fmha_params, "cu_seqlens_k", None),
+        fallback_tensor,
+    ]
+    for tensor in candidates:
+        if isinstance(tensor, torch.Tensor) and tensor.is_cuda:
+            return tensor.device
+    raise ValueError(
+        "Failed to infer CUDA/HIP graph device from attn_inputs/fmha_params tensors"
+    )
+
+
 class AiterPrefillAttnOpPaged:
     """Paged prefill attention"""
 
@@ -254,6 +279,13 @@ class AiterPrefillAttnOpPaged:
         self.head_num = attn_configs.head_num
         self.head_dim = attn_configs.size_per_head
         self.head_num_kv = attn_configs.kv_head_num
+        self.enable_cuda_graph = False
+        self.cuda_graph_prepared = False
+        self.graph_device: Optional[torch.device] = None
+        self.seqlen_k_buf: Optional[torch.Tensor] = None
+        self.kv_indptr_buf: Optional[torch.Tensor] = None
+        self.kv_page_indices_buf: Optional[torch.Tensor] = None
+        self.descale_buf: Optional[torch.Tensor] = None
 
     def support(self, attn_inputs: PyAttentionInputs) -> bool:
         has_prefix = (
@@ -268,7 +300,60 @@ class AiterPrefillAttnOpPaged:
             attn_inputs=attn_inputs,
             is_prefill=True,
         )
+        self.enable_cuda_graph = bool(getattr(attn_inputs, "is_cuda_graph", False))
+        self.cuda_graph_prepared = False
+        # Paged path only needs small metadata buffers; prepare them early so
+        # capture forward never falls back to CPU->GPU copies.
+        if self.enable_cuda_graph:
+            self.prepare_cuda_graph(fmha_params, attn_inputs)
         return fmha_params
+
+    def prepare_cuda_graph(self, fmha_params: FMHAParams, attn_inputs: PyAttentionInputs) -> None:
+        self.enable_cuda_graph = bool(getattr(attn_inputs, "is_cuda_graph", False))
+        if not self.enable_cuda_graph:
+            self.cuda_graph_prepared = False
+            return
+        graph_block_table = getattr(attn_inputs, "kv_cache_kernel_block_id_device", None)
+        if graph_block_table is None:
+            graph_block_table = getattr(attn_inputs, "kv_cache_block_id_device", None)
+        if graph_block_table is None:
+            raise ValueError(
+                "AiterPrefillAttnOpPaged.prepare_cuda_graph requires kv cache block id device tensor"
+            )
+        self.graph_device = _infer_cuda_graph_device(
+            attn_inputs, fmha_params, graph_block_table
+        )
+        if self.graph_device.type != "cuda":
+            raise ValueError(
+                "AiterPrefillAttnOpPaged.prepare_cuda_graph expects CUDA/HIP graph device"
+            )
+        fmha_params.cu_seqlens_q = fmha_params.cu_seqlens_q.to(
+            device=self.graph_device, dtype=torch.int32
+        )
+        fmha_params.cu_seqlens_k = fmha_params.cu_seqlens_k.to(
+            device=self.graph_device, dtype=torch.int32
+        )
+        fmha_params.kv_cache_block_id_device = fmha_params.kv_cache_block_id_device.to(
+            device=self.graph_device, dtype=torch.int32
+        )
+        batch_size = fmha_params.cu_seqlens_q.shape[0] - 1
+        if self.seqlen_k_buf is None or self.seqlen_k_buf.shape[0] < batch_size:
+            self.seqlen_k_buf = torch.empty(
+                max(1, batch_size), dtype=torch.int32, device=self.graph_device
+            )
+        if self.kv_indptr_buf is None or self.kv_indptr_buf.shape[0] < batch_size + 1:
+            self.kv_indptr_buf = torch.zeros(
+                max(1, batch_size + 1), dtype=torch.int32, device=self.graph_device
+            )
+        if self.kv_page_indices_buf is None:
+            self.kv_page_indices_buf = torch.zeros(
+                1, dtype=torch.int32, device=self.graph_device
+            )
+        if self.descale_buf is None:
+            self.descale_buf = torch.ones(
+                1, dtype=torch.float32, device=self.graph_device
+            )
+        self.cuda_graph_prepared = True
 
     def forward(self, qkv, kv_cache, fmha_params) -> torch.Tensor:
         q_tensor = qkv[0][: fmha_params.token_q_num]
@@ -286,18 +371,43 @@ class AiterPrefillAttnOpPaged:
             kv_sizes[0], kv_sizes[1], kv_sizes[2] // x, kv_sizes[3], x
         )
 
-        cu_seqlens_q = fmha_params.cu_seqlens_q.to(device)
+        graph_ready = self.enable_cuda_graph and self.cuda_graph_prepared
+        if graph_ready:
+            if self.graph_device != device:
+                raise RuntimeError(
+                    "AiterPrefillAttnOpPaged graph device mismatch between capture and forward"
+                )
+            assert self.seqlen_k_buf is not None
+            assert self.kv_indptr_buf is not None
+            assert self.kv_page_indices_buf is not None
+            assert self.descale_buf is not None
+            cu_seqlens_q = fmha_params.cu_seqlens_q
+            cu_seqlens_k = fmha_params.cu_seqlens_k
+        else:
+            cu_seqlens_q = fmha_params.cu_seqlens_q.to(device)
+            cu_seqlens_k = fmha_params.cu_seqlens_k.to(device)
         batch_size = cu_seqlens_q.shape[0] - 1
 
-        cu_seqlens_k = fmha_params.cu_seqlens_k.to(device)
-        seqlen_k = (cu_seqlens_k[1:] - cu_seqlens_k[:-1]).to(torch.int32)
+        if graph_ready:
+            torch.sub(cu_seqlens_k[1:], cu_seqlens_k[:-1], out=self.seqlen_k_buf)
+            seqlen_k = self.seqlen_k_buf
+        else:
+            seqlen_k = (cu_seqlens_k[1:] - cu_seqlens_k[:-1]).to(torch.int32)
 
-        block_table = fmha_params.kv_cache_block_id_device.to(
-            dtype=torch.int32, device=device
-        )
+        if graph_ready:
+            block_table = fmha_params.kv_cache_block_id_device
+        else:
+            block_table = fmha_params.kv_cache_block_id_device.to(
+                dtype=torch.int32, device=device
+            )
 
-        kv_indptr = torch.zeros(batch_size + 1, dtype=torch.int32, device=device)
-        kv_page_indices = torch.zeros(1, dtype=torch.int32, device=device)
+        if graph_ready:
+            self.kv_indptr_buf.zero_()
+            kv_indptr = self.kv_indptr_buf
+            kv_page_indices = self.kv_page_indices_buf
+        else:
+            kv_indptr = torch.zeros(batch_size + 1, dtype=torch.int32, device=device)
+            kv_page_indices = torch.zeros(1, dtype=torch.int32, device=device)
 
         max_seqlen_q = fmha_params.max_seqlen_q
         max_seqlen_k = fmha_params.max_seqlen_k
@@ -306,9 +416,14 @@ class AiterPrefillAttnOpPaged:
         k_descale = None
         v_descale = None
         if key_cache.dtype in (torch.float8_e4m3fnuz, torch.float8_e4m3fn):
-            q_descale = torch.ones(1, dtype=torch.float32, device=device)
-            k_descale = torch.ones(1, dtype=torch.float32, device=device)
-            v_descale = torch.ones(1, dtype=torch.float32, device=device)
+            if graph_ready:
+                q_descale = self.descale_buf
+                k_descale = self.descale_buf
+                v_descale = self.descale_buf
+            else:
+                q_descale = torch.ones(1, dtype=torch.float32, device=device)
+                k_descale = torch.ones(1, dtype=torch.float32, device=device)
+                v_descale = torch.ones(1, dtype=torch.float32, device=device)
 
         res = aiter.mha_batch_prefill_func(
             q_tensor,
@@ -928,6 +1043,120 @@ class AiterPrefillImplPaged(FMHAImplBase):
         )
         return has_prefix
 
+    def _update_prefill_params_for_cuda_graph(self, attn_inputs: PyAttentionInputs) -> None:
+        input_lengths = attn_inputs.input_lengths
+        if input_lengths is None:
+            raise ValueError("AiterPrefillImplPaged.prepare_cuda_graph requires input_lengths")
+        if input_lengths.dim() != 1:
+            raise ValueError(
+                "AiterPrefillImplPaged.prepare_cuda_graph expects 1D input_lengths"
+            )
+
+        fmha_params = self.fmha_params
+        expected_batch = fmha_params.cu_seqlens_q.numel() - 1
+        if input_lengths.shape[0] != expected_batch:
+            raise ValueError(
+                "AiterPrefillImplPaged CUDA graph replay batch mismatch: "
+                f"capture={expected_batch}, replay={input_lengths.shape[0]}"
+            )
+
+        live_cu_seqlens_q = getattr(attn_inputs, "cu_seqlens", None)
+        live_cu_seqlens_k = getattr(attn_inputs, "cu_kv_seqlens", None)
+        use_live_cu_seqlens = (
+            live_cu_seqlens_q is not None
+            and live_cu_seqlens_k is not None
+            and live_cu_seqlens_q.numel() == expected_batch + 1
+            and live_cu_seqlens_k.numel() == expected_batch + 1
+        )
+
+        if use_live_cu_seqlens:
+            fmha_params.cu_seqlens_q.copy_(
+                live_cu_seqlens_q.to(
+                    device=fmha_params.cu_seqlens_q.device, dtype=torch.int32
+                )
+            )
+            fmha_params.cu_seqlens_k.copy_(
+                live_cu_seqlens_k.to(
+                    device=fmha_params.cu_seqlens_k.device, dtype=torch.int32
+                )
+            )
+            q_lengths = fmha_params.cu_seqlens_q[1:] - fmha_params.cu_seqlens_q[:-1]
+            kv_lengths = fmha_params.cu_seqlens_k[1:] - fmha_params.cu_seqlens_k[:-1]
+            prefix_lengths = kv_lengths - q_lengths
+        else:
+            q_lengths = input_lengths.to(
+                device=fmha_params.cu_seqlens_q.device, dtype=torch.int32
+            )
+            fmha_params.cu_seqlens_q.zero_()
+            fmha_params.cu_seqlens_q[1:].copy_(torch.cumsum(q_lengths, dim=0))
+
+            prefix_lengths = getattr(attn_inputs, "prefix_lengths", None)
+            if prefix_lengths is None:
+                prefix_lengths = torch.zeros_like(q_lengths)
+            else:
+                if prefix_lengths.shape[0] != expected_batch:
+                    raise ValueError(
+                        "AiterPrefillImplPaged CUDA graph replay prefix length mismatch: "
+                        f"capture={expected_batch}, replay={prefix_lengths.shape[0]}"
+                    )
+                prefix_lengths = prefix_lengths.to(
+                    device=fmha_params.cu_seqlens_k.device, dtype=torch.int32
+                )
+
+            kv_lengths = q_lengths + prefix_lengths
+            fmha_params.cu_seqlens_k.zero_()
+            fmha_params.cu_seqlens_k[1:].copy_(torch.cumsum(kv_lengths, dim=0))
+
+        fmha_params.prefix_lengths = prefix_lengths
+
+        fmha_params.max_seq_len = int(q_lengths.max().item()) if expected_batch > 0 else 0
+        fmha_params.max_seqlen_q = fmha_params.max_seq_len
+        current_max_k = int(kv_lengths.max().item()) if expected_batch > 0 else 0
+        fmha_params.max_seqlen_k = current_max_k
+        fmha_params.token_q_num = int(q_lengths.sum().item())
+        fmha_params.token_kv_num = int(kv_lengths.sum().item())
+
+        kv_block_id = getattr(attn_inputs, "kv_cache_kernel_block_id_device", None)
+        if kv_block_id is None:
+            kv_block_id = getattr(attn_inputs, "kv_cache_block_id_device", None)
+        if kv_block_id is None:
+            raise ValueError(
+                "AiterPrefillImplPaged.prepare_cuda_graph requires kv cache block ids"
+            )
+        fmha_params.kv_cache_block_id_device = kv_block_id
+
+    def prepare_cuda_graph(self, attn_inputs: PyAttentionInputs):
+        # Replay path must reuse capture-time params buffers and keep runtime branch stable.
+        self.attn_inputs = attn_inputs
+        self._update_prefill_params_for_cuda_graph(attn_inputs)
+
+        self.batch_prefill_impl.prepare_cuda_graph(self.fmha_params, attn_inputs)
+
+        # Keep rope prefill params numerically aligned with live replay tensors.
+        update_prefill_runtime = getattr(self.rope_params, "update_prefill_runtime", None)
+        if callable(update_prefill_runtime):
+            prefix_lengths = self.fmha_params.prefix_lengths
+            if prefix_lengths is None:
+                prefix_lengths = torch.zeros_like(attn_inputs.input_lengths, dtype=torch.int32)
+            # Derive q lengths from live cu_seqlens to keep rope/fmha in sync.
+            input_lengths = self.fmha_params.cu_seqlens_q[1:] - self.fmha_params.cu_seqlens_q[:-1]
+            max_prefix_len = max(
+                0,
+                int(self.fmha_params.max_seqlen_k) - int(self.fmha_params.max_seqlen_q),
+            )
+            update_prefill_runtime(
+                input_lengths,
+                self.fmha_params.cu_seqlens_q,
+                self.fmha_params.cu_seqlens_k,
+                prefix_lengths,
+                int(self.fmha_params.max_seqlen_q),
+                max_prefix_len,
+            )
+
+        update_kv_cache_offset = getattr(self.rope_params, "update_kv_cache_offset", None)
+        if callable(update_kv_cache_offset):
+            update_kv_cache_offset(self.fmha_params.kv_cache_block_id_device)
+
     def forward(
         self,
         qkv: torch.Tensor,
@@ -935,13 +1164,14 @@ class AiterPrefillImplPaged(FMHAImplBase):
     ) -> torch.Tensor:
         cu_seqlens_q = self.fmha_params.cu_seqlens_q
         batch_size = cu_seqlens_q.shape[0] - 1
-        if batch_size > 0:
-            max_q_len = (cu_seqlens_q[1:] - cu_seqlens_q[:-1]).max().item()
-            token_num = cu_seqlens_q[-1].item()
-        else:
-            max_q_len = 0
-            token_num = 0
-        use_triton = batch_size > 0 and 0 < max_q_len <= 4
+        # Avoid tensor->host sync during CUDA graph capture.
+        max_q_len = int(self.fmha_params.max_seqlen_q) if batch_size > 0 else 0
+        token_num = int(self.fmha_params.token_q_num) if batch_size > 0 else 0
+        use_triton = (
+            False
+            if self.batch_prefill_impl.enable_cuda_graph
+            else (batch_size > 0 and 0 < max_q_len <= 4)
+        )
 
         if self.need_rope_kv_cache:
             self.rope_kvcache_impl.pad_query = (

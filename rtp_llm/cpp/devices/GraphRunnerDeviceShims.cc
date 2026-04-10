@@ -42,10 +42,12 @@ void enter_graph_capture(GraphNcclCaptureContext* ctx) {
     rocm::setHipGraphCaptureEnabled(true);
     try {
         py::module_& collective_torch = getCollectiveTorchModule();
+        const char*  capture_mode = (ctx && ctx->is_prefill_capture) ? "prefill" : "decode";
         if (ctx && ctx->comm_handle != 0) {
-            collective_torch.attr("enter_hipgraph_capture_mode")(ctx->comm_handle, ctx->world_size, ctx->rank);
+            collective_torch.attr("enter_hipgraph_capture_mode")(
+                ctx->comm_handle, ctx->world_size, ctx->rank, capture_mode);
         } else {
-            collective_torch.attr("enter_hipgraph_capture_mode")(0, 0, 0);
+            collective_torch.attr("enter_hipgraph_capture_mode")(0, 0, 0, capture_mode);
         }
     } catch (const py::error_already_set& e) {
         rocm::setHipGraphCaptureEnabled(false);
@@ -67,6 +69,7 @@ void enter_graph_capture(GraphNcclCaptureContext* ctx) {
 
 void exit_graph_capture(GraphNcclCaptureContext* ctx) {
 #if USING_ROCM
+    rocm::setHipGraphCaptureEnabled(false);
     try {
         py::module_& collective_torch = getCollectiveTorchModule();
         collective_torch.attr("exit_hipgraph_capture_mode")();
@@ -86,7 +89,6 @@ void exit_graph_capture(GraphNcclCaptureContext* ctx) {
             RTP_LLM_LOG_WARNING("Failed to clear NCCL comm after exit_graph_capture failure: %s", clear_e.what());
         }
     }
-    rocm::setHipGraphCaptureEnabled(false);
 #else
     (void)ctx;
     CaptureCheck::in_cuda_graph_capture = false;
