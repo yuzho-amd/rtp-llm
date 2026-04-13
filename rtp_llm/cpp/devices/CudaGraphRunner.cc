@@ -547,7 +547,6 @@ void CudaGraphRunner::captureOneGraphInstance(int key, const char* key_type) {
         {
             graph.capture_begin();
             graph_runner::GraphNcclCaptureContext capture_ctx;
-            capture_ctx.is_prefill_capture = is_prefill_cuda_graph_mode_;
             CudaGraphCaptureGuard capture_guard(&capture_ctx);
             auto                  py_outputs_obj = py_forward_method_(inputs, attn_pyobj);
             outputs                              = py_outputs_obj.cast<PyModelOutputs>();

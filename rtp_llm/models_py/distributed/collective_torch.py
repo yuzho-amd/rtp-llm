@@ -73,7 +73,6 @@ _is_rocm_runtime: bool = getattr(torch.version, "hip", None) is not None
 # this global must be guarded by an explicit lock or replaced with thread-local storage.
 _HipgraphAllGatherCacheKey = Tuple[Tuple[int, ...], torch.dtype, str, int]
 _hipgraph_allgather_outputs: Dict[_HipgraphAllGatherCacheKey, torch.Tensor] = {}
-_hipgraph_capture_mode: str = "unknown"
 
 
 def _is_hidden_size_supported_for_trtllm(hidden_size: int) -> bool:
@@ -92,10 +91,6 @@ def _is_hidden_size_supported_for_trtllm(hidden_size: int) -> bool:
         return hidden_size in ALLREDUCE_SUPPORTED_HIDDEN_SIZES
     except Exception:
         return False
-
-
-def _is_prefill_capture_mode() -> bool:
-    return _hipgraph_capture_mode == "prefill"
 
 
 def _get_nccl_dtype(tensor: torch.Tensor) -> int:
@@ -301,10 +296,7 @@ def enter_hipgraph_capture_mode(
     nccl_comm_handle: int = 0,
     world_size: int = 0,
     rank: int = 0,
-    capture_mode: str = "unknown",
 ) -> None:
-    global _hipgraph_capture_mode
-    _hipgraph_capture_mode = capture_mode
     if nccl_comm_handle != 0 and world_size > 1:
         set_hipgraph_capture_nccl_comm(nccl_comm_handle, world_size, rank)
     # Keep previously registered comm when no valid handle is provided.
@@ -313,7 +305,6 @@ def enter_hipgraph_capture_mode(
 
 
 def exit_hipgraph_capture_mode() -> None:
-    global _hipgraph_capture_mode
     # Keep this path side-effect free unless trt_allreduce has pending captured handles.
     try:
         from rtp_llm.models_py.modules.base.rocm.trt_allreduce import (
@@ -325,8 +316,6 @@ def exit_hipgraph_capture_mode() -> None:
             consume_capture()
     except Exception:
         pass
-    finally:
-        _hipgraph_capture_mode = "unknown"
     return
 
 
@@ -335,9 +324,6 @@ def _should_use_hipgraph_capture_rccl(group: Group) -> bool:
         _is_rocm_runtime
         and group == Group.TP
         and _is_hipgraph_capture_active()
-        and _is_prefill_capture_mode()
-        and _rccl_comm is not None
-        and _rccl_comm.value is not None
     )
 
 
@@ -789,14 +775,6 @@ def all_reduce(tensor: torch.Tensor, group: Group) -> torch.Tensor:
     if _should_use_hipgraph_capture_rccl(group):
         process_group = _get_group(group)
         return _hipgraph_capture_all_reduce(tensor, process_group)
-    if group == Group.TP and _is_hipgraph_capture_active() and not _is_prefill_capture_mode():
-        process_group = _get_group(group)
-        return _hipgraph_capture_all_reduce(tensor, process_group)
-    if group == Group.TP and _is_hipgraph_capture_active() and _is_prefill_capture_mode():
-        raise RuntimeError(
-            "TP all_reduce would fall back to torch.distributed during HIPGraph capture; "
-            "RCCL capture communicator is not ready."
-        )
 
     if group == Group.TP:
         symm_mem_comm = get_symm_mem_communicator()
@@ -826,14 +804,6 @@ def all_gather(tensor: torch.Tensor, group: Group) -> torch.Tensor:
     if _should_use_hipgraph_capture_rccl(group):
         process_group = _get_group(group)
         return _hipgraph_capture_all_gather(tensor, process_group)
-    if group == Group.TP and _is_hipgraph_capture_active() and not _is_prefill_capture_mode():
-        process_group = _get_group(group)
-        return _hipgraph_capture_all_gather(tensor, process_group)
-    if group == Group.TP and _is_hipgraph_capture_active() and _is_prefill_capture_mode():
-        raise RuntimeError(
-            "TP all_gather would fall back to torch.distributed during HIPGraph capture; "
-            "RCCL capture communicator is not ready."
-        )
 
     if group == Group.TP:
         symm_mem_comm = get_symm_mem_communicator()

@@ -42,12 +42,11 @@ void enter_graph_capture(GraphNcclCaptureContext* ctx) {
     rocm::setHipGraphCaptureEnabled(true);
     try {
         py::module_& collective_torch = getCollectiveTorchModule();
-        const char*  capture_mode = (ctx && ctx->is_prefill_capture) ? "prefill" : "decode";
         if (ctx && ctx->comm_handle != 0) {
             collective_torch.attr("enter_hipgraph_capture_mode")(
-                ctx->comm_handle, ctx->world_size, ctx->rank, capture_mode);
+                ctx->comm_handle, ctx->world_size, ctx->rank);
         } else {
-            collective_torch.attr("enter_hipgraph_capture_mode")(0, 0, 0, capture_mode);
+            collective_torch.attr("enter_hipgraph_capture_mode")(0, 0, 0);
         }
     } catch (const py::error_already_set& e) {
         rocm::setHipGraphCaptureEnabled(false);
