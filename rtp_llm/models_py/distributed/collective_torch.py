@@ -305,7 +305,27 @@ def enter_hipgraph_capture_mode(
 
 
 def exit_hipgraph_capture_mode() -> None:
-    # Keep this path side-effect free unless trt_allreduce has pending captured handles.
+    # Do NOT call consume_capture() here.  The ProcessGroupNCCL operations
+    # inside consume_capture (dist.barrier / dist.all_gather_object) leave
+    # work-completion events that the NCCL watchdog thread queries
+    # asynchronously.  If the next graph capture starts before the watchdog
+    # finishes querying those events, hipEventQuery hits
+    # hipErrorCapturedEvent.
+    #
+    # consume_capture is deferred to finish_hipgraph_capture_session() which
+    # is called once after the entire capture loop finishes, giving the
+    # watchdog enough time to drain its work queue before the next model's
+    # capture begins.
+    return
+
+
+def finish_hipgraph_capture_session() -> None:
+    """Finalize pending trt_allreduce IPC handles after a full capture loop.
+
+    Must be called outside of any graph capture, after captureDecode/capturePrefill
+    completes.  This is separated from exit_hipgraph_capture_mode to avoid
+    ProcessGroupNCCL watchdog races between consecutive graph captures.
+    """
     try:
         from rtp_llm.models_py.modules.base.rocm.trt_allreduce import (
             consume_capture,
@@ -316,7 +336,6 @@ def exit_hipgraph_capture_mode() -> None:
             consume_capture()
     except Exception:
         pass
-    return
 
 
 def _should_use_hipgraph_capture_rccl(group: Group) -> bool:
@@ -383,7 +402,31 @@ def _hipgraph_capture_all_reduce(
     tensor: torch.Tensor,
     process_group: torch.distributed.ProcessGroup,
 ) -> torch.Tensor:
-    # Use raw RCCL on HIPGraph TP path to avoid ProcessGroup capture hazards.
+    # Prefer trt_allreduce when already initialized and hidden_size is supported;
+    # never attempt first-time initialization during graph capture because
+    # TrtllmDistEnv.__init__ does hipMalloc and dist.all_gather_object.
+    if (
+        _is_hidden_size_supported_for_trtllm(tensor.shape[-1])
+        and _is_trtllm_allreduce_ready()
+    ):
+        try:
+            from rtp_llm.models_py.modules.base.rocm.trt_allreduce import (
+                allreduce as trtllm_allreduce,
+            )
+
+            return trtllm_allreduce(
+                allreduce_in=tensor,
+                group=process_group,
+                device_id=_parallelism_config.tp_rank,
+            )
+        except Exception as e:
+            logging.warning(
+                "trtllm_allreduce failed in graph capture mode, "
+                "fallback to ncclAllReduce: %s",
+                e,
+            )
+
+    # Fallback to raw RCCL ncclAllReduce (in-place, returns original tensor).
     lib, rccl_comm = _get_rccl_runtime(process_group)
     result = lib.ncclAllReduce(
         tensor.data_ptr(),

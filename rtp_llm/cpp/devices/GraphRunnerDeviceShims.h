@@ -85,6 +85,7 @@ py::module_& getCollectiveTorchModule();
 void register_graph_capture_nccl_comm(void* nccl_comm, int world_size, int rank);
 void enter_graph_capture(GraphNcclCaptureContext* ctx);
 void exit_graph_capture(GraphNcclCaptureContext* ctx);
+void finish_capture_session();
 
 }  // namespace graph_runner
 }  // namespace rtp_llm

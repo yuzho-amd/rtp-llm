@@ -63,6 +63,12 @@ void CudaGraphRunner::captureDecode() {
         graph_instances_[bs].mem_hold_.attn_pyobj_ =
             py_attn_pyobj_method_(graph_instances_[bs].mem_hold_.py_model_inputs_, true);
         captureDecodeOneBatchSize(bs);
+        // Finalize pending trt_allreduce IPC handles after each graph capture.
+        // This must happen outside of graph capture, and before the next
+        // capture begins, to avoid ProcessGroupNCCL watchdog races
+        // (hipErrorCapturedEvent).  replayAndSyncCheck provides enough delay
+        // for the watchdog to drain its work queue.
+        graph_runner::finish_capture_session();
         replayAndSyncCheck(bs, "batch size");
         RTP_LLM_LOG_INFO("capture success for batch size: %d", bs);
     }

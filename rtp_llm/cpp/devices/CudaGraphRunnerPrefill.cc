@@ -37,6 +37,7 @@ void CudaGraphRunner::capturePrefill() {
         graph_instances_[seq_len].mem_hold_.decoder_layer_hidden_states_ =
             graph_instances_[seq_len].mem_hold_.decoder_layer_hidden_states_.slice(0, 0, seq_len);
         capturePrefillOneSeqLen(seq_len);
+        graph_runner::finish_capture_session();
         replayAndSyncCheck(seq_len, "seq len");
         RTP_LLM_LOG_INFO("capture success for seq_len: %d", seq_len);
     }

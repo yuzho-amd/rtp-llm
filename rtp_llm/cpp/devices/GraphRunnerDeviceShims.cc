@@ -94,5 +94,16 @@ void exit_graph_capture(GraphNcclCaptureContext* ctx) {
 #endif
 }
 
+void finish_capture_session() {
+#if USING_ROCM
+    try {
+        py::module_& collective_torch = getCollectiveTorchModule();
+        collective_torch.attr("finish_hipgraph_capture_session")();
+    } catch (const py::error_already_set& e) {
+        RTP_LLM_LOG_WARNING("Failed to finish capture session: %s", e.what());
+    }
+#endif
+}
+
 }  // namespace graph_runner
 }  // namespace rtp_llm
