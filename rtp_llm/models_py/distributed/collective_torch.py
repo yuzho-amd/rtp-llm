@@ -117,7 +117,6 @@ def _get_or_create_allgather_output(tensor: torch.Tensor) -> torch.Tensor:
         return output
 
     if not _is_hipgraph_capture_active():
-        # Non-graph mode can allocate temporary output safely.
         return torch.empty(expected_shape, device=tensor.device, dtype=tensor.dtype)
 
     output = torch.zeros(expected_shape, device=tensor.device, dtype=tensor.dtype)
@@ -305,17 +304,8 @@ def enter_hipgraph_capture_mode(
 
 
 def exit_hipgraph_capture_mode() -> None:
-    # Do NOT call consume_capture() here.  The ProcessGroupNCCL operations
-    # inside consume_capture (dist.barrier / dist.all_gather_object) leave
-    # work-completion events that the NCCL watchdog thread queries
-    # asynchronously.  If the next graph capture starts before the watchdog
-    # finishes querying those events, hipEventQuery hits
-    # hipErrorCapturedEvent.
-    #
-    # consume_capture is deferred to finish_hipgraph_capture_session() which
-    # is called once after the entire capture loop finishes, giving the
-    # watchdog enough time to drain its work queue before the next model's
-    # capture begins.
+    # consume_capture is deferred to finish_hipgraph_capture_session() to
+    # avoid ProcessGroupNCCL watchdog hipErrorCapturedEvent races.
     return
 
 
@@ -363,36 +353,6 @@ def _is_trtllm_allreduce_ready() -> bool:
             and _trtllm_comm_manager.initialized
             and _trtllm_comm_manager.dist_env is not None
             and not _trtllm_comm_manager.dist_env.disabled
-        )
-    except Exception:
-        return False
-
-
-def _is_trtllm_allreduce_ready_for(
-    tensor: torch.Tensor,
-    process_group: torch.distributed.ProcessGroup,
-) -> bool:
-    """Check TRT-LLM allreduce can run without re-initialization."""
-    try:
-        from rtp_llm.models_py.modules.base.rocm.trt_allreduce import (
-            _trtllm_comm_manager,
-        )
-
-        if (
-            _trtllm_comm_manager is None
-            or not _trtllm_comm_manager.initialized
-            or _trtllm_comm_manager.dist_env is None
-            or _trtllm_comm_manager.dist_env.disabled
-        ):
-            return False
-
-        tensor_device_index = (
-            tensor.device.index if tensor.device.index is not None else -1
-        )
-        return (
-            _trtllm_comm_manager.group == process_group
-            and _trtllm_comm_manager.device_id == tensor_device_index
-            and _trtllm_comm_manager.dtype == tensor.dtype
         )
     except Exception:
         return False

@@ -22,9 +22,6 @@ static at::ScalarType get_fp8_dtype(ROCmDevice* device) {
 }
 
 static torch::Tensor allocateFlatBuffer(int64_t elements, const torch::TensorOptions& options, bool zero_init) {
-    if (elements < 0) {
-        throw std::runtime_error("allocateFlatBuffer expects non-negative element count");
-    }
     if (zero_init) {
         return torch::zeros({elements}, options);
     }
@@ -80,7 +77,6 @@ static void ensurePrefillCaptureBuffers(const CKAttnPtr&       params,
 
     params->prefill_q_output_buf = allocateFlatBuffer(q_output_elements, q_opts, true);
     if (use_paged_fmha) {
-        // Align CUDA behavior: paged prefill only needs q output.
         params->prefill_k_output_buf = torch::Tensor();
         params->prefill_v_output_buf = torch::Tensor();
     } else {
@@ -128,7 +124,7 @@ static void copyTensorExactInPlace(torch::Tensor& dst, const torch::Tensor& src,
 
     torch::Tensor src_match = src_flat;
     if (src_match.scalar_type() != dst.scalar_type() || src_match.device() != dst.device()) {
-        src_match = src_match.to(dst.options(), true, false).reshape({-1});
+        src_match = src_match.to(dst.options(), true, false);
     }
     dst_flat.copy_(src_match, true);
 }
@@ -157,9 +153,6 @@ void updatePrefillRuntime(CKAttn&              params,
                           const torch::Tensor& prefix_lengths,
                           int                  max_seq_len,
                           int                  max_prefix_len) {
-    if (max_seq_len < 0 || max_prefix_len < 0) {
-        throw std::runtime_error("update_prefill_runtime expects non-negative max_seq_len/max_prefix_len");
-    }
     copyTensorExactInPlace(params.input_lengths, input_lengths, "input_lengths");
     copyTensorExactInPlace(params.cu_seqlens, cu_seqlens, "cu_seqlens");
     copyTensorExactInPlace(params.cu_kv_seqlens, cu_kv_seqlens, "cu_kv_seqlens");
@@ -238,20 +231,7 @@ CKAttnPtr FusedRopeKVCachePrefillOpBase::prepare(torch_ext::PyAttentionInputs at
         throw std::runtime_error(
             "FusedRopeKVCachePrefillOp::prepare cannot infer prefill device from inputs");
     }
-    if (!prefill_device->is_cuda()) {
-        throw std::runtime_error(
-            "FusedRopeKVCachePrefillOp::prepare expects CUDA device tensors for prefill buffers");
-    }
     attn_params->prefill_capture_device_index = prefill_device->index();
-
-    attn_params->prefill_q_output_buf = torch::Tensor();
-    attn_params->prefill_k_output_buf = torch::Tensor();
-    attn_params->prefill_v_output_buf = torch::Tensor();
-    attn_params->prefill_q_fp8_buf = torch::Tensor();
-    attn_params->prefill_qkv_fp8_buf = torch::Tensor();
-    attn_params->prefill_q_contiguous_buf = torch::Tensor();
-    attn_params->prefill_k_contiguous_buf = torch::Tensor();
-    attn_params->prefill_v_contiguous_buf = torch::Tensor();
 
     attn_params->prefill_capture_batch_size          = batch_size;
     attn_params->prefill_capture_max_seq_len         = attn_params->max_seq_len;
@@ -271,13 +251,7 @@ CKAttnPtr FusedRopeKVCachePrefillOpBase::prepare(torch_ext::PyAttentionInputs at
 
 std::tuple<torch::Tensor, torch::Tensor, torch::Tensor> FusedRopeKVCachePrefillOpBase::forward(
     const torch::Tensor& qkv, std::optional<torch_ext::LayerKVCache> kv_cache, const CKAttnPtr& params) {
-    if (!qkv.is_cuda()) {
-        throw std::runtime_error("FusedRopeKVCachePrefillOp: qkv must be on CUDA/HIP device");
-    }
     ensurePrefillCaptureBuffers(params, attn_configs_, device_, qkv);
-    if (params->prefill_capture_device_index >= 0 && qkv.get_device() != params->prefill_capture_device_index) {
-        throw std::runtime_error("FusedRopeKVCachePrefillOp: qkv.device does not match capture-time device");
-    }
 
     const int local_head_num    = attn_configs_.head_num;
     const int local_head_num_kv = attn_configs_.kv_head_num;
@@ -289,15 +263,7 @@ std::tuple<torch::Tensor, torch::Tensor, torch::Tensor> FusedRopeKVCachePrefillO
     // 计算包含 prefix 的序列长度
     int max_prefix_length = params->prefill_runtime_max_prefix_len >= 0 ? params->prefill_runtime_max_prefix_len
                                                                          : params->prefill_capture_max_prefix_len;
-    int seq_len_with_prefix = params->prefill_runtime_seq_len_with_prefix >= 0
-                                  ? params->prefill_runtime_seq_len_with_prefix
-                                  : (seq_len + max_prefix_length);
-    if (seq_len_with_prefix != seq_len + max_prefix_length) {
-        seq_len_with_prefix = seq_len + max_prefix_length;
-    }
-    if (seq_len < 0 || max_prefix_length < 0 || seq_len_with_prefix < 0) {
-        throw std::runtime_error("FusedRopeKVCachePrefillOp: invalid runtime seq/prefix lengths");
-    }
+    const int seq_len_with_prefix = seq_len + max_prefix_length;
     if (batch_size > params->prefill_capture_batch_size || seq_len > params->prefill_capture_max_seq_len
         || seq_len_with_prefix > params->prefill_capture_seq_len_with_prefix) {
         throw std::runtime_error("FusedRopeKVCachePrefillOp: replay shape exceeds capture-time preallocated capacity");

@@ -252,7 +252,6 @@ def _infer_cuda_graph_device(
     fmha_params: FMHAParams,
     fallback_tensor: Optional[torch.Tensor],
 ) -> torch.device:
-    # Prefer device-side runtime tensors instead of host-side metadata.
     candidates = [
         getattr(attn_inputs, "input_lengths_d", None),
         getattr(attn_inputs, "prefix_lengths_d", None),
@@ -302,31 +301,17 @@ class AiterPrefillAttnOpPaged:
         )
         self.enable_cuda_graph = bool(getattr(attn_inputs, "is_cuda_graph", False))
         self.cuda_graph_prepared = False
-        # Paged path only needs small metadata buffers; prepare them early so
-        # capture forward never falls back to CPU->GPU copies.
         if self.enable_cuda_graph:
             self.prepare_cuda_graph(fmha_params, attn_inputs)
         return fmha_params
 
     def prepare_cuda_graph(self, fmha_params: FMHAParams, attn_inputs: PyAttentionInputs) -> None:
-        self.enable_cuda_graph = bool(getattr(attn_inputs, "is_cuda_graph", False))
-        if not self.enable_cuda_graph:
-            self.cuda_graph_prepared = False
-            return
         graph_block_table = getattr(attn_inputs, "kv_cache_kernel_block_id_device", None)
         if graph_block_table is None:
             graph_block_table = getattr(attn_inputs, "kv_cache_block_id_device", None)
-        if graph_block_table is None:
-            raise ValueError(
-                "AiterPrefillAttnOpPaged.prepare_cuda_graph requires kv cache block id device tensor"
-            )
         self.graph_device = _infer_cuda_graph_device(
             attn_inputs, fmha_params, graph_block_table
         )
-        if self.graph_device.type != "cuda":
-            raise ValueError(
-                "AiterPrefillAttnOpPaged.prepare_cuda_graph expects CUDA/HIP graph device"
-            )
         fmha_params.cu_seqlens_q = fmha_params.cu_seqlens_q.to(
             device=self.graph_device, dtype=torch.int32
         )
@@ -373,14 +358,6 @@ class AiterPrefillAttnOpPaged:
 
         graph_ready = self.enable_cuda_graph and self.cuda_graph_prepared
         if graph_ready:
-            if self.graph_device != device:
-                raise RuntimeError(
-                    "AiterPrefillAttnOpPaged graph device mismatch between capture and forward"
-                )
-            assert self.seqlen_k_buf is not None
-            assert self.kv_indptr_buf is not None
-            assert self.kv_page_indices_buf is not None
-            assert self.descale_buf is not None
             cu_seqlens_q = fmha_params.cu_seqlens_q
             cu_seqlens_k = fmha_params.cu_seqlens_k
         else:
@@ -1045,20 +1022,9 @@ class AiterPrefillImplPaged(FMHAImplBase):
 
     def _update_prefill_params_for_cuda_graph(self, attn_inputs: PyAttentionInputs) -> None:
         input_lengths = attn_inputs.input_lengths
-        if input_lengths is None:
-            raise ValueError("AiterPrefillImplPaged.prepare_cuda_graph requires input_lengths")
-        if input_lengths.dim() != 1:
-            raise ValueError(
-                "AiterPrefillImplPaged.prepare_cuda_graph expects 1D input_lengths"
-            )
 
         fmha_params = self.fmha_params
         expected_batch = fmha_params.cu_seqlens_q.numel() - 1
-        if input_lengths.shape[0] != expected_batch:
-            raise ValueError(
-                "AiterPrefillImplPaged CUDA graph replay batch mismatch: "
-                f"capture={expected_batch}, replay={input_lengths.shape[0]}"
-            )
 
         live_cu_seqlens_q = getattr(attn_inputs, "cu_seqlens", None)
         live_cu_seqlens_k = getattr(attn_inputs, "cu_kv_seqlens", None)
@@ -1126,19 +1092,16 @@ class AiterPrefillImplPaged(FMHAImplBase):
         fmha_params.kv_cache_block_id_device = kv_block_id
 
     def prepare_cuda_graph(self, attn_inputs: PyAttentionInputs):
-        # Replay path must reuse capture-time params buffers and keep runtime branch stable.
         self.attn_inputs = attn_inputs
         self._update_prefill_params_for_cuda_graph(attn_inputs)
 
         self.batch_prefill_impl.prepare_cuda_graph(self.fmha_params, attn_inputs)
 
-        # Keep rope prefill params numerically aligned with live replay tensors.
         update_prefill_runtime = getattr(self.rope_params, "update_prefill_runtime", None)
         if callable(update_prefill_runtime):
             prefix_lengths = self.fmha_params.prefix_lengths
             if prefix_lengths is None:
                 prefix_lengths = torch.zeros_like(attn_inputs.input_lengths, dtype=torch.int32)
-            # Derive q lengths from live cu_seqlens to keep rope/fmha in sync.
             input_lengths = self.fmha_params.cu_seqlens_q[1:] - self.fmha_params.cu_seqlens_q[:-1]
             max_prefix_len = max(
                 0,

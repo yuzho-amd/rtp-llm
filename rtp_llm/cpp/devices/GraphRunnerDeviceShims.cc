@@ -68,7 +68,6 @@ void enter_graph_capture(GraphNcclCaptureContext* ctx) {
 
 void exit_graph_capture(GraphNcclCaptureContext* ctx) {
 #if USING_ROCM
-    rocm::setHipGraphCaptureEnabled(false);
     try {
         py::module_& collective_torch = getCollectiveTorchModule();
         collective_torch.attr("exit_hipgraph_capture_mode")();
@@ -88,6 +87,7 @@ void exit_graph_capture(GraphNcclCaptureContext* ctx) {
             RTP_LLM_LOG_WARNING("Failed to clear NCCL comm after exit_graph_capture failure: %s", clear_e.what());
         }
     }
+    rocm::setHipGraphCaptureEnabled(false);
 #else
     (void)ctx;
     CaptureCheck::in_cuda_graph_capture = false;
