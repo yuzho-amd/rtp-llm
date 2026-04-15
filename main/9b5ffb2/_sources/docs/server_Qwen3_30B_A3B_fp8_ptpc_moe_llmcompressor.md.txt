@@ -1,0 +1,37 @@
+# server_Qwen3_30B_A3B_fp8_ptpc_moe_llmcompressor
+<pre>
+running server command: USE_AITER_PA=1 SEQ_SIZE_PER_BLOCK=16 MODEL_TYPE=qwen_3_moe FP8_KV_CACHE=1 ACT_TYPE=bf16 TOKENIZER_PATH=/mnt/raid0/pretrained_model/rtp_ci/Qwen3-30B-A3B-Thinking-2507-FP8-Dynamic CHECKPOINT_PATH=/mnt/raid0/pretrained_model/rtp_ci/Qwen3-30B-A3B-Thinking-2507-FP8-Dynamic CUDA_VISIBLE_DEVICES=4,5,6,7 START_PORT=6789 /opt/conda310/bin/python3.10 -m rtp_llm.start_server
+WARNING:root:fuse is not valid: connet http://0:28006 error
+[process-25093][root][2026-04-15 23:41:17.381][log_config.py:setup_logging():93][INFO] successfully set NCCL_DEBUG_FILE path to logs/nccl.log
+[CHECK] internal_source directory: /mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/internal_source, found: False
+import in __init__ took 1.48s
+import rtp_llm.ops took 0.00s
+WARNING:root:fuse is not valid: connet http://0:28006 error
+WARNING:root:fuse is not valid: connet http://0:28006 error
+WARNING:root:fuse is not valid: connet http://0:28006 error
+WARNING:root:fuse is not valid: connet http://0:28006 error
+WARNING:root:fuse is not valid: connet http://0:28006 error
+[aiter] import [module_aiter_enum] under /opt/conda310/lib/python3.10/site-packages/aiter/jit/module_aiter_enum.so
+initLogger log_file_path: /mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/config/alog.conf
+[aiter] import [module_rmsnorm] under /opt/conda310/lib/python3.10/site-packages/aiter/jit/module_rmsnorm.so
+[aiter] import [module_quant] under /opt/conda310/lib/python3.10/site-packages/aiter/jit/module_quant.so
+[aiter] merge tuned file under model_configs/ and configs/ /opt/conda310/lib/python3.10/site-packages/aiter/configs/a8w8_bpreshuffle_tuned_gemm.csv:/opt/conda310/lib/python3.10/site-packages/aiter/configs/model_configs/a8w8_bpreshuffle_tuned_gemm_dsv3.csv
+[aiter] import [module_gemm_common] under /opt/conda310/lib/python3.10/site-packages/aiter/jit/module_gemm_common.so
+[aiter] shape is M:7, N:5120, K:2048, q_dtype_w:torch.float8_e4m3fnuz, not found tuned config in /tmp/aiter_configs/a8w8_bpreshuffle_tuned_gemm.csv, will use default config!
+[aiter] import [module_gemm_a8w8_bpreshuffle] under /opt/conda310/lib/python3.10/site-packages/aiter/jit/module_gemm_a8w8_bpreshuffle.so
+[aiter] import [mha_varlen_fwd_fp8bf16_nlogits_nbias_mask_nlse_ndropout_nskip_nqscale] under /opt/conda310/lib/python3.10/site-packages/aiter/jit/mha_varlen_fwd_fp8bf16_nlogits_nbias_mask_nlse_ndropout_nskip_nqscale.so
+[aiter] shape is M:7, N:2048, K:4096, q_dtype_w:torch.float8_e4m3fnuz, not found tuned config in /tmp/aiter_configs/a8w8_bpreshuffle_tuned_gemm.csv, will use default config!
+[aiter] import [module_hipbsolgemm] under /opt/conda310/lib/python3.10/site-packages/aiter/jit/module_hipbsolgemm.so
+[aiter] import [module_moe_asm] under /opt/conda310/lib/python3.10/site-packages/aiter/jit/module_moe_asm.so
+[aiter] import [module_moe_sorting] under /opt/conda310/lib/python3.10/site-packages/aiter/jit/module_moe_sorting.so
+[aiter] type hints mismatch, override to --&gt; moe_stage1_g1u1(input: torch.Tensor, w1: torch.Tensor, w2: torch.Tensor, sorted_token_ids: torch.Tensor, sorted_expert_ids: torch.Tensor, num_valid_ids: torch.Tensor, out: torch.Tensor, inter_dim: int, kernelName: str, block_m: int, ksplit: int = 0, activation: ActivationType = ActivationType.Silu, quant_type: QuantType = QuantType.No, a1_scale: Optional[torch.Tensor] = None, w1_scale: Optional[torch.Tensor] = None, sorted_weights: Optional[torch.Tensor] = None) -&gt; None
+[aiter] hipModuleLoad: /opt/conda310/lib/python3.10/site-packages/aiter_meta/hsa//gfx942/fmoe_2stages/fmoe_stage1_bf16_pertokenFp8_g1u1_32x256_2tg_pf2.co GetFunction: _ZN5aiter48fmoe_stage1_bf16_pertokenFp8_g1u1_32x256_2tg_pf2E Success
+[aiter] import [module_moe_ck2stages] under /opt/conda310/lib/python3.10/site-packages/aiter/jit/module_moe_ck2stages.so
+[aiter] type hints mismatch, override to --&gt; ck_moe_stage2(inter_states: torch.Tensor, w1: torch.Tensor, w2: torch.Tensor, sorted_token_ids: torch.Tensor, sorted_expert_ids: torch.Tensor, num_valid_ids: torch.Tensor, out: torch.Tensor, topk: int, kernelName: str = None, w2_scale: Optional[torch.Tensor] = None, a2_scale: Optional[torch.Tensor] = None, block_m: Optional[int] = 32, sorted_weights: Optional[torch.Tensor] = None, quant_type: int = 0, activation: int = 0, splitk: Optional[int] = 1, non_temporal_load: bool = False, dst_type: Optional[str] = None) -&gt; None
+[aiter] shape is M:1, N:5120, K:2048, q_dtype_w:torch.float8_e4m3fnuz, not found tuned config in /tmp/aiter_configs/a8w8_bpreshuffle_tuned_gemm.csv, will use default config!
+[aiter] import [module_attention_asm] under /opt/conda310/lib/python3.10/site-packages/aiter/jit/module_attention_asm.so
+[aiter] hipModuleLoad: /opt/conda310/lib/python3.10/site-packages/aiter_meta/hsa//gfx942/pa/pa_bf16_pertokenFp8_gqa8_2tg_4w.co GetFunction: _ZN5aiter31pa_bf16_pertokenFp8_gqa8_2tg_4wE Success
+[aiter] shape is M:1, N:2048, K:4096, q_dtype_w:torch.float8_e4m3fnuz, not found tuned config in /tmp/aiter_configs/a8w8_bpreshuffle_tuned_gemm.csv, will use default config!
+/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/utils/grpc_util.py:35: UserWarning: The given buffer is not writable, and PyTorch does not support non-writable tensors. This means you can write to the underlying (supposedly non-writable) buffer using the tensor. You may want to copy the buffer to protect its data or make it writable before converting it to a tensor. This type of warning will be suppressed for the rest of this program. (Triggered internally at /opt/pytorch/torch/csrc/utils/tensor_new.cpp:1577.)
+  return torch.frombuffer(t.int32_data, dtype=torch.int32).reshape(list(t.shape))
+</pre>
