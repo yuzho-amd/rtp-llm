@@ -2,10 +2,13 @@ import functools
 from typing import Any, Dict, List
 
 import torch
+
 try:
+    # transformers < 5
     from transformers.models.gpt2.tokenization_gpt2_fast import GPT2TokenizerFast
-except ImportError:
-    from transformers import GPT2TokenizerFast
+except ModuleNotFoundError:
+    # transformers >= 5
+    from transformers.models.gpt2 import GPT2TokenizerFast
 
 from rtp_llm.config.model_config import VitParameters
 from rtp_llm.config.model_config import ModelConfig
