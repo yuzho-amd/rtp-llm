@@ -83,6 +83,8 @@ class ModelLoader:
     @timer_wrapper(description="load weights")
     @torch.inference_mode()
     def load_weights(self, device: str):
+        import time
+        t_start = time.perf_counter()
         if self._load_config.is_ft_style_weight:
             weights = self._load_from_ft_style(device)
         else:
@@ -93,6 +95,8 @@ class ModelLoader:
         self._load_dynamic_weights(weights, device)
         # load eplb weight
         self._init_eplb_weight(weights, device)
+        t_total = time.perf_counter() - t_start
+        logging.info("[load_weights] total time: %.2fs", t_total)
         return weights
 
     def load_lora_weights(self, adapter_name: str, lora_path: str, device: str = "cpu"):

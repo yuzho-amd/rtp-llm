@@ -866,9 +866,106 @@ class RocmImpl(GpuImpl):
         except Exception:
             return self.arch == "950"
 
+    _quant_stats = {"quant_total": 0.0, "call_count": 0}
+    _quant_warmed_up = False
+
+    def _warmup_quant_backend(self, device, backend: str):
+        dummy = torch.randn(16, 64, dtype=torch.bfloat16, device=device)
+        if backend == "quark":
+            from quark.torch.kernel.mx.hip import real_quantize_mxfp4_hip
+            real_quantize_mxfp4_hip(
+                dummy, group_size=32, shuffle_scale=True, shuffle_weight=True,
+            )
+        else:
+            from aiter.ops.quant import per_1x32_f4_quant_hip
+            from aiter.ops.shuffle import shuffle_weight
+            p, s = per_1x32_f4_quant_hip(dummy, shuffle=False)
+            shuffle_weight(p.unsqueeze(0), (16, 16))
+        torch.cuda.synchronize()
+        logging.info("[mxfp4 quant] warmup done for %s backend", backend)
+
+    def _online_quantize_moe(self, x: torch.Tensor, name: str):
+        from aiter.ops.shuffle import shuffle_weight
+        from aiter.utility.fp4_utils import e8m0_shuffle
+
+        backend = os.getenv("MXFP4_QUANT_BACKEND", "quark").lower()
+        is_gate = (name == W.moe_w1)
+        stats = RocmImpl._quant_stats
+
+        original_ndim = x.dim()
+        if original_ndim == 2:
+            x = x.unsqueeze(0)
+
+        # gate/up swap on bf16 before quantization
+        if is_gate:
+            x = self.cat_0(
+                [x[:, x.shape[1] // 2 :, :], x[:, : x.shape[1] // 2, :]], dim=1
+            )
+
+        # Warmup on first call to exclude JIT compilation from timing
+        if not RocmImpl._quant_warmed_up:
+            self._warmup_quant_backend(x.device, backend)
+            RocmImpl._quant_warmed_up = True
+
+        stats["call_count"] += 1
+        call_id = stats["call_count"]
+        num_experts = x.shape[0]
+
+        # GPU timing via cuda events
+        start = torch.cuda.Event(enable_timing=True)
+        end = torch.cuda.Event(enable_timing=True)
+
+        packed_list, scale_list = [], []
+        start.record()
+
+        # export QUANTIZATION=FP4_PER_GROUP_QUARK
+        # export MXFP4_QUANT_BACKEND=quark/aiter
+        if backend == "quark":
+            from quark.torch.kernel.mx.hip import real_quantize_mxfp4_hip
+            for i in range(num_experts):
+                p, s = real_quantize_mxfp4_hip(
+                    x[i].contiguous(), group_size=32,
+                    shuffle_scale=True, shuffle_weight=True,
+                )
+                packed_list.append(p.view(torch.uint8))
+                scale_list.append(s.view(torch.uint8))
+        else:
+            from aiter.ops.quant import per_1x32_f4_quant_hip
+            for i in range(num_experts):
+                p, s = per_1x32_f4_quant_hip(x[i].contiguous(), shuffle=False)
+                p = shuffle_weight(p.unsqueeze(0), (16, 16)).squeeze(0)
+                packed_list.append(p.view(torch.uint8))
+                scale_list.append(s.view(torch.uint8))
+
+        packed = torch.stack(packed_list)
+        scale = torch.stack(scale_list)
+
+        if backend != "quark":
+            s0, s1, _ = scale.shape
+            scale = e8m0_shuffle(
+                scale.contiguous().view(s0 * s1, -1)
+            ).view(s0, s1, -1)
+
+        end.record()
+        torch.cuda.synchronize()
+        t_ms = start.elapsed_time(end)
+        t_s = t_ms / 1000.0
+        stats["quant_total"] += t_s
+
+        logging.info(
+            "[mxfp4 quant #%d] %s shape=%s | %s=%.4fs | cumulative=%.2fs",
+            call_id, name, list(x.shape), backend, t_s, stats["quant_total"],
+        )
+
+        if original_ndim == 2:
+            packed = packed.squeeze(0)
+            scale = scale.squeeze(0)
+
+        return (packed, scale)
+
     def shuffle_moe_weight(
         self, x: torch.Tensor, datatype: torch.dtype, name: str
-    ) -> torch.Tensor:
+    ):
         from aiter.ops.shuffle import shuffle_weight
         from aiter.utility.fp4_utils import e8m0_shuffle
 
@@ -877,6 +974,12 @@ class RocmImpl(GpuImpl):
         do_fp4_scale_shuffle = name in [W.moe_s1, W.moe_s2]
         quantization = self.py_env_configs.quantization_config.get_quantization().upper()
         is_fp4_quant = "FP4" in quantization
+
+        # Online FP4 quantization: bf16 weight -> mxfp4 packed + scale
+        if (is_fp4_quant
+                and name in [W.moe_w1, W.moe_w2]
+                and x.dtype in (torch.bfloat16, torch.float16)):
+            return self._online_quantize_moe(x, name)
 
         original_ndim = x.dim()
         if original_ndim == 2:

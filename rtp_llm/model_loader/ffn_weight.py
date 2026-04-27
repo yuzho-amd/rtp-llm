@@ -313,9 +313,21 @@ class MoeAtomicWeight(AtomicWeight):
     ):
         raw_tensor = tensor.get(self.name) if isinstance(tensor, dict) else tensor
         if self.name in [W.moe_w1, W.moe_w2, W.moe_s1, W.moe_s2]:
-            raw_tensor = load_config.exported_device.shuffle_moe_weight(
+            result = load_config.exported_device.shuffle_moe_weight(
                 raw_tensor, load_config.compute_dtype, self.name
             )
+            if isinstance(result, tuple):
+                packed, scale = result
+                scale_name = W.moe_s1 if self.name == W.moe_w1 else W.moe_s2
+                return {
+                    self.name: load_config.exported_device.maybe_rewrite_weight_by_key(
+                        self.name, packed
+                    ),
+                    scale_name: load_config.exported_device.maybe_rewrite_weight_by_key(
+                        scale_name, scale
+                    ),
+                }
+            raw_tensor = result
         return {
             self.name: load_config.exported_device.maybe_rewrite_weight_by_key(
                 self.name, raw_tensor
