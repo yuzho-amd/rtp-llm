@@ -3,11 +3,11 @@
 running server command: USE_AITER_PA=1 SEQ_SIZE_PER_BLOCK=16 DEVICE_RESERVE_MEMORY_BYTES=-2048000000 RESERVER_RUNTIME_MEM_MB=102400 AITER_ASM_DIR=$(bazelisk info output_base)/external/aiter/aiter_meta/hsa/gfx942/ MAX_SEQ_LEN=150000 CONCURRENCY_LIMIT=1024 WORLD_SIZE=1 DP_SIZE=1 TP_SIZE=1 WARM_UP=0 ACT_TYPE=bf16 TOKENIZER_PATH=/mnt/raid0/pretrained_model/rtp_ci/Qwen3-32B CHECKPOINT_PATH=/mnt/raid0/pretrained_model/rtp_ci/Qwen3-32B MODEL_TYPE=qwen_3 FT_SERVER_TEST=1 CUDA_VISIBLE_DEVICES=4,5,6,7 START_PORT=6789 /opt/conda310/bin/python3.10 -m rtp_llm.start_server
 WARNING:root:Failed to load C++ FusedRopeKVCacheOp: cannot import name &#x27;FusedRopeKVCacheDecodeOp&#x27; from &#x27;librtp_compute_ops.rtp_llm_ops&#x27; (/mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/../bazel-bin/librtp_compute_ops.so)
 WARNING:root:fuse is not valid: connet http://0:28006 error
-[process-14710][root][2026-05-06 16:11:34.828][log_config.py:setup_logging():93][INFO] successfully set NCCL_DEBUG_FILE path to logs/nccl.log
-[process-14710][root][2026-05-06 16:11:34.832][server_args.py:parse_args():244][INFO] Parsing arguments and applying config bindings...
-[process-14710][root][2026-05-06 16:11:34.833][hw_kernel_group_args.py:_parse_prefill_capture_config():292][INFO] Generated 160 sequence lengths from range (step=1, max=160)
-[process-14710][root][2026-05-06 16:11:34.834][server_config_setup.py:set_parallelism_config():223][INFO] parallelism_config.ep_size == 0, auto set to world size
-[process-14710][root][2026-05-06 16:11:34.834][server_config_setup.py:set_parallelism_config():282][INFO] set_parallelism_config: rank None
+[process-14741][root][2026-05-07 16:13:59.632][log_config.py:setup_logging():93][INFO] successfully set NCCL_DEBUG_FILE path to logs/nccl.log
+[process-14741][root][2026-05-07 16:13:59.636][server_args.py:parse_args():244][INFO] Parsing arguments and applying config bindings...
+[process-14741][root][2026-05-07 16:13:59.637][hw_kernel_group_args.py:_parse_prefill_capture_config():292][INFO] Generated 160 sequence lengths from range (step=1, max=160)
+[process-14741][root][2026-05-07 16:13:59.638][server_config_setup.py:set_parallelism_config():223][INFO] parallelism_config.ep_size == 0, auto set to world size
+[process-14741][root][2026-05-07 16:13:59.638][server_config_setup.py:set_parallelism_config():282][INFO] set_parallelism_config: rank None
 parallelism_config=tp_size: 1
 ep_size: 1
 dp_size: 1
@@ -33,67 +33,67 @@ method: DISABLED
 }
 world_rank=None
 
-[process-14710][root][2026-05-06 16:11:34.835][server_config_setup.py:setup_default_args():335][INFO] [MI308X] enable FT_DISABLE_CUSTOM_AR by default, as amd has own implementation.
-[process-14710][root][2026-05-06 16:11:34.938][fuser.py:fetch_remote_file_to_local():283][INFO] Local path /mnt/raid0/pretrained_model/rtp_ci/Qwen3-32B use directly.
-[process-14710][root][2026-05-06 16:11:34.938][fuser.py:fetch_remote_file_to_local():283][INFO] Local path /mnt/raid0/pretrained_model/rtp_ci/Qwen3-32B use directly.
-[process-14710][root][2026-05-06 16:11:34.938][server_config_setup.py:fetch_model_files_to_local():433][INFO] Fetched model files - checkpoint_path: /mnt/raid0/pretrained_model/rtp_ci/Qwen3-32B, tokenizer_path: /mnt/raid0/pretrained_model/rtp_ci/Qwen3-32B, ptuning_path: , extra_data_path: , phy2log_path: 
-[process-14710][root][2026-05-06 16:11:34.938][server_config_setup.py:auto_configure_deepep():69][INFO] USE_ALL_GATHER is enabled (use_all_gather=True), all DeepEP settings are disabled (0, 0, 0)
-[process-14710][root][2026-05-06 16:11:34.938][start_server.py:start_server():193][INFO] [PROCESS_START]Start server
-[process-14710][root][2026-05-06 16:11:34.938][start_server.py:start_server():200][INFO] dp_size:  parallelism_config=1
-[process-14710][root][2026-05-06 16:11:34.938][concurrency_controller.py:init_controller():62][INFO] concurrency_limit : 1024, global_concurrency_limit : 1024
-[process-14710][root][2026-05-06 16:11:34.940][start_server.py:start_server():218][INFO] start backend server
-[process-14710][root][2026-05-06 16:11:34.943][start_server.py:start_backend_server_impl():56][INFO] [PROCESS_SPAWN]Start backend server process outer
+[process-14741][root][2026-05-07 16:13:59.638][server_config_setup.py:setup_default_args():335][INFO] [MI308X] enable FT_DISABLE_CUSTOM_AR by default, as amd has own implementation.
+[process-14741][root][2026-05-07 16:13:59.742][fuser.py:fetch_remote_file_to_local():283][INFO] Local path /mnt/raid0/pretrained_model/rtp_ci/Qwen3-32B use directly.
+[process-14741][root][2026-05-07 16:13:59.742][fuser.py:fetch_remote_file_to_local():283][INFO] Local path /mnt/raid0/pretrained_model/rtp_ci/Qwen3-32B use directly.
+[process-14741][root][2026-05-07 16:13:59.742][server_config_setup.py:fetch_model_files_to_local():433][INFO] Fetched model files - checkpoint_path: /mnt/raid0/pretrained_model/rtp_ci/Qwen3-32B, tokenizer_path: /mnt/raid0/pretrained_model/rtp_ci/Qwen3-32B, ptuning_path: , extra_data_path: , phy2log_path: 
+[process-14741][root][2026-05-07 16:13:59.742][server_config_setup.py:auto_configure_deepep():69][INFO] USE_ALL_GATHER is enabled (use_all_gather=True), all DeepEP settings are disabled (0, 0, 0)
+[process-14741][root][2026-05-07 16:13:59.742][start_server.py:start_server():193][INFO] [PROCESS_START]Start server
+[process-14741][root][2026-05-07 16:13:59.743][start_server.py:start_server():200][INFO] dp_size:  parallelism_config=1
+[process-14741][root][2026-05-07 16:13:59.743][concurrency_controller.py:init_controller():62][INFO] concurrency_limit : 1024, global_concurrency_limit : 1024
+[process-14741][root][2026-05-07 16:13:59.744][start_server.py:start_server():218][INFO] start backend server
+[process-14741][root][2026-05-07 16:13:59.747][start_server.py:start_backend_server_impl():56][INFO] [PROCESS_SPAWN]Start backend server process outer
 import rtp_llm.ops took 0.00s
 [CHECK] internal_source directory: /mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/internal_source, found: False
-import in __init__ took 1.58s
-[process-14710][root][2026-05-06 16:11:34.944][time_util.py:wrapped():47][INFO] start backend server took: 0.00s
-[process-14710][root][2026-05-06 16:11:34.944][start_server.py:start_server():224][INFO] start frontend server
-[process-14710][root][2026-05-06 16:11:34.945][start_server.py:start_frontend_server_impl():144][INFO] multi rank starts with default local world size: 1, world size = 1
-[process-14710][root][2026-05-06 16:11:34.945][start_server.py:start_frontend_server_impl():153][INFO] [PROCESS_SPAWN]Start frontend server process rank_0_server_0 outer
-[process-14710][root][2026-05-06 16:11:34.945][start_server.py:start_frontend_server_impl():153][INFO] [PROCESS_SPAWN]Start frontend server process rank_0_server_1 outer
-[process-14710][root][2026-05-06 16:11:34.946][start_server.py:start_frontend_server_impl():153][INFO] [PROCESS_SPAWN]Start frontend server process rank_0_server_2 outer
-[process-14710][root][2026-05-06 16:11:34.946][start_server.py:start_frontend_server_impl():153][INFO] [PROCESS_SPAWN]Start frontend server process rank_0_server_3 outer
-[process-14710][root][2026-05-06 16:11:34.947][time_util.py:wrapped():47][INFO] start frontend server took: 0.00s
-[process-14710][root][2026-05-06 16:11:34.947][process_manager.py:start_parallel_health_checks():247][INFO] Starting parallel health checks for 2 processes
-[process-14710][root][2026-05-06 16:11:34.948][process_manager.py:wait_for_health_checks():275][INFO] Waiting for 2 health checks to complete...
+import in __init__ took 1.56s
+[process-14741][root][2026-05-07 16:13:59.748][time_util.py:wrapped():47][INFO] start backend server took: 0.00s
+[process-14741][root][2026-05-07 16:13:59.748][start_server.py:start_server():224][INFO] start frontend server
+[process-14741][root][2026-05-07 16:13:59.749][start_server.py:start_frontend_server_impl():144][INFO] multi rank starts with default local world size: 1, world size = 1
+[process-14741][root][2026-05-07 16:13:59.749][start_server.py:start_frontend_server_impl():153][INFO] [PROCESS_SPAWN]Start frontend server process rank_0_server_0 outer
+[process-14741][root][2026-05-07 16:13:59.750][start_server.py:start_frontend_server_impl():153][INFO] [PROCESS_SPAWN]Start frontend server process rank_0_server_1 outer
+[process-14741][root][2026-05-07 16:13:59.750][start_server.py:start_frontend_server_impl():153][INFO] [PROCESS_SPAWN]Start frontend server process rank_0_server_2 outer
+[process-14741][root][2026-05-07 16:13:59.751][start_server.py:start_frontend_server_impl():153][INFO] [PROCESS_SPAWN]Start frontend server process rank_0_server_3 outer
+[process-14741][root][2026-05-07 16:13:59.752][time_util.py:wrapped():47][INFO] start frontend server took: 0.00s
+[process-14741][root][2026-05-07 16:13:59.752][process_manager.py:start_parallel_health_checks():247][INFO] Starting parallel health checks for 2 processes
+[process-14741][root][2026-05-07 16:13:59.752][process_manager.py:wait_for_health_checks():275][INFO] Waiting for 2 health checks to complete...
+WARNING:root:Failed to load C++ FusedRopeKVCacheOp: cannot import name &#x27;FusedRopeKVCacheDecodeOp&#x27; from &#x27;librtp_compute_ops.rtp_llm_ops&#x27; (/mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/../bazel-bin/librtp_compute_ops.so)
+WARNING:root:fuse is not valid: connet http://0:28006 error
+[process-14840][root][2026-05-07 16:14:01.545][start_frontend_server.py:start_frontend_server():32][INFO] [PROCESS_START]Start frontend server process rank_0_server_2
+WARNING:root:Failed to load C++ FusedRopeKVCacheOp: cannot import name &#x27;FusedRopeKVCacheDecodeOp&#x27; from &#x27;librtp_compute_ops.rtp_llm_ops&#x27; (/mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/../bazel-bin/librtp_compute_ops.so)
 WARNING:root:Failed to load C++ FusedRopeKVCacheOp: cannot import name &#x27;FusedRopeKVCacheDecodeOp&#x27; from &#x27;librtp_compute_ops.rtp_llm_ops&#x27; (/mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/../bazel-bin/librtp_compute_ops.so)
 WARNING:root:Failed to load C++ FusedRopeKVCacheOp: cannot import name &#x27;FusedRopeKVCacheDecodeOp&#x27; from &#x27;librtp_compute_ops.rtp_llm_ops&#x27; (/mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/../bazel-bin/librtp_compute_ops.so)
 WARNING:root:Failed to load C++ FusedRopeKVCacheOp: cannot import name &#x27;FusedRopeKVCacheDecodeOp&#x27; from &#x27;librtp_compute_ops.rtp_llm_ops&#x27; (/mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/../bazel-bin/librtp_compute_ops.so)
 WARNING:root:fuse is not valid: connet http://0:28006 error
-[process-14807][root][2026-05-06 16:11:36.932][start_frontend_server.py:start_frontend_server():32][INFO] [PROCESS_START]Start frontend server process rank_0_server_1
-WARNING:root:fuse is not valid: connet http://0:28006 error
-WARNING:root:Failed to load C++ FusedRopeKVCacheOp: cannot import name &#x27;FusedRopeKVCacheDecodeOp&#x27; from &#x27;librtp_compute_ops.rtp_llm_ops&#x27; (/mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/../bazel-bin/librtp_compute_ops.so)
-WARNING:root:Failed to load C++ FusedRopeKVCacheOp: cannot import name &#x27;FusedRopeKVCacheDecodeOp&#x27; from &#x27;librtp_compute_ops.rtp_llm_ops&#x27; (/mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/../bazel-bin/librtp_compute_ops.so)
-WARNING:root:fuse is not valid: connet http://0:28006 error
-[process-14808][root][2026-05-06 16:11:36.940][start_frontend_server.py:start_frontend_server():32][INFO] [PROCESS_START]Start frontend server process rank_0_server_2
-[process-14806][root][2026-05-06 16:11:36.943][start_frontend_server.py:start_frontend_server():32][INFO] [PROCESS_START]Start frontend server process rank_0_server_0
 WARNING:root:fuse is not valid: connet http://0:28006 error
 WARNING:root:fuse is not valid: connet http://0:28006 error
-[process-14809][root][2026-05-06 16:11:36.956][start_frontend_server.py:start_frontend_server():32][INFO] [PROCESS_START]Start frontend server process rank_0_server_3
-[process-14805][root][2026-05-06 16:11:36.957][start_backend_server.py:start_backend_server():422][INFO] [PROCESS_START]Start backend server process
-[process-14805][root][2026-05-06 16:11:36.958][start_backend_server.py:load_gpu_nic_affinity():381][INFO] get gpu nic affinity failed, run /usr/local/bin/run_affinity failed, exception is [Errno 8] Exec format error: &#x27;/usr/local/bin/run_affinity&#x27;
-[process-14805][root][2026-05-06 16:11:37.531][start_backend_server.py:local_rank_start():43][INFO] [PROCESS_START]Start local rank process
-[process-14807][root][2026-05-06 16:11:38.888][report_worker.py:__init__():32][INFO] kmonitor report default tags: {}
-[process-14808][root][2026-05-06 16:11:38.888][report_worker.py:__init__():32][INFO] kmonitor report default tags: {}
-[process-14807][root][2026-05-06 16:11:38.888][report_worker.py:__init__():52][INFO] test mode, kmonitor metrics not reported.
-[process-14808][root][2026-05-06 16:11:38.888][report_worker.py:__init__():52][INFO] test mode, kmonitor metrics not reported.
-[process-14806][root][2026-05-06 16:11:38.892][report_worker.py:__init__():32][INFO] kmonitor report default tags: {}
-[process-14806][root][2026-05-06 16:11:38.892][report_worker.py:__init__():52][INFO] test mode, kmonitor metrics not reported.
-[process-14805][root][2026-05-06 16:11:38.896][report_worker.py:__init__():32][INFO] kmonitor report default tags: {}
-[process-14805][root][2026-05-06 16:11:38.896][report_worker.py:__init__():52][INFO] test mode, kmonitor metrics not reported.
-[process-14809][root][2026-05-06 16:11:38.953][report_worker.py:__init__():32][INFO] kmonitor report default tags: {}
-[process-14809][root][2026-05-06 16:11:38.953][report_worker.py:__init__():52][INFO] test mode, kmonitor metrics not reported.
-[process-14807][root][2026-05-06 16:11:53.401][vipserver_proxy.py:refresh_srv_lst():86][ERROR] failed to refresh vipserver server list, exception : HTTPConnectionPool(host=&#x27;jmenv.tbsite.net&#x27;, port=8080): Max retries exceeded with url: /vipserver/serverlist?nofix=1&amp;labels=&amp; (Caused by NameResolutionError(&quot;HTTPConnection(host=&#x27;jmenv.tbsite.net&#x27;, port=8080): Failed to resolve &#x27;jmenv.tbsite.net&#x27; ([Errno -2] Name or service not known)&quot;))
-[process-14808][root][2026-05-06 16:11:53.401][vipserver_proxy.py:refresh_srv_lst():86][ERROR] failed to refresh vipserver server list, exception : HTTPConnectionPool(host=&#x27;jmenv.tbsite.net&#x27;, port=8080): Max retries exceeded with url: /vipserver/serverlist?nofix=1&amp;labels=&amp; (Caused by NameResolutionError(&quot;HTTPConnection(host=&#x27;jmenv.tbsite.net&#x27;, port=8080): Failed to resolve &#x27;jmenv.tbsite.net&#x27; ([Errno -2] Name or service not known)&quot;))
-[process-14806][root][2026-05-06 16:11:53.401][vipserver_proxy.py:refresh_srv_lst():86][ERROR] failed to refresh vipserver server list, exception : HTTPConnectionPool(host=&#x27;jmenv.tbsite.net&#x27;, port=8080): Max retries exceeded with url: /vipserver/serverlist?nofix=1&amp;labels=&amp; (Caused by NameResolutionError(&quot;HTTPConnection(host=&#x27;jmenv.tbsite.net&#x27;, port=8080): Failed to resolve &#x27;jmenv.tbsite.net&#x27; ([Errno -2] Name or service not known)&quot;))
-[process-14809][root][2026-05-06 16:11:53.401][vipserver_proxy.py:refresh_srv_lst():86][ERROR] failed to refresh vipserver server list, exception : HTTPConnectionPool(host=&#x27;jmenv.tbsite.net&#x27;, port=8080): Max retries exceeded with url: /vipserver/serverlist?nofix=1&amp;labels=&amp; (Caused by NameResolutionError(&quot;HTTPConnection(host=&#x27;jmenv.tbsite.net&#x27;, port=8080): Failed to resolve &#x27;jmenv.tbsite.net&#x27; ([Errno -2] Name or service not known)&quot;))
-[process-14807][root][2026-05-06 16:11:53.401][host_reactor.py:start():32][INFO] vipserver domain update thread started. to refresh domains: &lt;bound method HostReactor.refresh_cache_domain_srv_lst of &lt;rtp_llm.vipserver.host_reactor.HostReactor object at 0x7f653c3dcf40&gt;&gt;
-[process-14806][root][2026-05-06 16:11:53.401][host_reactor.py:start():32][INFO] vipserver domain update thread started. to refresh domains: &lt;bound method HostReactor.refresh_cache_domain_srv_lst of &lt;rtp_llm.vipserver.host_reactor.HostReactor object at 0x7fc33ece69e0&gt;&gt;
-[process-14809][root][2026-05-06 16:11:53.401][host_reactor.py:start():32][INFO] vipserver domain update thread started. to refresh domains: &lt;bound method HostReactor.refresh_cache_domain_srv_lst of &lt;rtp_llm.vipserver.host_reactor.HostReactor object at 0x7fc64ecdc220&gt;&gt;
-[process-14808][root][2026-05-06 16:11:53.401][host_reactor.py:start():32][INFO] vipserver domain update thread started. to refresh domains: &lt;bound method HostReactor.refresh_cache_domain_srv_lst of &lt;rtp_llm.vipserver.host_reactor.HostReactor object at 0x7f9241a654b0&gt;&gt;
-[process-14805][root][2026-05-06 16:11:53.402][vipserver_proxy.py:refresh_srv_lst():86][ERROR] failed to refresh vipserver server list, exception : HTTPConnectionPool(host=&#x27;jmenv.tbsite.net&#x27;, port=8080): Max retries exceeded with url: /vipserver/serverlist?nofix=1&amp;labels=&amp; (Caused by NameResolutionError(&quot;HTTPConnection(host=&#x27;jmenv.tbsite.net&#x27;, port=8080): Failed to resolve &#x27;jmenv.tbsite.net&#x27; ([Errno -2] Name or service not known)&quot;))
-[process-14805][root][2026-05-06 16:11:53.403][host_reactor.py:start():32][INFO] vipserver domain update thread started. to refresh domains: &lt;bound method HostReactor.refresh_cache_domain_srv_lst of &lt;rtp_llm.vipserver.host_reactor.HostReactor object at 0x7ee3ca059db0&gt;&gt;
-[process-14805][root][2026-05-06 16:11:56.479][kimi_k25_vit.py:&lt;module&gt;():50][INFO] flash_attn unavailable for kimi_k25 vit (libamdhip64.so.6: cannot open shared object file: No such file or directory); falling back to SDPA
+[process-14838][root][2026-05-07 16:14:01.642][start_frontend_server.py:start_frontend_server():32][INFO] [PROCESS_START]Start frontend server process rank_0_server_0
+[process-14839][root][2026-05-07 16:14:01.642][start_frontend_server.py:start_frontend_server():32][INFO] [PROCESS_START]Start frontend server process rank_0_server_1
+[process-14841][root][2026-05-07 16:14:01.642][start_frontend_server.py:start_frontend_server():32][INFO] [PROCESS_START]Start frontend server process rank_0_server_3
+WARNING:root:fuse is not valid: connet http://0:28006 error
+[process-14837][root][2026-05-07 16:14:01.657][start_backend_server.py:start_backend_server():422][INFO] [PROCESS_START]Start backend server process
+[process-14837][root][2026-05-07 16:14:01.659][start_backend_server.py:load_gpu_nic_affinity():381][INFO] get gpu nic affinity failed, run /usr/local/bin/run_affinity failed, exception is [Errno 8] Exec format error: &#x27;/usr/local/bin/run_affinity&#x27;
+[process-14837][root][2026-05-07 16:14:01.761][start_backend_server.py:local_rank_start():43][INFO] [PROCESS_START]Start local rank process
+[process-14837][root][2026-05-07 16:14:03.139][report_worker.py:__init__():32][INFO] kmonitor report default tags: {}
+[process-14837][root][2026-05-07 16:14:03.139][report_worker.py:__init__():52][INFO] test mode, kmonitor metrics not reported.
+[process-14840][root][2026-05-07 16:14:03.141][report_worker.py:__init__():32][INFO] kmonitor report default tags: {}
+[process-14840][root][2026-05-07 16:14:03.141][report_worker.py:__init__():52][INFO] test mode, kmonitor metrics not reported.
+[process-14838][root][2026-05-07 16:14:03.141][report_worker.py:__init__():32][INFO] kmonitor report default tags: {}
+[process-14838][root][2026-05-07 16:14:03.141][report_worker.py:__init__():52][INFO] test mode, kmonitor metrics not reported.
+[process-14839][root][2026-05-07 16:14:03.157][report_worker.py:__init__():32][INFO] kmonitor report default tags: {}
+[process-14839][root][2026-05-07 16:14:03.157][report_worker.py:__init__():52][INFO] test mode, kmonitor metrics not reported.
+[process-14841][root][2026-05-07 16:14:03.160][report_worker.py:__init__():32][INFO] kmonitor report default tags: {}
+[process-14841][root][2026-05-07 16:14:03.160][report_worker.py:__init__():52][INFO] test mode, kmonitor metrics not reported.
+[process-14838][root][2026-05-07 16:14:19.827][vipserver_proxy.py:refresh_srv_lst():86][ERROR] failed to refresh vipserver server list, exception : HTTPConnectionPool(host=&#x27;jmenv.tbsite.net&#x27;, port=8080): Max retries exceeded with url: /vipserver/serverlist?nofix=1&amp;labels=&amp; (Caused by NameResolutionError(&quot;HTTPConnection(host=&#x27;jmenv.tbsite.net&#x27;, port=8080): Failed to resolve &#x27;jmenv.tbsite.net&#x27; ([Errno -2] Name or service not known)&quot;))
+[process-14841][root][2026-05-07 16:14:19.827][vipserver_proxy.py:refresh_srv_lst():86][ERROR] failed to refresh vipserver server list, exception : HTTPConnectionPool(host=&#x27;jmenv.tbsite.net&#x27;, port=8080): Max retries exceeded with url: /vipserver/serverlist?nofix=1&amp;labels=&amp; (Caused by NameResolutionError(&quot;HTTPConnection(host=&#x27;jmenv.tbsite.net&#x27;, port=8080): Failed to resolve &#x27;jmenv.tbsite.net&#x27; ([Errno -2] Name or service not known)&quot;))
+[process-14839][root][2026-05-07 16:14:19.827][vipserver_proxy.py:refresh_srv_lst():86][ERROR] failed to refresh vipserver server list, exception : HTTPConnectionPool(host=&#x27;jmenv.tbsite.net&#x27;, port=8080): Max retries exceeded with url: /vipserver/serverlist?nofix=1&amp;labels=&amp; (Caused by NameResolutionError(&quot;HTTPConnection(host=&#x27;jmenv.tbsite.net&#x27;, port=8080): Failed to resolve &#x27;jmenv.tbsite.net&#x27; ([Errno -2] Name or service not known)&quot;))
+[process-14840][root][2026-05-07 16:14:19.827][vipserver_proxy.py:refresh_srv_lst():86][ERROR] failed to refresh vipserver server list, exception : HTTPConnectionPool(host=&#x27;jmenv.tbsite.net&#x27;, port=8080): Max retries exceeded with url: /vipserver/serverlist?nofix=1&amp;labels=&amp; (Caused by NameResolutionError(&quot;HTTPConnection(host=&#x27;jmenv.tbsite.net&#x27;, port=8080): Failed to resolve &#x27;jmenv.tbsite.net&#x27; ([Errno -2] Name or service not known)&quot;))
+[process-14839][root][2026-05-07 16:14:19.828][host_reactor.py:start():32][INFO] vipserver domain update thread started. to refresh domains: &lt;bound method HostReactor.refresh_cache_domain_srv_lst of &lt;rtp_llm.vipserver.host_reactor.HostReactor object at 0x7f9ab6b1e200&gt;&gt;
+[process-14840][root][2026-05-07 16:14:19.828][host_reactor.py:start():32][INFO] vipserver domain update thread started. to refresh domains: &lt;bound method HostReactor.refresh_cache_domain_srv_lst of &lt;rtp_llm.vipserver.host_reactor.HostReactor object at 0x7f526fe0f670&gt;&gt;
+[process-14838][root][2026-05-07 16:14:19.828][host_reactor.py:start():32][INFO] vipserver domain update thread started. to refresh domains: &lt;bound method HostReactor.refresh_cache_domain_srv_lst of &lt;rtp_llm.vipserver.host_reactor.HostReactor object at 0x7f858cb09c60&gt;&gt;
+[process-14841][root][2026-05-07 16:14:19.828][host_reactor.py:start():32][INFO] vipserver domain update thread started. to refresh domains: &lt;bound method HostReactor.refresh_cache_domain_srv_lst of &lt;rtp_llm.vipserver.host_reactor.HostReactor object at 0x7eefb0f58400&gt;&gt;
+[process-14837][root][2026-05-07 16:14:19.829][vipserver_proxy.py:refresh_srv_lst():86][ERROR] failed to refresh vipserver server list, exception : HTTPConnectionPool(host=&#x27;jmenv.tbsite.net&#x27;, port=8080): Max retries exceeded with url: /vipserver/serverlist?nofix=1&amp;labels=&amp; (Caused by NameResolutionError(&quot;HTTPConnection(host=&#x27;jmenv.tbsite.net&#x27;, port=8080): Failed to resolve &#x27;jmenv.tbsite.net&#x27; ([Errno -2] Name or service not known)&quot;))
+[process-14837][root][2026-05-07 16:14:19.829][host_reactor.py:start():32][INFO] vipserver domain update thread started. to refresh domains: &lt;bound method HostReactor.refresh_cache_domain_srv_lst of &lt;rtp_llm.vipserver.host_reactor.HostReactor object at 0x7fd936455d80&gt;&gt;
+[process-14837][root][2026-05-07 16:14:21.842][kimi_k25_vit.py:&lt;module&gt;():50][INFO] flash_attn unavailable for kimi_k25 vit (libamdhip64.so.6: cannot open shared object file: No such file or directory); falling back to SDPA
 Process backend_manager:
 Traceback (most recent call last):
   File &quot;/opt/conda310/lib/python3.10/site-packages/transformers/utils/import_utils.py&quot;, line 1967, in _get_module
@@ -148,8 +148,8 @@ RuntimeError: Failed to import transformers.models.clip.modeling_clip because of
 libamdhip64.so.6: cannot open shared object file: No such file or directory
 import rtp_llm.ops took 0.00s
 [CHECK] internal_source directory: /mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/internal_source, found: False
-import in __init__ took 1.97s
-[process-14807][root][2026-05-06 16:11:56.782][kimi_k25_vit.py:&lt;module&gt;():50][INFO] flash_attn unavailable for kimi_k25 vit (libamdhip64.so.6: cannot open shared object file: No such file or directory); falling back to SDPA
+import in __init__ took 1.87s
+[process-14839][root][2026-05-07 16:14:22.125][kimi_k25_vit.py:&lt;module&gt;():50][INFO] flash_attn unavailable for kimi_k25 vit (libamdhip64.so.6: cannot open shared object file: No such file or directory); falling back to SDPA
 Process frontend_server_1:
 Traceback (most recent call last):
   File &quot;/opt/conda310/lib/python3.10/site-packages/transformers/utils/import_utils.py&quot;, line 1967, in _get_module
@@ -204,9 +204,8 @@ RuntimeError: Failed to import transformers.models.clip.modeling_clip because of
 libamdhip64.so.6: cannot open shared object file: No such file or directory
 import rtp_llm.ops took 0.00s
 [CHECK] internal_source directory: /mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/internal_source, found: False
-import in __init__ took 1.95s
-[process-14808][root][2026-05-06 16:11:56.797][kimi_k25_vit.py:&lt;module&gt;():50][INFO] flash_attn unavailable for kimi_k25 vit (libamdhip64.so.6: cannot open shared object file: No such file or directory); falling back to SDPA
-[process-14806][root][2026-05-06 16:11:56.802][kimi_k25_vit.py:&lt;module&gt;():50][INFO] flash_attn unavailable for kimi_k25 vit (libamdhip64.so.6: cannot open shared object file: No such file or directory); falling back to SDPA
+import in __init__ took 1.85s
+[process-14840][root][2026-05-07 16:14:22.142][kimi_k25_vit.py:&lt;module&gt;():50][INFO] flash_attn unavailable for kimi_k25 vit (libamdhip64.so.6: cannot open shared object file: No such file or directory); falling back to SDPA
 Process frontend_server_2:
 Traceback (most recent call last):
   File &quot;/opt/conda310/lib/python3.10/site-packages/transformers/utils/import_utils.py&quot;, line 1967, in _get_module
@@ -261,7 +260,8 @@ RuntimeError: Failed to import transformers.models.clip.modeling_clip because of
 libamdhip64.so.6: cannot open shared object file: No such file or directory
 import rtp_llm.ops took 0.00s
 [CHECK] internal_source directory: /mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/internal_source, found: False
-import in __init__ took 1.95s
+import in __init__ took 1.75s
+[process-14838][root][2026-05-07 16:14:22.240][kimi_k25_vit.py:&lt;module&gt;():50][INFO] flash_attn unavailable for kimi_k25 vit (libamdhip64.so.6: cannot open shared object file: No such file or directory); falling back to SDPA
 Process frontend_server_0:
 Traceback (most recent call last):
   File &quot;/opt/conda310/lib/python3.10/site-packages/transformers/utils/import_utils.py&quot;, line 1967, in _get_module
@@ -316,8 +316,8 @@ RuntimeError: Failed to import transformers.models.clip.modeling_clip because of
 libamdhip64.so.6: cannot open shared object file: No such file or directory
 import rtp_llm.ops took 0.00s
 [CHECK] internal_source directory: /mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/internal_source, found: False
-import in __init__ took 1.96s
-[process-14809][root][2026-05-06 16:11:56.825][kimi_k25_vit.py:&lt;module&gt;():50][INFO] flash_attn unavailable for kimi_k25 vit (libamdhip64.so.6: cannot open shared object file: No such file or directory); falling back to SDPA
+import in __init__ took 1.85s
+[process-14841][root][2026-05-07 16:14:22.271][kimi_k25_vit.py:&lt;module&gt;():50][INFO] flash_attn unavailable for kimi_k25 vit (libamdhip64.so.6: cannot open shared object file: No such file or directory); falling back to SDPA
 Process frontend_server_3:
 Traceback (most recent call last):
   File &quot;/opt/conda310/lib/python3.10/site-packages/transformers/utils/import_utils.py&quot;, line 1967, in _get_module
@@ -372,24 +372,24 @@ RuntimeError: Failed to import transformers.models.clip.modeling_clip because of
 libamdhip64.so.6: cannot open shared object file: No such file or directory
 import rtp_llm.ops took 0.00s
 [CHECK] internal_source directory: /mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/internal_source, found: False
-import in __init__ took 1.97s
-[process-14710][root][2026-05-06 16:11:57.840][process_manager.py:_health_check_worker():217][ERROR] frontend_server process manager is not available
-[process-14710][root][2026-05-06 16:11:57.894][process_manager.py:_health_check_worker():217][ERROR] backend_server process manager is not available
-[process-14710][root][2026-05-06 16:11:57.894][process_manager.py:wait_for_health_checks():290][ERROR] backend_server health check failed
-[process-14710][root][2026-05-06 16:11:57.894][process_manager.py:wait_for_health_checks():290][ERROR] frontend_server health check failed
-[process-14710][root][2026-05-06 16:11:57.894][start_server.py:start_server():232][ERROR] Health checks failed
-[process-14710][root][2026-05-06 16:11:57.895][start_server.py:start_server():241][ERROR] start failed, trace: Traceback (most recent call last):
+import in __init__ took 1.85s
+[process-14741][root][2026-05-07 16:14:22.998][process_manager.py:_health_check_worker():217][ERROR] backend_server process manager is not available
+[process-14741][root][2026-05-07 16:14:23.006][process_manager.py:_health_check_worker():217][ERROR] frontend_server process manager is not available
+[process-14741][root][2026-05-07 16:14:23.007][process_manager.py:wait_for_health_checks():290][ERROR] backend_server health check failed
+[process-14741][root][2026-05-07 16:14:23.007][process_manager.py:wait_for_health_checks():290][ERROR] frontend_server health check failed
+[process-14741][root][2026-05-07 16:14:23.007][start_server.py:start_server():232][ERROR] Health checks failed
+[process-14741][root][2026-05-07 16:14:23.007][start_server.py:start_server():241][ERROR] start failed, trace: Traceback (most recent call last):
   File &quot;/mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/start_server.py&quot;, line 233, in start_server
     raise Exception(&quot;Health checks failed&quot;)
 Exception: Health checks failed
 
-[process-14710][root][2026-05-06 16:11:57.895][process_manager.py:monitor_and_release_processes():159][INFO] Monitoring 5 processes
-[process-14710][root][2026-05-06 16:11:57.895][process_manager.py:_terminate_processes():61][INFO] Shutdown requested, terminating processes...
-[process-14710][root][2026-05-06 16:11:57.895][process_manager.py:_terminate_processes():67][INFO] proc.name [backend_manager] pid[14805] is not alived
-[process-14710][root][2026-05-06 16:11:57.895][process_manager.py:_terminate_processes():64][INFO] Sending SIGTERM to process 14806
-[process-14710][root][2026-05-06 16:11:57.895][process_manager.py:_terminate_processes():64][INFO] Sending SIGTERM to process 14807
-[process-14710][root][2026-05-06 16:11:57.895][process_manager.py:_terminate_processes():64][INFO] Sending SIGTERM to process 14808
-[process-14710][root][2026-05-06 16:11:57.895][process_manager.py:_terminate_processes():64][INFO] Sending SIGTERM to process 14809
-[process-14710][root][2026-05-06 16:11:58.897][process_manager.py:_join_all_processes():123][INFO] All processes joined
-[process-14710][root][2026-05-06 16:11:58.897][process_manager.py:monitor_and_release_processes():162][INFO] Process monitoring completed
+[process-14741][root][2026-05-07 16:14:23.007][process_manager.py:monitor_and_release_processes():159][INFO] Monitoring 5 processes
+[process-14741][root][2026-05-07 16:14:23.007][process_manager.py:_terminate_processes():61][INFO] Shutdown requested, terminating processes...
+[process-14741][root][2026-05-07 16:14:23.007][process_manager.py:_terminate_processes():67][INFO] proc.name [backend_manager] pid[14837] is not alived
+[process-14741][root][2026-05-07 16:14:23.007][process_manager.py:_terminate_processes():64][INFO] Sending SIGTERM to process 14838
+[process-14741][root][2026-05-07 16:14:23.008][process_manager.py:_terminate_processes():64][INFO] Sending SIGTERM to process 14839
+[process-14741][root][2026-05-07 16:14:23.009][process_manager.py:_terminate_processes():64][INFO] Sending SIGTERM to process 14840
+[process-14741][root][2026-05-07 16:14:23.010][process_manager.py:_terminate_processes():64][INFO] Sending SIGTERM to process 14841
+[process-14741][root][2026-05-07 16:14:24.012][process_manager.py:_join_all_processes():123][INFO] All processes joined
+[process-14741][root][2026-05-07 16:14:24.012][process_manager.py:monitor_and_release_processes():162][INFO] Process monitoring completed
 </pre>
