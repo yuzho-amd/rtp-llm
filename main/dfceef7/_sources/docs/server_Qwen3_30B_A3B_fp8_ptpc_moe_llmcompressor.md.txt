@@ -3,10 +3,10 @@
 running server command: USE_AITER_PA=1 SEQ_SIZE_PER_BLOCK=16 MODEL_TYPE=qwen_3_moe FP8_KV_CACHE=1 ACT_TYPE=bf16 TOKENIZER_PATH=/mnt/raid0/pretrained_model/rtp_ci/Qwen3-30B-A3B-Thinking-2507-FP8-Dynamic CHECKPOINT_PATH=/mnt/raid0/pretrained_model/rtp_ci/Qwen3-30B-A3B-Thinking-2507-FP8-Dynamic CUDA_VISIBLE_DEVICES=4,5,6,7 START_PORT=6789 /opt/conda310/bin/python3.10 -m rtp_llm.start_server
 WARNING:root:Failed to load C++ FusedRopeKVCacheOp: cannot import name &#x27;FusedRopeKVCacheDecodeOp&#x27; from &#x27;librtp_compute_ops.rtp_llm_ops&#x27; (/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/../bazel-bin/librtp_compute_ops.so)
 WARNING:root:fuse is not valid: connet http://0:28006 error
-[process-20172][root][2026-05-30 15:36:40.426][log_config.py:setup_logging():93][INFO] successfully set NCCL_DEBUG_FILE path to logs/nccl.log
+[process-20178][root][2026-05-31 15:49:27.655][log_config.py:setup_logging():93][INFO] successfully set NCCL_DEBUG_FILE path to logs/nccl.log
 import rtp_llm.ops took 0.00s
 [CHECK] internal_source directory: /mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/internal_source, found: False
-import in __init__ took 1.53s
+import in __init__ took 1.54s
 WARNING:root:Failed to load C++ FusedRopeKVCacheOp: cannot import name &#x27;FusedRopeKVCacheDecodeOp&#x27; from &#x27;librtp_compute_ops.rtp_llm_ops&#x27; (/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/../bazel-bin/librtp_compute_ops.so)
 WARNING:root:Failed to load C++ FusedRopeKVCacheOp: cannot import name &#x27;FusedRopeKVCacheDecodeOp&#x27; from &#x27;librtp_compute_ops.rtp_llm_ops&#x27; (/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/../bazel-bin/librtp_compute_ops.so)
 WARNING:root:Failed to load C++ FusedRopeKVCacheOp: cannot import name &#x27;FusedRopeKVCacheDecodeOp&#x27; from &#x27;librtp_compute_ops.rtp_llm_ops&#x27; (/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/../bazel-bin/librtp_compute_ops.so)
@@ -71,7 +71,7 @@ RuntimeError: Failed to import transformers.models.clip.modeling_clip because of
 libamdhip64.so.6: cannot open shared object file: No such file or directory
 import rtp_llm.ops took 0.00s
 [CHECK] internal_source directory: /mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/internal_source, found: False
-import in __init__ took 1.81s
+import in __init__ took 1.95s
 Process frontend_server_1:
 Traceback (most recent call last):
   File &quot;/opt/conda310/lib/python3.10/site-packages/transformers/utils/import_utils.py&quot;, line 1967, in _get_module
@@ -126,8 +126,8 @@ RuntimeError: Failed to import transformers.models.clip.modeling_clip because of
 libamdhip64.so.6: cannot open shared object file: No such file or directory
 import rtp_llm.ops took 0.00s
 [CHECK] internal_source directory: /mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/internal_source, found: False
-import in __init__ took 1.81s
-Process frontend_server_0:
+import in __init__ took 1.94s
+Process frontend_server_2:
 Traceback (most recent call last):
   File &quot;/opt/conda310/lib/python3.10/site-packages/transformers/utils/import_utils.py&quot;, line 1967, in _get_module
     return importlib.import_module(&quot;.&quot; + module_name, self.__name__)
@@ -181,8 +181,8 @@ RuntimeError: Failed to import transformers.models.clip.modeling_clip because of
 libamdhip64.so.6: cannot open shared object file: No such file or directory
 import rtp_llm.ops took 0.00s
 [CHECK] internal_source directory: /mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/internal_source, found: False
-import in __init__ took 1.81s
-Process frontend_server_2:
+import in __init__ took 1.95s
+Process frontend_server_0:
 Process frontend_server_3:
 Traceback (most recent call last):
   File &quot;/opt/conda310/lib/python3.10/site-packages/transformers/utils/import_utils.py&quot;, line 1967, in _get_module
@@ -203,8 +203,39 @@ Traceback (most recent call last):
     from flash_attn.flash_attn_interface import (
   File &quot;/opt/conda310/lib/python3.10/site-packages/flash_attn/flash_attn_interface.py&quot;, line 15, in &lt;module&gt;
     import flash_attn_2_cuda as flash_attn_gpu
-Traceback (most recent call last):
 ImportError: libamdhip64.so.6: cannot open shared object file: No such file or directory
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File &quot;/opt/conda310/lib/python3.10/multiprocessing/process.py&quot;, line 314, in _bootstrap
+    self.run()
+  File &quot;/opt/conda310/lib/python3.10/multiprocessing/process.py&quot;, line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/start_frontend_server.py&quot;, line 36, in start_frontend_server
+    from rtp_llm.frontend.frontend_app import FrontendApp
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/frontend/frontend_app.py&quot;, line 28, in &lt;module&gt;
+    from rtp_llm.frontend.frontend_server import FrontendServer
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/frontend/frontend_server.py&quot;, line 19, in &lt;module&gt;
+    from rtp_llm.embedding.embedding_endpoint import EmbeddingEndpoint
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/embedding/embedding_endpoint.py&quot;, line 15, in &lt;module&gt;
+    from rtp_llm.models.downstream_modules.utils import create_custom_module
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/models/__init__.py&quot;, line 25, in &lt;module&gt;
+    from .llava import Llava
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/models/llava.py&quot;, line 12, in &lt;module&gt;
+    from rtp_llm.models.llava_vit import LlavaImageEmbedding
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/models/llava_vit.py&quot;, line 18, in &lt;module&gt;
+    from transformers import CLIPImageProcessor, CLIPVisionConfig, CLIPVisionModel
+  File &quot;&lt;frozen importlib._bootstrap&gt;&quot;, line 1075, in _handle_fromlist
+  File &quot;/opt/conda310/lib/python3.10/site-packages/transformers/utils/import_utils.py&quot;, line 1956, in __getattr__
+    value = getattr(module, name)
+  File &quot;/opt/conda310/lib/python3.10/site-packages/transformers/utils/import_utils.py&quot;, line 1955, in __getattr__
+    module = self._get_module(self._class_to_module[name])
+  File &quot;/opt/conda310/lib/python3.10/site-packages/transformers/utils/import_utils.py&quot;, line 1969, in _get_module
+    raise RuntimeError(
+RuntimeError: Failed to import transformers.models.clip.modeling_clip because of the following error (look up to see its traceback):
+libamdhip64.so.6: cannot open shared object file: No such file or directory
+Traceback (most recent call last):
   File &quot;/opt/conda310/lib/python3.10/site-packages/transformers/utils/import_utils.py&quot;, line 1967, in _get_module
     return importlib.import_module(&quot;.&quot; + module_name, self.__name__)
   File &quot;/opt/conda310/lib/python3.10/importlib/__init__.py&quot;, line 126, in import_module
@@ -251,45 +282,14 @@ Traceback (most recent call last):
     value = getattr(module, name)
   File &quot;/opt/conda310/lib/python3.10/site-packages/transformers/utils/import_utils.py&quot;, line 1955, in __getattr__
     module = self._get_module(self._class_to_module[name])
-
-The above exception was the direct cause of the following exception:
-
-  File &quot;/opt/conda310/lib/python3.10/site-packages/transformers/utils/import_utils.py&quot;, line 1969, in _get_module
-    raise RuntimeError(
-Traceback (most recent call last):
-RuntimeError: Failed to import transformers.models.clip.modeling_clip because of the following error (look up to see its traceback):
-libamdhip64.so.6: cannot open shared object file: No such file or directory
-  File &quot;/opt/conda310/lib/python3.10/multiprocessing/process.py&quot;, line 314, in _bootstrap
-    self.run()
-  File &quot;/opt/conda310/lib/python3.10/multiprocessing/process.py&quot;, line 108, in run
-    self._target(*self._args, **self._kwargs)
-  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/start_frontend_server.py&quot;, line 36, in start_frontend_server
-    from rtp_llm.frontend.frontend_app import FrontendApp
-  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/frontend/frontend_app.py&quot;, line 28, in &lt;module&gt;
-    from rtp_llm.frontend.frontend_server import FrontendServer
-  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/frontend/frontend_server.py&quot;, line 19, in &lt;module&gt;
-    from rtp_llm.embedding.embedding_endpoint import EmbeddingEndpoint
-  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/embedding/embedding_endpoint.py&quot;, line 15, in &lt;module&gt;
-    from rtp_llm.models.downstream_modules.utils import create_custom_module
-  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/models/__init__.py&quot;, line 25, in &lt;module&gt;
-    from .llava import Llava
-  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/models/llava.py&quot;, line 12, in &lt;module&gt;
-    from rtp_llm.models.llava_vit import LlavaImageEmbedding
-  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/models/llava_vit.py&quot;, line 18, in &lt;module&gt;
-    from transformers import CLIPImageProcessor, CLIPVisionConfig, CLIPVisionModel
-  File &quot;&lt;frozen importlib._bootstrap&gt;&quot;, line 1075, in _handle_fromlist
-  File &quot;/opt/conda310/lib/python3.10/site-packages/transformers/utils/import_utils.py&quot;, line 1956, in __getattr__
-    value = getattr(module, name)
-  File &quot;/opt/conda310/lib/python3.10/site-packages/transformers/utils/import_utils.py&quot;, line 1955, in __getattr__
-    module = self._get_module(self._class_to_module[name])
   File &quot;/opt/conda310/lib/python3.10/site-packages/transformers/utils/import_utils.py&quot;, line 1969, in _get_module
     raise RuntimeError(
 RuntimeError: Failed to import transformers.models.clip.modeling_clip because of the following error (look up to see its traceback):
 libamdhip64.so.6: cannot open shared object file: No such file or directory
 import rtp_llm.ops took 0.00s
 [CHECK] internal_source directory: /mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/internal_source, found: False
-import in __init__ took 1.81s
+import in __init__ took 1.95s
 import rtp_llm.ops took 0.00s
 [CHECK] internal_source directory: /mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/internal_source, found: False
-import in __init__ took 1.81s
+import in __init__ took 1.95s
 </pre>
