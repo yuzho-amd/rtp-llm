@@ -28,8 +28,8 @@ permissions:  # Sets permissions of the GITHUB_TOKEN to allow deployment to GitH
   id-token: write
   pull-requests: write
 
-env: 
-  IMAGE: ${{ vars.ALI_ROCM_IMAGE }}
+env:
+  IMAGE: hub.docker.alibaba-inc.com/isearch/rtp_llm_dev_rocm:2026_02_02_19_35_ff2f700_yuzho
 
 jobs:
   clean_gpu:
@@ -71,6 +71,9 @@ jobs:
     
     - name: Run unit tests in container
       run: |
+        id
+        echo "DEBUG_IMAGE=[$IMAGE]"
+        echo "DEBUG_NAME=[${IMAGE#*:}]"
         docker run --rm \
           --privileged \
           --cap-add=SYS_PTRACE \
