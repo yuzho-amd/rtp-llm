@@ -15,7 +15,7 @@ on:
     inputs:
       branch:
         description: "Target branch for testing in rtp-llm"
-        required: true
+        required: true 
         default: "main"
 
 concurrency:
@@ -53,7 +53,7 @@ jobs:
   unit_tests: #TODO: assign 1 gpu card to this job
     runs-on: [ MI308 ]
     needs: [ clean_gpu ]
-
+    steps:
     # for pull request: using PR's source branch. 
     # for schedule: using main branch.
     - name: Check out rtp llm source code
