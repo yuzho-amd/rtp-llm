@@ -1,0 +1,344 @@
+# server_Qwen_VL_TP4
+<pre>
+running server command: RESERVER_RUNTIME_MEM_MB=10240 DEVICE_RESERVE_MEMORY_BYTES=-4096000000 MAX_SEQ_LEN=32768 USE_SWIZZLEA=1 AITER_ASM_DIR=$(bazelisk info output_base)/external/aiter/aiter_meta/hsa/gfx942/ REUSE_CACHE=0 USE_ASM_PA=1 USE_AITER_PA=1 CONCURRENCY_LIMIT=1024 WORLD_SIZE=4 TP_SIZE=4 DP_SIZE=1 WARM_UP=0 ACT_TYPE=bf16 FORCE_CPU_LOAD_WEIGHTS=1 TOKENIZER_PATH=/mnt/raid0/pretrained_model/rtp_ci/Qwen2.5-VL-72B-Instruct/ CHECKPOINT_PATH=/mnt/raid0/pretrained_model/rtp_ci/Qwen2.5-VL-72B-Instruct/ MODEL_TYPE=qwen2_5_vl FT_SERVER_TEST=1  CUDA_VISIBLE_DEVICES=4,5,6,7 START_PORT=6789 /opt/conda310/bin/python3.10 -m rtp_llm.start_server
+WARNING:root:Failed to load C++ FusedRopeKVCacheOp: cannot import name &#x27;FusedRopeKVCacheDecodeOp&#x27; from &#x27;librtp_compute_ops.rtp_llm_ops&#x27; (/mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/../bazel-bin/librtp_compute_ops.so)
+WARNING:root:fuse is not valid: connet http://0:28006 error
+[process-31097][root][2026-07-30 08:38:47.509][log_config.py:setup_logging():93][INFO] successfully set NCCL_DEBUG_FILE path to logs/nccl.log
+[process-31097][root][2026-07-30 08:38:47.513][server_args.py:parse_args():258][INFO] Parsing arguments and applying config bindings...
+[process-31097][root][2026-07-30 08:38:47.514][hw_kernel_group_args.py:_parse_prefill_capture_config():292][INFO] Generated 160 sequence lengths from range (step=1, max=160)
+[process-31097][root][2026-07-30 08:38:47.617][server_config_setup.py:set_parallelism_config():285][INFO] parallelism_config.ep_size == 0, auto set to world size
+[process-31097][root][2026-07-30 08:38:47.617][server_config_setup.py:set_parallelism_config():350][INFO] set_parallelism_config: rank None
+parallelism_config=tp_size: 4
+ep_size: 4
+dp_size: 1
+world_size: 4
+world_rank: 0
+pp_size: 1
+local_world_size: 4
+local_rank: 0
+ffn_sp_size: 1
+tp_rank: 0
+ep_rank: 0
+dp_rank: 0
+ffn_tp_size: 4
+ffn_tp_rank: 0
+enable_sp: 0
+ffn_disaggregate_config: {
+enable_ffn_disaggregate: 0
+
+}
+prefill_cp_config: {
+method: DISABLED
+ comm_buffer_size: 536870912
+ kv_cache_sharded: 0
+ prefill_cp_size: 0
+}
+world_rank=None
+
+[process-31097][root][2026-07-30 08:38:47.617][server_config_setup.py:setup_default_args():403][INFO] [MI308X] enable FT_DISABLE_CUSTOM_AR by default, as amd has own implementation.
+[process-31097][root][2026-07-30 08:38:47.617][server_config_setup.py:setup_default_args():412][INFO] [MI308X] set SEQ_SIZE_PER_BLOCK 16 by default, as it just support 16 now.
+[process-31097][root][2026-07-30 08:38:47.618][fuser.py:fetch_remote_file_to_local():283][INFO] Local path /mnt/raid0/pretrained_model/rtp_ci/Qwen2.5-VL-72B-Instruct/ use directly.
+[process-31097][root][2026-07-30 08:38:47.618][fuser.py:fetch_remote_file_to_local():283][INFO] Local path /mnt/raid0/pretrained_model/rtp_ci/Qwen2.5-VL-72B-Instruct/ use directly.
+[process-31097][root][2026-07-30 08:38:47.618][server_config_setup.py:fetch_model_files_to_local():508][INFO] Fetched model files - checkpoint_path: /mnt/raid0/pretrained_model/rtp_ci/Qwen2.5-VL-72B-Instruct/, tokenizer_path: /mnt/raid0/pretrained_model/rtp_ci/Qwen2.5-VL-72B-Instruct/, ptuning_path: , extra_data_path: , phy2log_path: 
+[process-31097][root][2026-07-30 08:38:47.618][server_config_setup.py:auto_configure_deepep():114][INFO] USE_ALL_GATHER is enabled (use_all_gather=True), all DeepEP settings are disabled (0, 0, 0)
+[process-31097][root][2026-07-30 08:38:47.618][start_server.py:start_server():450][INFO] [PROCESS_START]Start server
+[process-31097][root][2026-07-30 08:38:47.618][start_server.py:start_server():458][INFO] dp_size:  parallelism_config=1
+[process-31097][root][2026-07-30 08:38:47.618][concurrency_controller.py:init_controller():62][INFO] concurrency_limit : 1024, global_concurrency_limit : 1024
+[process-31097][root][2026-07-30 08:38:47.620][start_server.py:start_backend_server_impl():67][INFO] [PROCESS_SPAWN]Start backend server process outer
+import rtp_llm.ops took 0.00s
+[CHECK] internal_source directory: /mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/internal_source, found: False
+import in __init__ took 1.64s
+[process-31097][root][2026-07-30 08:38:47.621][time_util.py:wrapped():47][INFO] start backend server took: 0.00s
+[process-31097][root][2026-07-30 08:38:47.622][start_server.py:start_frontend_server_impl():399][INFO] multi rank starts with default local world size: 4, world size = 4
+[process-31097][root][2026-07-30 08:38:47.622][start_server.py:start_frontend_server_impl():408][INFO] [PROCESS_SPAWN]Start frontend server process rank_0_server_0 outer
+[process-31097][root][2026-07-30 08:38:47.622][start_server.py:start_frontend_server_impl():408][INFO] [PROCESS_SPAWN]Start frontend server process rank_0_server_1 outer
+[process-31097][root][2026-07-30 08:38:47.623][start_server.py:start_frontend_server_impl():408][INFO] [PROCESS_SPAWN]Start frontend server process rank_0_server_2 outer
+[process-31097][root][2026-07-30 08:38:47.623][start_server.py:start_frontend_server_impl():408][INFO] [PROCESS_SPAWN]Start frontend server process rank_0_server_3 outer
+[process-31097][root][2026-07-30 08:38:47.624][start_server.py:start_frontend_server_impl():424][INFO] rank 1 skipping frontend startup
+[process-31097][root][2026-07-30 08:38:47.624][start_server.py:start_frontend_server_impl():424][INFO] rank 1 skipping frontend startup
+[process-31097][root][2026-07-30 08:38:47.624][start_server.py:start_frontend_server_impl():424][INFO] rank 1 skipping frontend startup
+[process-31097][root][2026-07-30 08:38:47.624][start_server.py:start_frontend_server_impl():424][INFO] rank 1 skipping frontend startup
+[process-31097][root][2026-07-30 08:38:47.624][start_server.py:start_frontend_server_impl():424][INFO] rank 2 skipping frontend startup
+[process-31097][root][2026-07-30 08:38:47.624][start_server.py:start_frontend_server_impl():424][INFO] rank 2 skipping frontend startup
+[process-31097][root][2026-07-30 08:38:47.624][start_server.py:start_frontend_server_impl():424][INFO] rank 2 skipping frontend startup
+[process-31097][root][2026-07-30 08:38:47.624][start_server.py:start_frontend_server_impl():424][INFO] rank 2 skipping frontend startup
+[process-31097][root][2026-07-30 08:38:47.624][start_server.py:start_frontend_server_impl():424][INFO] rank 3 skipping frontend startup
+[process-31097][root][2026-07-30 08:38:47.624][start_server.py:start_frontend_server_impl():424][INFO] rank 3 skipping frontend startup
+[process-31097][root][2026-07-30 08:38:47.624][start_server.py:start_frontend_server_impl():424][INFO] rank 3 skipping frontend startup
+[process-31097][root][2026-07-30 08:38:47.624][start_server.py:start_frontend_server_impl():424][INFO] rank 3 skipping frontend startup
+[process-31097][root][2026-07-30 08:38:47.624][time_util.py:wrapped():47][INFO] start frontend server took: 0.00s
+[process-31097][root][2026-07-30 08:38:47.624][start_server.py:_iter_serving_ranks():140][INFO] multi rank starts with default local world size: 4, world size = 4
+[process-31097][root][2026-07-30 08:38:47.624][start_server.py:start_dash_sc_server_impl():169][INFO] [PROCESS_SPAWN]Start dash_sc server process rank_0_server_0 outer
+[process-31097][root][2026-07-30 08:38:47.625][start_server.py:start_dash_sc_server_impl():169][INFO] [PROCESS_SPAWN]Start dash_sc server process rank_0_server_1 outer
+[process-31097][root][2026-07-30 08:38:47.625][start_server.py:start_dash_sc_server_impl():169][INFO] [PROCESS_SPAWN]Start dash_sc server process rank_0_server_2 outer
+[process-31097][root][2026-07-30 08:38:47.626][start_server.py:start_dash_sc_server_impl():169][INFO] [PROCESS_SPAWN]Start dash_sc server process rank_0_server_3 outer
+[process-31097][root][2026-07-30 08:38:47.626][start_server.py:_iter_serving_ranks():149][INFO] rank 1 skipping frontend/dash_sc startup
+[process-31097][root][2026-07-30 08:38:47.626][start_server.py:_iter_serving_ranks():149][INFO] rank 2 skipping frontend/dash_sc startup
+[process-31097][root][2026-07-30 08:38:47.626][start_server.py:_iter_serving_ranks():149][INFO] rank 3 skipping frontend/dash_sc startup
+[process-31097][root][2026-07-30 08:38:47.626][time_util.py:wrapped():47][INFO] start dash_sc server took: 0.00s
+[process-31097][root][2026-07-30 08:38:47.626][process_manager.py:start_parallel_health_checks():895][INFO] Starting parallel health checks for 3 processes
+[process-31097][root][2026-07-30 08:38:47.627][process_manager.py:wait_for_health_checks():923][INFO] Waiting for 3 health checks to complete...
+WARNING:root:Failed to load C++ FusedRopeKVCacheOp: cannot import name &#x27;FusedRopeKVCacheDecodeOp&#x27; from &#x27;librtp_compute_ops.rtp_llm_ops&#x27; (/mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/../bazel-bin/librtp_compute_ops.so)
+WARNING:root:Failed to load C++ FusedRopeKVCacheOp: cannot import name &#x27;FusedRopeKVCacheDecodeOp&#x27; from &#x27;librtp_compute_ops.rtp_llm_ops&#x27; (/mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/../bazel-bin/librtp_compute_ops.so)
+WARNING:root:Failed to load C++ FusedRopeKVCacheOp: cannot import name &#x27;FusedRopeKVCacheDecodeOp&#x27; from &#x27;librtp_compute_ops.rtp_llm_ops&#x27; (/mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/../bazel-bin/librtp_compute_ops.so)
+WARNING:root:Failed to load C++ FusedRopeKVCacheOp: cannot import name &#x27;FusedRopeKVCacheDecodeOp&#x27; from &#x27;librtp_compute_ops.rtp_llm_ops&#x27; (/mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/../bazel-bin/librtp_compute_ops.so)
+WARNING:root:Failed to load C++ FusedRopeKVCacheOp: cannot import name &#x27;FusedRopeKVCacheDecodeOp&#x27; from &#x27;librtp_compute_ops.rtp_llm_ops&#x27; (/mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/../bazel-bin/librtp_compute_ops.so)
+WARNING:root:Failed to load C++ FusedRopeKVCacheOp: cannot import name &#x27;FusedRopeKVCacheDecodeOp&#x27; from &#x27;librtp_compute_ops.rtp_llm_ops&#x27; (/mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/../bazel-bin/librtp_compute_ops.so)
+WARNING:root:Failed to load C++ FusedRopeKVCacheOp: cannot import name &#x27;FusedRopeKVCacheDecodeOp&#x27; from &#x27;librtp_compute_ops.rtp_llm_ops&#x27; (/mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/../bazel-bin/librtp_compute_ops.so)
+WARNING:root:Failed to load C++ FusedRopeKVCacheOp: cannot import name &#x27;FusedRopeKVCacheDecodeOp&#x27; from &#x27;librtp_compute_ops.rtp_llm_ops&#x27; (/mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/../bazel-bin/librtp_compute_ops.so)
+WARNING:root:Failed to load C++ FusedRopeKVCacheOp: cannot import name &#x27;FusedRopeKVCacheDecodeOp&#x27; from &#x27;librtp_compute_ops.rtp_llm_ops&#x27; (/mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/../bazel-bin/librtp_compute_ops.so)
+WARNING:root:fuse is not valid: connet http://0:28006 error
+[process-31199][root][2026-07-30 08:38:50.121][start_dash_sc_server.py:start_dash_sc_server():42][INFO] [PROCESS_START]Start dash_sc server process rank_0_server_1
+Process dash_sc_server_0_1:
+Traceback (most recent call last):
+  File &quot;/opt/conda310/lib/python3.10/multiprocessing/process.py&quot;, line 314, in _bootstrap
+    self.run()
+  File &quot;/opt/conda310/lib/python3.10/multiprocessing/process.py&quot;, line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/start_dash_sc_server.py&quot;, line 46, in start_dash_sc_server
+    from rtp_llm.dash_sc import DashScApp
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/dash_sc/__init__.py&quot;, line 16, in &lt;module&gt;
+    from rtp_llm.dash_sc.client import (
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/dash_sc/client.py&quot;, line 26, in &lt;module&gt;
+    from rtp_llm.dash_sc.codec import SamplingParams
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/dash_sc/codec.py&quot;, line 19, in &lt;module&gt;
+    from rtp_llm.dash_sc.proto import predict_v2_pb2
+ImportError: cannot import name &#x27;predict_v2_pb2&#x27; from &#x27;rtp_llm.dash_sc.proto&#x27; (unknown location)
+import rtp_llm.ops took 0.00s
+[CHECK] internal_source directory: /mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/internal_source, found: False
+import in __init__ took 2.45s
+WARNING:root:fuse is not valid: connet http://0:28006 error
+WARNING:root:fuse is not valid: connet http://0:28006 error
+WARNING:root:fuse is not valid: connet http://0:28006 error
+[process-31193][root][2026-07-30 08:38:50.180][start_backend_server.py:start_backend_server():422][INFO] [PROCESS_START]Start backend server process
+[process-31198][root][2026-07-30 08:38:50.180][start_dash_sc_server.py:start_dash_sc_server():42][INFO] [PROCESS_START]Start dash_sc server process rank_0_server_0
+[process-31193][root][2026-07-30 08:38:50.182][start_backend_server.py:load_gpu_nic_affinity():381][INFO] get gpu nic affinity failed, run /usr/local/bin/run_affinity failed, exception is [Errno 8] Exec format error: &#x27;/usr/local/bin/run_affinity&#x27;
+[process-31196][root][2026-07-30 08:38:50.187][start_frontend_server.py:start_frontend_server():32][INFO] [PROCESS_START]Start frontend server process rank_0_server_2
+WARNING:root:fuse is not valid: connet http://0:28006 error
+Process dash_sc_server_0_0:
+Traceback (most recent call last):
+  File &quot;/opt/conda310/lib/python3.10/multiprocessing/process.py&quot;, line 314, in _bootstrap
+    self.run()
+  File &quot;/opt/conda310/lib/python3.10/multiprocessing/process.py&quot;, line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/start_dash_sc_server.py&quot;, line 46, in start_dash_sc_server
+    from rtp_llm.dash_sc import DashScApp
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/dash_sc/__init__.py&quot;, line 16, in &lt;module&gt;
+    from rtp_llm.dash_sc.client import (
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/dash_sc/client.py&quot;, line 26, in &lt;module&gt;
+    from rtp_llm.dash_sc.codec import SamplingParams
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/dash_sc/codec.py&quot;, line 19, in &lt;module&gt;
+    from rtp_llm.dash_sc.proto import predict_v2_pb2
+ImportError: cannot import name &#x27;predict_v2_pb2&#x27; from &#x27;rtp_llm.dash_sc.proto&#x27; (unknown location)
+import rtp_llm.ops took 0.00s
+[CHECK] internal_source directory: /mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/internal_source, found: False
+import in __init__ took 2.51s
+WARNING:root:fuse is not valid: connet http://0:28006 error
+[process-31201][root][2026-07-30 08:38:50.201][start_dash_sc_server.py:start_dash_sc_server():42][INFO] [PROCESS_START]Start dash_sc server process rank_0_server_3
+[process-31200][root][2026-07-30 08:38:50.203][start_dash_sc_server.py:start_dash_sc_server():42][INFO] [PROCESS_START]Start dash_sc server process rank_0_server_2
+WARNING:root:fuse is not valid: connet http://0:28006 error
+WARNING:root:fuse is not valid: connet http://0:28006 error
+WARNING:root:fuse is not valid: connet http://0:28006 error
+[process-31195][root][2026-07-30 08:38:50.213][start_frontend_server.py:start_frontend_server():32][INFO] [PROCESS_START]Start frontend server process rank_0_server_1
+Process dash_sc_server_0_3:
+[process-31197][root][2026-07-30 08:38:50.213][start_frontend_server.py:start_frontend_server():32][INFO] [PROCESS_START]Start frontend server process rank_0_server_3
+[process-31194][root][2026-07-30 08:38:50.213][start_frontend_server.py:start_frontend_server():32][INFO] [PROCESS_START]Start frontend server process rank_0_server_0
+Traceback (most recent call last):
+  File &quot;/opt/conda310/lib/python3.10/multiprocessing/process.py&quot;, line 314, in _bootstrap
+    self.run()
+  File &quot;/opt/conda310/lib/python3.10/multiprocessing/process.py&quot;, line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/start_dash_sc_server.py&quot;, line 46, in start_dash_sc_server
+    from rtp_llm.dash_sc import DashScApp
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/dash_sc/__init__.py&quot;, line 16, in &lt;module&gt;
+    from rtp_llm.dash_sc.client import (
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/dash_sc/client.py&quot;, line 26, in &lt;module&gt;
+    from rtp_llm.dash_sc.codec import SamplingParams
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/dash_sc/codec.py&quot;, line 19, in &lt;module&gt;
+    from rtp_llm.dash_sc.proto import predict_v2_pb2
+ImportError: cannot import name &#x27;predict_v2_pb2&#x27; from &#x27;rtp_llm.dash_sc.proto&#x27; (unknown location)
+import rtp_llm.ops took 0.00s
+[CHECK] internal_source directory: /mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/internal_source, found: False
+import in __init__ took 2.53s
+Process dash_sc_server_0_2:
+Traceback (most recent call last):
+  File &quot;/opt/conda310/lib/python3.10/multiprocessing/process.py&quot;, line 314, in _bootstrap
+    self.run()
+  File &quot;/opt/conda310/lib/python3.10/multiprocessing/process.py&quot;, line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/start_dash_sc_server.py&quot;, line 46, in start_dash_sc_server
+    from rtp_llm.dash_sc import DashScApp
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/dash_sc/__init__.py&quot;, line 16, in &lt;module&gt;
+    from rtp_llm.dash_sc.client import (
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/dash_sc/client.py&quot;, line 26, in &lt;module&gt;
+    from rtp_llm.dash_sc.codec import SamplingParams
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/dash_sc/codec.py&quot;, line 19, in &lt;module&gt;
+    from rtp_llm.dash_sc.proto import predict_v2_pb2
+ImportError: cannot import name &#x27;predict_v2_pb2&#x27; from &#x27;rtp_llm.dash_sc.proto&#x27; (unknown location)
+import rtp_llm.ops took 0.00s
+[CHECK] internal_source directory: /mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/internal_source, found: False
+import in __init__ took 2.53s
+[process-31193][root][2026-07-30 08:38:50.286][start_backend_server.py:multi_rank_start():281][WARNING] context has already been set
+[process-31193][root][2026-07-30 08:38:50.286][start_backend_server.py:_get_local_world_size():127][INFO] multi rank starts with default local world size: 4, device count = 4, world size = 4
+import rtp_llm.ops took 0.00s
+[CHECK] internal_source directory: /mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/internal_source, found: False
+import in __init__ took 2.52s
+[process-31193][root][2026-07-30 08:38:50.298][start_backend_server.py:_wait_for_ranks_startup():202][INFO] Waiting for all 4 ranks to report startup status...
+[process-31097][root][2026-07-30 08:38:50.631][process_manager.py:_health_check_worker():865][ERROR] backend_server process manager is not available
+[process-31097][root][2026-07-30 08:38:50.632][process_manager.py:_health_check_worker():865][ERROR] dash_sc_server process manager is not available
+[process-31097][root][2026-07-30 08:38:50.634][process_manager.py:_health_check_worker():865][ERROR] frontend_server process manager is not available
+[process-31097][root][2026-07-30 08:38:50.635][process_manager.py:wait_for_health_checks():938][ERROR] backend_server health check failed
+[process-31097][root][2026-07-30 08:38:50.635][process_manager.py:wait_for_health_checks():938][ERROR] frontend_server health check failed
+[process-31097][root][2026-07-30 08:38:50.635][process_manager.py:wait_for_health_checks():938][ERROR] dash_sc_server health check failed
+[process-31097][root][2026-07-30 08:38:50.635][start_server.py:start_server():532][ERROR] [START_SERVER] Health checks failed
+[process-31097][root][2026-07-30 08:38:50.635][start_server.py:start_server():536][ERROR] start failed, trace: Traceback (most recent call last):
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/start_server.py&quot;, line 533, in start_server
+    raise Exception(&quot;Health checks failed&quot;)
+Exception: Health checks failed
+
+[process-31097][root][2026-07-30 08:38:50.635][process_manager.py:monitor_and_release_processes():774][INFO] Monitoring 9 processes
+[process-31097][root][2026-07-30 08:38:50.635][process_manager.py:_terminate_processes():368][INFO] Sending SIGTERM (drain_timeout=0s)
+[process-31097][root][2026-07-30 08:38:50.635][process_manager.py:_send_pre_stop_drain_signal():579][INFO] Sending SIGUSR1 to frontend process group for pre-stop drain
+[process-31097][root][2026-07-30 08:38:50.635][process_manager.py:_terminate_process_list():212][INFO] Sending SIGUSR1 to frontend process frontend_server_0 pid=31194
+[process-31097][root][2026-07-30 08:38:50.635][process_manager.py:_terminate_process_list():212][INFO] Sending SIGUSR1 to frontend process frontend_server_1 pid=31195
+[process-31097][root][2026-07-30 08:38:50.636][process_manager.py:_terminate_process_list():212][INFO] Sending SIGUSR1 to frontend process frontend_server_2 pid=31196
+[process-31097][root][2026-07-30 08:38:50.636][process_manager.py:_terminate_process_list():212][INFO] Sending SIGUSR1 to frontend process frontend_server_3 pid=31197
+[process-31097][root][2026-07-30 08:38:50.637][process_manager.py:_terminate_process_list():227][INFO] proc.name [dash_sc_server_0_0] pid[31198] is not alived
+[process-31097][root][2026-07-30 08:38:50.638][process_manager.py:_terminate_process_list():227][INFO] proc.name [dash_sc_server_0_1] pid[31199] is not alived
+[process-31097][root][2026-07-30 08:38:50.638][process_manager.py:_terminate_process_list():227][INFO] proc.name [dash_sc_server_0_2] pid[31200] is not alived
+[process-31097][root][2026-07-30 08:38:50.638][process_manager.py:_terminate_process_list():227][INFO] proc.name [dash_sc_server_0_3] pid[31201] is not alived
+[process-31097][root][2026-07-30 08:38:50.638][process_manager.py:_pre_stop_drain_signal_window_seconds():642][INFO] Clamp pre-stop drain signal window from 120.000s to 0.000s (remaining_shutdown_budget=0.000s, headroom=1.000s)
+[process-31097][root][2026-07-30 08:38:50.638][process_manager.py:_terminate_process_list():212][INFO] Sending SIGTERM to frontend process frontend_server_0 pid=31194
+[process-31097][root][2026-07-30 08:38:50.638][process_manager.py:_terminate_process_list():212][INFO] Sending SIGTERM to frontend process frontend_server_1 pid=31195
+[process-31097][root][2026-07-30 08:38:50.638][process_manager.py:_terminate_process_list():212][INFO] Sending SIGTERM to frontend process frontend_server_2 pid=31196
+[process-31097][root][2026-07-30 08:38:50.638][process_manager.py:_terminate_process_list():212][INFO] Sending SIGTERM to frontend process frontend_server_3 pid=31197
+[process-31097][root][2026-07-30 08:38:50.638][process_manager.py:_terminate_process_list():227][INFO] proc.name [dash_sc_server_0_0] pid[31198] is not alived
+[process-31097][root][2026-07-30 08:38:50.638][process_manager.py:_terminate_process_list():227][INFO] proc.name [dash_sc_server_0_1] pid[31199] is not alived
+[process-31097][root][2026-07-30 08:38:50.638][process_manager.py:_terminate_process_list():227][INFO] proc.name [dash_sc_server_0_2] pid[31200] is not alived
+[process-31097][root][2026-07-30 08:38:50.638][process_manager.py:_terminate_process_list():227][INFO] proc.name [dash_sc_server_0_3] pid[31201] is not alived
+[process-31097][root][2026-07-30 08:38:50.638][process_manager.py:_drain_deadline_passed():295][WARNING] Timed out waiting for frontend process group to exit, alive=[31194, 31195, 31196, 31197]
+[process-31097][root][2026-07-30 08:38:50.638][process_manager.py:_terminate_process_list():212][INFO] Sending SIGINT to backend process backend_manager pid=31193
+[process-31097][root][2026-07-30 08:38:50.638][process_manager.py:_drain_deadline_passed():295][WARNING] Timed out waiting for deferred process group to exit, alive=[31193]
+WARNING:root:Failed to load C++ FusedRopeKVCacheOp: cannot import name &#x27;FusedRopeKVCacheDecodeOp&#x27; from &#x27;librtp_compute_ops.rtp_llm_ops&#x27; (/mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/../bazel-bin/librtp_compute_ops.so)
+WARNING:root:Failed to load C++ FusedRopeKVCacheOp: cannot import name &#x27;FusedRopeKVCacheDecodeOp&#x27; from &#x27;librtp_compute_ops.rtp_llm_ops&#x27; (/mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/../bazel-bin/librtp_compute_ops.so)
+WARNING:root:Failed to load C++ FusedRopeKVCacheOp: cannot import name &#x27;FusedRopeKVCacheDecodeOp&#x27; from &#x27;librtp_compute_ops.rtp_llm_ops&#x27; (/mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/../bazel-bin/librtp_compute_ops.so)
+WARNING:root:Failed to load C++ FusedRopeKVCacheOp: cannot import name &#x27;FusedRopeKVCacheDecodeOp&#x27; from &#x27;librtp_compute_ops.rtp_llm_ops&#x27; (/mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/../bazel-bin/librtp_compute_ops.so)
+WARNING:root:fuse is not valid: connet http://0:28006 error
+WARNING:root:fuse is not valid: connet http://0:28006 error
+WARNING:root:fuse is not valid: connet http://0:28006 error
+[process-31801][root][2026-07-30 08:38:52.228][start_backend_server.py:local_rank_start():42][INFO] [PROCESS_START]Start local rank process
+[process-31803][root][2026-07-30 08:38:52.229][start_backend_server.py:local_rank_start():42][INFO] [PROCESS_START]Start local rank process
+[process-31802][root][2026-07-30 08:38:52.230][start_backend_server.py:local_rank_start():42][INFO] [PROCESS_START]Start local rank process
+WARNING:root:fuse is not valid: connet http://0:28006 error
+[process-31800][root][2026-07-30 08:38:52.239][start_backend_server.py:local_rank_start():42][INFO] [PROCESS_START]Start local rank process
+[process-31802][root][2026-07-30 08:38:53.553][report_worker.py:__init__():32][INFO] kmonitor report default tags: {}
+[process-31802][root][2026-07-30 08:38:53.553][report_worker.py:__init__():52][INFO] test mode, kmonitor metrics not reported.
+[process-31803][root][2026-07-30 08:38:53.553][report_worker.py:__init__():32][INFO] kmonitor report default tags: {}
+[process-31801][root][2026-07-30 08:38:53.554][report_worker.py:__init__():32][INFO] kmonitor report default tags: {}
+[process-31800][root][2026-07-30 08:38:53.554][report_worker.py:__init__():32][INFO] kmonitor report default tags: {}
+[process-31801][root][2026-07-30 08:38:53.554][report_worker.py:__init__():52][INFO] test mode, kmonitor metrics not reported.
+[process-31800][root][2026-07-30 08:38:53.554][report_worker.py:__init__():52][INFO] test mode, kmonitor metrics not reported.
+[process-31803][root][2026-07-30 08:38:53.554][report_worker.py:__init__():52][INFO] test mode, kmonitor metrics not reported.
+/mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/openai/api_datatype.py:155: UserWarning: Field name &quot;schema&quot; in &quot;ResponseFormatJSONSchema&quot; shadows an attribute in parent &quot;BaseModel&quot;
+  class ResponseFormatJSONSchema(BaseModel):
+/mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/openai/api_datatype.py:155: UserWarning: Field name &quot;schema&quot; in &quot;ResponseFormatJSONSchema&quot; shadows an attribute in parent &quot;BaseModel&quot;
+  class ResponseFormatJSONSchema(BaseModel):
+/mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/openai/api_datatype.py:155: UserWarning: Field name &quot;schema&quot; in &quot;ResponseFormatJSONSchema&quot; shadows an attribute in parent &quot;BaseModel&quot;
+  class ResponseFormatJSONSchema(BaseModel):
+/mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/openai/api_datatype.py:155: UserWarning: Field name &quot;schema&quot; in &quot;ResponseFormatJSONSchema&quot; shadows an attribute in parent &quot;BaseModel&quot;
+  class ResponseFormatJSONSchema(BaseModel):
+[process-31097][root][2026-07-30 08:38:55.643][process_manager.py:_force_kill_processes():676][WARNING] Force-killing surviving children
+[process-31097][root][2026-07-30 08:38:55.644][process_manager.py:_force_kill_process_list():682][WARNING] Force killing process 31193
+[process-31097][root][2026-07-30 08:38:55.682][process_manager.py:_join_all_processes():732][INFO] All processes joined
+[process-31097][root][2026-07-30 08:38:55.682][process_manager.py:monitor_and_release_processes():799][ERROR] Child process failure cleanup completed, exiting parent
+[process-31801][root][2026-07-30 08:39:09.027][vipserver_proxy.py:refresh_srv_lst():86][ERROR] failed to refresh vipserver server list, exception : HTTPConnectionPool(host=&#x27;jmenv.tbsite.net&#x27;, port=8080): Max retries exceeded with url: /vipserver/serverlist?nofix=1&amp;labels=&amp; (Caused by NameResolutionError(&quot;HTTPConnection(host=&#x27;jmenv.tbsite.net&#x27;, port=8080): Failed to resolve &#x27;jmenv.tbsite.net&#x27; ([Errno -2] Name or service not known)&quot;))
+[process-31802][root][2026-07-30 08:39:09.027][vipserver_proxy.py:refresh_srv_lst():86][ERROR] failed to refresh vipserver server list, exception : HTTPConnectionPool(host=&#x27;jmenv.tbsite.net&#x27;, port=8080): Max retries exceeded with url: /vipserver/serverlist?nofix=1&amp;labels=&amp; (Caused by NameResolutionError(&quot;HTTPConnection(host=&#x27;jmenv.tbsite.net&#x27;, port=8080): Failed to resolve &#x27;jmenv.tbsite.net&#x27; ([Errno -2] Name or service not known)&quot;))
+[process-31800][root][2026-07-30 08:39:09.027][vipserver_proxy.py:refresh_srv_lst():86][ERROR] failed to refresh vipserver server list, exception : HTTPConnectionPool(host=&#x27;jmenv.tbsite.net&#x27;, port=8080): Max retries exceeded with url: /vipserver/serverlist?nofix=1&amp;labels=&amp; (Caused by NameResolutionError(&quot;HTTPConnection(host=&#x27;jmenv.tbsite.net&#x27;, port=8080): Failed to resolve &#x27;jmenv.tbsite.net&#x27; ([Errno -2] Name or service not known)&quot;))
+[process-31803][root][2026-07-30 08:39:09.027][vipserver_proxy.py:refresh_srv_lst():86][ERROR] failed to refresh vipserver server list, exception : HTTPConnectionPool(host=&#x27;jmenv.tbsite.net&#x27;, port=8080): Max retries exceeded with url: /vipserver/serverlist?nofix=1&amp;labels=&amp; (Caused by NameResolutionError(&quot;HTTPConnection(host=&#x27;jmenv.tbsite.net&#x27;, port=8080): Failed to resolve &#x27;jmenv.tbsite.net&#x27; ([Errno -2] Name or service not known)&quot;))
+[process-31801][root][2026-07-30 08:39:09.027][host_reactor.py:start():32][INFO] vipserver domain update thread started. to refresh domains: &lt;bound method HostReactor.refresh_cache_domain_srv_lst of &lt;rtp_llm.vipserver.host_reactor.HostReactor object at 0x7f61d5ee7e50&gt;&gt;
+[process-31800][root][2026-07-30 08:39:09.027][host_reactor.py:start():32][INFO] vipserver domain update thread started. to refresh domains: &lt;bound method HostReactor.refresh_cache_domain_srv_lst of &lt;rtp_llm.vipserver.host_reactor.HostReactor object at 0x7f1ca9cf0c40&gt;&gt;
+[process-31803][root][2026-07-30 08:39:09.027][host_reactor.py:start():32][INFO] vipserver domain update thread started. to refresh domains: &lt;bound method HostReactor.refresh_cache_domain_srv_lst of &lt;rtp_llm.vipserver.host_reactor.HostReactor object at 0x7f5f3b5f3430&gt;&gt;
+[process-31802][root][2026-07-30 08:39:09.028][host_reactor.py:start():32][INFO] vipserver domain update thread started. to refresh domains: &lt;bound method HostReactor.refresh_cache_domain_srv_lst of &lt;rtp_llm.vipserver.host_reactor.HostReactor object at 0x7f388b65c7c0&gt;&gt;
+Process rank-3:
+Traceback (most recent call last):
+  File &quot;/opt/conda310/lib/python3.10/multiprocessing/process.py&quot;, line 314, in _bootstrap
+    self.run()
+  File &quot;/opt/conda310/lib/python3.10/multiprocessing/process.py&quot;, line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/start_backend_server.py&quot;, line 44, in local_rank_start
+    from rtp_llm.server.backend_manager import BackendManager
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/server/backend_manager.py&quot;, line 10, in &lt;module&gt;
+    from rtp_llm.async_decoder_engine.base_engine import BaseEngine
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/async_decoder_engine/base_engine.py&quot;, line 5, in &lt;module&gt;
+    from rtp_llm.models.base_model import BaseModel
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/models/__init__.py&quot;, line 29, in &lt;module&gt;
+    from .qwen3_vl import QWen3_VL
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/models/qwen3_vl.py&quot;, line 9, in &lt;module&gt;
+    from transformers import AutoProcessor, Qwen3VLConfig, Qwen3VLVisionModel
+ImportError: cannot import name &#x27;Qwen3VLConfig&#x27; from &#x27;transformers&#x27; (/opt/conda310/lib/python3.10/site-packages/transformers/__init__.py)
+import rtp_llm.ops took 0.00s
+[CHECK] internal_source directory: /mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/internal_source, found: False
+import in __init__ took 1.89s
+Process rank-2:
+Traceback (most recent call last):
+  File &quot;/opt/conda310/lib/python3.10/multiprocessing/process.py&quot;, line 314, in _bootstrap
+    self.run()
+  File &quot;/opt/conda310/lib/python3.10/multiprocessing/process.py&quot;, line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/start_backend_server.py&quot;, line 44, in local_rank_start
+    from rtp_llm.server.backend_manager import BackendManager
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/server/backend_manager.py&quot;, line 10, in &lt;module&gt;
+    from rtp_llm.async_decoder_engine.base_engine import BaseEngine
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/async_decoder_engine/base_engine.py&quot;, line 5, in &lt;module&gt;
+    from rtp_llm.models.base_model import BaseModel
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/models/__init__.py&quot;, line 29, in &lt;module&gt;
+    from .qwen3_vl import QWen3_VL
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/models/qwen3_vl.py&quot;, line 9, in &lt;module&gt;
+    from transformers import AutoProcessor, Qwen3VLConfig, Qwen3VLVisionModel
+ImportError: cannot import name &#x27;Qwen3VLConfig&#x27; from &#x27;transformers&#x27; (/opt/conda310/lib/python3.10/site-packages/transformers/__init__.py)
+import rtp_llm.ops took 0.00s
+[CHECK] internal_source directory: /mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/internal_source, found: False
+import in __init__ took 1.89s
+Process rank-1:
+Traceback (most recent call last):
+  File &quot;/opt/conda310/lib/python3.10/multiprocessing/process.py&quot;, line 314, in _bootstrap
+    self.run()
+  File &quot;/opt/conda310/lib/python3.10/multiprocessing/process.py&quot;, line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/start_backend_server.py&quot;, line 44, in local_rank_start
+    from rtp_llm.server.backend_manager import BackendManager
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/server/backend_manager.py&quot;, line 10, in &lt;module&gt;
+    from rtp_llm.async_decoder_engine.base_engine import BaseEngine
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/async_decoder_engine/base_engine.py&quot;, line 5, in &lt;module&gt;
+    from rtp_llm.models.base_model import BaseModel
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/models/__init__.py&quot;, line 29, in &lt;module&gt;
+    from .qwen3_vl import QWen3_VL
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/models/qwen3_vl.py&quot;, line 9, in &lt;module&gt;
+    from transformers import AutoProcessor, Qwen3VLConfig, Qwen3VLVisionModel
+ImportError: cannot import name &#x27;Qwen3VLConfig&#x27; from &#x27;transformers&#x27; (/opt/conda310/lib/python3.10/site-packages/transformers/__init__.py)
+import rtp_llm.ops took 0.00s
+[CHECK] internal_source directory: /mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/internal_source, found: False
+import in __init__ took 1.89s
+Process rank-0:
+Traceback (most recent call last):
+  File &quot;/opt/conda310/lib/python3.10/multiprocessing/process.py&quot;, line 314, in _bootstrap
+    self.run()
+  File &quot;/opt/conda310/lib/python3.10/multiprocessing/process.py&quot;, line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/start_backend_server.py&quot;, line 44, in local_rank_start
+    from rtp_llm.server.backend_manager import BackendManager
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/server/backend_manager.py&quot;, line 10, in &lt;module&gt;
+    from rtp_llm.async_decoder_engine.base_engine import BaseEngine
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/async_decoder_engine/base_engine.py&quot;, line 5, in &lt;module&gt;
+    from rtp_llm.models.base_model import BaseModel
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/models/__init__.py&quot;, line 29, in &lt;module&gt;
+    from .qwen3_vl import QWen3_VL
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/models/qwen3_vl.py&quot;, line 9, in &lt;module&gt;
+    from transformers import AutoProcessor, Qwen3VLConfig, Qwen3VLVisionModel
+ImportError: cannot import name &#x27;Qwen3VLConfig&#x27; from &#x27;transformers&#x27; (/opt/conda310/lib/python3.10/site-packages/transformers/__init__.py)
+import rtp_llm.ops took 0.00s
+[CHECK] internal_source directory: /mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/internal_source, found: False
+import in __init__ took 1.90s
+/opt/conda310/lib/python3.10/multiprocessing/resource_tracker.py:224: UserWarning: resource_tracker: There appear to be 3 leaked semaphore objects to clean up at shutdown
+  warnings.warn(&#x27;resource_tracker: There appear to be %d &#x27;
+</pre>
