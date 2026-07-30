@@ -49,7 +49,7 @@ compile_rtp(){
     /opt/conda310/bin/python -m pip install flash_attn --no-build-isolation --index-url https://pypi.org/simple
 
     # try to build
-    bazelisk build //rtp_llm:rtp_llm --jobs 150 --verbose_failures --config=rocm 2>&1 | tee "${LOG_DIR}/bazelbuild.log"
+    bazelisk build //rtp_llm:rtp_llm //rtp_llm/dash_sc/proto:predict_v2_py --jobs 150 --verbose_failures --config=rocm 2>&1 | tee "${LOG_DIR}/bazelbuild.log"
     BUILD_RESULT=$?
     
     # if build failed and is because timeout, set PIP_TIMEOUT and try again
@@ -57,11 +57,14 @@ compile_rtp(){
         if grep -q -i "timeout\|timed out" "${LOG_DIR}/bazelbuild.log"; then
             echo "bazel build failed due to time out，set PIP_TIMEOUT=300 and try again..."
             export PIP_TIMEOUT=300
-            bazelisk build //rtp_llm:rtp_llm --jobs 150 --verbose_failures --config=rocm 2>&1 | tee -a "${LOG_DIR}/bazelbuild.log" || EXIT_CODE=1
+            bazelisk build //rtp_llm:rtp_llm //rtp_llm/dash_sc/proto:predict_v2_py --jobs 150 --verbose_failures --config=rocm 2>&1 | tee -a "${LOG_DIR}/bazelbuild.log" || EXIT_CODE=1
         else
             EXIT_CODE=1
         fi
     fi
+    # link dash_sc proto pb2 into source dir so backend can import predict_v2_pb2
+    bash ${RTP_PATH}/rtp_llm/dash_sc/proto/link_py_proto.sh || true
+
     record_env
 }
 
