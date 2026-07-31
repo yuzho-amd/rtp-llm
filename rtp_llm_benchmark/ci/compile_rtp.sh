@@ -42,8 +42,8 @@ compile_rtp(){
     EXIT_CODE=0
     set -o pipefail
     # yum --disablerepo="*" --enablerepo=alinux3-os install -y patch
-    # /opt/conda310/bin/python3 -m pip install -r ./open_source/deps/requirements_rocm.txt
-    /opt/conda310/bin/python3 -m pip install --no-cache-dir -r ./open_source/deps/requirements_rocm.txt --index-url https://pypi.org/simple
+    # /opt/conda310/bin/python3 -m pip install -r ./deps/requirements_rocm.txt
+    /opt/conda310/bin/python3 -m pip install --no-cache-dir -r ./deps/requirements_rocm.txt --index-url https://pypi.org/simple
     # /opt/conda310/bin/python3 -m pip install /mnt/raid0/yuzho/BACKUPS/flash_attn-2.8.3-cp310-cp310-linux_x86_64.whl # flash attn whl
     /opt/conda310/bin/python -m pip install ninja -i https://pypi.org/simple/
     /opt/conda310/bin/python -m pip install flash_attn --no-build-isolation --index-url https://pypi.org/simple
