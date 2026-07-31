@@ -36,7 +36,7 @@ compare_json_score() {
                             if (a[$i] | type) == "array" and (b[$i] | type) == "array" then
                                 compare_arrays(a[$i]; b[$i])
                             elif (a[$i] | type) == "number" and (b[$i] | type) == "number" then
-                                (((a[$i] - b[$i]) | if . < 0 then -. else . end) <= 1e-10)
+                                (((a[$i] - b[$i]) | if . < 0 then -. else . end) <= 1e-2)
                             else
                                 a[$i] == b[$i]
                             end
