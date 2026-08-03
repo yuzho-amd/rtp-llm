@@ -46,7 +46,7 @@ compile_rtp(){
     /opt/conda310/bin/python3 -m pip install --no-cache-dir -r ./deps/requirements_rocm.txt --index-url https://pypi.org/simple
     # /opt/conda310/bin/python3 -m pip install /mnt/raid0/yuzho/BACKUPS/flash_attn-2.8.3-cp310-cp310-linux_x86_64.whl # flash attn whl
     /opt/conda310/bin/python -m pip install ninja -i https://pypi.org/simple/
-    /opt/conda310/bin/python -m pip install flash_attn --no-build-isolation --index-url https://pypi.org/simple
+    /opt/conda310/bin/python3 -m pip install /mnt/raid0/lcong/flash_attn-2.8.3.post1+rocm7.2.0.gita8aa52b-cp310-cp310-linux_x86_64.whl
 
     # try to build
     bazelisk build //rtp_llm:rtp_llm //rtp_llm/dash_sc/proto:predict_v2_py --jobs 150 --verbose_failures --config=rocm 2>&1 | tee "${LOG_DIR}/bazelbuild.log"
