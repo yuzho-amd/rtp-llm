@@ -2,11 +2,12 @@ import copy
 import hashlib
 import logging
 import time
-from typing import Any, Dict, List, Optional, Union
+from typing import TYPE_CHECKING, Any, Dict, List, Optional, Union
 
 from pydantic import (
     BaseModel,
     ConfigDict,
+    Field,
     PrivateAttr,
     field_serializer,
     field_validator,
@@ -15,9 +16,19 @@ from pydantic import (
 from transformers.tokenization_utils_base import PreTrainedTokenizerBase
 
 from rtp_llm.config.exceptions import ExceptionType, FtRuntimeException
+from rtp_llm.config.grammar_constraint import parse_json_grammar_value
+from rtp_llm.config.response_format import (
+    ResponseFormat,
+    normalize_think_tag,
+    parse_response_format,
+)
 from rtp_llm.ops import RoleType
 from rtp_llm.utils.check_util import *
 from rtp_llm.utils.util import check_with_info
+
+if TYPE_CHECKING:
+    from rtp_llm.config.grammar_constraint import GrammarConstraint
+    from rtp_llm.config.response_format_compiler import ReasoningFormat
 
 
 class RequestFormat:
@@ -82,6 +93,8 @@ class GenerateConfig(BaseModel):
     # --- private attrs（不参与序列化/schema，生命周期与实例绑定） ---
     _diverge_depth_warned: bool = PrivateAttr(default=False)
     _ban_auto_downgraded: bool = PrivateAttr(default=False)
+    _reasoning_envelope_applied: bool = PrivateAttr(default=False)
+    _reasoning_final_constraint: Any = PrivateAttr(default=None)
 
     max_new_tokens: int = 32000
     # only for qwen agent fncall check max input tokens
@@ -91,6 +104,7 @@ class GenerateConfig(BaseModel):
         False  # same as `enable_thinking` in chat_template_kwargs, discard one in the future
     )
     chat_template_kwargs: Optional[Dict[str, Any]] = None
+    begin_think_token_ids: List[int] = []
     end_think_token_ids: List[int] = []
     num_beams: int = 1
     variable_num_beams: List[int] = []
@@ -144,6 +158,16 @@ class GenerateConfig(BaseModel):
     chat_id: Optional[str] = None
     task_id: Optional[Union[str, int]] = None
     request_format: str = RequestFormat.RAW
+    # Deprecated request-only compatibility alias. It is normalized to
+    # response_format immediately and never serialized to the engine.
+    json_format: bool = Field(default=False, exclude=True, repr=False)
+    response_format: Optional[ResponseFormat] = None
+    # Keep JSON-valued grammar fields structured internally. The model RPC
+    # boundary serializes them to the strings expected by the C++ engine.
+    json_schema: Optional[Union[Dict[str, Any], bool]] = None
+    regex: Optional[str] = None
+    ebnf: Optional[str] = None
+    structural_tag: Optional[Dict[str, Any]] = None
     # calculate_loss style: 0 for not calculate; 1 for sum; 2 for each token
     calculate_loss: int = 0
     return_logits: bool = False
@@ -380,6 +404,39 @@ class GenerateConfig(BaseModel):
             return ReturnAllProbsMode.DEFAULT if v else ReturnAllProbsMode.NONE
         return v
 
+    @field_validator("response_format", mode="before")
+    @classmethod
+    def _parse_response_format(cls, value):
+        return parse_response_format(value)
+
+    @field_validator("json_schema", mode="before")
+    @classmethod
+    def _parse_json_schema(cls, value):
+        return parse_json_grammar_value("json_schema", value)
+
+    @field_validator("structural_tag", mode="before")
+    @classmethod
+    def _parse_structural_tag(cls, value):
+        return parse_json_grammar_value("structural_tag", value)
+
+    def _consume_legacy_json_format(self) -> None:
+        if not self.json_format:
+            return
+        if (
+            self.response_format is None
+            and self.json_schema is None
+            and self.regex is None
+            and self.ebnf is None
+            and self.structural_tag is None
+        ):
+            self.response_format = ResponseFormat(type="json_object")
+        self.json_format = False
+
+    @model_validator(mode="after")
+    def _normalize_legacy_json_format(self):
+        self._consume_legacy_json_format()
+        return self
+
     def gen_hash_value(self):
         cp = copy.copy(self)
         cp.max_new_tokens = 0
@@ -402,6 +459,21 @@ class GenerateConfig(BaseModel):
     def is_same(self, config: "GenerateConfig") -> bool:
         return self.md5_value == config.md5_value
 
+    @staticmethod
+    def _parse_update_value(key: str, value: Any) -> Any:
+        """Normalize fields whose Pydantic validators assignment bypasses."""
+        if key in ("json_schema", "structural_tag"):
+            return parse_json_grammar_value(key, value)
+        if key == "response_format":
+            try:
+                return parse_response_format(value)
+            except (TypeError, ValueError) as e:
+                raise FtRuntimeException(
+                    ExceptionType.ERROR_INPUT_FORMAT_ERROR,
+                    f"response_format must be valid: {str(e)}",
+                ) from e
+        return value
+
     def update(self, new: Dict[str, Any]):
         """批量更新字段。
 
@@ -414,7 +486,7 @@ class GenerateConfig(BaseModel):
         """
         for key, value in new.items():
             if hasattr(self, key):
-                setattr(self, key, value)
+                setattr(self, key, self._parse_update_value(key, value))
         # setattr 不会触发 field_validator / model_validator，手动补偿：
         # 1) cross_seq_diverge_start_combo 的 clamp/类型兜底
         if "cross_seq_diverge_start_combo" in new:
@@ -427,7 +499,9 @@ class GenerateConfig(BaseModel):
         # 3) 用户显式传入 enable_cross_sequence_ban 时，视为重新表态，清除自动降级标志
         if "enable_cross_sequence_ban" in new:
             self._ban_auto_downgraded = False
-        # 4) 跨序列去重兼容性
+        # 4) 兼容 structured-output 旧入口
+        self._consume_legacy_json_format()
+        # 5) 跨序列去重兼容性
         self._check_cross_seq_ban_compatibility()
 
     def update_and_pop(self, new: Dict[str, Any]):
@@ -435,7 +509,7 @@ class GenerateConfig(BaseModel):
         to_remove: List[str] = []
         for key, value in new.items():
             if hasattr(self, key):
-                setattr(self, key, value)
+                setattr(self, key, self._parse_update_value(key, value))
                 to_remove.append(key)
         # setattr 不会触发 field_validator / model_validator，手动补偿：
         if "cross_seq_diverge_start_combo" in new:
@@ -446,6 +520,7 @@ class GenerateConfig(BaseModel):
             self._diverge_depth_warned = False
         if "enable_cross_sequence_ban" in new:
             self._ban_auto_downgraded = False
+        self._consume_legacy_json_format()
         self._check_cross_seq_ban_compatibility()
         return {k: v for k, v in new.items() if k not in to_remove}
 
@@ -481,32 +556,60 @@ class GenerateConfig(BaseModel):
         self.stop_words_list += special_tokens.stop_words_id_list
         self.stop_words_str += special_tokens.stop_words_str_list
 
-    def add_thinking_params(self, tokenizer, generate_env_config):
-        """Add thinking parameters from generate_env_config.
+    def finalize_response_format(
+        self,
+        reasoning_format: Optional["ReasoningFormat"] = None,
+    ) -> Optional["GrammarConstraint"]:
+        """Validate and install the one grammar constraint used by the engine.
 
-        Args:
-            tokenizer: Tokenizer instance.
-            generate_env_config: GenerateEnvConfig object.
+        Repeated finalization reuses an installed reasoning envelope. RPC
+        serialization only verifies the result without mutating the config.
+        """
+
+        from rtp_llm.config.response_format_compiler import prepare_response_format
+
+        self.validate()
+        return prepare_response_format(self, reasoning_format=reasoning_format)
+
+    def add_thinking_params(
+        self,
+        tokenizer,
+        generate_env_config,
+        enable_thinking: Optional[bool] = None,
+        reasoning_format: Optional["ReasoningFormat"] = None,
+    ) -> Optional["GrammarConstraint"]:
+        """Apply thinking fields and finalize structured-output grammar.
+
+        This is the common grammar boundary for raw, OpenAI, and DashSC
+        requests. Grammar-related fields must be complete before this call;
+        later request enrichment may only update grammar-independent fields.
         """
 
         end_think_token_id = generate_env_config.think_end_token_id
+        in_think_mode = (
+            bool(generate_env_config.think_mode)
+            if enable_thinking is None
+            else enable_thinking
+        )
         self.end_think_token_ids = (
             [end_think_token_id] if end_think_token_id != -1 else []
         )
-        if (
-            bool(generate_env_config.think_mode)
-            and tokenizer
-            and end_think_token_id == -1
-        ):
-            think_end_tag: str = generate_env_config.think_end_tag.encode(
-                "utf-8"
-            ).decode("unicode_escape")
+        if in_think_mode and tokenizer and end_think_token_id == -1:
+            think_end_tag = normalize_think_tag(generate_env_config.think_end_tag)
             tokenized_result: List[int] = tokenizer.encode(
                 think_end_tag, add_special_tokens=False
             )
             self.end_think_token_ids = tokenized_result
-        self.in_think_mode = (
-            bool(generate_env_config.think_mode) and len(self.end_think_token_ids) >= 0
+        self.in_think_mode = in_think_mode
+
+        from rtp_llm.config.response_format_compiler import ReasoningFormat
+
+        if self.in_think_mode and reasoning_format is None:
+            reasoning_format = ReasoningFormat.from_generate_env_config(
+                generate_env_config
+            )
+        return self.finalize_response_format(
+            reasoning_format=reasoning_format if self.in_think_mode else None
         )
 
     def add_stop_ids_from_str(self, tokenizer):
@@ -528,7 +631,8 @@ class GenerateConfig(BaseModel):
             if item not in self.stop_words_list:
                 self.stop_words_list.append(item)
 
-    def validate(self):
+    def validate(self) -> None:
+        """Validate regular GenerateConfig fields without preparing grammar."""
         try:
             check_with_info(
                 is_union_positive_integer(self.top_k),
@@ -629,6 +733,10 @@ class GenerateConfig(BaseModel):
             check_with_info(
                 is_union_positive_integer(self.sp_advice_prompt_token_ids),
                 f"sp_advice_prompt_token_ids {self.sp_advice_prompt_token_ids} is wrong data type",
+            )
+            check_with_info(
+                is_list_positive_integer(self.begin_think_token_ids),
+                f"begin_think_token_ids {self.begin_think_token_ids} is wrong data type",
             )
             if self.in_think_mode:
                 check_with_info(

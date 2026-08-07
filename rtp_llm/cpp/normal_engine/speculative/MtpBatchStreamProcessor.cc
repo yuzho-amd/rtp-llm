@@ -1,5 +1,6 @@
 #include "rtp_llm/cpp/normal_engine/speculative/MtpBatchStreamProcessor.h"
 #include "rtp_llm/models_py/bindings/core/ExecOps.h"
+#include "rtp_llm/cpp/normal_engine/NormalOutputDispatcher.h"
 #include "rtp_llm/cpp/utils/TensorDebugUtils.h"
 #include "rtp_llm/cpp/utils/StringUtil.h"
 #include "rtp_llm/cpp/utils/AssertUtils.h"
@@ -7,7 +8,6 @@
 #include <cstring>
 
 namespace rtp_llm {
-
 void MtpBatchStreamProcessor::expandTargetVerifyPositionIds(const StreamGroups& stream_groups,
                                                             GptModelInputs&     model_input) const {
     if (!model_input.combo_position_ids.defined()) {
@@ -15,8 +15,8 @@ void MtpBatchStreamProcessor::expandTargetVerifyPositionIds(const StreamGroups& 
     }
 
     const size_t position_id_len_factor = model_input_gatherer_config_.position_id_len_factor;
-    const size_t batch_size = model_input.combo_position_ids.numel() / position_id_len_factor;
-    auto target_combo_position_ids =
+    const size_t batch_size             = model_input.combo_position_ids.numel() / position_id_len_factor;
+    auto         target_combo_position_ids =
         torch::empty({(int64_t)(batch_size * (propose_step_ + 1) * position_id_len_factor)}, torch::kInt32)
             .pin_memory();
 
@@ -100,8 +100,11 @@ MtpBatchStreamProcessor::gatherDecodeModelInput(const StreamGroups& stream_group
     return model_input;
 }
 
-absl::StatusOr<SamplerInputs> MtpBatchStreamProcessor::gatherSpecSamplerInput(
-    const StreamGroups& stream_groups, const GptModelInputs& model_inputs, const GptModelOutputs& model_output) const {
+absl::StatusOr<SamplerInputs>
+MtpBatchStreamProcessor::gatherSpecSamplerInput(const StreamGroups&                         stream_groups,
+                                                const GptModelInputs&                       model_inputs,
+                                                const GptModelOutputs&                      model_output,
+                                                const SpecLogitsVerifyRunner::LaunchResult& spec_logits_result) const {
     (void)model_inputs;
     RTP_LLM_CHECK(!stream_groups.empty());
     auto               all_streams      = stream_groups.allStreams();
@@ -116,6 +119,7 @@ absl::StatusOr<SamplerInputs> MtpBatchStreamProcessor::gatherSpecSamplerInput(
 
     SamplerInputs sampler_inputs =
         allocateSamplerInputs(stream_groups, total_batch_size, total_batch_size, propose_step_);
+    sampler_inputs.finished_mask.zero_();
     fillSamplerCommonInputs(sampler_inputs, all_streams, true, propose_step_);
 
     int batch_idx = 0;
@@ -135,16 +139,21 @@ absl::StatusOr<SamplerInputs> MtpBatchStreamProcessor::gatherSpecSamplerInput(
                           tensorDebugStringWithData<int32_t>(sampler_inputs.token_ids).c_str());
     }
 
-    auto vocab_size = (size_t)model_output.logits.size(1);
+    sampler_inputs.vocab_size = (size_t)model_output.logits.size(1);
     if (return_all_probs != ReturnAllProbsMode::NONE) {
-        sampler_inputs.all_probs = torch::zeros({(int64_t)total_batch_size, (int64_t)vocab_size},
+        sampler_inputs.all_probs = torch::zeros({(int64_t)total_batch_size, (int64_t)sampler_inputs.vocab_size},
                                                 torch::TensorOptions().dtype(torch::kFloat32).device(torch::kCUDA));
         if (return_all_probs == ReturnAllProbsMode::ORIGINAL) {
             sampler_inputs.return_original_all_probs = true;
         }
     }
 
-    sampler_inputs.logits = model_output.logits.clone();
+    // Sampling mutates logits in place, but MTP decode does not consume target logits afterwards.
+    // Reuse the model output storage to avoid copying the full [B * (P + 1), vocab] tensor every step.
+    sampler_inputs.logits = model_output.logits;
+    if (spec_logits_result.has_active_processor) {
+        SpecLogitsVerifyRunner::applyMaskToLogits(sampler_inputs.logits, spec_logits_result, sampler_inputs.vocab_size);
+    }
 
     RTP_LLM_LOG_DEBUG("sampler inputs logits [%s]",
                       tensorDebugStringWithData<float>(sampler_inputs.logits.cpu(), 10).c_str());
@@ -261,7 +270,7 @@ void MtpBatchStreamProcessor::updateDecodeDraftModelInput(GptModelInputs&       
         const size_t position_id_len_factor = model_input_gatherer_config_.position_id_len_factor;
         auto         next_position_ids =
             torch::empty({(int64_t)(batch_size * position_id_len_factor)}, torch::kInt32).pin_memory();
-        int* dst_position_ids = next_position_ids.data_ptr<int>();
+        int*       dst_position_ids = next_position_ids.data_ptr<int>();
         const auto src_position_ids = model_input.combo_position_ids.cpu().contiguous();
         const int* src              = src_position_ids.data_ptr<int>();
         for (int64_t i = 0; i < next_position_ids.numel(); ++i) {
@@ -293,12 +302,12 @@ void MtpBatchStreamProcessor::updatePrefillPostDraftModelInput(const StreamGroup
     int* input_lengths = model_input.input_lengths.data_ptr<int>();
     int* combo_tokens  = model_input.combo_tokens.data_ptr<int>();
 
-    int offset = 0;
+    int  offset = 0;
     int* combo_position_ids =
         model_input.combo_position_ids.defined() ? model_input.combo_position_ids.data_ptr<int>() : nullptr;
     const size_t position_id_len_factor = model_input_gatherer_config_.position_id_len_factor;
-    auto all_streams = stream_groups.allStreams();
-    auto stream_it = all_streams.begin();
+    auto         all_streams            = stream_groups.allStreams();
+    auto         stream_it              = all_streams.begin();
     // Speculative decoding rejects num_return_sequences > 1 and beam search before this path.
     for (int i = 0; i < batch_size; i++) {
         // should shift one token for combo_tokens
@@ -324,7 +333,7 @@ void MtpBatchStreamProcessor::updatePrefillPostDraftModelInput(const StreamGroup
 
 torch::Tensor MtpBatchStreamProcessor::compactAcceptedPositionIds(const torch::Tensor&    combo_position_ids,
                                                                   const std::vector<int>& accept_lens,
-                                                                  size_t total_accept_len) const {
+                                                                  size_t                  total_accept_len) const {
     if (!combo_position_ids.defined()) {
         return torch::Tensor();
     }
@@ -387,7 +396,8 @@ void MtpBatchStreamProcessor::updateDecodePostDraftModelInput(
     hidden_states_d_t              = torch::cat(hidden_states_list).contiguous();
     model_input.last_hidden_states = hidden_states_d_t;
     model_input.lm_output_indexes  = std::move(lm_output_indexes);
-    auto compact_position_ids = compactAcceptedPositionIds(model_input.combo_position_ids, accept_lens, total_accept_len);
+    auto compact_position_ids =
+        compactAcceptedPositionIds(model_input.combo_position_ids, accept_lens, total_accept_len);
     if (compact_position_ids.defined()) {
         model_input.combo_position_ids = std::move(compact_position_ids);
     }
@@ -479,11 +489,7 @@ void MtpBatchStreamProcessor::preparePrefillSpecUpdateInfo(const StreamGroups&  
                 new_all_token_ids_cpu.data_ptr<int32_t>()[(batch_idx_out + i) * token_stride + token_stride - 1];
         }
 
-        for (int i = 0; i < cur_batch_size; ++i) {
-            if (success_cpu.defined() && !(success_cpu.data_ptr<bool>()[batch_idx_in + i])) {
-                stream->reportError(ErrorCode::UNKNOWN_ERROR, "sampler generate token id failed");
-            }
-        }
+        auto error_info = collectStreamSamplerError(sampler_output, success_cpu, batch_idx_in, cur_batch_size);
 
         // speculative decoding info
         torch::Tensor propose_all_probs =
@@ -494,7 +500,10 @@ void MtpBatchStreamProcessor::preparePrefillSpecUpdateInfo(const StreamGroups&  
             last_hidden_states = draft_model_output.all_hidden_states.narrow(0, token_offset + token_size - 1, 1);
         }
 
-        spec_update_infos.push_back({new_tokens, 1, -1, std::move(last_hidden_states), std::move(propose_all_probs)});
+        StreamSpecUpdateInfo spec_update_info{
+            new_tokens, 1, -1, std::move(last_hidden_states), std::move(propose_all_probs)};
+        spec_update_info.error_info = std::move(error_info);
+        spec_update_infos.push_back(std::move(spec_update_info));
 
         batch_idx_in += cur_batch_size;
         batch_idx_out += next_batch_size;
@@ -516,6 +525,7 @@ void MtpBatchStreamProcessor::prepareDecodeSpecUpdateInfo(
     int batch_idx_in  = 0;
     int batch_idx_out = 0;
     int token_offset  = 0;
+    int stream_idx    = 0;
 
     for (auto& stream : stream_groups.allStreams()) {
         auto cur_batch_size  = stream->currentBatchSize();
@@ -532,15 +542,20 @@ void MtpBatchStreamProcessor::prepareDecodeSpecUpdateInfo(
             last_hidden_states = slice_t;
         }
 
-        spec_update_infos.push_back({accept_tokens[batch_idx_out],
-                                     accept_len[batch_idx_out],
-                                     -1,
-                                     std::move(last_hidden_states),
-                                     std::move(propose_all_probs)});
+        StreamSpecUpdateInfo spec_update_info{accept_tokens[batch_idx_out],
+                                              accept_len[batch_idx_out],
+                                              -1,
+                                              std::move(last_hidden_states),
+                                              std::move(propose_all_probs)};
+        if (static_cast<size_t>(stream_idx) < spec_decode_output.processor_errors.size()) {
+            spec_update_info.error_info = spec_decode_output.processor_errors[stream_idx];
+        }
+        spec_update_infos.push_back(std::move(spec_update_info));
 
         token_offset += accept_len[batch_idx_out];
         batch_idx_in += cur_batch_size;
         batch_idx_out += next_batch_size;
+        stream_idx++;
     }
 }
 

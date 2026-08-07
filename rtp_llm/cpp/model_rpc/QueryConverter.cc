@@ -8,6 +8,7 @@
 #include "rtp_llm/cpp/model_rpc/proto/model_rpc_service.pb.h"
 
 namespace rtp_llm {
+
 #define TRANS_OPTIONAL(name)                                                                                           \
     if (config_proto->has_##name()) {                                                                                  \
         generate_config->name = config_proto->name().value();                                                          \
@@ -96,10 +97,17 @@ std::shared_ptr<GenerateConfig> QueryConverter::transGenerateConfig(const Genera
     TRANS_OPTIONAL(top_p_decay);
     TRANS_OPTIONAL(top_p_min);
     TRANS_OPTIONAL(top_p_reset_ids);
+    TRANS_OPTIONAL(json_schema);
+    TRANS_OPTIONAL(regex);
+    TRANS_OPTIONAL(ebnf);
+    TRANS_OPTIONAL(structural_tag);
     TRANS_OPTIONAL(task_id);
     TRANS_OPTIONAL(adapter_name);
     generate_config->in_think_mode       = config_proto->in_think_mode();
     generate_config->max_thinking_tokens = config_proto->max_thinking_tokens();
+    for (const auto& token_id : config_proto->begin_think_token_ids()) {
+        generate_config->begin_think_token_ids.push_back(token_id);
+    }
     for (const auto& token_id : config_proto->end_think_token_ids()) {
         generate_config->end_think_token_ids.push_back(token_id);
     }
@@ -118,8 +126,8 @@ std::shared_ptr<GenerateConfig> QueryConverter::transGenerateConfig(const Genera
     TRANS_OPTIONAL(force_batch);
 
     // 生成式推荐：组合 token 约束
-    generate_config->combo_token_size = config_proto->combo_token_size();
-    generate_config->enable_cross_sequence_ban = config_proto->enable_cross_sequence_ban();
+    generate_config->combo_token_size              = config_proto->combo_token_size();
+    generate_config->enable_cross_sequence_ban     = config_proto->enable_cross_sequence_ban();
     generate_config->cross_seq_diverge_start_combo = config_proto->cross_seq_diverge_start_combo();
     for (const auto& combo_proto : config_proto->banned_combo_token_ids().rows()) {
         std::vector<int> combo;
@@ -170,6 +178,23 @@ std::shared_ptr<GenerateInput> QueryConverter::transQuery(const GenerateInputPB*
     generate_input->batch_group_size = input->batch_group_size() > 0 ? input->batch_group_size() : 1;
     if (input->has_batch_group_id()) {
         generate_input->batch_group_id = input->batch_group_id().value();
+    }
+    if (input->has_request_info()) {
+        const auto& info_pb                      = input->request_info();
+        generate_input->request_info.frontend_ip = info_pb.frontend_ip();
+        generate_input->request_info.dash_ip     = info_pb.dash_ip();
+        generate_input->request_info.trace_id    = info_pb.trace_id();
+        generate_input->request_info.request_id  = info_pb.request_id();
+        generate_input->request_info.source_role = info_pb.source_role();
+    }
+    if (generate_input->request_info.trace_id.empty() && generate_input->generate_config) {
+        generate_input->request_info.trace_id = generate_input->generate_config->trace_id;
+    }
+    if (generate_input->request_info.request_id.empty()) {
+        generate_input->request_info.request_id = std::to_string(input->request_id());
+    }
+    if (generate_input->generate_config && generate_input->generate_config->trace_id.empty()) {
+        generate_input->generate_config->trace_id = generate_input->request_info.trace_id;
     }
 
     return generate_input;

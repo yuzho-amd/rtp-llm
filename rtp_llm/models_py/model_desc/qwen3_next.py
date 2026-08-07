@@ -5,11 +5,15 @@ from typing import Any, Dict, Optional
 import torch
 from torch import nn
 
-import rtp_llm.ops.compute_ops as compute_ops
 from rtp_llm.config.model_config import ModelConfig
 from rtp_llm.model_loader.model_weight_info import ModelWeights
 from rtp_llm.models_py.distributed.collective_torch import Group, all_gather, all_reduce
-from rtp_llm.models_py.model_desc.block_map import select_block_map_for_layer
+from rtp_llm.models_py.model_desc.block_map import (
+    get_group_tags_for_layers,
+    get_primary_attention_inputs,
+    select_attention_inputs_for_layer,
+    select_fmha_impl_for_layer,
+)
 from rtp_llm.models_py.model_desc.generic_moe import GenericMoeLayer
 from rtp_llm.models_py.model_desc.module_base import GptModelBase
 from rtp_llm.models_py.modules import (
@@ -22,7 +26,6 @@ from rtp_llm.models_py.modules import (
     RMSNorm,
     RMSResNorm,
 )
-from rtp_llm.models_py.modules.base.common.kvcache_store import WriteCacheStoreOp
 from rtp_llm.models_py.triton_kernels.causal_conv1d import (
     CausalConv1dMetadata,
     causal_conv1d_fn,
@@ -73,7 +76,6 @@ class Qwen3NextMetadata(object):
         cp_restore_indices: Optional[torch.Tensor] = None,
         cp_local_extract_indices: Optional[torch.Tensor] = None,
         cp_local_valid_mask: Optional[torch.Tensor] = None,
-        cp_write_cache_store_impl: Optional[WriteCacheStoreOp] = None,
     ):
         self.prefill_conv1d_meta = prefill_conv1d_meta
         self.is_target_verify = is_target_verify
@@ -82,7 +84,6 @@ class Qwen3NextMetadata(object):
         self.cp_restore_indices = cp_restore_indices
         self.cp_local_extract_indices = cp_local_extract_indices
         self.cp_local_valid_mask = cp_local_valid_mask
-        self.cp_write_cache_store_impl = cp_write_cache_store_impl
 
     def get_prefill_conv1d_meta(self) -> Optional[CausalConv1dMetadata]:
         return self.prefill_conv1d_meta
@@ -90,6 +91,28 @@ class Qwen3NextMetadata(object):
     @property
     def is_cp_linear_attn(self) -> bool:
         return self.cp_restore_indices is not None
+
+
+def _write_cp_cache_store(
+    attention_inputs: PyAttentionInputs, kv_cache: LayerKVCache
+) -> None:
+    """Write a CP linear layer using that layer's tag-local cache metadata."""
+    cache_store_inputs = attention_inputs.cache_store_inputs
+    cache_store_writer = attention_inputs.cache_store_writer
+    if cache_store_inputs is None or cache_store_writer is None:
+        return
+    cache_store_writer.write(cache_store_inputs, kv_cache)
+
+
+def _maybe_write_cp_cache_store(
+    attention_inputs: PyAttentionInputs,
+    kv_cache: Optional[LayerKVCache],
+    attn_meta: Qwen3NextMetadata,
+) -> None:
+    """Keep CacheStore writes on the CP linear-attention path only."""
+    if kv_cache is None or not attn_meta.is_cp_linear_attn:
+        return
+    _write_cp_cache_store(attention_inputs, kv_cache)
 
 
 class Qwen3NextGatedDeltaNetBase(torch.nn.Module):
@@ -286,7 +309,9 @@ class Qwen3NextGatedDeltaNetPrefill(Qwen3NextGatedDeltaNetBase):
                 g,
                 beta,
                 prefix_lengths=(
-                    attn_inputs.prefix_lengths_device if ssm_states is not None else None
+                    attn_inputs.prefix_lengths_device
+                    if ssm_states is not None
+                    else None
                 ),
                 block_map=(
                     attn_inputs.kv_cache_kernel_block_id_device
@@ -353,19 +378,33 @@ class Qwen3NextGatedDeltaNetPrefill(Qwen3NextGatedDeltaNetBase):
         attn_out = self._fla(
             mixed_qkv, b, a, kv_cache_tensor, seq_size_per_block, attn_inputs
         )
-        if kv_cache is not None:
-            # write kvcache to cache store
-            compute_ops.write_cache_store(
-                attn_inputs.input_lengths,
-                attn_inputs.prefix_lengths,
-                attn_inputs.kv_cache_block_id,
-                attn_inputs.cache_store_inputs,
-                kv_cache,
-            )
+        cache_store_inputs = attn_inputs.cache_store_inputs
+        cache_store_writer = attn_inputs.cache_store_writer
+        if (
+            kv_cache is not None
+            and cache_store_inputs is not None
+            and cache_store_writer is not None
+        ):
+            cache_store_writer.write(cache_store_inputs, kv_cache)
         return attn_out
 
 
 class Qwen3NextGatedDeltaNetDecode(Qwen3NextGatedDeltaNetBase):
+    def _get_fla_block_map(self, attn_inputs: PyAttentionInputs) -> torch.Tensor:
+        block_map = attn_inputs.kv_cache_kernel_block_id_device
+        if (
+            attn_inputs.is_cuda_graph
+            and block_map is not None
+            and block_map.ndim == 2
+            and block_map.shape[1] > 1
+        ):
+            # CUDA graph capture allocates a fixed-width block table, while the
+            # recurrent FLA decode kernel consumes only the first logical block.
+            # Keep the original row stride in this narrow view: FLA receives it
+            # explicitly and uses it to advance between batch rows.
+            return block_map[:, :1]
+        return block_map
+
     def _conv1d(
         self,
         mixed_qkv: torch.Tensor,
@@ -440,7 +479,7 @@ class Qwen3NextGatedDeltaNetDecode(Qwen3NextGatedDeltaNetBase):
             scale=None,
             initial_state=ssm_states,
             inplace_final_state=True,
-            block_map=attn_inputs.kv_cache_kernel_block_id_device,
+            block_map=self._get_fla_block_map(attn_inputs),
             seq_size_per_block=seq_size_per_block,
             sequence_lengths=attn_inputs.sequence_lengths_plus_1_device,
             use_qk_l2norm_in_kernel=True,
@@ -501,9 +540,10 @@ class Qwen3NextGatedDeltaNetDecode(Qwen3NextGatedDeltaNetBase):
         assert (
             token % attention_inputs.prefix_lengths.size(0) == 0
         ), f"token: {token} is not divisible by prefill_lengths size: {attention_inputs.prefix_lengths.size(0)} when target verify"
-        b, s = attention_inputs.prefix_lengths.size(
-            0
-        ), token // attention_inputs.prefix_lengths.size(0)
+        b, s = (
+            attention_inputs.prefix_lengths.size(0),
+            token // attention_inputs.prefix_lengths.size(0),
+        )
         return b, s
 
 
@@ -847,8 +887,7 @@ class Qwen3NextGatedDeltaNet(nn.Module):
                 chunk_size=64,
             )
 
-        if kv_cache is not None and attn_meta.cp_write_cache_store_impl is not None:
-            attn_meta.cp_write_cache_store_impl(kv_cache)
+        _maybe_write_cp_cache_store(attention_inputs, kv_cache, attn_meta)
 
         full_attn_out = attn_out.squeeze_(0)
 
@@ -1054,6 +1093,16 @@ class Qwen3NextModel(GptModelBase):
             weights.get_global_weight(W.final_ln_gamma), eps=model_config.layernorm_eps
         )
 
+    def _get_fmha_group_tags(self) -> Optional[list[str]]:
+        if self.kv_cache is None:
+            return None
+        full_attention_layers = (
+            layer_idx
+            for layer_idx, layer in enumerate(self.layers)
+            if layer.layer_type != HybridAttentionType.LINEAR
+        )
+        return get_group_tags_for_layers(self.kv_cache, full_attention_layers)
+
     def _build_cp_linear_attn_metadata(
         self,
         attention_inputs: PyAttentionInputs,
@@ -1119,7 +1168,7 @@ class Qwen3NextModel(GptModelBase):
     def forward(self, inputs: PyModelInputs, fmha_impl: Any = None) -> PyModelOutputs:
         hidden_states = self.word_embedding(inputs)
 
-        attention_inputs: PyAttentionInputs = inputs.attention_inputs
+        attention_inputs = get_primary_attention_inputs(inputs, self.kv_cache)
         prefill_conv1d_meta = None
         is_target_verify = attention_inputs.is_target_verify
         is_cp = self.parallelism_config.prefill_cp_config.is_enabled()
@@ -1129,8 +1178,6 @@ class Qwen3NextModel(GptModelBase):
         cp_restore_indices = None
         cp_local_extract_indices = None
         cp_local_valid_mask = None
-        cp_write_cache_store_impl = None
-
         if attention_inputs.is_prefill and not is_target_verify:
             if is_cp:
                 (
@@ -1142,14 +1189,6 @@ class Qwen3NextModel(GptModelBase):
                 ) = self._build_cp_linear_attn_metadata(
                     attention_inputs, hidden_states.device
                 )
-                if attention_inputs.cache_store_inputs:
-                    cp_info = attention_inputs.context_parallel_info
-                    cp_write_cache_store_impl = WriteCacheStoreOp(
-                        cp_info.prefill_actual_input_lengths_cpu,
-                        attention_inputs.prefix_lengths,
-                        attention_inputs.kv_cache_block_id,
-                        attention_inputs.cache_store_inputs,
-                    )
             else:
                 cu_seqlen_without_padding = attention_inputs.cu_seqlens_device
                 prefill_conv1d_meta = prepare_causal_conv1d_metadata(
@@ -1165,7 +1204,6 @@ class Qwen3NextModel(GptModelBase):
             cp_restore_indices=cp_restore_indices,
             cp_local_extract_indices=cp_local_extract_indices,
             cp_local_valid_mask=cp_local_valid_mask,
-            cp_write_cache_store_impl=cp_write_cache_store_impl,
         )
 
         if fmha_impl is None:
@@ -1174,18 +1212,25 @@ class Qwen3NextModel(GptModelBase):
         residual = torch.zeros_like(hidden_states)
 
         for i, decoder_layer in enumerate(self.layers):
-            select_block_map_for_layer(attention_inputs, i)
+            layer_attention_inputs = select_attention_inputs_for_layer(
+                inputs, self.kv_cache, i
+            )
+            layer_fmha_impl = (
+                None
+                if decoder_layer.layer_type == HybridAttentionType.LINEAR
+                else select_fmha_impl_for_layer(fmha_impl, self.kv_cache, i)
+            )
             hidden_states, residual = decoder_layer(
                 hidden_states,
                 residual,
-                fmha_impl,
+                layer_fmha_impl,
                 kv_cache=self.kv_cache.get_layer_cache(i) if self.kv_cache else None,
-                attention_inputs=attention_inputs,
+                attention_inputs=layer_attention_inputs,
                 attn_meta=attn_meta,
             )
 
         hidden_states, residual = self.norm(hidden_states, residual)
-        return PyModelOutputs(hidden_states, fmha_impl.fmha_params)
+        return PyModelOutputs(hidden_states)
 
 
 class Qwen35Model(Qwen3NextModel):

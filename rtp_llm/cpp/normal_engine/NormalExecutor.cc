@@ -6,6 +6,7 @@
 #include <memory>
 #include "rtp_llm/cpp/utils/StatusUtil.h"
 #include "rtp_llm/cpp/utils/ProfilingScope.h"
+#include "rtp_llm/cpp/models/ModelInputsLogger.h"
 #include "rtp_llm/cpp/models/ModelTypes.h"
 #include "rtp_llm/cpp/models/PyWrappedModel.h"
 #include "rtp_llm/cpp/models/Sampler.h"
@@ -27,9 +28,7 @@ NormalExecutor::NormalExecutor(const EngineInitParams&                params,
                                bool                                   warm_up,
                                bool                                   is_propose,
                                int                                    propose_model_index,
-                               MlaOpsType                             mla_ops_type,
-                               int32_t                                kv_cache_group_num,
-                               const std::vector<int32_t>&            kv_cache_layer_to_group):
+                               MlaOpsType                             mla_ops_type):
     Executor(),
     cache_manager_(cache_manager),
     warm_up_(warm_up),
@@ -42,6 +41,12 @@ NormalExecutor::NormalExecutor(const EngineInitParams&                params,
     tp_rank_            = params.parallelism_config.tp_rank;
     parallelism_config_ = params.parallelism_config;
     RTP_LLM_LOG_INFO("enable_detail_log_ = %d, tp_rank_ = %d", enable_detail_log_, tp_rank_);
+    if (params.profiling_debug_logging_config.enable_model_inputs_log) {
+        model_inputs_logger_ =
+            std::make_shared<ModelInputsLogger>(params.parallelism_config.world_rank,
+                                                params.profiling_debug_logging_config.log_file_backup_count,
+                                                metrics_reporter_);
+    }
 
     if (params.eplb_config.enable_eplb() && params.model_config_.moe_style != 0) {
         // use first moe layer weight as moe weight type
@@ -71,12 +76,18 @@ NormalExecutor::NormalExecutor(const EngineInitParams&                params,
         static_cast<size_t>(std::max<int64_t>(1, params.runtime_config.max_generate_batch_size));
     sampler_.reset(new Sampler(SamplerInitParams{initial_sampler_batch_size, false}));
 
+    const size_t runtime_tokens_per_block        = cache_manager ? cache_manager->cacheConfig().seq_size_per_block :
+                                                                   params.model_config_.attn_config.tokens_per_block;
+    const size_t runtime_kernel_tokens_per_block = cache_manager ?
+                                                       cache_manager->cacheConfig().kernel_seq_size_per_block :
+                                                       params.model_config_.attn_config.kernel_tokens_per_block;
+
     GptModelInitParams model_init_params(
         {params.gpt_weights,
          genModelDescription(params.model_config_, params.parallelism_config, params.eplb_config, params.moe_config),
          cache_manager ?
-             std::make_optional(is_propose_ ? cache_manager->getMTPModuleCacheLayerLayout(propose_model_index_) :
-                                              cache_manager->getMainModelCacheLayerLayout()) :
+             std::make_optional(is_propose_ ? cache_manager->getMTPModuleGroupedCacheLayerLayout(propose_model_index_) :
+                                              cache_manager->getMainModelGroupedCacheLayerLayout()) :
              std::nullopt,
          params.model_id,
          params.parallelism_config,
@@ -89,11 +100,10 @@ NormalExecutor::NormalExecutor(const EngineInitParams&                params,
          mla_ops_type,
          params.model_config_.max_seq_len,
          params.model_config_.hidden_size,
-         params.model_config_.attn_config.tokens_per_block,
-         params.model_config_.attn_config.kernel_tokens_per_block,
-         kv_cache_group_num,
-         kv_cache_layer_to_group,
-         cache_manager});
+         runtime_tokens_per_block,
+         runtime_kernel_tokens_per_block,
+         cache_manager,
+         is_propose_ ? std::make_optional(propose_model_index_) : std::nullopt});
 
     if (params.ffn_disaggregate_config.enable_ffn_disaggregate) {
         RTP_LLM_LOG_INFO("using ffn as service");
@@ -117,7 +127,7 @@ NormalExecutor::NormalExecutor(const EngineInitParams&                params,
 
     batch_stream_processor_.reset(new NormalBatchStreamProcessor(
         params.model_config_, params.pd_sep_config, params.profiling_debug_logging_config, cache_config, warm_up_));
-    LogitsProcessorFactory::init(params.model_config_.ckpt_path, params.sp_config.tree_decode_config);
+    LogitsProcessorFactory::init(params.model_config_, params.grammar_config, params.sp_config.tree_decode_config);
     cudaProfilerBegin();
 }
 
@@ -170,7 +180,11 @@ absl::Status NormalExecutor::process(const std::list<GenerateStreamPtr>& streams
                                       stream_groups.totalDecodeBatchSize(),
                                       stream_groups.modelExecuteTokenSize(),
                                       stream_groups.maxSeqLen());
-        int64_t start_time_us               = autil::TimeUtility::currentTimeInMicroSeconds();
+        int64_t start_time_us = autil::TimeUtility::currentTimeInMicroSeconds();
+        if (model_inputs_logger_) {
+            const auto role = is_propose_ ? ModelInputsModelRole::DRAFT : ModelInputsModelRole::NORMAL;
+            model_inputs_logger_->log(model_input, role, model_->model_id_);
+        }
         model_output                        = std::move(model_->forward(model_input));
         executor_collector.model_forward_us = autil::TimeUtility::currentTimeInMicroSeconds() - start_time_us;
     }
@@ -190,8 +204,7 @@ absl::Status NormalExecutor::process(const std::list<GenerateStreamPtr>& streams
         int64_t start_time_us = autil::TimeUtility::currentTimeInMicroSeconds();
         CHECK_AND_RETURN_REF(sampler_input,
                              batch_stream_processor_->gatherSamplerInput(stream_groups, model_input, model_output));
-        sampler_output = std::move(sampler_->forward(sampler_input));
-        RTP_LLM_LOG_DEBUG("sampler forward done");
+        sampler_output                     = std::move(sampler_->forward(sampler_input));
         executor_collector.sample_input_us = autil::TimeUtility::currentTimeInMicroSeconds() - start_time_us;
     }
     {

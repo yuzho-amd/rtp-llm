@@ -2,7 +2,6 @@
 
 #include "absl/status/statusor.h"
 #include "autil/TimeUtility.h"
-#include "autil/SynchronizedQueue.h"
 #include "kmonitor/client/MetricsReporter.h"
 #include "rtp_llm/cpp/models/ModelTypes.h"
 #include "rtp_llm/cpp/config/ModelConfig.h"
@@ -14,9 +13,14 @@
 #include "rtp_llm/cpp/engine_base/system_prompt/SystemPrompt.h"
 #include "rtp_llm/cpp/models/position_ids/PositionIdsGenerator.h"
 #include "rtp_llm/cpp/model_rpc/proto/model_rpc_service.pb.h"
+#include <condition_variable>
+#include <cstdint>
 #include <iterator>
+#include <memory>
 #include <mutex>
 #include <optional>
+#include <type_traits>
+#include <utility>
 
 namespace rtp_llm {
 
@@ -38,6 +42,7 @@ struct StreamUpdateInfo {
     bool                force_update_info      = false;
     // prompt scoring
     std::optional<PromptLogitsOutput> prompt_logits;
+    std::optional<ErrorInfo>          error_info;
 };
 
 struct StreamSpecUpdateInfo {
@@ -48,8 +53,9 @@ struct StreamSpecUpdateInfo {
     const torch::Tensor draft_hidden_states;
     const torch::Tensor draft_token_probs;
 
-    bool update_remote_generate = true;
-    bool force_update_info      = false;
+    bool                     update_remote_generate = true;
+    bool                     force_update_info      = false;
+    std::optional<ErrorInfo> error_info;
 };
 
 struct SpeculativeExecutorStreamOutput {
@@ -119,7 +125,10 @@ public:
         return is_fake_stream_;
     }
 
-    virtual ErrorResult<GenerateOutputs> nextOutput() = 0;
+    // A positive wait_timeout_ms bounds only the consumer condition-variable
+    // wait. Zero waits without a caller interval; a request deadline, when
+    // configured, remains authoritative.
+    virtual ErrorResult<GenerateOutputs> nextOutput(int64_t wait_timeout_ms = 0) = 0;
     virtual bool                         hasOutput() {
         return false;
     }
@@ -235,16 +244,35 @@ public:
     torch::Tensor              multimodalLocations() const;
 
     int64_t getTimeoutMs() const;
-    void    checkTimeout();
 
+    // 统一的事件上报接口，替代原先所有 reportXX 方法。
+    // 外部线程调用时自动加锁保护 error_info 和 events_ 的一致性。
+    template<typename T = std::string>
     void reportEvent(StreamEvents::EventType event,
                      ErrorCode               error_code = ErrorCode::NONE_ERROR,
-                     const std::string&      error_msg  = "");
+                     T&&                     error_msg  = std::decay_t<T>{}) {
+        std::lock_guard<std::mutex> lock(*mutex_);
+        reportEventWithoutLock(event, error_code, std::forward<T>(error_msg));
+    }
+
+    // 无锁版本，供已持有 mutex_ 的内部调用路径使用（如 update/specUpdate/moveToNext 链路）。
+    template<typename T = std::string>
     void reportEventWithoutLock(StreamEvents::EventType event,
                                 ErrorCode               error_code = ErrorCode::NONE_ERROR,
-                                const std::string&      error_msg  = "");
+                                T&&                     error_msg  = std::decay_t<T>{}) {
+        generate_status_->reportEvent(event, error_code, std::forward<T>(error_msg));
+        if (event == StreamEvents::Error || event == StreamEvents::GenerateDone
+            || event == StreamEvents::NeedRemoteGenerate) {
+            consumer_cv_->notify_all();
+        }
+    }
 
-    void         reportError(ErrorCode error_code = ErrorCode::NONE_ERROR, const std::string& error_msg = "");
+    template<typename T = std::string>
+    void reportError(ErrorCode error_code = ErrorCode::NONE_ERROR, T&& error_msg = std::decay_t<T>{}) {
+        std::lock_guard<std::mutex> lock(*mutex_);
+        reportEventWithoutLock(StreamEvents::Error, error_code, std::forward<T>(error_msg));
+    }
+
     bool         hasEvent(StreamEvents::EventType event) const;
     virtual bool hasError() const;
     ErrorInfo    statusInfo();
@@ -347,7 +375,6 @@ public:
         return return_all_hidden_states_;
     }
 
-    bool waitForRemoteGenerate();
     void holdKVCacheForPDSep();
     void releaseKVCacheForPDSep();
 
@@ -426,6 +453,9 @@ public:
     }
 
     std::string traceId() const {
+        if (!generate_input_->request_info.trace_id.empty()) {
+            return generate_input_->request_info.trace_id;
+        }
         return generate_input_->generate_config->trace_id;
     }
 
@@ -448,7 +478,7 @@ public:
         return generate_input_->begin_time_us;
     }
 
-    std::vector<BaseLogitsProcessorPtr> getAllLogitsProcessorPtr() const {
+    const std::vector<BaseLogitsProcessorPtr>& getAllLogitsProcessorPtr() const {
         return logits_processor_list_;
     }
 
@@ -539,11 +569,24 @@ public:
     bool     queryPdSep() const;
 
 protected:
-    int  estimateKVNeedBlocks(int remaining_tokens, int target_batch_size) const;
-    void updateLogitProcessorMultiSeqStatus(const torch::Tensor& src_batch_indices);
-    void updateLogitProcessorStatus(const StreamUpdateInfo& update_info);
-    void fillSubGenerateStatus(StreamState state);
-    void resizeSubGenerateStatus(size_t new_size);
+    // Consumer-visible state is read and written under mutex_. Public readers
+    // acquire the lock; already-locked engine paths use these helpers.
+    void         checkTimeoutWithoutLock();
+    void         reportTimeoutWithoutLock(int64_t running_time_ms, int64_t timeout_ms);
+    bool         hasEventWithoutLock(StreamEvents::EventType event) const;
+    bool         hasErrorWithoutLock() const;
+    ErrorInfo    statusInfoWithoutLock() const;
+    bool         consumerFinishedWithoutLock() const;
+    virtual bool consumerReadyWithoutLock() const;
+
+    int                      estimateKVNeedBlocks(int remaining_tokens, int target_batch_size) const;
+    bool                     reportUpdateErrorWithoutLock(const std::optional<ErrorInfo>& error_info);
+    std::optional<ErrorInfo> updateNormalLogitProcessorStatus(const StreamUpdateInfo& update_info);
+    std::optional<ErrorInfo> updateLogitProcessorStatus(const torch::Tensor& new_tokens, int32_t num_new_tokens);
+    void                     updateLogitProcessorMultiSeqStatus(const torch::Tensor& src_batch_indices);
+    std::optional<ErrorInfo> validateLogitsProcessorState();
+    void                     fillSubGenerateStatus(StreamState state);
+    void                     resizeSubGenerateStatus(size_t new_size);
 
     void reportStreamMetrics();
     void reportCacheReuseMetrics() const;
@@ -612,7 +655,7 @@ protected:
     torch::Tensor                            last_hidden_states_;
     int                                      loss_index_ = 0;
     std::shared_ptr<std::mutex>              mutex_;
-    std::shared_ptr<std::condition_variable> cv_;
+    std::shared_ptr<std::condition_variable> consumer_cv_;
 
     GenerateStreamPtr propose_stream_ = nullptr;
     GenerateStreamPtr score_stream_   = nullptr;

@@ -37,7 +37,7 @@ GenerateStream::GenerateStream(const shared_ptr<GenerateInput>& input,
     metrics_reporter_(metrics_reporter),
     special_tokens_(model_config.special_tokens),
     mutex_(std::make_shared<std::mutex>()),
-    cv_(std::make_shared<std::condition_variable>()),
+    consumer_cv_(std::make_shared<std::condition_variable>()),
     mm_position_ids_style_(PositionIdsStyle(model_config.mm_model_config.mm_position_ids_style)),
     dtype_(model_config.data_type),
     hidden_size_(model_config.hidden_size) {
@@ -86,8 +86,14 @@ GenerateStream::GenerateStream(const shared_ptr<GenerateInput>& input,
 
     setReturnAllProbs(generate_input_->generate_config->return_all_probs);
 
-    logits_processor_list_ = LogitsProcessorFactory::createLogitsProcessors(
+    auto processors_result = LogitsProcessorFactory::createLogitsProcessors(
         generate_input_, init_batch_size, maxBatchSize(), special_tokens_.eos_token_id);
+    if (processors_result.ok()) {
+        logits_processor_list_ = std::move(processors_result.value());
+    } else {
+        const auto& err = processors_result.status();
+        reportEventWithoutLock(StreamEvents::Error, err.code(), err.ToString());
+    }
 
     if (generateConfig()->random_seed.has_value()) {
 #if defined(USING_CUDA) || defined(USING_ROCM)
@@ -150,7 +156,7 @@ int GenerateStream::nextNeedBlockNums(int reserve_step) const {
 
 int GenerateStream::estimateKVNeedBlocks(int remaining_tokens, int target_batch_size) const {
     const int reserve_step   = complete_token_ids_->getReserveStep();
-    int common_seq_len = std::min(complete_token_ids_->commonSeqLength(), seqLength());
+    int       common_seq_len = std::min(complete_token_ids_->commonSeqLength(), seqLength());
     if (target_batch_size > 1) {
         common_seq_len = common_seq_len / seqSizePerBlock() * seqSizePerBlock();
     }
@@ -502,38 +508,43 @@ int64_t GenerateStream::getTimeoutMs() const {
     return generate_input_->generate_config->timeout_ms;
 }
 
-void GenerateStream::checkTimeout() {
+void GenerateStream::checkTimeoutWithoutLock() {
+    // Consumer-visible events and timeout publication share mutex_. Once a
+    // consumer-ready event has linearized, a later scheduler timeout must not
+    // replace it with the higher-precedence timeout error.
+    if (consumerReadyWithoutLock()) {
+        return;
+    }
+
     auto running_time_ms = (autil::TimeUtility::currentTimeInMicroSeconds() - begin_time_us_) / 1000;
     auto timeout_ms      = getTimeoutMs();
     if (timeout_ms > 0 && timeout_ms < running_time_ms) {
-        reportEvent(StreamEvents::Error,
-                    ErrorCode::GENERATE_TIMEOUT,
-                    "query has been running " + std::to_string(running_time_ms) + " ms, "
-                        + "timeout_ms = " + std::to_string(timeout_ms) + ", it's timeout");
+        reportTimeoutWithoutLock(running_time_ms, timeout_ms);
     }
 }
 
-// 统一的事件上报接口，替代原先所有 reportXX 方法。
-// 外部线程调用时自动加锁保护 error_info 和 events_ 的一致性。
-void GenerateStream::reportEvent(StreamEvents::EventType event, ErrorCode error_code, const std::string& error_msg) {
-    std::lock_guard<std::mutex> lock(*mutex_);
-    generate_status_->reportEvent(event, error_code, error_msg);
+void GenerateStream::reportTimeoutWithoutLock(int64_t running_time_ms, int64_t timeout_ms) {
+    reportEventWithoutLock(StreamEvents::Error,
+                           ErrorCode::GENERATE_TIMEOUT,
+                           "query has been running " + std::to_string(running_time_ms) + " ms, "
+                               + "timeout_ms = " + std::to_string(timeout_ms) + ", it's timeout");
 }
 
-// 无锁版本，供已持有 mutex_ 的内部调用路径使用（如 update/specUpdate/moveToNext 链路）。
-void GenerateStream::reportEventWithoutLock(StreamEvents::EventType event,
-                                            ErrorCode               error_code,
-                                            const std::string&      error_msg) {
-    generate_status_->reportEvent(event, error_code, error_msg);
-}
-
-void GenerateStream::reportError(ErrorCode error_code, const std::string& error_msg) {
-    std::lock_guard<std::mutex> lock(*mutex_);
-    generate_status_->reportEvent(StreamEvents::Error, error_code, error_msg);
+bool GenerateStream::reportUpdateErrorWithoutLock(const std::optional<ErrorInfo>& error_info) {
+    if (!error_info.has_value() || !error_info->hasError()) {
+        return false;
+    }
+    const auto& error = error_info.value();
+    reportEventWithoutLock(StreamEvents::Error, error.code(), error.ToString());
+    return true;
 }
 
 bool GenerateStream::hasEvent(StreamEvents::EventType event) const {
     std::lock_guard<std::mutex> lock(*mutex_);
+    return hasEventWithoutLock(event);
+}
+
+bool GenerateStream::hasEventWithoutLock(StreamEvents::EventType event) const {
     return generate_status_->hasEvent(event);
 }
 
@@ -546,7 +557,8 @@ bool GenerateStream::isFinished() const {
 }
 
 bool GenerateStream::isActive() const {
-    return !hasError() && getStatus() != StreamState::FINISHED;
+    std::lock_guard<std::mutex> lock(*mutex_);
+    return !hasErrorWithoutLock() && getStatus() != StreamState::FINISHED;
 }
 
 void GenerateStream::setReserveStep(size_t reserve_step) {
@@ -557,24 +569,28 @@ void GenerateStream::setReserveStep(size_t reserve_step) {
 }
 
 StreamState GenerateStream::moveToNext() {
-    checkTimeout();
     std::lock_guard<std::mutex> lock(*mutex_);
-    const auto                  old_status = getStatus();
-    StreamState                 state      = generate_status_->moveToNext();
-    const auto                  new_status = getStatus();
+    checkTimeoutWithoutLock();
+    const auto  old_status = getStatus();
+    StreamState state      = generate_status_->moveToNext();
+    const auto  new_status = getStatus();
 
     if (old_status == StreamState::WAITING && new_status != StreamState::WAITING) {
         wait_time_us_ = autil::TimeUtility::currentTimeInMicroSeconds() - begin_time_us_;
     }
 
-    // notify one thread waiting for stream completion
-    if (new_status == StreamState::FINISHED) {
-        cv_->notify_one();
+    if (new_status != old_status) {
+        consumer_cv_->notify_all();
     }
     return state;
 }
 
 bool GenerateStream::hasError() const {
+    std::lock_guard<std::mutex> lock(*mutex_);
+    return hasErrorWithoutLock();
+}
+
+bool GenerateStream::hasErrorWithoutLock() const {
     return generate_status_->error_info.hasError();
 }
 
@@ -584,12 +600,26 @@ bool GenerateStream::isSubGenerateDoneWithoutLock(int batch_id) const {
 
 ErrorInfo GenerateStream::statusInfo() {
     std::lock_guard<std::mutex> lock(*mutex_);
+    return statusInfoWithoutLock();
+}
+
+ErrorInfo GenerateStream::statusInfoWithoutLock() const {
     return generate_status_->error_info;
+}
+
+bool GenerateStream::consumerFinishedWithoutLock() const {
+    // Consumer completion includes pending GenerateDone, but lifecycle commit and
+    // resource release remain scheduler-owned through moveToNext().
+    return hasEventWithoutLock(StreamEvents::NeedRemoteGenerate) || generate_status_->checkFinished();
+}
+
+bool GenerateStream::consumerReadyWithoutLock() const {
+    return hasErrorWithoutLock() || consumerFinishedWithoutLock();
 }
 
 std::string GenerateStream::stopReason() {
     std::lock_guard<std::mutex> lock(*mutex_);
-    return generate_status_->error_info.ToString();
+    return statusInfoWithoutLock().ToString();
 }
 
 size_t GenerateStream::iterCount() const {
@@ -675,20 +705,6 @@ void GenerateStream::matchEosToken(int batch_id) {
     }
 }
 
-bool GenerateStream::waitForRemoteGenerate() {
-    std::unique_lock<std::mutex> lock(*mutex_);
-    // Wait until stream status -> NeedRemoteGenerate
-    cv_->wait(lock, [this] { return generate_status_->hasEvent(StreamEvents::NeedRemoteGenerate); });
-    // If stream status is abnormal, log the error info
-    if (hasError()) {
-        RTP_LLM_LOG_WARNING("waitForRemoteGenerate exits due to stream [%ld] error: %s",
-                            streamId(),
-                            generate_status_->error_info.ToString().c_str());
-    }
-
-    return !hasError();
-}
-
 std::vector<int> GenerateStream::getLatestTokens(size_t token_num) {
     return complete_token_ids_->getLatestTokens(token_num);
 }
@@ -726,7 +742,10 @@ void GenerateStream::specUpdate(const StreamSpecUpdateInfo& update_info) {
     std::lock_guard<std::mutex> lock(*mutex_);
     RTP_LLM_LOG_DEBUG("stream [%ld] spec update", streamId());
     *is_context_stream_ = false;
-    if (hasError() && !update_info.force_update_info) {
+    if (reportUpdateErrorWithoutLock(update_info.error_info)) {
+        return;
+    }
+    if ((hasErrorWithoutLock() || isFinished()) && !update_info.force_update_info) {
         return;
     }
 
@@ -756,6 +775,16 @@ void GenerateStream::specUpdate(const StreamSpecUpdateInfo& update_info) {
         return;
     }
 
+    int nxt_cached_len   = seqLength() - 1;
+    int accept_token_num = nxt_cached_len - cur_cached_len;
+
+    // The stream token history is authoritative. Advance every processor exactly
+    // once before mutating speculative buffers, cache layout or published output.
+    if (auto error = updateLogitProcessorStatus(new_tokens, accept_token_num); error.has_value()) {
+        reportEventWithoutLock(StreamEvents::Error, error->code(), error->ToString());
+        return;
+    }
+
     // update speculative output buffer
     int  target_last_token = new_tokens.data_ptr<int>()[num_new_tokens - 1];
     int* spec_tokens       = sp_output_buffer_->tokens.data_ptr<int>();
@@ -767,8 +796,6 @@ void GenerateStream::specUpdate(const StreamSpecUpdateInfo& update_info) {
     sp_output_buffer_->all_probs     = update_info.draft_token_probs;
 
     // for spec-decode linear attention, we need to adjust cache blocks
-    int nxt_cached_len   = seqLength() - 1;
-    int accept_token_num = nxt_cached_len - cur_cached_len;
     if (accept_token_num > 1 && stream_cache_resource_) {
         int seq_size_per_block = seqSizePerBlock();
 
@@ -815,14 +842,16 @@ void GenerateStream::update(const StreamUpdateInfo& update_info) {
     std::lock_guard<std::mutex> lock(*mutex_);
     RTP_LLM_LOG_DEBUG("stream [%ld] update", streamId());
     *is_context_stream_ = false;
-    if (hasError() && !update_info.force_update_info) {
+    if (reportUpdateErrorWithoutLock(update_info.error_info)) {
+        return;
+    }
+    if ((hasErrorWithoutLock() || isFinished()) && !update_info.force_update_info) {
         return;
     }
 
     const auto& new_tokens     = update_info.new_tokens;
     auto        num_new_tokens = update_info.num_new_tokens;
-
-    int error_token_id = 0;
+    int         error_token_id = 0;
     if (!complete_token_ids_->update(new_tokens,
                                      begin_time_us_,
                                      num_new_tokens,
@@ -841,16 +870,19 @@ void GenerateStream::update(const StreamUpdateInfo& update_info) {
 
     resizeSubGenerateStatus(update_info.new_tokens.size(0));
 
+    // Update processor state before publishing output, including the batch that
+    // finishes the stream, so normal and speculative decoding share one lifecycle.
+    if (auto error = updateNormalLogitProcessorStatus(update_info); error.has_value()) {
+        reportEventWithoutLock(StreamEvents::Error, error->code(), error->ToString());
+        return;
+    }
+
     // TODO(xinfei.sxf) fix this (update_queue)
     updateOutput(update_info);
 
     // checkFinished() 已将本轮 updateOutput 中上报的 GenerateDone/Error 事件应用到状态上，
     // 即使 moveToNext() 还未被调度器轮询，这里也能拿到与事件一致的"已完成"判断。
     bool is_done = generate_status_->checkFinished();
-
-    if (!is_done) {
-        updateLogitProcessorStatus(update_info);
-    }
 
     if (!is_done || stream_cache_resource_->reuseCache()) {
         // kv cache blocks must be updated if REUSE_CACHE is on, even the stream is done
@@ -882,6 +914,27 @@ bool GenerateStream::updateKvCacheBlocks(const torch::Tensor& src_batch_indices)
     return stream_cache_resource_->updateKVBlock(block_src_batch, is_seq_len_misaligned);
 }
 
+std::optional<ErrorInfo> GenerateStream::updateNormalLogitProcessorStatus(const StreamUpdateInfo& update_info) {
+    updateLogitProcessorMultiSeqStatus(update_info.src_batch_indices);
+    RTP_LLM_CHECK(update_info.new_tokens.size(0) == currentBatchSize());
+    return updateLogitProcessorStatus(update_info.new_tokens, update_info.num_new_tokens);
+}
+
+std::optional<ErrorInfo> GenerateStream::updateLogitProcessorStatus(const torch::Tensor& new_tokens,
+                                                                    int32_t              num_new_tokens) {
+    RTP_LLM_PROFILE_FUNCTION();
+    if (num_new_tokens <= 0) {
+        return std::nullopt;
+    }
+    for (const auto& logit_processor_ptr : logits_processor_list_) {
+        auto error = logit_processor_ptr->updateStatus(new_tokens, num_new_tokens);
+        if (error.has_value()) {
+            return error;
+        }
+    }
+    return validateLogitsProcessorState();
+}
+
 void GenerateStream::updateLogitProcessorMultiSeqStatus(const torch::Tensor& src_batch_indices) {
     RTP_LLM_PROFILE_FUNCTION();
     if (!src_batch_indices.defined() || !hasNumBeams()) {
@@ -892,22 +945,29 @@ void GenerateStream::updateLogitProcessorMultiSeqStatus(const torch::Tensor& src
     std::vector<int> src_batch_indices_vec(data, data + src_batch_indices.numel());
     RTP_LLM_CHECK(src_batch_indices_vec.size() == currentBatchSize());
 
-    for (auto logit_processor_ptr : getAllLogitsProcessorPtr()) {
+    for (const auto& logit_processor_ptr : logits_processor_list_) {
         logit_processor_ptr->updateMultiSeqStatus(src_batch_indices_vec);
     }
 }
 
-void GenerateStream::updateLogitProcessorStatus(const StreamUpdateInfo& update_info) {
-    RTP_LLM_PROFILE_FUNCTION();
-    updateLogitProcessorMultiSeqStatus(update_info.src_batch_indices);
-
-    const auto& new_tokens = update_info.new_tokens;
-    RTP_LLM_CHECK(new_tokens.size(0) == currentBatchSize());
-    auto num_new_tokens = update_info.num_new_tokens;
-
-    for (auto logit_processor_ptr : getAllLogitsProcessorPtr()) {
-        logit_processor_ptr->updateStatus(new_tokens, num_new_tokens);
+std::optional<ErrorInfo> GenerateStream::validateLogitsProcessorState() {
+    if (hasErrorWithoutLock()) {
+        return std::nullopt;
     }
+
+    const auto  stream_output_len = static_cast<int64_t>(outputTokenLen());
+    const auto& processors        = logits_processor_list_;
+    for (size_t i = 0; i < processors.size(); ++i) {
+        const auto& processor            = processors[i];
+        const auto  processor_output_len = processor->committedOutputLen();
+        if (processor_output_len.has_value() && processor_output_len.value() != stream_output_len) {
+            return ErrorInfo(ErrorCode::UNKNOWN_ERROR,
+                             "logits processor committed output length mismatch: processor_index=" + std::to_string(i)
+                                 + ", processor=" + std::to_string(processor_output_len.value())
+                                 + ", stream_output=" + std::to_string(stream_output_len));
+        }
+    }
+    return std::nullopt;
 }
 
 void GenerateStream::setLoss(const torch::Tensor& loss) {

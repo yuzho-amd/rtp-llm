@@ -1,4 +1,5 @@
 import asyncio
+import json
 import struct
 import sys
 from unittest.mock import MagicMock
@@ -27,6 +28,7 @@ import torch
 
 from rtp_llm.config.generate_config import GenerateConfig
 from rtp_llm.config.log_config import setup_logging
+from rtp_llm.config.response_format_compiler import ReasoningFormat
 from rtp_llm.cpp.model_rpc.model_rpc_client import (
     ModelRpcClient,
     StreamState,
@@ -38,11 +40,14 @@ from rtp_llm.cpp.model_rpc.proto.model_rpc_service_pb2 import (
     GenerateOutputsPB,
     TensorPB,
 )
-from rtp_llm.utils.base_model_datatypes import GenerateInput, GenerateOutputs
+from rtp_llm.utils.base_model_datatypes import (
+    GenerateInput,
+    GenerateOutputs,
+    RequestInfo,
+)
 
 
 class FakeStub:
-
     async def GenerateStreamCall(self, input: GenerateInputPB, timeout=None):
         # 1. 第一个响应：包含第一个生成的 token
         outputs_pb1 = GenerateOutputsPB()
@@ -83,13 +88,12 @@ class FakeStub:
 
 
 class FakeModelRpcClient(ModelRpcClient):
-
     def __init__(self):
         # Call parent __init__ with minimal required parameters
         super().__init__(
-            [],     # addresses: empty list for fake client
-            {},     # client_config: empty dict for fake client
-            0,      # max_rpc_timeout_ms
+            [],  # addresses: empty list for fake client
+            {},  # client_config: empty dict for fake client
+            0,  # max_rpc_timeout_ms
             False,  # decode_entrance
         )
         self.stub = FakeStub()
@@ -105,7 +109,6 @@ class FakeModelRpcClient(ModelRpcClient):
 
 
 class ModelRpcClientTest(TestCase):
-
     def __init__(self, methodName: str = "runTest") -> None:
         super().__init__(methodName)
         # self.client = FakeModelRpcClient()
@@ -116,6 +119,120 @@ class ModelRpcClientTest(TestCase):
         async for res in client.enqueue(input):
             responses.extend(res.generate_outputs)
         return responses
+
+    def test_trans_input_serializes_typed_request_info(self):
+        input_py = GenerateInput(
+            request_id=123,
+            token_ids=torch.tensor([1, 2]),
+            mm_inputs=[],
+            generate_config=GenerateConfig(),
+            headers={"x-trace-id": "header-trace"},
+            request_info=RequestInfo(
+                frontend_ip="frontend-ip",
+                dash_ip="dash-ip",
+                trace_id="request-trace",
+                request_id="request-id",
+                source_role="frontend",
+            ),
+        )
+
+        request_info_pb = trans_input(input_py).request_info
+
+        self.assertEqual(request_info_pb.frontend_ip, "frontend-ip")
+        self.assertEqual(request_info_pb.dash_ip, "dash-ip")
+        self.assertEqual(request_info_pb.trace_id, "request-trace")
+        self.assertEqual(request_info_pb.request_id, "request-id")
+        self.assertEqual(request_info_pb.source_role, "frontend")
+
+    def test_trans_input_fills_request_info_from_typed_headers(self):
+        input_py = GenerateInput(
+            request_id=123,
+            token_ids=torch.tensor([1, 2]),
+            mm_inputs=[],
+            generate_config=GenerateConfig(),
+            headers={
+                "x-trace-id": "header-trace",
+                "x-request-id": "header-request-id",
+            },
+        )
+
+        request_info_pb = trans_input(input_py).request_info
+
+        self.assertEqual(request_info_pb.trace_id, "header-trace")
+        self.assertEqual(request_info_pb.request_id, "header-request-id")
+
+    @staticmethod
+    def _make_generate_input(generate_config: GenerateConfig) -> GenerateInput:
+        return GenerateInput(
+            request_id=1,
+            token_ids=torch.tensor([1], dtype=torch.int32),
+            mm_inputs=[],
+            generate_config=generate_config,
+        )
+
+    def test_trans_input_writes_typed_grammar_fields_consistently(self):
+        grammar_fields = ("json_schema", "regex", "ebnf", "structural_tag")
+        cases = [
+            (
+                "json_schema",
+                {"type": "object"},
+                '{"type":"object"}',
+                lambda pb: pb.json_schema,
+            ),
+            ("regex", r"[a-z]+", r"[a-z]+", lambda pb: pb.regex),
+            ("ebnf", 'root ::= "a"', 'root ::= "a"', lambda pb: pb.ebnf),
+            (
+                "structural_tag",
+                {
+                    "type": "structural_tag",
+                    "format": {"type": "regex", "pattern": "a"},
+                },
+                '{"type":"structural_tag","format":{"type":"regex","pattern":"a"}}',
+                lambda pb: pb.structural_tag,
+            ),
+        ]
+
+        for field, value, expected, field_value in cases:
+            with self.subTest(field=field):
+                config = GenerateConfig(**{field: value})
+                config_before_rpc = config.model_dump()
+                input_pb = trans_input(self._make_generate_input(config))
+
+                self.assertEqual(config.model_dump(), config_before_rpc)
+                self.assertTrue(input_pb.generate_config.HasField(field))
+                self.assertEqual(field_value(input_pb.generate_config).value, expected)
+                for removed_field in (
+                    "response_format",
+                    "grammar_terminate_without_stop_token",
+                ):
+                    self.assertNotIn(
+                        removed_field,
+                        input_pb.generate_config.DESCRIPTOR.fields_by_name,
+                    )
+                for other_field in grammar_fields:
+                    if other_field != field:
+                        self.assertFalse(input_pb.generate_config.HasField(other_field))
+
+    def test_trans_input_does_not_reapply_reasoning_envelope(self):
+        config = GenerateConfig(
+            response_format={"type": "json_object"},
+            in_think_mode=True,
+            end_think_token_ids=[7],
+            max_thinking_tokens=16,
+        )
+        config.finalize_response_format(
+            reasoning_format=ReasoningFormat(tag_begin="", tag_end="</think>")
+        )
+        config_before_rpc = config.model_dump()
+
+        input_pb = trans_input(self._make_generate_input(config))
+
+        self.assertEqual(config.model_dump(), config_before_rpc)
+        structural_tag = json.loads(input_pb.generate_config.structural_tag.value)
+        elements = structural_tag["format"]["elements"]
+        self.assertEqual(len(elements), 2)
+        self.assertEqual(elements[0]["type"], "tag")
+        self.assertEqual(elements[1]["type"], "json_schema")
 
     @unittest.skip("need fix")
     def test_generate_stream(self):

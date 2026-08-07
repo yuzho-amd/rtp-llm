@@ -8,6 +8,7 @@
 #include "rtp_llm/models_py/bindings/ParamsBase.h"
 #include <cstddef>
 #include <optional>
+#include <string>
 #include <memory>
 #include <torch/extension.h>
 #include <torch/python.h>
@@ -53,9 +54,8 @@ struct GptModelInputs {
     torch::Tensor kv_cache_block_id;
     torch::Tensor kv_cache_kernel_block_id;  // [group, batch, kernel_blocks], int32
 
-    torch::Tensor kv_cache_layer_to_group;  // [layer_num], int32
     torch::Tensor kv_cache_group_types;     // [group_num], int32, Convention: 0 -> LINEAR, 1 -> FULL.
-    torch::Tensor kv_cache_update_mapping;  // [block_copy_num, 2] kv cache update mapping
+    torch::Tensor kv_cache_update_mapping;  // [block_copy_num, 3]: group_id, src block, dst block
 
     std::optional<std::vector<torch::Tensor>> multimodal_features;  // all features in gathered stream stored here
     torch::Tensor text_tokens_mask;  // text part in multimodal input tokens [cumulated_seq_len]
@@ -76,6 +76,7 @@ struct GptModelInputs {
     size_t kernel_seq_size_per_block = 0;  // 0 means same as seq_size_per_block
     bool   pd_separation             = false;
     bool   decode_entrance           = false;
+    bool   use_opaque_kv_cache_store = false;
 
     bool need_all_logits = false;
     bool need_moe_gating = false;
@@ -169,48 +170,12 @@ struct KvCacheInfo {
     torch::Tensor kv_scale_buffer;
 };
 
-struct CacheStoreInputs {
-    torch::Tensor input_lengths_host;
-    torch::Tensor prefix_lengths_host;
-    torch::Tensor host_kv_cache_offset;
-
-    torch::Tensor kv_cache_layer_to_group_host;
-    torch::Tensor kv_cache_group_types_host;  // 0 -> LINEAR, 1 -> FULL.
-
-    size_t context_batch_size = 0;
-    size_t decoder_batch_size = 0;
-
-    torch::Tensor            request_id;             // [context_batch_size]
-    torch::Tensor            request_pd_separation;  // [context_batch_size]
-    std::vector<std::string> cache_keys;             // [context_batch_size]
-    size_t                   tokens_per_block;
-    size_t                   kv_block_stride_bytes = 0;
-    size_t                   kv_scale_stride_bytes = 0;
-    bool                     pd_separation         = false;
-    size_t                   model_id              = 0;
-    bool                     decode_entrance       = false;
-    bool                     warmup;
-
-    int layer_id = 0;
-
-    // Pre-created event from the main thread to avoid cudaEventRecord
-    // contention on background threads. nullptr means writeCacheStore will
-    // create an event on the spot (single-threaded / C++ path).
-    std::shared_ptr<torch::Event> pre_created_event = nullptr;
-};
-
 struct AttentionCommonInputs {
     // see detailed comments at GptModelInputs
     torch::Tensor input_lengths;     // int32_t, [decoder_batch_size + context_batch_size]
     torch::Tensor sequence_lengths;  // int32_t, [decoder_batch_size]
 
-    std::optional<KvCacheInfo>      kv_cache;
-    std::optional<CacheStoreInputs> cache_store_inputs;
-
-    // Hybrid cache helper: layer_id -> kv cache group id (host-side).
-    // When kv_cache->kv_cache_block_ids_by_group is non-empty, model will select the right group per layer
-    // and set kv_cache->kv_cache_block_id before calling attention ops.
-    std::vector<int32_t> kv_cache_layer_to_group_id;
+    std::optional<KvCacheInfo> kv_cache;
 
     torch::Tensor cu_seqlens;
     torch::Tensor cu_kv_seqlens;

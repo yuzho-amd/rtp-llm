@@ -1,4 +1,5 @@
 load("//:def.bzl", "copts")
+load("@arch_config//:arch_select.bzl", "torch_deps")
 
 # Sample infos - model sampling data structures
 cc_library(
@@ -43,38 +44,54 @@ cc_library(
     visibility = ["//visibility:public"],
 )
 
-# Logits processor - model output processing
+# Grammar processors co-located so LogitsProcessorFactory dispatches without a runtime plug-in hook.
 cc_library(
     name = "logits_processor",
     hdrs = [
         "logits_processor/BaseLogitsProcessor.h",
+        "logits_processor/SpecLogitsProcessor.h",
         "logits_processor/MultiSeqLogitsProcessor.h",
         "logits_processor/LogitsProcessorStates.h",
         "logits_processor/ThinkModeLogitsProcessor.h",
         "logits_processor/TreeLogitsProcessor.h",
         "logits_processor/RecommendationLogitsProcessor.h",
         "logits_processor/LogitsProcessorFactory.h",
+        "logits_processor/GrammarLogitsProcessor.h",
+        "logits_processor/SpecLogitsVerifyRunner.h",
+        "logits_processor/BitmaskUtils.h",
     ],
     srcs = [
         "logits_processor/BaseLogitsProcessor.cc",
+        "logits_processor/BitmaskUtils.cc",
         "logits_processor/MultiSeqLogitsProcessor.cc",
         "logits_processor/LogitsProcessorStates.cc",
         "logits_processor/ThinkModeLogitsProcessor.cc",
         "logits_processor/TreeLogitsProcessor.cc",
         "logits_processor/RecommendationLogitsProcessor.cc",
         "logits_processor/LogitsProcessorFactory.cc",
+        "logits_processor/GrammarLogitsProcessor.cc",
+        "logits_processor/SpecLogitsVerifyRunner.cc",
     ],
     deps = [
         ":sample_infos",
         ":dfa_utils",
+        "//rtp_llm/cpp/engine_base/grammar:grammar_cpp_lib",
         "//rtp_llm/cpp/engine_base/stream:generate_types",
         "//rtp_llm/cpp/engine_base/stream:generate_config",
+        "//rtp_llm/cpp/config:model_config",
+        "//rtp_llm/cpp/config:config_modules",
         "//rtp_llm/cpp/pybind:py_utils",
+        "//rtp_llm/cpp/utils:core_utils",
         "//rtp_llm/cpp/utils:error_code",
+        "//rtp_llm/cpp/utils:profiling_scope",
+        "//rtp_llm/models_py/bindings/core:exec_ops_hdr",
     ] + select({
-        "//:using_cuda": ["//rtp_llm/models_py/bindings/cuda/ops:standalone_ops"],
+        "//:using_cuda": [
+            "//rtp_llm/models_py/bindings/cuda/ops:standalone_ops",
+        ],
         "//conditions:default": [],
     }),
+    copts = copts(),
     visibility = ["//visibility:public"],
 )
 
@@ -110,20 +127,35 @@ cc_library(
 )
 
 cc_library(
+    name = "model_inputs_logger",
+    srcs = ["ModelInputsLogger.cc"],
+    hdrs = ["ModelInputsLogger.h"],
+    deps = [
+        "//rtp_llm/cpp/utils:core_utils",
+        "//rtp_llm/models_py/bindings/core:op_data",
+        "@havenask//aios/autil:env_util",
+        "@havenask//aios/kmonitor:kmonitor_client_cpp",
+    ] + torch_deps(),
+    visibility = ["//rtp_llm/cpp/models/test:__pkg__"],
+)
+
+cc_library(
     name = "models",
     hdrs = glob([
         "*.h",
-    ]),
+    ], exclude = ["ModelInputsLogger.h"]),
     srcs = glob([
         "*.cc",
-    ]),
+    ], exclude = ["ModelInputsLogger.cc"]),
     deps = [
+        ":model_inputs_logger",
         ":sample_infos",
         ":logits_processor",
         ":dfa_utils",
         ":context_parallel",
         "//:rtp_compute_ops",
         "//rtp_llm/models_py/bindings/core:exec_ops_hdr",
+        "//rtp_llm/cpp/pybind:py_utils",
         "//rtp_llm/cpp/engine_base/stream:complete_token_ids",
         "//rtp_llm/cpp/cache:cache_types",
         "//rtp_llm/cpp/cache:cache",

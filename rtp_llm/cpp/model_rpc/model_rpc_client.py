@@ -1,21 +1,29 @@
 import functools
+import json
 import logging
-from typing import AsyncGenerator, Optional
+from typing import Any, AsyncGenerator, Dict, Optional, Union
 
 import grpc
+from google.protobuf.wrappers_pb2 import StringValue
 from grpc import StatusCode
 
 from rtp_llm.config.exceptions import ExceptionType, FtRuntimeException
 from rtp_llm.config.generate_config import ReturnAllProbsMode, RoleType
+from rtp_llm.config.response_format_compiler import validate_engine_ready
 from rtp_llm.cpp.model_rpc.proto.model_rpc_service_pb2 import (
     BatchGenerateInputPB,
     ErrorDetailsPB,
+    GenerateConfigPB,
     GenerateInputPB,
     GenerateOutputsPB,
     MultimodalInputPB,
     RoleAddrPB,
 )
 from rtp_llm.cpp.model_rpc.proto.model_rpc_service_pb2_grpc import RpcServiceStub
+from rtp_llm.server.request_headers import (
+    extract_correlation_request_id,
+    extract_trace_id,
+)
 from rtp_llm.utils.base_model_datatypes import (
     AuxInfo,
     GenerateConfig,
@@ -33,6 +41,7 @@ from rtp_llm.utils.grpc_util import (
 )
 
 MAX_GRPC_TIMEOUT_SECONDS = 3600
+JsonableOption = Optional[Union[str, Dict[str, Any], bool]]
 
 
 class StreamState:
@@ -53,22 +62,72 @@ def trans_role_type(role_type: RoleType) -> RoleAddrPB.RoleType:
         return RoleAddrPB.RoleType.FRONTEND
 
 
+def _trans_jsonable_option(
+    option_pb: StringValue, name: str, value: JsonableOption
+) -> None:
+    """Serialize structured config exactly once at the protobuf boundary."""
+    if value is None:
+        return
+    if not isinstance(value, str):
+        try:
+            value = json.dumps(value, ensure_ascii=False, separators=(",", ":"))
+        except (TypeError, ValueError, RecursionError) as e:
+            raise FtRuntimeException(
+                ExceptionType.ERROR_INPUT_FORMAT_ERROR,
+                f"{name} must be serializable as JSON: {str(e)}",
+            ) from e
+    option_pb.value = value
+
+
+def _trans_jsonable_options(
+    config_pb: GenerateConfigPB, config: GenerateConfig
+) -> None:
+    _trans_jsonable_option(config_pb.json_schema, "json_schema", config.json_schema)
+    _trans_jsonable_option(config_pb.regex, "regex", config.regex)
+    _trans_jsonable_option(config_pb.ebnf, "ebnf", config.ebnf)
+    _trans_jsonable_option(
+        config_pb.structural_tag, "structural_tag", config.structural_tag
+    )
+
+
 def trans_input(input_py: GenerateInput):
     input_pb = GenerateInputPB()
     input_pb.request_id = input_py.request_id
     input_pb.token_ids.extend(input_py.token_ids.reshape(-1).tolist())
     input_pb.batch_group_size = input_py.batch_group_size
-    if hasattr(input_py, "batch_group_id") and input_py.batch_group_id != -1:
+    if input_py.batch_group_id != -1:
         input_pb.batch_group_id.value = input_py.batch_group_id
 
+    request_info = input_py.request_info
+    input_pb.request_info.frontend_ip = request_info.frontend_ip
+    input_pb.request_info.dash_ip = request_info.dash_ip
+    input_pb.request_info.trace_id = request_info.trace_id
+    input_pb.request_info.request_id = request_info.request_id
+    input_pb.request_info.source_role = request_info.source_role
+    if not input_pb.request_info.trace_id:
+        input_pb.request_info.trace_id = str(
+            input_py.generate_config.trace_id
+            or extract_trace_id(input_py.headers)
+            or ""
+        )
+    if not input_pb.request_info.request_id:
+        input_pb.request_info.request_id = extract_correlation_request_id(
+            input_py.headers
+        ) or str(input_pb.request_info.trace_id or input_py.request_id)
+
     trans_multimodal_input(input_py, input_pb, input_py.generate_config)
-    # check generate config is valid before enter into engine
+    # Preserve main's regular GenerateConfig validation at the RPC boundary,
+    # then assert (without mutating) that the request entrypoint prepared grammar.
     input_py.generate_config.validate()
+    validate_engine_ready(input_py.generate_config)
 
     generate_config_pb = input_pb.generate_config
     generate_config_pb.max_new_tokens = input_py.generate_config.max_new_tokens
     generate_config_pb.max_thinking_tokens = (
         input_py.generate_config.max_thinking_tokens
+    )
+    generate_config_pb.begin_think_token_ids.extend(
+        input_py.generate_config.begin_think_token_ids
     )
     generate_config_pb.end_think_token_ids.extend(
         input_py.generate_config.end_think_token_ids
@@ -99,6 +158,7 @@ def trans_input(input_py: GenerateInput):
     trans_option(generate_config_pb, input_py.generate_config, "top_p_decay")
     trans_option(generate_config_pb, input_py.generate_config, "top_p_min")
     trans_option(generate_config_pb, input_py.generate_config, "top_p_reset_ids")
+    _trans_jsonable_options(generate_config_pb, input_py.generate_config)
     trans_option(generate_config_pb, input_py.generate_config, "adapter_name")
     trans_option_cast(
         generate_config_pb, input_py.generate_config, "task_id", functools.partial(str)
@@ -181,8 +241,12 @@ def trans_input(input_py: GenerateInput):
 
     # 生成式推荐：组合 token 约束
     generate_config_pb.combo_token_size = input_py.generate_config.combo_token_size
-    generate_config_pb.enable_cross_sequence_ban = input_py.generate_config.enable_cross_sequence_ban
-    generate_config_pb.cross_seq_diverge_start_combo = input_py.generate_config.cross_seq_diverge_start_combo
+    generate_config_pb.enable_cross_sequence_ban = (
+        input_py.generate_config.enable_cross_sequence_ban
+    )
+    generate_config_pb.cross_seq_diverge_start_combo = (
+        input_py.generate_config.cross_seq_diverge_start_combo
+    )
     for i in range(len(input_py.generate_config.banned_combo_token_ids)):
         banned_combo = generate_config_pb.banned_combo_token_ids.rows.add()
         banned_combo.values.extend(input_py.generate_config.banned_combo_token_ids[i])
@@ -455,6 +519,9 @@ class ModelRpcClient(object):
             options=self._options, cleanup_interval=60  # clean up every minute
         )
         logging.info(f"addresses: {self._addresses}")
+
+    async def close(self) -> None:
+        await self._channel_pool.close()
 
     def _compute_grpc_timeout(self, timeout_ms) -> float:
         rpc_timeout_ms = (

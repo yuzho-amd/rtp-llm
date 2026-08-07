@@ -6,6 +6,7 @@ This page lists server arguments used to configure the behavior and performance 
 
 | Arguments | Description | Defaults |
 |-----------|-------------|----------|
+| `--worker_info_port_num` | Stride between port **bases** for each `rank_id`: `base = start_port + rank_id * worker_info_port_num`. Offsets under each base include RPC, HTTP, DashSc gRPC (`base + 8`), etc. **Breaking change:** default was **8**, now **9**. Services with DashSc gRPC enabled require this value to be at least `9`; multi-rank deployments that relied on the old stride must re-check ports. See [breaking-changes.md](../release/breaking-changes.md). | 9 |
 | `--tp-size` | Specifies the tensor parallelism degree. | None |
 | `--ep-size` | Defines the number of model instances for expert parallelism. | None |
 | `--dp-size` | Sets the number of replicas or group size for data parallelism. | None |
@@ -202,4 +203,7 @@ RTP-LLM deployments are released as versioned, immutable container images, with 
 
 | Arguments | Description | Defaults |
 |-----------|-------------|----------|
-| `--load_method` | Specify the weight loading method.<br>Options: auto, fastsafetensors, scratch | auto |
+| `--load_method` | Specify the weight loading method.<br>Options: auto, fastsafetensors, scratch (`LOAD_METHOD`) | auto |
+| `--force_cpu_load_weights` | Load weights on CPU to reduce device memory usage (`FORCE_CPU_LOAD_WEIGHTS`) | False |
+| `--loader_recycle_handles` | ROCm + safetensors only: close consumed main-model shard handles to release mmap memory. Requires layer-numbered tensors and copies safetensors data out before closing; no effect on fastsafetensors, ViT, EPLB, or .bin weights. (`LOADER_RECYCLE_HANDLES`) | True |
+| `--moe_pure_tp_preshard` | Under pure TP (`tp>1, dp=1, ep=1`), pre-shard supported Qwen3-Next / Qwen3.5 MoE and offline FP8 weights before device copy. Unsupported sources or layouts warn and use legacy full reads. Set false to disable. (`MOE_PURE_TP_PRESHARD`) | True |

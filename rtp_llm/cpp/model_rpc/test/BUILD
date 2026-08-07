@@ -29,6 +29,7 @@ test_deps = [
     "//rtp_llm/cpp/config:config_modules",
     "//rtp_llm/cpp/model_rpc/proto:model_rpc_service_cc_proto",
     "//rtp_llm/cpp/model_rpc:model_rpc_server",
+    "//rtp_llm/cpp/normal_engine:normal_engine",
     "//rtp_llm/cpp/testing:test_log_capture",
     "@com_google_googletest//:gtest",
     "@com_google_googletest//:gtest_main",
@@ -53,12 +54,23 @@ test_deps = [
 # )
 
 cc_test(
+    name = "local_rpc_server_test",
+    srcs = ["LocalRpcServerTest.cc"],
+    copts = test_copts,
+    deps = test_deps,
+    env = {},
+    exec_properties = {'gpu':'H20'},
+)
+
+cc_test(
     name = "query_converter_test",
     srcs = [
         "QueryConverterTest.cc",
     ],
     copts = test_copts,
-    deps = test_deps,
+    deps = test_deps + [
+        "//rtp_llm/cpp/models:logits_processor",
+    ],
     env = {
         "TEST_USING_DEVICE": "CUDA",
     },

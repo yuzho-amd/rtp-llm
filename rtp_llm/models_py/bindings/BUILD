@@ -4,6 +4,7 @@ load("@arch_config//:arch_select.bzl", "torch_deps")
 cc_library(
     name = "op_defs",
     hdrs = [
+        "CacheStoreWriter.h",
         "OpDefs.h",
         "OpDefsUtils.h",
         "ParamsBase.h",
@@ -12,6 +13,7 @@ cc_library(
         "OpDefs.cc",
     ],
     deps = torch_deps() + [
+        "//rtp_llm/cpp/cache:cache_layout",
         "//rtp_llm/cpp/cache:cache_group_type",
         "//rtp_llm/cpp/model_utils:model_utils",
         "//rtp_llm/cpp/utils:core_utils",
@@ -23,6 +25,9 @@ cc_library(
 py_test(
     name = "py_model_inputs_compat_test",
     srcs = ["py_model_inputs_compat_test.py"],
+    data = [
+        "//rtp_llm:ops/librtp_compute_ops/__init__.pyi",
+    ],
     deps = [
         "//rtp_llm:testlib",
     ],
@@ -59,6 +64,7 @@ cc_library(
     visibility = ["//visibility:public"],
     alwayslink = 1,
 )
+
 
 cc_library(
     name = "dummy_register",

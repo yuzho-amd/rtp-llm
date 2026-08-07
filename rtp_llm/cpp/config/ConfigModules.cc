@@ -43,7 +43,9 @@ std::string PrefillCPConfig::to_string() const {
             oss << "UNKNOWN";
             break;
     }
-    oss << "\n comm_buffer_size: " << comm_buffer_size << "\n";
+    oss << "\n comm_buffer_size: " << comm_buffer_size << "\n"
+        << " kv_cache_sharded: " << kv_cache_sharded << "\n"
+        << " prefill_cp_size: " << prefill_cp_size << "\n";
     return oss.str();
 }
 
@@ -117,6 +119,11 @@ std::string KVCacheConfig::to_string() const {
         << "max_block_size_per_item: " << max_block_size_per_item << "\n"
         << "memory_cache_size_mb: " << memory_cache_size_mb << "\n"
         << "memory_cache_sync_timeout_ms: " << memory_cache_sync_timeout_ms << "\n"
+        << "enable_memory_cache_disk: " << enable_memory_cache_disk << "\n"
+        << "memory_cache_disk_paths: " << memory_cache_disk_paths << "\n"
+        << "memory_cache_disk_size_mb: " << memory_cache_disk_size_mb << "\n"
+        << "memory_cache_disk_buffered_io: " << memory_cache_disk_buffered_io << "\n"
+        << "memory_cache_disk_sync_timeout_ms: " << memory_cache_disk_sync_timeout_ms << "\n"
         << "linear_step: " << linear_step << "\n"
         << "fp8_kv_cache: " << fp8_kv_cache << "\n"
         << "ssm_state_dtype: " << ssm_state_dtype << "\n"
@@ -127,9 +134,15 @@ std::string KVCacheConfig::to_string() const {
         << "use_block_cache: " << use_block_cache << "\n"
         << "enable_device_cache: " << enable_device_cache << "\n"
         << "enable_memory_cache: " << enable_memory_cache << "\n"
+        << "enable_memory_cache_sm_copy: " << enable_memory_cache_sm_copy << "\n"
         << "enable_remote_cache: " << enable_remote_cache << "\n"
         << "write_cache_sync: " << write_cache_sync << "\n"
         << "enable_tiered_memory_cache: " << enable_tiered_memory_cache << "\n"
+        << "enable_gpu_prefix_tree: " << enable_gpu_prefix_tree << "\n"
+        << "enable_prefix_tree_memory_cache: " << enable_prefix_tree_memory_cache << "\n"
+        << "enable_legacy_memory_connector_fallback: " << enable_legacy_memory_connector_fallback << "\n"
+        << "prefix_tree_memory_state_swa_pool_ratio: " << prefix_tree_memory_state_swa_pool_ratio << "\n"
+        << "enable_independent_group_eviction: " << enable_independent_group_eviction << "\n"
         << "device_cache_min_free_blocks: " << device_cache_min_free_blocks << "\n"
         << "load_cache_retry_times: " << load_cache_retry_times << "\n";
     return oss.str();
@@ -152,7 +165,8 @@ std::string ProfilingDebugLoggingConfig::to_string() const {
         << "hack_layer_num: " << hack_layer_num << "\n"
         << "debug_start_fake_process: " << debug_start_fake_process << "\n"
         << "enable_detail_log: " << enable_detail_log << "\n"
-        << "check_nan: " << check_nan << "\n";
+        << "check_nan: " << check_nan << "\n"
+        << "enable_model_inputs_log: " << enable_model_inputs_log << "\n";
     return oss.str();
 }
 
@@ -369,6 +383,17 @@ std::string FIFOSchedulerConfig::to_string() const {
     return oss.str();
 }
 
+// GrammarConfig
+std::string GrammarConfig::to_string() const {
+    std::ostringstream oss;
+    oss << "constrained_json_disable_any_whitespace: " << constrained_json_disable_any_whitespace << "\n"
+        << "terminate_without_stop_token: " << terminate_without_stop_token << "\n"
+        << "num_workers: " << num_workers << "\n"
+        << "compiler_cache_bytes: " << compiler_cache_bytes << "\n"
+        << "tokenizer_info_json_size: " << tokenizer_info_json.size();
+    return oss.str();
+}
+
 // RuntimeConfig
 std::string RuntimeConfig::to_string() const {
     std::ostringstream oss;
@@ -410,41 +435,9 @@ std::string ArpcConfig::to_string() const {
     return oss.str();
 }
 
-GrpcConfig::GrpcConfig(const std::string& json_str) {
-    from_json(json_str);
-}
-
-std::string GrpcConfig::to_string() const {
-    std::ostringstream oss;
-
-    // Output client config
-    oss << "Client Config:\n";
-    for (auto it = client_config.begin(); it != client_config.end(); ++it) {
-        oss << "  " << it->first << ": " << it->second << "\n";
-    }
-
-    // Output server config
-    oss << "Server Config:\n";
-    for (auto it = server_config.begin(); it != server_config.end(); ++it) {
-        oss << "  " << it->first << ": " << it->second << "\n";
-    }
-
-    return oss.str();
-}
-
-void GrpcConfig::from_json(const std::string& json_str) {
-    if (json_str.empty()) {
-        return;
-    }
-
-    // Clear existing configs
-    client_config.clear();
-    server_config.clear();
-
-    // Parse 2-level JSON structure
-    // Expected format: {"client_config": {"key1": value1, ...}, "server_config": {"key2": value2, ...}}
-
-    // Find client_config section
+static void parse_grpc_client_server_maps_json(const std::string&          json_str,
+                                               std::map<std::string, int>& client_config,
+                                               std::map<std::string, int>& server_config) {
     std::regex  client_section_pattern("\"client_config\"\\s*:\\s*\\{([^}]+)\\}");
     std::smatch client_match;
     if (std::regex_search(json_str, client_match, client_section_pattern)) {
@@ -461,7 +454,6 @@ void GrpcConfig::from_json(const std::string& json_str) {
         }
     }
 
-    // Find server_config section
     std::regex  server_section_pattern("\"server_config\"\\s*:\\s*\\{([^}]+)\\}");
     std::smatch server_match;
     if (std::regex_search(json_str, server_match, server_section_pattern)) {
@@ -477,6 +469,73 @@ void GrpcConfig::from_json(const std::string& json_str) {
             ++iter;
         }
     }
+}
+
+static int parse_optional_root_int_json(const std::string& json_str, const char* key, int default_value) {
+    try {
+        std::string pat = std::string("\"") + key + "\"\\s*:\\s*(\\d+)";
+        std::regex  re(pat);
+        std::smatch m;
+        if (std::regex_search(json_str, m, re) && m.size() > 1) {
+            return std::stoi(m[1].str());
+        }
+    } catch (...) {}
+    return default_value;
+}
+
+static void append_grpc_maps_to_stream(std::ostringstream& oss, const GrpcMapsConfig& maps) {
+    oss << "Client Config:\n";
+    for (auto it = maps.client_config.begin(); it != maps.client_config.end(); ++it) {
+        oss << "  " << it->first << ": " << it->second << "\n";
+    }
+    oss << "Server Config:\n";
+    for (auto it = maps.server_config.begin(); it != maps.server_config.end(); ++it) {
+        oss << "  " << it->first << ": " << it->second << "\n";
+    }
+}
+
+GrpcConfig::GrpcConfig(const std::string& json_str) {
+    from_json(json_str);
+}
+
+std::string GrpcConfig::to_string() const {
+    std::ostringstream oss;
+    append_grpc_maps_to_stream(oss, *this);
+    return oss.str();
+}
+
+void GrpcConfig::from_json(const std::string& json_str) {
+    if (json_str.empty()) {
+        return;
+    }
+
+    client_config.clear();
+    server_config.clear();
+
+    parse_grpc_client_server_maps_json(json_str, client_config, server_config);
+}
+
+DashScGrpcConfig::DashScGrpcConfig(const std::string& json_str) {
+    from_json(json_str);
+}
+
+std::string DashScGrpcConfig::to_string() const {
+    std::ostringstream oss;
+    append_grpc_maps_to_stream(oss, *this);
+    oss << "max_server_workers: " << max_server_workers << "\n";
+    return oss.str();
+}
+
+void DashScGrpcConfig::from_json(const std::string& json_str) {
+    if (json_str.empty()) {
+        return;
+    }
+    client_config.clear();
+    server_config.clear();
+    max_server_workers = 4;
+    parse_grpc_client_server_maps_json(json_str, client_config, server_config);
+    int mw             = parse_optional_root_int_json(json_str, "max_server_workers", 4);
+    max_server_workers = mw > 0 ? mw : 4;
 }
 
 // FfnDisAggregateConfig

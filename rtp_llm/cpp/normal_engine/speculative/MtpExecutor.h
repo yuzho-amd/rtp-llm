@@ -9,11 +9,16 @@
 #include "rtp_llm/models_py/bindings/core/DeviceData.h"
 #include "rtp_llm/cpp/metrics/RtpLLMMetrics.h"
 #include "rtp_llm/cpp/models/eplb/ExpertBalancer.h"
+#include "rtp_llm/cpp/models/logits_processor/SpecLogitsVerifyRunner.h"
 #include "rtp_llm/cpp/normal_engine/speculative/MtpBatchStreamProcessor.h"
 #include "rtp_llm/cpp/engine_base/ProposeModelEngineInitParams.h"
 #include "rtp_llm/cpp/normal_engine/speculative/SpeculativeSampler.h"
 
 namespace rtp_llm {
+
+enum class ModelInputsModelRole;
+
+class ModelInputsLogger;
 
 struct MtpMetricsCollector {
     RtpLLMExecutorMetricsCollector          executor_collector;
@@ -46,10 +51,9 @@ public:
     explicit MtpExecutor(const EngineInitParams&                        params,
                          std::unique_ptr<ProposeModelEngineInitParams>& propose_params,
                          const std::shared_ptr<KVCacheManager>&         cache_manager,
-                         MlaOpsType                                     mla_ops_type            = MlaOpsType::AUTO,
-                         int32_t                                        kv_cache_group_num      = 1,
-                         const std::vector<int32_t>&                    kv_cache_layer_to_group = {},
-                         bool                                           warm_up                 = false);
+                         MlaOpsType                                     mla_ops_type       = MlaOpsType::AUTO,
+                         int32_t                                        kv_cache_group_num = 1,
+                         bool                                           warm_up            = false);
 
     absl::Status process(const std::list<GenerateStreamPtr>& streams) override;
     bool         updateEplbConfig(const EPLBConfig& config) override;
@@ -107,10 +111,24 @@ protected:
                         std::list<GenerateStreamPtr>&       decode_streams);
 
 private:
+    GptModelOutputs forwardModel(ModelBase* model, const GptModelInputs& inputs, ModelInputsModelRole role);
+    void            releaseModelBuffers();
+
+    static void applySpecVerifyResult(SpecLogitsVerifyRunner::LaunchResult&  verify_result,
+                                      const SamplerOutput&                   target_sampler_output,
+                                      speculative::SpeculativeSamplerOutput& output,
+                                      int64_t                                propose_step);
+
+    SpecLogitsVerifyRunner::LaunchResult runSpecLogitsVerify(const std::list<GenerateStreamPtr>& streams,
+                                                             const GptModelInputs&               model_input,
+                                                             const SamplerOutput&                draft_sampler_output,
+                                                             const torch::Tensor&                draft_token_ids);
+
     std::unique_ptr<ModelBase>               model_;
     std::unique_ptr<Sampler>                 sampler_;
     std::unique_ptr<MtpBatchStreamProcessor> batch_stream_processor_;
     std::shared_ptr<KVCacheManager>          cache_manager_;
+    std::shared_ptr<ModelInputsLogger>       model_inputs_logger_;
     bool                                     enable_ffn_disaggregate_ = false;
     bool                                     enable_detail_log_       = false;
     int                                      tp_rank_                 = 0;
@@ -135,8 +153,6 @@ private:
     bool     warm_up_;
     RoleType role_type_;
 
-    // group id tensors
-    torch::Tensor target_kv_cache_layer_to_group;
-    torch::Tensor draft_kv_cache_layer_to_group;
+    SpecLogitsVerifyRunner spec_logits_verify_runner_;
 };
 };  // namespace rtp_llm

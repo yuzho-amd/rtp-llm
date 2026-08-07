@@ -6,9 +6,18 @@ from rtp_llm.models_py.modules.factory.attention.fmha_impl_base import (
     FMHAImplBase,
     MlaImplBase,
 )
-from rtp_llm.ops import AttentionConfigs, FMHAConfig, KvCacheDataType, ParallelismConfig
+from rtp_llm.ops import (
+    AttentionConfigs,
+    FMHAConfig,
+    KvCacheDataType,
+    ParallelismConfig,
+    RopeStyle,
+)
 from rtp_llm.ops.compute_ops import PyAttentionInputs
 from rtp_llm.utils.model_weight import W
+
+AttentionImpl = Union[FMHAImplBase, MlaImplBase]
+AttentionImplFactory = Callable[..., AttentionImpl]
 
 # Lists to store registered implementations
 PREFILL_MHA_IMPS: List[type[FMHAImplBase]] = []
@@ -175,20 +184,24 @@ def get_fmha_impl(
             # If instantiation fails, continue to next impl
             logging.warning(f"Failed to instantiate {impl_class_name}: {e}")
             continue
-    raise Exception(f"can not find mha type")
+    if (
+        attn_configs.rope_config.style == RopeStyle.Mrope
+        and not attn_configs.rope_config.mrope_interleaved
+    ):
+        raise ValueError(
+            "No registered attention implementation supports non-interleaved MRoPE "
+            "on this backend. Qwen2-VL/Qwen2.5-VL checkpoints use the "
+            "non-interleaved layout by default; do not flip mrope_interleaved because "
+            "that changes RoPE semantics. Use a CUDA backend for these checkpoints."
+        )
+    raise Exception("can not find mha type")
 
 
 class AttnImplFactory(object):
     """Factory class for creating FMHA implementations based on attention_type."""
 
     # FMHA implementation registry - maps attention_type to impl method
-    FMHA_IMPL_REGISTRY: Dict[
-        str,
-        Callable[
-            [AttentionConfigs, ModelWeights, PyAttentionInputs, Optional[FMHAConfig]],
-            Union[FMHAImplBase, MlaImplBase],
-        ],
-    ] = {
+    FMHA_IMPL_REGISTRY: Dict[str, AttentionImplFactory] = {
         "mha": get_fmha_impl,
         "mla": get_mla_impl,
     }
@@ -202,7 +215,7 @@ class AttnImplFactory(object):
         attn_inputs: PyAttentionInputs,
         fmha_config: Optional[FMHAConfig] = None,
         is_cuda_graph: bool = False,
-    ) -> FMHAImplBase:
+    ) -> AttentionImpl:
         # Extract AttentionConfigs from ModelConfig
         attn_configs = model_config.getAttentionConfigs(
             parallelism_config.get_attn_tp_size()
@@ -224,7 +237,7 @@ class AttnImplFactory(object):
         return instance
 
     @classmethod
-    def get_fmha_impl_method(cls, attention_type: str) -> str:
+    def get_fmha_impl_method(cls, attention_type: str) -> AttentionImplFactory:
         """
         Get the appropriate FMHA implementation method based on attention_type.
 

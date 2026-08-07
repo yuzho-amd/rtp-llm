@@ -1,5 +1,8 @@
 #pragma once
 
+#include <string>
+#include <utility>
+
 namespace rtp_llm {
 
 enum class ErrorCode {
@@ -13,6 +16,14 @@ enum class ErrorCode {
     EXECUTION_EXCEPTION          = 606,
     EXCEEDS_KV_CACHE_MAX_LEN     = 607,
 
+    // grammar / structured-output errors (608-613)
+    GRAMMAR_PARSER_REJECTED_TOKEN     = 608,
+    GRAMMAR_NON_EOS_AFTER_TERMINAL    = 609,
+    GRAMMAR_BITMASK_BUFFER_TOO_SMALL  = 610,
+    GRAMMAR_VOCAB_EXCEEDS_MODEL_VOCAB = 611,
+    GRAMMAR_EOS_OUT_OF_VOCAB          = 612,
+    GRAMMAR_VERIFY_EXCEPTION          = 613,
+
     // multimodal error
     MM_LONG_PROMPT_ERROR   = 901,
     MM_WRONG_FORMAT_ERROR  = 902,
@@ -22,11 +33,12 @@ enum class ErrorCode {
     MM_DOWNLOAD_FAILED     = 906,
 
     // Error codes starting from 8000 can be retried
-    CANCELLED             = 8100,
-    OUT_OF_VOCAB_RANGE    = 8101,
-    OUTPUT_QUEUE_FULL     = 8102,
-    OUTPUT_QUEUE_IS_EMPTY = 8103,
-    FINISHED              = 8104,
+    CANCELLED              = 8100,
+    OUT_OF_VOCAB_RANGE     = 8101,
+    OUTPUT_QUEUE_FULL      = 8102,
+    OUTPUT_QUEUE_IS_EMPTY  = 8103,
+    FINISHED               = 8104,
+    OUTPUT_QUEUE_NO_UPDATE = 8105,
 
     // rpc error
     GET_HOST_FAILED                       = 8200,
@@ -108,8 +120,22 @@ inline std::string ErrorCodeToString(ErrorCode code) {
             return "OUTPUT_QUEUE_IS_EMPTY";
         case ErrorCode::FINISHED:
             return "FINISHED";
+        case ErrorCode::OUTPUT_QUEUE_NO_UPDATE:
+            return "OUTPUT_QUEUE_NO_UPDATE";
         case ErrorCode::EXCEEDS_KV_CACHE_MAX_LEN:
             return "EXCEEDS_KV_CACHE_MAX_LEN";
+        case ErrorCode::GRAMMAR_PARSER_REJECTED_TOKEN:
+            return "GRAMMAR_PARSER_REJECTED_TOKEN";
+        case ErrorCode::GRAMMAR_NON_EOS_AFTER_TERMINAL:
+            return "GRAMMAR_NON_EOS_AFTER_TERMINAL";
+        case ErrorCode::GRAMMAR_BITMASK_BUFFER_TOO_SMALL:
+            return "GRAMMAR_BITMASK_BUFFER_TOO_SMALL";
+        case ErrorCode::GRAMMAR_VOCAB_EXCEEDS_MODEL_VOCAB:
+            return "GRAMMAR_VOCAB_EXCEEDS_MODEL_VOCAB";
+        case ErrorCode::GRAMMAR_EOS_OUT_OF_VOCAB:
+            return "GRAMMAR_EOS_OUT_OF_VOCAB";
+        case ErrorCode::GRAMMAR_VERIFY_EXCEPTION:
+            return "GRAMMAR_VERIFY_EXCEPTION";
         case ErrorCode::GET_HOST_FAILED:
             return "GET_HOST_FAILED";
         case ErrorCode::GET_CONNECTION_FAILED:
@@ -215,14 +241,11 @@ class ErrorInfo {
 public:
     ErrorInfo() {}
     ErrorInfo(ErrorCode code, const std::string& message): code_(code), message_(message) {}
-    ErrorInfo(const ErrorInfo& other): code_(other.code_), message_(other.message_) {}
-    ErrorInfo& operator=(const ErrorInfo& other) {
-        if (this != &other) {
-            code_    = other.code_;
-            message_ = other.message_;
-        }
-        return *this;
-    }
+    ErrorInfo(ErrorCode code, std::string&& message): code_(code), message_(std::move(message)) {}
+    ErrorInfo(const ErrorInfo& other)            = default;
+    ErrorInfo(ErrorInfo&& other)                 = default;
+    ErrorInfo& operator=(const ErrorInfo& other) = default;
+    ErrorInfo& operator=(ErrorInfo&& other)      = default;
 
     const std::string& ToString() const {
         return message_;

@@ -25,6 +25,19 @@ py_test(
 )
 
 py_test(
+    # Verifies load_tensor_slice / copy-out on a real ROCm build (hip asserted).
+    name = "ckpt_database_test_rocm",
+    srcs = ["ckpt_database_test.py"],
+    main = "ckpt_database_test.py",
+    args = ["HandleRecyclingTest"],
+    deps = ["//rtp_llm:utils", "//rtp_llm:config", "//rtp_llm:_ft_pickler", "//rtp_llm:lora"],
+    data = ["//rtp_llm/utils/test:testdata"],
+    env = {"RTP_LLM_REQUIRE_ACCELERATOR": "1"},
+    tags = ["rocm"],
+    exec_properties = {'gpu': 'MI308X-ROCM7'},
+)
+
+py_test(
     name = "fuser_test",
     srcs = [
         "fuser_test.py",
@@ -46,6 +59,17 @@ py_test(
         "//rtp_llm:pynvml",
         "//rtp_llm:psutil",
         "//rtp_llm:fastapi",
+    ],
+)
+
+py_test(
+    name = "hot_hook_runtime_test",
+    srcs = [
+        "hot_hook_runtime_test.py",
+        "hot_hook_target.py",
+    ],
+    deps = [
+        "//rtp_llm:utils",
     ],
 )
 

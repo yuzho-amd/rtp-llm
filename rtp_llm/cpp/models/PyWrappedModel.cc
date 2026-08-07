@@ -24,6 +24,54 @@ using namespace std;
 
 namespace rtp_llm {
 
+namespace {
+
+// Pairs init() with waitAllDone() so an exception between them still returns the
+// writer to IDLE. Without this a single failed forward leaves it RUNNING, and every
+// later init() trips its IDLE precondition -- the instance can never publish again.
+class CacheStoreWriteCycleGuard {
+public:
+    CacheStoreWriteCycleGuard(const std::shared_ptr<CacheStoreAsyncWriter>& writer, bool has_work):
+        writer_(writer), active_(has_work) {
+        if (active_) {
+            writer_->init();
+        }
+    }
+
+    ~CacheStoreWriteCycleGuard() {
+        if (!active_) {
+            return;
+        }
+        active_ = false;
+        // Swallowed on purpose: this runs while another exception may be unwinding.
+        try {
+            writer_->waitAllDone();
+        } catch (const std::exception& e) {
+            RTP_LLM_LOG_ERROR("failed to drain CacheStore writer while unwinding forward: %s", e.what());
+        } catch (...) {
+            RTP_LLM_LOG_ERROR("failed to drain CacheStore writer while unwinding forward: unknown exception");
+        }
+    }
+
+    // Normal path: let a drain failure propagate to the caller.
+    void finish() {
+        if (!active_) {
+            return;
+        }
+        active_ = false;
+        writer_->waitAllDone();
+    }
+
+    CacheStoreWriteCycleGuard(const CacheStoreWriteCycleGuard&)            = delete;
+    CacheStoreWriteCycleGuard& operator=(const CacheStoreWriteCycleGuard&) = delete;
+
+private:
+    std::shared_ptr<CacheStoreAsyncWriter> writer_;
+    bool                                   active_{false};
+};
+
+}  // namespace
+
 torch::Tensor PyWrappedModel::tensorHoldHostAndToCuda(const torch::Tensor& tensor) {
     if (tensor.device().is_cuda()) {
         return tensor;
@@ -83,16 +131,6 @@ torch_ext::PyAttentionInputs PyWrappedModel::buildPyAttentionInputs(const GptMod
     py_attn_inputs.sequence_lengths = inputs.sequence_lengths;
     py_attn_inputs.input_lengths    = inputs.input_lengths;
 
-    if (inputs.kv_cache_kernel_block_id.defined()) {
-        py_attn_inputs.kv_cache_kernel_block_id = inputs.kv_cache_kernel_block_id.clone().pin_memory();
-    }
-    if (inputs.kv_cache_block_id.defined()) {
-        py_attn_inputs.kv_cache_block_id = inputs.kv_cache_block_id.clone().pin_memory();
-    }
-    if (inputs.kv_cache_layer_to_group.defined()) {
-        py_attn_inputs.kv_cache_layer_to_group = inputs.kv_cache_layer_to_group;
-    }
-
     if (inputs.combo_position_ids.defined()) {
         py_attn_inputs.combo_position_ids = tensorHoldHostAndToCuda(inputs.combo_position_ids);
     }
@@ -138,7 +176,7 @@ torch_ext::PyAttentionInputs PyWrappedModel::buildPyAttentionInputs(const GptMod
 
         py_attn_inputs.context_total_kv_length = cu_kv_seqlens[context_batch_size].item<int>();
         py_attn_inputs.total_tokens            = cu_seqlens[batch_size].item<int>();
-        py_attn_inputs.cu_seqlens         = cu_seqlens;
+        py_attn_inputs.cu_seqlens              = cu_seqlens;
         py_attn_inputs.cu_seqlens_device       = tensorHoldHostAndToCuda(cu_seqlens);
         py_attn_inputs.cu_kv_seqlens_device    = tensorHoldHostAndToCuda(cu_kv_seqlens);
     } else {
@@ -154,7 +192,7 @@ torch_ext::PyAttentionInputs PyWrappedModel::buildPyAttentionInputs(const GptMod
                           py_attn_inputs.sequence_lengths.size(0) + 1,
                           1,
                           torch::TensorOptions(torch::kInt32).device(torch::kCPU).pinned_memory(true));
-        py_attn_inputs.decode_cu_seqlens   = decode_cu_seqlens;
+        py_attn_inputs.decode_cu_seqlens        = decode_cu_seqlens;
         py_attn_inputs.decode_cu_seqlens_device = tensorHoldHostAndToCuda(decode_cu_seqlens);
     }
 
@@ -175,34 +213,68 @@ torch_ext::PyAttentionInputs PyWrappedModel::buildPyAttentionInputs(const GptMod
 }
 
 // Helper function to setup KV cache for attention inputs
-void PyWrappedModel::setupKVCacheForAttentionInputs(torch_ext::PyAttentionInputs& py_attn_inputs,
-                                                    const GptModelInputs&         inputs) {
+torch_ext::AttentionInputsByTag
+PyWrappedModel::setupKVCacheForAttentionInputs(torch_ext::PyAttentionInputs& py_attn_inputs,
+                                               const GptModelInputs&         inputs) {
     RTP_LLM_PROFILE_SCOPE("py_model.setupKVCacheForAttentionInputs");
     DevicePerfWrapper wrapper(enable_device_perf_, "py model setupKVCacheForAttentionInputs");
     if (!inputs.kv_cache_kernel_block_id.defined()) {
-        return;
+        return {};
     }
-    RTP_LLM_CHECK_WITH_INFO(inputs.kv_cache_kernel_block_id.dim() == 3, "kv_cache_kernel_block_id shape should be 3");
-    // New layout: [group, batch, kernel_blocks]
-    // build per-group contiguous 2-D tables on device.
-    const size_t group = inputs.kv_cache_kernel_block_id.size(0);
+    RTP_LLM_CHECK_WITH_INFO(inputs.kv_cache_kernel_block_id.dim() == 2 || inputs.kv_cache_kernel_block_id.dim() == 3,
+                            "kv_cache_kernel_block_id must be [batch, blocks] or [group, batch, blocks]");
 
-    py_attn_inputs.kv_cache_kernel_block_id_by_group.clear();
-    py_attn_inputs.kv_cache_kernel_block_id_device_by_group.clear();
-    py_attn_inputs.kv_cache_kernel_block_id_by_group.reserve(group);
-    py_attn_inputs.kv_cache_kernel_block_id_device_by_group.reserve(group);
-
-    for (size_t g = 0; g < group; ++g) {
-        // group view: [batch, kernel_blocks] on HOST
-        auto group_view = inputs.kv_cache_kernel_block_id[g];
-        py_attn_inputs.kv_cache_kernel_block_id_by_group.push_back(group_view);
-        py_attn_inputs.kv_cache_kernel_block_id_device_by_group.push_back(tensorHoldHostAndToCuda(group_view));
+    if (inputs.kv_cache_kernel_block_id.dim() == 2) {
+        py_attn_inputs.kv_cache_kernel_block_id = inputs.kv_cache_kernel_block_id;
+        py_attn_inputs.kv_cache_kernel_block_id_device =
+            tensorHoldHostAndToCuda(py_attn_inputs.kv_cache_kernel_block_id);
+        if (inputs.kv_cache_block_id.defined()) {
+            RTP_LLM_CHECK_WITH_INFO(inputs.kv_cache_block_id.dim() == 2,
+                                    "kv_cache_block_id must be 2-D when kernel block table is 2-D");
+            py_attn_inputs.kv_cache_block_id        = inputs.kv_cache_block_id;
+            py_attn_inputs.kv_cache_block_id_device = tensorHoldHostAndToCuda(py_attn_inputs.kv_cache_block_id);
+            if (py_attn_inputs.cache_store_inputs.has_value()) {
+                py_attn_inputs.cache_store_inputs->host_kv_cache_offset = py_attn_inputs.kv_cache_block_id;
+            }
+        }
+        return {};
     }
 
-    // Legacy 2-D fields default to group 0.
-    // NOTE: keep host/device 2-D fields consistent to avoid shape mismatch in CUDA graph replay path.
-    py_attn_inputs.kv_cache_kernel_block_id_device = py_attn_inputs.kv_cache_kernel_block_id_device_by_group[0];
-    py_attn_inputs.kv_cache_kernel_block_id   = py_attn_inputs.kv_cache_kernel_block_id_by_group[0];
+    const size_t group_count = static_cast<size_t>(inputs.kv_cache_kernel_block_id.size(0));
+    RTP_LLM_CHECK_WITH_INFO(kv_cache_layer_layout_.has_value(),
+                            "tagged attention inputs require the current model cache layout");
+    const auto& group_tags = kv_cache_layer_layout_->topology().groupTagsSnapshot();
+    RTP_LLM_CHECK_WITH_INFO(group_tags.size() == group_count,
+                            "KV block table group count=%zu does not match topology tag count=%zu",
+                            group_count,
+                            group_tags.size());
+    RTP_LLM_CHECK_WITH_INFO(!inputs.kv_cache_block_id.defined() || inputs.kv_cache_block_id.dim() == 3,
+                            "physical kv_cache_block_id must be 3-D for tagged inputs");
+
+    torch_ext::AttentionInputsByTag by_tag;
+    for (size_t group_id = 0; group_id < group_count; ++group_id) {
+        auto group_inputs                            = py_attn_inputs;
+        group_inputs.kv_cache_kernel_block_id        = inputs.kv_cache_kernel_block_id[group_id];
+        group_inputs.kv_cache_kernel_block_id_device = tensorHoldHostAndToCuda(group_inputs.kv_cache_kernel_block_id);
+        if (inputs.kv_cache_block_id.defined()) {
+            group_inputs.kv_cache_block_id        = inputs.kv_cache_block_id[group_id];
+            group_inputs.kv_cache_block_id_device = tensorHoldHostAndToCuda(group_inputs.kv_cache_block_id);
+            if (group_inputs.cache_store_inputs.has_value()) {
+                group_inputs.cache_store_inputs->host_kv_cache_offset = group_inputs.kv_cache_block_id;
+            }
+        }
+        const auto [it, inserted] = by_tag.emplace(group_tags[group_id], std::move(group_inputs));
+        (void)it;
+        RTP_LLM_CHECK_WITH_INFO(inserted, "duplicate attention input tag=%s", group_tags[group_id].c_str());
+    }
+
+    // A single global group keeps the direct fast path. Multiple groups are
+    // exposed only through the outer tag mapping.
+    py_attn_inputs = by_tag.at(group_tags.front());
+    if (group_count == 1) {
+        return {};
+    }
+    return by_tag;
 }
 
 // Helper function to build BertEmbeddingInputs from GptModelInputs
@@ -261,40 +333,21 @@ GptModelOutputs PyWrappedModel::callForwardPostLayers(torch::Tensor         hidd
 
 std::optional<PyCacheStoreInputs> PyWrappedModel::prepareWriteCacheParams(const GptModelInputs& inputs) {
     RTP_LLM_PROFILE_SCOPE("py_model.prepareWriteCacheParams");
-    std::optional<PyCacheStoreInputs> params;
-    if (!inputs.warmup && inputs.pd_separation) {
-        const size_t         decoder_batch_size = inputs.sequence_lengths.size(0);
-        const size_t         context_batch_size = inputs.input_lengths.size(0) - decoder_batch_size;
-        std::vector<int64_t> cache_keys_vec;
-        if (inputs.cache_keys.defined()) {
-            auto ck        = inputs.cache_keys.contiguous();
-            cache_keys_vec = std::vector<int64_t>(ck.data_ptr<int64_t>(), ck.data_ptr<int64_t>() + ck.numel());
-        }
-        torch::Tensor kv_cache_layer_to_group =
-            inputs.kv_cache_layer_to_group.defined() ? inputs.kv_cache_layer_to_group : torch::Tensor();
-        torch::Tensor kv_cache_group_types =
-            inputs.kv_cache_group_types.defined() ? inputs.kv_cache_group_types : torch::Tensor();
-        PyCacheStoreInputs cache_store_inputs{context_batch_size,
-                                              decoder_batch_size,
-                                              inputs.request_id,
-                                              inputs.request_pd_separation,
-                                              kv_cache_layer_to_group,
-                                              kv_cache_group_types,
-                                              transVectorToString(cache_keys_vec),
-                                              inputs.seq_size_per_block,
-                                              inputs.kv_block_stride_bytes,
-                                              inputs.kv_scale_stride_bytes,
-                                              inputs.pd_separation,
-                                              model_id_,
-                                              inputs.decode_entrance,
-                                              inputs.warmup,
-                                              description_.attention_conf.use_mla
-                                                  && mla_ops_type_ != rtp_llm::MlaOpsType::MHA,
-                                              cache_manager_ ? cache_manager_->getCacheStore() : nullptr,
-                                              cache_store_async_writer_.get()};
-        params = cache_store_inputs;
+    if (inputs.warmup) {
+        return std::nullopt;
     }
-    return params;
+    if (!inputs.pd_separation || !inputs.request_id.defined() || inputs.request_id.numel() == 0) {
+        return std::nullopt;
+    }
+
+    PyCacheStoreInputs cache_store_inputs;
+    cache_store_inputs.input_lengths_host    = inputs.input_lengths;
+    cache_store_inputs.prefix_lengths_host   = inputs.prefix_lengths;
+    cache_store_inputs.host_kv_cache_offset  = inputs.kv_cache_block_id;
+    cache_store_inputs.request_id            = inputs.request_id;
+    cache_store_inputs.request_pd_separation = inputs.request_pd_separation;
+    cache_store_inputs.cache_keys            = inputs.cache_keys;
+    return cache_store_inputs;
 }
 
 GptModelOutputs PyWrappedModel::forwardMicroBatched(const GptModelInputs& inputs) {
@@ -329,22 +382,24 @@ GptModelOutputs PyWrappedModel::forwardMicroBatched(const GptModelInputs& inputs
     input_list.reserve(split_inputs.size());
 
     for (size_t i = 0; i < split_inputs.size(); ++i) {
-        const auto& micro_inputs =
-            split_inputs[i].kv_cache_kernel_block_id.defined() ? split_inputs[i] : split_inputs[0];
-        auto py_attn_inputs        = buildPyAttentionInputs(micro_inputs);
-        auto embedding_inputs      = buildPyEmbeddingInputs(micro_inputs);
-        auto multimodal_inputs     = buildPyMultimodalInputs(micro_inputs);
-        auto bert_embedding_inputs = buildBertEmbeddingInputs(micro_inputs);
-        if (!inputs.warmup && inputs.pd_separation) {
-            py_attn_inputs.cache_store_inputs = prepareWriteCacheParams(inputs);
+        const bool  is_real_micro_input   = split_inputs[i].kv_cache_kernel_block_id.defined();
+        const auto& micro_inputs          = is_real_micro_input ? split_inputs[i] : split_inputs[0];
+        auto        py_attn_inputs        = buildPyAttentionInputs(micro_inputs);
+        auto        embedding_inputs      = buildPyEmbeddingInputs(micro_inputs);
+        auto        multimodal_inputs     = buildPyMultimodalInputs(micro_inputs);
+        auto        bert_embedding_inputs = buildBertEmbeddingInputs(micro_inputs);
+        if (is_real_micro_input && py_attn_inputs.is_prefill) {
+            py_attn_inputs.cache_store_inputs = prepareWriteCacheParams(micro_inputs);
+            if (py_attn_inputs.cache_store_inputs.has_value()) {
+                py_attn_inputs.cache_store_writer = cache_store_async_writer_;
+            }
         }
         torch::Tensor combo_position_ids = micro_inputs.combo_position_ids.defined() ?
                                                tensorHoldHostAndToCuda(micro_inputs.combo_position_ids) :
                                                torch::empty({0});
-        setupKVCacheForAttentionInputs(py_attn_inputs, micro_inputs);
-
         calculatePaddingOffset(py_attn_inputs);
         py_attn_inputs.padding_offset = tensorHoldHostAndToCuda(py_attn_inputs.padding_offset);
+        auto attention_inputs_by_tag  = setupKVCacheForAttentionInputs(py_attn_inputs, micro_inputs);
 
         torch::Tensor token_ids = micro_inputs.combo_tokens.clone().cuda();
         torch::Tensor input_hiddens =
@@ -355,12 +410,12 @@ GptModelOutputs PyWrappedModel::forwardMicroBatched(const GptModelInputs& inputs
                                               embedding_inputs,
                                               multimodal_inputs,
                                               py_attn_inputs,
+                                              attention_inputs_by_tag,
                                               bert_embedding_inputs});
     }
 
-    if (!inputs.warmup && inputs.pd_separation) {
-        cache_store_async_writer_->init();
-    }
+    const bool                has_cache_store_work = !inputs.warmup && inputs.pd_separation;
+    CacheStoreWriteCycleGuard cache_store_write_cycle(cache_store_async_writer_, has_cache_store_work);
 
     fusedCopy(d2d_copies_);
 
@@ -377,9 +432,7 @@ GptModelOutputs PyWrappedModel::forwardMicroBatched(const GptModelInputs& inputs
                             py_model_outputs.size(),
                             input_list.size());
 
-    if (!inputs.warmup && inputs.pd_separation) {
-        cache_store_async_writer_->waitAllDone();
-    }
+    cache_store_write_cycle.finish();
 
     // TODO: merge hidden states in one tensor
     torch::Tensor hidden_states;
@@ -489,14 +542,21 @@ GptModelOutputs PyWrappedModel::forward(const GptModelInputs& inputs) {
             attention_inputs.context_parallel_info = cp_params;
         }
 
-        if (!inputs.warmup && inputs.pd_separation) {
+        if (attention_inputs.is_prefill) {
             attention_inputs.cache_store_inputs = prepareWriteCacheParams(inputs);
-            cache_store_async_writer_->init();
+            if (attention_inputs.cache_store_inputs.has_value()) {
+                if (device_props_.enable_prefill_cp) {
+                    attention_inputs.cache_store_inputs->input_lengths_host =
+                        cp_params.prefill_actual_input_lengths_cpu;
+                }
+                attention_inputs.cache_store_writer = cache_store_async_writer_;
+            }
         }
-        setupKVCacheForAttentionInputs(attention_inputs, inputs);
-
+        const bool                has_cache_store_work = !inputs.warmup && inputs.pd_separation;
+        CacheStoreWriteCycleGuard cache_store_write_cycle(cache_store_async_writer_, has_cache_store_work);
         calculatePaddingOffset(attention_inputs);
         attention_inputs.padding_offset = tensorHoldHostAndToCuda(attention_inputs.padding_offset);
+        auto attention_inputs_by_tag    = setupKVCacheForAttentionInputs(attention_inputs, inputs);
 
         // launch fused copy
         fusedCopy(d2d_copies_);
@@ -507,6 +567,7 @@ GptModelOutputs PyWrappedModel::forward(const GptModelInputs& inputs) {
                                                         embedding_inputs,
                                                         multimodal_inputs,
                                                         attention_inputs,
+                                                        attention_inputs_by_tag,
                                                         bert_embedding_inputs});
         PyModelOutputs py_model_outputs;
         torch::Tensor  hidden_states;
@@ -540,12 +601,11 @@ GptModelOutputs PyWrappedModel::forward(const GptModelInputs& inputs) {
             hidden_states         = py_model_outputs.hidden_states.clone();
         }
 
-        if (!inputs.warmup && inputs.pd_separation) {
-            cache_store_async_writer_->waitAllDone();
-        }
+        cache_store_write_cycle.finish();
 
         RTP_LLM_LOG_DEBUG("Python object instance forward method called successfully.");
-        if (device_props_.enable_prefill_cp) {
+        const bool has_context_request = inputs.input_lengths.size(0) != inputs.sequence_lengths.size(0);
+        if (device_props_.enable_prefill_cp && has_context_request) {
             size_t num_valid_tokens = context_parallel_processor_->handleOutputs(hidden_states, inputs, cp_params);
             return callForwardPostLayers(hidden_states, inputs, true, num_valid_tokens);
         }
@@ -970,7 +1030,6 @@ void PyWrappedModel::holdInputsHostBuffers(const GptModelInputs& inputs) {
 
     buffer_holder_.hold_host(inputs.attention_mask);
     buffer_holder_.hold_host(inputs.kv_cache_block_id);
-    buffer_holder_.hold_host(inputs.kv_cache_layer_to_group);
     buffer_holder_.hold_host(inputs.kv_cache_group_types);
     buffer_holder_.hold_host(inputs.kv_cache_update_mapping);
 
