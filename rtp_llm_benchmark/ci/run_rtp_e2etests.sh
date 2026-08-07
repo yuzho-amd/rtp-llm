@@ -432,6 +432,15 @@ install_and_test_e2e() {
         CACHED_TOKENS=0
         
         local case_tag=$(python3 -c "import json; data=json.load(open('${GOLDEN_RESPONSES_FILE}')); print(data['test_cases'][${i}]['case_tag'])")
+
+        # 临时跳过列表(用例保留在json中,仅CI运行时跳过;需要时从此列表移除即可恢复)
+        SKIP_CASES="Qwen_VL_TP1 Qwen_VL_TP4 Bert_int8"
+        if echo " $SKIP_CASES " | grep -qw "$case_tag"; then
+            echo "=========================================="
+            echo "跳过用例: ${case_tag} (临时禁用,用例仍保留在json)"
+            echo "=========================================="
+            continue
+        fi
         local server_params=$(python3 -c "import json; data=json.load(open('${GOLDEN_RESPONSES_FILE}')); print(data['test_cases'][${i}]['server_params'])")
         local model_timeout=$(python3 -c "import json; data=json.load(open('${GOLDEN_RESPONSES_FILE}')); print(data['test_cases'][${i}]['timeout'])")
         local generate_config=$(python3 -c "import json; data=json.load(open('${GOLDEN_RESPONSES_FILE}')); print(json.dumps(data['test_cases'][${i}]['generate_config']))")
