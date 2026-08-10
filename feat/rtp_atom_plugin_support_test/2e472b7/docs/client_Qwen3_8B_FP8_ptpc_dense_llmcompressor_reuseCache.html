@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>client_Qwen3_8B_FP8_ptpc_dense_llmcompressor_reuseCache &#8212; rtp-llm-private  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8e8a900e" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/pdj.css?v=4abe0d83" />
+
+<link rel="stylesheet" href="../_static/css/darker.css" type="text/css"
+      media="(prefers-color-scheme: dark)"/>
+    <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'/>
+    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/pdj.js"></script>
+
+    <script type="module" src="../_static/js/dark-mode-toggle.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="client_Qwen3_8B_FP8_ptpc_dense_llmcompressor_reuseCache_ASM_PA" href="client_Qwen3_8B_FP8_ptpc_dense_llmcompressor_reuseCache_ASM_PA.html" />
+    <link rel="prev" title="client_Qwen3_8B_FP8_ptpc_dense_llmcompressor_TRITON_PA" href="client_Qwen3_8B_FP8_ptpc_dense_llmcompressor_TRITON_PA.html" /> 
+  </head>  <body class="wy-body-for-nav" role="document"> 
+<div class="menu-overlay"></div>
+<section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+  <nav class="wy-nav-top" id="barra-mobile" role="navigation" aria-label="top navigation">
+    <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+    <a href="#">rtp-llm-private </a>
+  </nav>
+
+  <div class="wy-nav-content">
+    <div class="fundo-claro">
+    </div>
+    <div class="fundo-escuro">
+    </div>
+
+    <div class="rst-content">
+      <div role="navigation" aria-label="breadcrumbs navigation">
+      </div>
+      <div class="">
+
+	
+	<div id="content" class="hfeed entry-container hentry">
+      	  <div id="dark-mode-toggle-container">
+	    <dark-mode-toggle appearance="toggle" class="slider" dark="" light="">
+	    </dark-mode-toggle>
+	  </div>
+	  <div role="main">
+  <section id="client-qwen3-8b-fp8-ptpc-dense-llmcompressor-reusecache">
+<h1>client_Qwen3_8B_FP8_ptpc_dense_llmcompressor_reuseCache<a class="headerlink" href="#client-qwen3-8b-fp8-ptpc-dense-llmcompressor-reusecache" title="Link to this heading">¶</a></h1>
+<pre>
+REQUEST: curl -s -X POST &quot;http://localhost:6789/v1/chat/completions&quot; -H &quot;Content-Type: application/json&quot; -d &quot;{&quot;temperature&quot;:0,&quot;max_tokens&quot;:10,&quot;top_p&quot;:0.1,&quot;top_k&quot;:1,&quot;messages&quot;:[{&quot;role&quot;:&quot;system&quot;,&quot;content&quot;:&quot;# 角色\n你是一位意图识别分析专家，你熟知AIDC供应链知识以及术语，能够结合商家的问题和历史对话，理解商家实际意图。\n\n# 术语解释\nbp：商家备货周期\n圈品：根据条件对划分出货品范围\n备货逻辑：商家备货周期\n\n# 任务n结合**最近**历史对话以及商家的问题，理解商家实际意图，只能返回意图简称。\n\n# 意图识别\n## 我可接收处理的意图列表\n格式为“【意图简称】意图的具体描述”，列表如下：\n【备货逻辑解释】：商家希望平台解释备货单的备货量下单依据\n【修改备货逻辑】：当商家的问题中涉及修改**备货周期**或者**备货逻辑**，则返回“修改备货逻辑”\n【圈品】：商家圈定一定范围的货品来修改备货逻辑，支持的圈品规则示例：选出历史7天销量大于20的品、选出历史14天销量大于20的品、选出历史30天销量大于20的品\n【备货量重算】：商家希望**重新计算**备货量\n【改量】：若最近历史对话以及商家问题中提到**确认修改**备货量，则返回“改量”\n【确认接单】：最近历史对话以及商家问题中，商家提到**确认备货单**或**确认一起接单**，则返回“确认接单”\n【多意图】：商家输入的问题里同时包含上述多个意图。\n\n## 注意事项\n在意图识别的时候请忽略历史对话中的`output`、`&lt;actions&gt;`和`&lt;suggestions&gt;`这三个XML中的内容，一定不要用这三个XML标签内部的内容作为你意图识别的根据，非意图识别场景请忽略。\n\n# 输出限制\n1.只能输出意图识别里的意图简称，禁止输出其他无关信息。\n2.检查商家输入和你的输出是否含有违法、涉政、涉秘的内容，若有，识别为其他 。\n3.若商家同时想要改量和确认接单，则意图只识别为改量。&quot;,&quot;partial&quot;:false},{&quot;role&quot;:&quot;user&quot;,&quot;content&quot;:&quot;商家的问题:\n帮我解释货品的备货量 仓编码：CSC207 备货单号：PON204253155433402 货品 ID 809687885667&quot;,&quot;partial&quot;:false}],&quot;extra_configs&quot;:{&quot;chat_template_kwargs&quot;:{&quot;enable_thinking&quot;:false}}}&quot;
+CASE: Qwen3_8B_FP8_ptpc_dense_llmcompressor_reuseCache
+SERVER_PARAMS: REUSE_CACHE=1 USE_AITER_PA=1 USE_ASM_PA=1 ACT_TYPE=bf16 SEQ_SIZE_PER_BLOCK=16 WARM_UP=0 TOKENIZER_PATH=/mnt/raid0/pretrained_model/rtp_ci/Qwen3-8B-FP8-Dynamic/ CHECKPOINT_PATH=/mnt/raid0/pretrained_model/rtp_ci/Qwen3-8B-FP8-Dynamic/  MODEL_TYPE=qwen_3 FT_SERVER_TEST=1
+TEST_TIME: 2026-08-10T16:23:40+00:00
+GENERATE_CONFIG: {&quot;temperature&quot;: 0.0, &quot;max_tokens&quot;: 10, &quot;top_p&quot;: 0.1, &quot;top_k&quot;: 1}
+ACTUAL_RESPONSE1: 备货逻辑解释
+ACTUAL_RESPONSE2: 备货逻辑解释
+CACHED_TOKENS: 528
+REUSE_CACHE生效, cached_tokens=528
+CHECK: MATCH
+</pre></section>
+
+
+	  </div>
+	</div>
+      </div>
+      
+      
+      <footer>
+  
+  <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+    
+    <a href="client_Qwen3_8B_FP8_ptpc_dense_llmcompressor_reuseCache_ASM_PA.html" class="btn btn-neutral float-right" title="client_Qwen3_8B_FP8_ptpc_dense_llmcompressor_reuseCache_ASM_PA">Next <span class="fa fa-arrow-circle-right"></span></a>
+    
+    
+    <a href="client_Qwen3_8B_FP8_ptpc_dense_llmcompressor_TRITON_PA.html" class="btn btn-neutral" title="client_Qwen3_8B_FP8_ptpc_dense_llmcompressor_TRITON_PA"><span class="fa fa-arrow-circle-left"></span>Previous</a>
+    
+  </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+      &copy; Copyright 2023, Advanced Micro Devices, Inc. All rights reserved.
+    </p>
+  </div>
+
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/jucacrispim/sphinx_pdj_theme">theme</a> provided by <a href="https://poraodojuca.dev">Porão do Juca</a>.
+
+</footer>
+      
+
+      <div class="clearer"></div>
+    </div>
+  </div>
+
+</section>
+
+<nav data-toggle="wy-nav-shift" class="wy-nav-side">
+  <div class="wy-side-nav-search">
+    
+    <a href="../index.html" class="fa fa-home"> rtp-llm-private </a>
+    
+    
+    <div role="search">
+      
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+      
+    </div>
+  </div>
+
+  <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+    
+
+    
+      
+      
+	  <p class="caption" role="heading"><span class="caption-text">LogFiles:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="bazelbuild.html">bazelbuild</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bazeltest_py_all.html">bazeltest_py_all</a></li>
+<li class="toctree-l1"><a class="reference internal" href="client_Bert_fp16_4l_sku_mean_909.html">client_Bert_fp16_4l_sku_mean_909</a></li>
+<li class="toctree-l1"><a class="reference internal" href="client_Bert_fp8_4l_sku_mean_909.html">client_Bert_fp8_4l_sku_mean_909</a></li>
+<li class="toctree-l1"><a class="reference internal" href="client_Qwen3-32B_FP8_ptpc_dense_Quark.html">client_Qwen3-32B_FP8_ptpc_dense_Quark</a></li>
+<li class="toctree-l1"><a class="reference internal" href="client_Qwen3_30B_A3B_bf16_moe.html">client_Qwen3_30B_A3B_bf16_moe</a></li>
+<li class="toctree-l1"><a class="reference internal" href="client_Qwen3_30B_A3B_fp8_ptpc_moe_Quark.html">client_Qwen3_30B_A3B_fp8_ptpc_moe_Quark</a></li>
+<li class="toctree-l1"><a class="reference internal" href="client_Qwen3_30B_A3B_fp8_ptpc_moe_llmcompressor.html">client_Qwen3_30B_A3B_fp8_ptpc_moe_llmcompressor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="client_Qwen3_32B_bf16_dense.html">client_Qwen3_32B_bf16_dense</a></li>
+<li class="toctree-l1"><a class="reference internal" href="client_Qwen3_8B_FP8_ptpc_dense_llmcompressor.html">client_Qwen3_8B_FP8_ptpc_dense_llmcompressor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="client_Qwen3_8B_FP8_ptpc_dense_llmcompressor_ASM_PA.html">client_Qwen3_8B_FP8_ptpc_dense_llmcompressor_ASM_PA</a></li>
+<li class="toctree-l1"><a class="reference internal" href="client_Qwen3_8B_FP8_ptpc_dense_llmcompressor_TRITON_PA.html">client_Qwen3_8B_FP8_ptpc_dense_llmcompressor_TRITON_PA</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">client_Qwen3_8B_FP8_ptpc_dense_llmcompressor_reuseCache</a></li>
+<li class="toctree-l1"><a class="reference internal" href="client_Qwen3_8B_FP8_ptpc_dense_llmcompressor_reuseCache_ASM_PA.html">client_Qwen3_8B_FP8_ptpc_dense_llmcompressor_reuseCache_ASM_PA</a></li>
+<li class="toctree-l1"><a class="reference internal" href="client_Qwen3_8B_FP8_ptpc_dense_llmcompressor_reuseCache_TRITON_PA.html">client_Qwen3_8B_FP8_ptpc_dense_llmcompressor_reuseCache_TRITON_PA</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server_Bert_fp16_4l_sku_mean_909.html">server_Bert_fp16_4l_sku_mean_909</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server_Bert_fp8_4l_sku_mean_909.html">server_Bert_fp8_4l_sku_mean_909</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server_Qwen3-32B_FP8_ptpc_dense_Quark.html">server_Qwen3-32B_FP8_ptpc_dense_Quark</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server_Qwen3_30B_A3B_bf16_moe.html">server_Qwen3_30B_A3B_bf16_moe</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server_Qwen3_30B_A3B_fp8_ptpc_moe_Quark.html">server_Qwen3_30B_A3B_fp8_ptpc_moe_Quark</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server_Qwen3_30B_A3B_fp8_ptpc_moe_Quark_ASM_PA.html">server_Qwen3_30B_A3B_fp8_ptpc_moe_Quark_ASM_PA</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server_Qwen3_30B_A3B_fp8_ptpc_moe_Quark_TRITON_PA.html">server_Qwen3_30B_A3B_fp8_ptpc_moe_Quark_TRITON_PA</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server_Qwen3_30B_A3B_fp8_ptpc_moe_llmcompressor.html">server_Qwen3_30B_A3B_fp8_ptpc_moe_llmcompressor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server_Qwen3_32B_bf16_dense.html">server_Qwen3_32B_bf16_dense</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server_Qwen3_8B_FP8_ptpc_dense_llmcompressor.html">server_Qwen3_8B_FP8_ptpc_dense_llmcompressor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server_Qwen3_8B_FP8_ptpc_dense_llmcompressor_ASM_PA.html">server_Qwen3_8B_FP8_ptpc_dense_llmcompressor_ASM_PA</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server_Qwen3_8B_FP8_ptpc_dense_llmcompressor_TRITON_PA.html">server_Qwen3_8B_FP8_ptpc_dense_llmcompressor_TRITON_PA</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server_Qwen3_8B_FP8_ptpc_dense_llmcompressor_reuseCache.html">server_Qwen3_8B_FP8_ptpc_dense_llmcompressor_reuseCache</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server_Qwen3_8B_FP8_ptpc_dense_llmcompressor_reuseCache_ASM_PA.html">server_Qwen3_8B_FP8_ptpc_dense_llmcompressor_reuseCache_ASM_PA</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server_Qwen3_8B_FP8_ptpc_dense_llmcompressor_reuseCache_TRITON_PA.html">server_Qwen3_8B_FP8_ptpc_dense_llmcompressor_reuseCache_TRITON_PA</a></li>
+</ul>
+
+      
+    
+  
+  
+  
+  
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="client_Qwen3_8B_FP8_ptpc_dense_llmcompressor_TRITON_PA.html"
+                          title="previous chapter">client_Qwen3_8B_FP8_ptpc_dense_llmcompressor_TRITON_PA</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="client_Qwen3_8B_FP8_ptpc_dense_llmcompressor_reuseCache_ASM_PA.html"
+                          title="next chapter">client_Qwen3_8B_FP8_ptpc_dense_llmcompressor_reuseCache_ASM_PA</a></p>
+  </div>
+  
+  
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/docs/client_Qwen3_8B_FP8_ptpc_dense_llmcompressor_reuseCache.md.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+  
+  
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+  
+
+  </div>
+
+  &nbsp;
+</nav>
+
+  </body>
+</html>

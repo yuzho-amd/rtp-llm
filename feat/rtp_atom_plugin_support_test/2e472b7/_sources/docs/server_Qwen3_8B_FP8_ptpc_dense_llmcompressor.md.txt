@@ -1,0 +1,144 @@
+# server_Qwen3_8B_FP8_ptpc_dense_llmcompressor
+<pre>
+running server command: USE_AITER_PA=1 SEQ_SIZE_PER_BLOCK=16 TOKENIZER_PATH=/mnt/raid0/pretrained_model/rtp_ci/Qwen3-8B-FP8-Dynamic CHECKPOINT_PATH=/mnt/raid0/pretrained_model/rtp_ci/Qwen3-8B-FP8-Dynamic MODEL_TYPE=qwen_3 FP8_KV_CACHE=1 CUDA_VISIBLE_DEVICES=4,5,6,7 START_PORT=6789 /opt/conda310/bin/python3.10 -m rtp_llm.start_server
+[process-19538][root][2026-08-10 16:11:02.507][log_config.py:setup_logging():93][INFO] successfully set NCCL_DEBUG_FILE path to logs/nccl.log
+import rtp_llm.ops took 0.00s
+[aiter] import [module_aiter_core] under /opt/conda310/lib/python3.10/site-packages/aiter/jit/module_aiter_core.so
+initLogger log_file_path: /mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/config/alog.conf
+Process backend_manager:
+Traceback (most recent call last):
+  File &quot;/opt/conda310/lib/python3.10/multiprocessing/process.py&quot;, line 314, in _bootstrap
+    self.run()
+  File &quot;/opt/conda310/lib/python3.10/multiprocessing/process.py&quot;, line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/start_backend_server.py&quot;, line 447, in start_backend_server
+    return local_rank_start(global_controller, py_env_configs, 0, pipe_writer)
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/start_backend_server.py&quot;, line 116, in local_rank_start
+    raise e
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/start_backend_server.py&quot;, line 82, in local_rank_start
+    backend_manager.start()
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/server/backend_manager.py&quot;, line 138, in start
+    self.engine = ModelFactory.from_model_configs(
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/model_factory.py&quot;, line 254, in from_model_configs
+    engine.start()
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/async_decoder_engine/base_engine.py&quot;, line 15, in start
+    self._start()
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/utils/time_util.py&quot;, line 45, in wrapped
+    result = func(*args, **kwargs)
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/async_decoder_engine/rpc_engine.py&quot;, line 83, in _start
+    self.rtp_llm_op_.ft_op.start_http_server(
+RuntimeError: [ERROR] normal HTTP Server start fail. Assertion fail: rtp_llm/cpp/pybind/multi_gpu_gpt/RtpLLMOp.cc:368 
+ (rtp_llm/cpp/utils/AssertUtils.cc:10)
+1       0x7f2b04972f45 rtp_llm::throwRuntimeError(char const*, int, std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; const&amp;) + 1781
+2       0x7f2b049738fd rtp_llm::myAssert(char const*, int, std::__cxx11::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt; &gt; const&amp;) + 2109
+3       0x7f2a85457cd3 rtp_llm::RtpLLMOp::startHttpServer(pybind11::object, pybind11::object, pybind11::object, pybind11::object) + 947
+4       0x7f2a85461d40 /mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/../bazel-bin/libth_transformer.so(+0x55dd40) [0x7f2a85461d40]
+5       0x7f2a85461c22 /mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/../bazel-bin/libth_transformer.so(+0x55dc22) [0x7f2a85461c22]
+6       0x7f2a85461a79 /mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/../bazel-bin/libth_transformer.so(+0x55da79) [0x7f2a85461a79]
+7       0x7f2a85461a0e /mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/../bazel-bin/libth_transformer.so(+0x55da0e) [0x7f2a85461a0e]
+8       0x7f2a8541af60 /mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/../bazel-bin/libth_transformer.so(+0x516f60) [0x7f2a8541af60]
+9             0x4fee27 rtp_llm_backend_server() [0x4fee27]
+10            0x4f886b _PyObject_MakeTpCall + 603
+11            0x50a98f rtp_llm_backend_server() [0x50a98f]
+12            0x4f417c _PyEval_EvalFrameDefault + 19244
+13            0x4ff26f _PyFunction_Vectorcall + 111
+14            0x4f20a0 _PyEval_EvalFrameDefault + 10832
+15            0x4ff26f _PyFunction_Vectorcall + 111
+16            0x4efd81 _PyEval_EvalFrameDefault + 1841
+17            0x4ff26f _PyFunction_Vectorcall + 111
+18            0x4efd81 _PyEval_EvalFrameDefault + 1841
+19            0x4ff26f _PyFunction_Vectorcall + 111
+20            0x4f0a02 _PyEval_EvalFrameDefault + 5042
+21            0x4ff26f _PyFunction_Vectorcall + 111
+22            0x4efd81 _PyEval_EvalFrameDefault + 1841
+23            0x4ff26f _PyFunction_Vectorcall + 111
+24            0x4ef96f _PyEval_EvalFrameDefault + 799
+25            0x4ff26f _PyFunction_Vectorcall + 111
+26            0x4f20a0 _PyEval_EvalFrameDefault + 10832
+27            0x4ff26f _PyFunction_Vectorcall + 111
+28            0x4efd81 _PyEval_EvalFrameDefault + 1841
+29            0x4ff26f _PyFunction_Vectorcall + 111
+30            0x4efd81 _PyEval_EvalFrameDefault + 1841
+31            0x4ff26f _PyFunction_Vectorcall + 111
+32            0x4ef96f _PyEval_EvalFrameDefault + 799
+33            0x4ff26f _PyFunction_Vectorcall + 111
+34            0x4f0a02 _PyEval_EvalFrameDefault + 5042
+35            0x594fd2 rtp_llm_backend_server() [0x594fd2]
+36            0x594f17 PyEval_EvalCode + 135
+37            0x5c7667 rtp_llm_backend_server() [0x5c7667]
+38            0x5c24c0 rtp_llm_backend_server() [0x5c24c0]
+39            0x5ba63b PyRun_StringFlags + 123
+40            0x5ba47b PyRun_SimpleStringFlags + 59
+41            0x5b94dc Py_RunMain + 620
+42            0x588099 Py_BytesMain + 57
+43      0x7f4f094aea72 __libc_start_main + 242
+44            0x587f4e rtp_llm_backend_server() [0x587f4e]
+import rtp_llm.ops took 0.00s
+--- Logging error ---
+Traceback (most recent call last):
+  File &quot;/opt/conda310/lib/python3.10/logging/handlers.py&quot;, line 73, in emit
+    if self.shouldRollover(record):
+  File &quot;/opt/conda310/lib/python3.10/logging/handlers.py&quot;, line 197, in shouldRollover
+    self.stream.seek(0, 2)  #due to non-posix-compliant Windows feature
+RuntimeError: reentrant call inside &lt;_io.BufferedWriter name=&#x27;/mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/logs/main_0.log&#x27;&gt;
+Call stack:
+  File &quot;&lt;string&gt;&quot;, line 1, in &lt;module&gt;
+  File &quot;/opt/conda310/lib/python3.10/multiprocessing/spawn.py&quot;, line 116, in spawn_main
+    exitcode = _main(fd, parent_sentinel)
+  File &quot;/opt/conda310/lib/python3.10/multiprocessing/spawn.py&quot;, line 129, in _main
+    return self._bootstrap(parent_sentinel)
+  File &quot;/opt/conda310/lib/python3.10/multiprocessing/process.py&quot;, line 314, in _bootstrap
+    self.run()
+  File &quot;/opt/conda310/lib/python3.10/multiprocessing/process.py&quot;, line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/start_frontend_server.py&quot;, line 72, in start_frontend_server
+    app.start()
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/frontend/frontend_app.py&quot;, line 379, in start
+    server.run()
+  File &quot;/opt/conda310/lib/python3.10/site-packages/uvicorn/server.py&quot;, line 65, in run
+    return asyncio.run(self.serve(sockets=sockets))
+  File &quot;/opt/conda310/lib/python3.10/asyncio/runners.py&quot;, line 44, in run
+    return loop.run_until_complete(main)
+  File &quot;/opt/conda310/lib/python3.10/asyncio/base_events.py&quot;, line 636, in run_until_complete
+    self.run_forever()
+  File &quot;/opt/conda310/lib/python3.10/asyncio/base_events.py&quot;, line 603, in run_forever
+    self._run_once()
+  File &quot;/opt/conda310/lib/python3.10/asyncio/base_events.py&quot;, line 1868, in _run_once
+    event_list = self._selector.select(timeout)
+  File &quot;/opt/conda310/lib/python3.10/selectors.py&quot;, line 469, in select
+    fd_event_list = self._selector.poll(timeout, max_ev)
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/frontend/frontend_app.py&quot;, line 119, in handle_pre_stop_drain_signal
+    if not self._schedule_shutdown_after_pre_stop(sig, frame, sig_name):
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/frontend/frontend_app.py&quot;, line 160, in _schedule_shutdown_after_pre_stop
+    logging.info(
+  File &quot;/opt/conda310/lib/python3.10/logging/__init__.py&quot;, line 2138, in info
+    root.info(msg, *args, **kwargs)
+  File &quot;/opt/conda310/lib/python3.10/logging/__init__.py&quot;, line 1477, in info
+    self._log(INFO, msg, args, **kwargs)
+  File &quot;/opt/conda310/lib/python3.10/logging/__init__.py&quot;, line 1624, in _log
+    self.handle(record)
+  File &quot;/opt/conda310/lib/python3.10/logging/__init__.py&quot;, line 1634, in handle
+    self.callHandlers(record)
+  File &quot;/opt/conda310/lib/python3.10/logging/__init__.py&quot;, line 1696, in callHandlers
+    hdlr.handle(record)
+  File &quot;/opt/conda310/lib/python3.10/logging/__init__.py&quot;, line 968, in handle
+    self.emit(record)
+  File &quot;/opt/conda310/lib/python3.10/logging/handlers.py&quot;, line 75, in emit
+    logging.FileHandler.emit(self, record)
+  File &quot;/opt/conda310/lib/python3.10/logging/__init__.py&quot;, line 1218, in emit
+    StreamHandler.emit(self, record)
+  File &quot;/opt/conda310/lib/python3.10/logging/__init__.py&quot;, line 1104, in emit
+    self.flush()
+  File &quot;/opt/conda310/lib/python3.10/logging/__init__.py&quot;, line 1084, in flush
+    self.stream.flush()
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/frontend/frontend_app.py&quot;, line 128, in handle_exit
+    if self._defer_sigterm_for_pre_stop_drain(sig, frame, sig_name):
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/frontend/frontend_app.py&quot;, line 137, in _defer_sigterm_for_pre_stop_drain
+    return self._schedule_shutdown_after_pre_stop(sig, frame, sig_name)
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/frontend/frontend_app.py&quot;, line 160, in _schedule_shutdown_after_pre_stop
+    logging.info(
+Message: &#x27;Frontend entering pre-stop unavailable window before uvicorn shutdown: remaining=%.3fs, elapsed=%.3fs, active_requests=%s&#x27;
+Arguments: (119.99965786933899, 0.0003421306610107422, 0)
+/opt/conda310/lib/python3.10/multiprocessing/resource_tracker.py:224: UserWarning: resource_tracker: There appear to be 7 leaked semaphore objects to clean up at shutdown
+  warnings.warn(&#x27;resource_tracker: There appear to be %d &#x27;
+</pre>
