@@ -53,21 +53,15 @@
 <h1>server_Qwen3_8B_FP8_ptpc_dense_llmcompressor_TRITON_PA<a class="headerlink" href="#server-qwen3-8b-fp8-ptpc-dense-llmcompressor-triton-pa" title="Link to this heading">¶</a></h1>
 <pre>
 running server command: USE_TRITON_PA=1 USE_AITER_PA=0 SEQ_SIZE_PER_BLOCK=16 TOKENIZER_PATH=/mnt/raid0/pretrained_model/rtp_ci/Qwen3-8B-FP8-Dynamic CHECKPOINT_PATH=/mnt/raid0/pretrained_model/rtp_ci/Qwen3-8B-FP8-Dynamic MODEL_TYPE=qwen_3 FP8_KV_CACHE=1 CUDA_VISIBLE_DEVICES=4,5,6,7 START_PORT=6789 /opt/conda310/bin/python3.10 -m rtp_llm.start_server
-[process-43686][root][2026-08-10 16:25:41.070][log_config.py:setup_logging():93][INFO] successfully set NCCL_DEBUG_FILE path to logs/nccl.log
+[process-51898][root][2026-08-11 04:31:47.418][log_config.py:setup_logging():93][INFO] successfully set NCCL_DEBUG_FILE path to logs/nccl.log
 import rtp_llm.ops took 0.00s
 [aiter] import [module_aiter_core] under /opt/conda310/lib/python3.10/site-packages/aiter/jit/module_aiter_core.so
 initLogger log_file_path: /mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/config/alog.conf
 [aiter] import [module_rmsnorm] under /opt/conda310/lib/python3.10/site-packages/aiter/jit/module_rmsnorm.so
 [aiter] import [module_quant] under /opt/conda310/lib/python3.10/site-packages/aiter/jit/module_quant.so
 [aiter] merge tuned file under model_configs/ and configs/ /opt/conda310/lib/python3.10/site-packages/aiter/configs/a8w8_bpreshuffle_tuned_gemm.csv:/opt/conda310/lib/python3.10/site-packages/aiter/configs/model_configs/a8w8_bpreshuffle_tuned_gemm_glm47.csv:/opt/conda310/lib/python3.10/site-packages/aiter/configs/model_configs/dsv3_a8w8_bpreshuffle_tuned_gemm.csv
-[aiter] [pid=43761 pname=backend_manager] start build [module_gemm_common] under /opt/conda310/lib/python3.10/site-packages/aiter/jit/build/module_gemm_common
-[aiter] Current hipcc not support: -mllvm -amdgpu-coerce-illegal-types=1, skip it.
-import rtp_llm.ops took 0.00s
-[aiter] [pid=43761 pname=backend_manager] [32mfinish build [module_gemm_common], cost 4.7s [0m
 [aiter] shape is M:7, N:6144, K:4096, q_dtype_w:torch.float8_e4m3fnuz, not found tuned config in /tmp/aiter_configs/a8w8_bpreshuffle_tuned_gemm.csv, will use default config!
 [aiter] import [module_gemm_a8w8_bpreshuffle] under /opt/conda310/lib/python3.10/site-packages/aiter/jit/module_gemm_a8w8_bpreshuffle.so
-[aiter] [pid=43761 pname=backend_manager] start build [mha_batch_prefill_fp8bf16_nlogits_nbias_mask_nlse_ndropout_pertensor_nsink] under /opt/conda310/lib/python3.10/site-packages/aiter/jit/build/mha_batch_prefill_fp8bf16_nlogits_nbias_mask_nlse_ndropout_pertensor_nsink
-[aiter] [pid=43761 pname=backend_manager] [32mfinish build [mha_batch_prefill_fp8bf16_nlogits_nbias_mask_nlse_ndropout_pertensor_nsink], cost 37.8s [0m
 [aiter] import [mha_batch_prefill_fp8bf16_nlogits_nbias_mask_nlse_ndropout_pertensor_nsink] under /opt/conda310/lib/python3.10/site-packages/aiter/jit/mha_batch_prefill_fp8bf16_nlogits_nbias_mask_nlse_ndropout_pertensor_nsink.so
 [aiter] type hints mismatch, override to --&gt; mha_batch_prefill(q: torch.Tensor, k: torch.Tensor, v: torch.Tensor, cu_seqlens_q: torch.Tensor, kv_indptr: torch.Tensor, kv_page_indices: torch.Tensor, max_seqlen_q: int, max_seqlen_k: int, dropout_p: float, softmax_scale: float, logits_soft_cap: float, zero_tensors: bool, is_causal: bool, window_size_left: int, window_size_right: int, sink_size: int, return_softmax_lse: bool, return_dropout_randval: bool, out: Optional[torch.Tensor] = None, bias: Optional[torch.Tensor] = None, alibi_slopes: Optional[torch.Tensor] = None, q_descale: Optional[torch.Tensor] = None, k_descale: Optional[torch.Tensor] = None, v_descale: Optional[torch.Tensor] = None, kv_block_descale: Optional[torch.Tensor] = None, kv_last_page_lens: Optional[torch.Tensor] = None, block_table: Optional[torch.Tensor] = None, seqlen_k: Optional[torch.Tensor] = None, sink_ptr: Optional[torch.Tensor] = None, gen: Optional[torch.Generator] = None) -&gt; List[torch.Tensor]
 [aiter] shape is M:7, N:4096, K:4096, q_dtype_w:torch.float8_e4m3fnuz, not found tuned config in /tmp/aiter_configs/a8w8_bpreshuffle_tuned_gemm.csv, will use default config!
@@ -80,71 +74,6 @@ import rtp_llm.ops took 0.00s
 [aiter] shape is M:1, N:4096, K:12288, q_dtype_w:torch.float8_e4m3fnuz, not found tuned config in /tmp/aiter_configs/a8w8_bpreshuffle_tuned_gemm.csv, will use default config!
 /mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/utils/grpc_util.py:35: UserWarning: The given buffer is not writable, and PyTorch does not support non-writable tensors. This means you can write to the underlying (supposedly non-writable) buffer using the tensor. You may want to copy the buffer to protect its data or make it writable before converting it to a tensor. This type of warning will be suppressed for the rest of this program. (Triggered internally at /opt/pytorch/torch/csrc/utils/tensor_new.cpp:1581.)
   return torch.frombuffer(t.int32_data, dtype=torch.int32).reshape(list(t.shape))
---- Logging error ---
-Traceback (most recent call last):
-  File &quot;/opt/conda310/lib/python3.10/logging/handlers.py&quot;, line 73, in emit
-    if self.shouldRollover(record):
-  File &quot;/opt/conda310/lib/python3.10/logging/handlers.py&quot;, line 197, in shouldRollover
-    self.stream.seek(0, 2)  #due to non-posix-compliant Windows feature
-RuntimeError: reentrant call inside &lt;_io.BufferedWriter name=&#x27;/mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/logs/main_0.log&#x27;&gt;
-Call stack:
-  File &quot;&lt;string&gt;&quot;, line 1, in &lt;module&gt;
-  File &quot;/opt/conda310/lib/python3.10/multiprocessing/spawn.py&quot;, line 116, in spawn_main
-    exitcode = _main(fd, parent_sentinel)
-  File &quot;/opt/conda310/lib/python3.10/multiprocessing/spawn.py&quot;, line 129, in _main
-    return self._bootstrap(parent_sentinel)
-  File &quot;/opt/conda310/lib/python3.10/multiprocessing/process.py&quot;, line 314, in _bootstrap
-    self.run()
-  File &quot;/opt/conda310/lib/python3.10/multiprocessing/process.py&quot;, line 108, in run
-    self._target(*self._args, **self._kwargs)
-  File &quot;/mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/start_frontend_server.py&quot;, line 72, in start_frontend_server
-    app.start()
-  File &quot;/mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/frontend/frontend_app.py&quot;, line 379, in start
-    server.run()
-  File &quot;/opt/conda310/lib/python3.10/site-packages/uvicorn/server.py&quot;, line 65, in run
-    return asyncio.run(self.serve(sockets=sockets))
-  File &quot;/opt/conda310/lib/python3.10/asyncio/runners.py&quot;, line 44, in run
-    return loop.run_until_complete(main)
-  File &quot;/opt/conda310/lib/python3.10/asyncio/base_events.py&quot;, line 636, in run_until_complete
-    self.run_forever()
-  File &quot;/opt/conda310/lib/python3.10/asyncio/base_events.py&quot;, line 603, in run_forever
-    self._run_once()
-  File &quot;/opt/conda310/lib/python3.10/asyncio/base_events.py&quot;, line 1868, in _run_once
-    event_list = self._selector.select(timeout)
-  File &quot;/opt/conda310/lib/python3.10/selectors.py&quot;, line 469, in select
-    fd_event_list = self._selector.poll(timeout, max_ev)
-  File &quot;/mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/frontend/frontend_app.py&quot;, line 119, in handle_pre_stop_drain_signal
-    if not self._schedule_shutdown_after_pre_stop(sig, frame, sig_name):
-  File &quot;/mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/frontend/frontend_app.py&quot;, line 160, in _schedule_shutdown_after_pre_stop
-    logging.info(
-  File &quot;/opt/conda310/lib/python3.10/logging/__init__.py&quot;, line 2138, in info
-    root.info(msg, *args, **kwargs)
-  File &quot;/opt/conda310/lib/python3.10/logging/__init__.py&quot;, line 1477, in info
-    self._log(INFO, msg, args, **kwargs)
-  File &quot;/opt/conda310/lib/python3.10/logging/__init__.py&quot;, line 1624, in _log
-    self.handle(record)
-  File &quot;/opt/conda310/lib/python3.10/logging/__init__.py&quot;, line 1634, in handle
-    self.callHandlers(record)
-  File &quot;/opt/conda310/lib/python3.10/logging/__init__.py&quot;, line 1696, in callHandlers
-    hdlr.handle(record)
-  File &quot;/opt/conda310/lib/python3.10/logging/__init__.py&quot;, line 968, in handle
-    self.emit(record)
-  File &quot;/opt/conda310/lib/python3.10/logging/handlers.py&quot;, line 75, in emit
-    logging.FileHandler.emit(self, record)
-  File &quot;/opt/conda310/lib/python3.10/logging/__init__.py&quot;, line 1218, in emit
-    StreamHandler.emit(self, record)
-  File &quot;/opt/conda310/lib/python3.10/logging/__init__.py&quot;, line 1104, in emit
-    self.flush()
-  File &quot;/opt/conda310/lib/python3.10/logging/__init__.py&quot;, line 1084, in flush
-    self.stream.flush()
-  File &quot;/mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/frontend/frontend_app.py&quot;, line 128, in handle_exit
-    if self._defer_sigterm_for_pre_stop_drain(sig, frame, sig_name):
-  File &quot;/mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/frontend/frontend_app.py&quot;, line 137, in _defer_sigterm_for_pre_stop_drain
-    return self._schedule_shutdown_after_pre_stop(sig, frame, sig_name)
-  File &quot;/mnt/raid0/rtp-actions-runner-yuzho-2/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/frontend/frontend_app.py&quot;, line 160, in _schedule_shutdown_after_pre_stop
-    logging.info(
-Message: &#x27;Frontend entering pre-stop unavailable window before uvicorn shutdown: remaining=%.3fs, elapsed=%.3fs, active_requests=%s&#x27;
-Arguments: (119.99967408180237, 0.00032591819763183594, 0)
 /opt/conda310/lib/python3.10/multiprocessing/resource_tracker.py:224: UserWarning: resource_tracker: There appear to be 7 leaked semaphore objects to clean up at shutdown
   warnings.warn(&#x27;resource_tracker: There appear to be %d &#x27;
 </pre></section>
@@ -220,6 +149,8 @@ Arguments: (119.99967408180237, 0.00032591819763183594, 0)
 <li class="toctree-l1"><a class="reference internal" href="client_Qwen3-32B_FP8_ptpc_dense_Quark.html">client_Qwen3-32B_FP8_ptpc_dense_Quark</a></li>
 <li class="toctree-l1"><a class="reference internal" href="client_Qwen3_30B_A3B_bf16_moe.html">client_Qwen3_30B_A3B_bf16_moe</a></li>
 <li class="toctree-l1"><a class="reference internal" href="client_Qwen3_30B_A3B_fp8_ptpc_moe_Quark.html">client_Qwen3_30B_A3B_fp8_ptpc_moe_Quark</a></li>
+<li class="toctree-l1"><a class="reference internal" href="client_Qwen3_30B_A3B_fp8_ptpc_moe_Quark_ASM_PA.html">client_Qwen3_30B_A3B_fp8_ptpc_moe_Quark_ASM_PA</a></li>
+<li class="toctree-l1"><a class="reference internal" href="client_Qwen3_30B_A3B_fp8_ptpc_moe_Quark_TRITON_PA.html">client_Qwen3_30B_A3B_fp8_ptpc_moe_Quark_TRITON_PA</a></li>
 <li class="toctree-l1"><a class="reference internal" href="client_Qwen3_30B_A3B_fp8_ptpc_moe_llmcompressor.html">client_Qwen3_30B_A3B_fp8_ptpc_moe_llmcompressor</a></li>
 <li class="toctree-l1"><a class="reference internal" href="client_Qwen3_32B_bf16_dense.html">client_Qwen3_32B_bf16_dense</a></li>
 <li class="toctree-l1"><a class="reference internal" href="client_Qwen3_8B_FP8_ptpc_dense_llmcompressor.html">client_Qwen3_8B_FP8_ptpc_dense_llmcompressor</a></li>
