@@ -1,0 +1,110 @@
+# server_Qwen3_30B_A3B_fp8_ptpc_moe_Quark_TRITON_PA
+<pre>
+running server command: USE_TRITON_PA=1 USE_AITER_PA=0 SEQ_SIZE_PER_BLOCK=16 MODEL_TYPE=qwen_3_moe FP8_KV_CACHE=1 ACT_TYPE=bf16 TOKENIZER_PATH=/mnt/raid0/pretrained_model/rtp_ci/Qwen3-30B-A3B-Thinking-2507-FP8-ptpc-quark CHECKPOINT_PATH=/mnt/raid0/pretrained_model/rtp_ci/Qwen3-30B-A3B-Thinking-2507-FP8-ptpc-quark CUDA_VISIBLE_DEVICES=4,5,6,7 START_PORT=6789 /opt/conda310/bin/python3.10 -m rtp_llm.start_server
+[process-55914][root][2026-08-12 16:33:21.070][log_config.py:setup_logging():93][INFO] successfully set NCCL_DEBUG_FILE path to logs/nccl.log
+import rtp_llm.ops took 0.00s
+[aiter] import [module_aiter_core] under /opt/conda310/lib/python3.10/site-packages/aiter/jit/module_aiter_core.so
+Process backend_manager:
+Traceback (most recent call last):
+  File &quot;/opt/conda310/lib/python3.10/multiprocessing/process.py&quot;, line 314, in _bootstrap
+    self.run()
+  File &quot;/opt/conda310/lib/python3.10/multiprocessing/process.py&quot;, line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/start_backend_server.py&quot;, line 447, in start_backend_server
+    return local_rank_start(global_controller, py_env_configs, 0, pipe_writer)
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/start_backend_server.py&quot;, line 116, in local_rank_start
+    raise e
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/start_backend_server.py&quot;, line 82, in local_rank_start
+    backend_manager.start()
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/server/backend_manager.py&quot;, line 138, in start
+    self.engine = ModelFactory.from_model_configs(
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/model_factory.py&quot;, line 217, in from_model_configs
+    model = ModelFactory._create_model(
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/model_factory.py&quot;, line 89, in _create_model
+    model = model_cls.from_config(
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/models/base_model.py&quot;, line 306, in from_config
+    model.load(skip_python_model=skip_python_model)
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/utils/time_util.py&quot;, line 45, in wrapped
+    result = func(*args, **kwargs)
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/models/base_model.py&quot;, line 166, in load
+    self._load(device_str)
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/models/base_model.py&quot;, line 195, in _load
+    self.weight: ModelWeights = self.model_weights_loader.load_weights(
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/utils/time_util.py&quot;, line 45, in wrapped
+    result = func(*args, **kwargs)
+  File &quot;/opt/conda310/lib/python3.10/site-packages/torch/utils/_contextlib.py&quot;, line 120, in decorate_context
+    return func(*args, **kwargs)
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/model_loader/loader.py&quot;, line 93, in load_weights
+    weights = self._load_weight(device)
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/model_loader/loader.py&quot;, line 256, in _load_weight
+    return self._load_from_scratch(device)
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/model_loader/loader.py&quot;, line 668, in _load_from_scratch
+    tensor = tensor.to(device)
+torch.OutOfMemoryError: HIP out of memory. Tried to allocate 384.00 MiB. GPU 0 has a total capacity of 191.98 GiB of which 0 bytes is free. Of the allocated memory 23.31 GiB is allocated by PyTorch, and 102.00 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
+import rtp_llm.ops took 0.00s
+--- Logging error ---
+Traceback (most recent call last):
+  File &quot;/opt/conda310/lib/python3.10/logging/handlers.py&quot;, line 73, in emit
+    if self.shouldRollover(record):
+  File &quot;/opt/conda310/lib/python3.10/logging/handlers.py&quot;, line 197, in shouldRollover
+    self.stream.seek(0, 2)  #due to non-posix-compliant Windows feature
+RuntimeError: reentrant call inside &lt;_io.BufferedWriter name=&#x27;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/logs/main_0.log&#x27;&gt;
+Call stack:
+  File &quot;&lt;string&gt;&quot;, line 1, in &lt;module&gt;
+  File &quot;/opt/conda310/lib/python3.10/multiprocessing/spawn.py&quot;, line 116, in spawn_main
+    exitcode = _main(fd, parent_sentinel)
+  File &quot;/opt/conda310/lib/python3.10/multiprocessing/spawn.py&quot;, line 129, in _main
+    return self._bootstrap(parent_sentinel)
+  File &quot;/opt/conda310/lib/python3.10/multiprocessing/process.py&quot;, line 314, in _bootstrap
+    self.run()
+  File &quot;/opt/conda310/lib/python3.10/multiprocessing/process.py&quot;, line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/start_frontend_server.py&quot;, line 72, in start_frontend_server
+    app.start()
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/frontend/frontend_app.py&quot;, line 379, in start
+    server.run()
+  File &quot;/opt/conda310/lib/python3.10/site-packages/uvicorn/server.py&quot;, line 65, in run
+    return asyncio.run(self.serve(sockets=sockets))
+  File &quot;/opt/conda310/lib/python3.10/asyncio/runners.py&quot;, line 44, in run
+    return loop.run_until_complete(main)
+  File &quot;/opt/conda310/lib/python3.10/asyncio/base_events.py&quot;, line 636, in run_until_complete
+    self.run_forever()
+  File &quot;/opt/conda310/lib/python3.10/asyncio/base_events.py&quot;, line 603, in run_forever
+    self._run_once()
+  File &quot;/opt/conda310/lib/python3.10/asyncio/base_events.py&quot;, line 1868, in _run_once
+    event_list = self._selector.select(timeout)
+  File &quot;/opt/conda310/lib/python3.10/selectors.py&quot;, line 469, in select
+    fd_event_list = self._selector.poll(timeout, max_ev)
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/frontend/frontend_app.py&quot;, line 113, in handle_pre_stop_drain_signal
+    logging.info(
+  File &quot;/opt/conda310/lib/python3.10/logging/__init__.py&quot;, line 2138, in info
+    root.info(msg, *args, **kwargs)
+  File &quot;/opt/conda310/lib/python3.10/logging/__init__.py&quot;, line 1477, in info
+    self._log(INFO, msg, args, **kwargs)
+  File &quot;/opt/conda310/lib/python3.10/logging/__init__.py&quot;, line 1624, in _log
+    self.handle(record)
+  File &quot;/opt/conda310/lib/python3.10/logging/__init__.py&quot;, line 1634, in handle
+    self.callHandlers(record)
+  File &quot;/opt/conda310/lib/python3.10/logging/__init__.py&quot;, line 1696, in callHandlers
+    hdlr.handle(record)
+  File &quot;/opt/conda310/lib/python3.10/logging/__init__.py&quot;, line 968, in handle
+    self.emit(record)
+  File &quot;/opt/conda310/lib/python3.10/logging/handlers.py&quot;, line 75, in emit
+    logging.FileHandler.emit(self, record)
+  File &quot;/opt/conda310/lib/python3.10/logging/__init__.py&quot;, line 1218, in emit
+    StreamHandler.emit(self, record)
+  File &quot;/opt/conda310/lib/python3.10/logging/__init__.py&quot;, line 1104, in emit
+    self.flush()
+  File &quot;/opt/conda310/lib/python3.10/logging/__init__.py&quot;, line 1084, in flush
+    self.stream.flush()
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/frontend/frontend_app.py&quot;, line 128, in handle_exit
+    if self._defer_sigterm_for_pre_stop_drain(sig, frame, sig_name):
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/frontend/frontend_app.py&quot;, line 137, in _defer_sigterm_for_pre_stop_drain
+    return self._schedule_shutdown_after_pre_stop(sig, frame, sig_name)
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/frontend/frontend_app.py&quot;, line 160, in _schedule_shutdown_after_pre_stop
+    logging.info(
+Message: &#x27;Frontend entering pre-stop unavailable window before uvicorn shutdown: remaining=%.3fs, elapsed=%.3fs, active_requests=%s&#x27;
+Arguments: (119.99968338012695, 0.000316619873046875, 0)
+/opt/conda310/lib/python3.10/multiprocessing/resource_tracker.py:224: UserWarning: resource_tracker: There appear to be 7 leaked semaphore objects to clean up at shutdown
+  warnings.warn(&#x27;resource_tracker: There appear to be %d &#x27;
+</pre>
