@@ -2,11 +2,11 @@
 <pre>
 running server command: REUSE_CACHE=1 USE_TRITON_PA=1 USE_AITER_PA=0 ACT_TYPE=bf16 SEQ_SIZE_PER_BLOCK=16 WARM_UP=0 TOKENIZER_PATH=/mnt/raid0/pretrained_model/rtp_ci/Qwen3-8B-FP8-Dynamic/ CHECKPOINT_PATH=/mnt/raid0/pretrained_model/rtp_ci/Qwen3-8B-FP8-Dynamic/ MODEL_TYPE=qwen_3 FT_SERVER_TEST=1 CUDA_VISIBLE_DEVICES=4,5,6,7 START_PORT=6789 /opt/conda310/bin/python3.10 -m rtp_llm.start_server
 WARNING:root:torch version 2.9.1+git7e1940d is outside the validated 2.11 for the UE8M0 dist.broadcast compat shim. The shim is still installed (only triggers on float8_e8m0fnu tensors) but verify multi-rank ckpt loading of UE8M0 weight scales and bump _TORCH_TESTED_MAJOR_MINOR in torch_patch.py once re-validated.
-[process-35323][root][2026-08-24 11:29:06.266][log_config.py:setup_logging():93][INFO] successfully set NCCL_DEBUG_FILE path to logs/nccl.log
-[process-35323][root][2026-08-24 11:29:06.273][server_args.py:parse_args():264][INFO] Parsing arguments and applying config bindings...
-[process-35323][root][2026-08-24 11:29:06.274][hw_kernel_group_args.py:_parse_prefill_capture_config():292][INFO] Generated 160 sequence lengths from range (step=1, max=160)
-[process-35323][root][2026-08-24 11:29:06.276][server_config_setup.py:set_parallelism_config():286][INFO] parallelism_config.ep_size == 0, auto set to world size
-[process-35323][root][2026-08-24 11:29:06.276][server_config_setup.py:set_parallelism_config():360][INFO] set_parallelism_config: rank None
+[process-35437][root][2026-08-24 16:52:58.185][log_config.py:setup_logging():93][INFO] successfully set NCCL_DEBUG_FILE path to logs/nccl.log
+[process-35437][root][2026-08-24 16:52:58.191][server_args.py:parse_args():256][INFO] Parsing arguments and applying config bindings...
+[process-35437][root][2026-08-24 16:52:58.192][hw_kernel_group_args.py:_parse_prefill_capture_config():292][INFO] Generated 160 sequence lengths from range (step=1, max=160)
+[process-35437][root][2026-08-24 16:52:58.194][server_config_setup.py:set_parallelism_config():285][INFO] parallelism_config.ep_size == 0, auto set to world size
+[process-35437][root][2026-08-24 16:52:58.194][server_config_setup.py:set_parallelism_config():359][INFO] set_parallelism_config: rank None
 parallelism_config=tp_size: 1
 ep_size: 1
 dp_size: 1
@@ -35,63 +35,63 @@ method: DISABLED
 }
 world_rank=None
 
-[process-35323][root][2026-08-24 11:29:06.276][server_config_setup.py:setup_default_args():413][INFO] [MI308X] enable FT_DISABLE_CUSTOM_AR by default, as amd has own implementation.
-[process-35323][root][2026-08-24 11:29:06.495][fuser.py:fetch_remote_file_to_local():314][INFO] Local path /mnt/raid0/pretrained_model/rtp_ci/Qwen3-8B-FP8-Dynamic/ use directly.
-[process-35323][root][2026-08-24 11:29:06.495][fuser.py:fetch_remote_file_to_local():314][INFO] Local path /mnt/raid0/pretrained_model/rtp_ci/Qwen3-8B-FP8-Dynamic/ use directly.
-[process-35323][root][2026-08-24 11:29:06.495][server_config_setup.py:fetch_model_files_to_local():518][INFO] Fetched model files - checkpoint_path: /mnt/raid0/pretrained_model/rtp_ci/Qwen3-8B-FP8-Dynamic/, tokenizer_path: /mnt/raid0/pretrained_model/rtp_ci/Qwen3-8B-FP8-Dynamic/, ptuning_path: , extra_data_path: , phy2log_path: 
-[process-35323][root][2026-08-24 11:29:06.495][server_config_setup.py:auto_configure_deepep():115][INFO] USE_ALL_GATHER is enabled (use_all_gather=True), all DeepEP settings are disabled (0, 0, 0)
-[process-35323][root][2026-08-24 11:29:06.495][start_server.py:start_server():605][INFO] [PROCESS_START]Start server
-[process-35323][root][2026-08-24 11:29:06.495][start_server.py:start_server():617][INFO] dp_size:  parallelism_config=1
-[process-35323][root][2026-08-24 11:29:06.495][concurrency_controller.py:init_controller():62][INFO] concurrency_limit : 32, global_concurrency_limit : 32
-[process-35323][root][2026-08-24 11:29:06.497][start_server.py:start_server():674][INFO] start backend server
-[process-35323][root][2026-08-24 11:29:06.498][start_server.py:start_backend_server_impl():111][INFO] [PROCESS_SPAWN]Start backend server process outer
+[process-35437][root][2026-08-24 16:52:58.194][server_config_setup.py:setup_default_args():410][INFO] [MI308X] enable FT_DISABLE_CUSTOM_AR by default, as amd has own implementation.
+[process-35437][root][2026-08-24 16:52:58.412][fuser.py:fetch_remote_file_to_local():314][INFO] Local path /mnt/raid0/pretrained_model/rtp_ci/Qwen3-8B-FP8-Dynamic/ use directly.
+[process-35437][root][2026-08-24 16:52:58.412][fuser.py:fetch_remote_file_to_local():314][INFO] Local path /mnt/raid0/pretrained_model/rtp_ci/Qwen3-8B-FP8-Dynamic/ use directly.
+[process-35437][root][2026-08-24 16:52:58.412][server_config_setup.py:fetch_model_files_to_local():515][INFO] Fetched model files - checkpoint_path: /mnt/raid0/pretrained_model/rtp_ci/Qwen3-8B-FP8-Dynamic/, tokenizer_path: /mnt/raid0/pretrained_model/rtp_ci/Qwen3-8B-FP8-Dynamic/, ptuning_path: , extra_data_path: , phy2log_path: 
+[process-35437][root][2026-08-24 16:52:58.412][server_config_setup.py:auto_configure_deepep():114][INFO] USE_ALL_GATHER is enabled (use_all_gather=True), all DeepEP settings are disabled (0, 0, 0)
+[process-35437][root][2026-08-24 16:52:58.412][start_server.py:start_server():605][INFO] [PROCESS_START]Start server
+[process-35437][root][2026-08-24 16:52:58.412][start_server.py:start_server():617][INFO] dp_size:  parallelism_config=1
+[process-35437][root][2026-08-24 16:52:58.412][concurrency_controller.py:init_controller():62][INFO] concurrency_limit : 32, global_concurrency_limit : 32
+[process-35437][root][2026-08-24 16:52:58.414][start_server.py:start_server():674][INFO] start backend server
+[process-35437][root][2026-08-24 16:52:58.415][start_server.py:start_backend_server_impl():111][INFO] [PROCESS_SPAWN]Start backend server process outer
 import rtp_llm.ops took 0.00s
-[process-35323][root][2026-08-24 11:29:06.499][time_util.py:wrapped():47][INFO] start backend server took: 0.00s
-[process-35323][root][2026-08-24 11:29:06.499][start_server.py:start_server():682][INFO] start frontend server
-[process-35323][root][2026-08-24 11:29:06.499][start_server.py:start_frontend_server_impl():477][INFO] multi rank starts with default local world size: 1, world size = 1
-[process-35323][root][2026-08-24 11:29:06.499][start_server.py:start_frontend_server_impl():486][INFO] [PROCESS_SPAWN]Start frontend server process rank_0_server_0 outer
-[process-35323][root][2026-08-24 11:29:06.500][start_server.py:start_frontend_server_impl():486][INFO] [PROCESS_SPAWN]Start frontend server process rank_0_server_1 outer
-[process-35323][root][2026-08-24 11:29:06.500][start_server.py:start_frontend_server_impl():486][INFO] [PROCESS_SPAWN]Start frontend server process rank_0_server_2 outer
-[process-35323][root][2026-08-24 11:29:06.501][start_server.py:start_frontend_server_impl():486][INFO] [PROCESS_SPAWN]Start frontend server process rank_0_server_3 outer
-[process-35323][root][2026-08-24 11:29:06.501][time_util.py:wrapped():47][INFO] start frontend server took: 0.00s
-[process-35323][root][2026-08-24 11:29:06.501][start_server.py:start_server():688][INFO] start dash_sc server
-[process-35323][root][2026-08-24 11:29:06.502][start_server.py:_iter_serving_ranks():206][INFO] multi rank starts with default local world size: 1, world size = 1
-[process-35323][root][2026-08-24 11:29:06.502][start_server.py:start_dash_sc_server_impl():243][INFO] [PROCESS_SPAWN]Start dash_sc server process rank_0_server_0 outer
-[process-35323][root][2026-08-24 11:29:06.503][start_server.py:start_dash_sc_server_impl():243][INFO] [PROCESS_SPAWN]Start dash_sc server process rank_0_server_1 outer
-[process-35323][root][2026-08-24 11:29:06.503][start_server.py:start_dash_sc_server_impl():243][INFO] [PROCESS_SPAWN]Start dash_sc server process rank_0_server_2 outer
-[process-35323][root][2026-08-24 11:29:06.504][start_server.py:start_dash_sc_server_impl():243][INFO] [PROCESS_SPAWN]Start dash_sc server process rank_0_server_3 outer
-[process-35323][root][2026-08-24 11:29:06.504][time_util.py:wrapped():47][INFO] start dash_sc server took: 0.00s
-[process-35323][root][2026-08-24 11:29:06.504][process_manager.py:start_parallel_health_checks():896][INFO] Starting parallel health checks for 3 processes
-[process-35323][root][2026-08-24 11:29:06.505][process_manager.py:wait_for_health_checks():924][INFO] Waiting for 3 health checks to complete...
+[process-35437][root][2026-08-24 16:52:58.416][time_util.py:wrapped():47][INFO] start backend server took: 0.00s
+[process-35437][root][2026-08-24 16:52:58.416][start_server.py:start_server():682][INFO] start frontend server
+[process-35437][root][2026-08-24 16:52:58.416][start_server.py:start_frontend_server_impl():477][INFO] multi rank starts with default local world size: 1, world size = 1
+[process-35437][root][2026-08-24 16:52:58.416][start_server.py:start_frontend_server_impl():486][INFO] [PROCESS_SPAWN]Start frontend server process rank_0_server_0 outer
+[process-35437][root][2026-08-24 16:52:58.417][start_server.py:start_frontend_server_impl():486][INFO] [PROCESS_SPAWN]Start frontend server process rank_0_server_1 outer
+[process-35437][root][2026-08-24 16:52:58.417][start_server.py:start_frontend_server_impl():486][INFO] [PROCESS_SPAWN]Start frontend server process rank_0_server_2 outer
+[process-35437][root][2026-08-24 16:52:58.418][start_server.py:start_frontend_server_impl():486][INFO] [PROCESS_SPAWN]Start frontend server process rank_0_server_3 outer
+[process-35437][root][2026-08-24 16:52:58.418][time_util.py:wrapped():47][INFO] start frontend server took: 0.00s
+[process-35437][root][2026-08-24 16:52:58.418][start_server.py:start_server():688][INFO] start dash_sc server
+[process-35437][root][2026-08-24 16:52:58.419][start_server.py:_iter_serving_ranks():206][INFO] multi rank starts with default local world size: 1, world size = 1
+[process-35437][root][2026-08-24 16:52:58.419][start_server.py:start_dash_sc_server_impl():243][INFO] [PROCESS_SPAWN]Start dash_sc server process rank_0_server_0 outer
+[process-35437][root][2026-08-24 16:52:58.420][start_server.py:start_dash_sc_server_impl():243][INFO] [PROCESS_SPAWN]Start dash_sc server process rank_0_server_1 outer
+[process-35437][root][2026-08-24 16:52:58.420][start_server.py:start_dash_sc_server_impl():243][INFO] [PROCESS_SPAWN]Start dash_sc server process rank_0_server_2 outer
+[process-35437][root][2026-08-24 16:52:58.421][start_server.py:start_dash_sc_server_impl():243][INFO] [PROCESS_SPAWN]Start dash_sc server process rank_0_server_3 outer
+[process-35437][root][2026-08-24 16:52:58.421][time_util.py:wrapped():47][INFO] start dash_sc server took: 0.00s
+[process-35437][root][2026-08-24 16:52:58.421][process_manager.py:start_parallel_health_checks():896][INFO] Starting parallel health checks for 3 processes
+[process-35437][root][2026-08-24 16:52:58.422][process_manager.py:wait_for_health_checks():924][INFO] Waiting for 3 health checks to complete...
 WARNING:root:torch version 2.9.1+git7e1940d is outside the validated 2.11 for the UE8M0 dist.broadcast compat shim. The shim is still installed (only triggers on float8_e8m0fnu tensors) but verify multi-rank ckpt loading of UE8M0 weight scales and bump _TORCH_TESTED_MAJOR_MINOR in torch_patch.py once re-validated.
 WARNING:root:torch version 2.9.1+git7e1940d is outside the validated 2.11 for the UE8M0 dist.broadcast compat shim. The shim is still installed (only triggers on float8_e8m0fnu tensors) but verify multi-rank ckpt loading of UE8M0 weight scales and bump _TORCH_TESTED_MAJOR_MINOR in torch_patch.py once re-validated.
 WARNING:root:torch version 2.9.1+git7e1940d is outside the validated 2.11 for the UE8M0 dist.broadcast compat shim. The shim is still installed (only triggers on float8_e8m0fnu tensors) but verify multi-rank ckpt loading of UE8M0 weight scales and bump _TORCH_TESTED_MAJOR_MINOR in torch_patch.py once re-validated.
 WARNING:root:torch version 2.9.1+git7e1940d is outside the validated 2.11 for the UE8M0 dist.broadcast compat shim. The shim is still installed (only triggers on float8_e8m0fnu tensors) but verify multi-rank ckpt loading of UE8M0 weight scales and bump _TORCH_TESTED_MAJOR_MINOR in torch_patch.py once re-validated.
-[process-35404][root][2026-08-24 11:29:07.787][start_dash_sc_server.py:start_dash_sc_server():43][INFO] [PROCESS_START]Start dash_sc server process rank_0_server_1
 WARNING:root:torch version 2.9.1+git7e1940d is outside the validated 2.11 for the UE8M0 dist.broadcast compat shim. The shim is still installed (only triggers on float8_e8m0fnu tensors) but verify multi-rank ckpt loading of UE8M0 weight scales and bump _TORCH_TESTED_MAJOR_MINOR in torch_patch.py once re-validated.
 WARNING:root:torch version 2.9.1+git7e1940d is outside the validated 2.11 for the UE8M0 dist.broadcast compat shim. The shim is still installed (only triggers on float8_e8m0fnu tensors) but verify multi-rank ckpt loading of UE8M0 weight scales and bump _TORCH_TESTED_MAJOR_MINOR in torch_patch.py once re-validated.
 WARNING:root:torch version 2.9.1+git7e1940d is outside the validated 2.11 for the UE8M0 dist.broadcast compat shim. The shim is still installed (only triggers on float8_e8m0fnu tensors) but verify multi-rank ckpt loading of UE8M0 weight scales and bump _TORCH_TESTED_MAJOR_MINOR in torch_patch.py once re-validated.
-[process-35399][root][2026-08-24 11:29:07.802][start_frontend_server.py:start_frontend_server():43][INFO] [PROCESS_START]Start frontend server process rank_0_server_0
-[process-35402][root][2026-08-24 11:29:07.804][start_frontend_server.py:start_frontend_server():43][INFO] [PROCESS_START]Start frontend server process rank_0_server_3
-[process-35403][root][2026-08-24 11:29:07.805][start_dash_sc_server.py:start_dash_sc_server():43][INFO] [PROCESS_START]Start dash_sc server process rank_0_server_0
-[process-35398][root][2026-08-24 11:29:07.808][start_backend_server.py:start_backend_server():428][INFO] [PROCESS_START]Start backend server process
 WARNING:root:torch version 2.9.1+git7e1940d is outside the validated 2.11 for the UE8M0 dist.broadcast compat shim. The shim is still installed (only triggers on float8_e8m0fnu tensors) but verify multi-rank ckpt loading of UE8M0 weight scales and bump _TORCH_TESTED_MAJOR_MINOR in torch_patch.py once re-validated.
-[process-35398][root][2026-08-24 11:29:07.810][start_backend_server.py:load_gpu_nic_affinity():383][INFO] get gpu nic affinity failed, run /usr/local/bin/run_affinity failed, exception is [Errno 8] Exec format error: &#x27;/usr/local/bin/run_affinity&#x27;
+[process-35512][root][2026-08-24 16:52:59.718][start_backend_server.py:start_backend_server():428][INFO] [PROCESS_START]Start backend server process
+[process-35512][root][2026-08-24 16:52:59.720][start_backend_server.py:load_gpu_nic_affinity():383][INFO] get gpu nic affinity failed, run /usr/local/bin/run_affinity failed, exception is [Errno 8] Exec format error: &#x27;/usr/local/bin/run_affinity&#x27;
+[process-35515][root][2026-08-24 16:52:59.720][start_frontend_server.py:start_frontend_server():43][INFO] [PROCESS_START]Start frontend server process rank_0_server_2
+[process-35517][root][2026-08-24 16:52:59.720][start_dash_sc_server.py:start_dash_sc_server():43][INFO] [PROCESS_START]Start dash_sc server process rank_0_server_0
+[process-35514][root][2026-08-24 16:52:59.720][start_frontend_server.py:start_frontend_server():43][INFO] [PROCESS_START]Start frontend server process rank_0_server_1
 WARNING:root:torch version 2.9.1+git7e1940d is outside the validated 2.11 for the UE8M0 dist.broadcast compat shim. The shim is still installed (only triggers on float8_e8m0fnu tensors) but verify multi-rank ckpt loading of UE8M0 weight scales and bump _TORCH_TESTED_MAJOR_MINOR in torch_patch.py once re-validated.
-[process-35406][root][2026-08-24 11:29:07.815][start_dash_sc_server.py:start_dash_sc_server():43][INFO] [PROCESS_START]Start dash_sc server process rank_0_server_3
-[process-35400][root][2026-08-24 11:29:07.819][start_frontend_server.py:start_frontend_server():43][INFO] [PROCESS_START]Start frontend server process rank_0_server_1
-[process-35401][root][2026-08-24 11:29:07.828][start_frontend_server.py:start_frontend_server():43][INFO] [PROCESS_START]Start frontend server process rank_0_server_2
-[process-35405][root][2026-08-24 11:29:07.832][start_dash_sc_server.py:start_dash_sc_server():43][INFO] [PROCESS_START]Start dash_sc server process rank_0_server_2
-[process-35398][root][2026-08-24 11:29:08.039][start_backend_server.py:start_backend_server():453][ERROR] JIT_CACHE_FAIL_OPEN: setup failed; cold start
+[process-35520][root][2026-08-24 16:52:59.721][start_dash_sc_server.py:start_dash_sc_server():43][INFO] [PROCESS_START]Start dash_sc server process rank_0_server_3
+[process-35513][root][2026-08-24 16:52:59.723][start_frontend_server.py:start_frontend_server():43][INFO] [PROCESS_START]Start frontend server process rank_0_server_0
+[process-35516][root][2026-08-24 16:52:59.731][start_frontend_server.py:start_frontend_server():43][INFO] [PROCESS_START]Start frontend server process rank_0_server_3
+[process-35519][root][2026-08-24 16:52:59.733][start_dash_sc_server.py:start_dash_sc_server():43][INFO] [PROCESS_START]Start dash_sc server process rank_0_server_2
+[process-35518][root][2026-08-24 16:52:59.739][start_dash_sc_server.py:start_dash_sc_server():43][INFO] [PROCESS_START]Start dash_sc server process rank_0_server_1
+[process-35512][root][2026-08-24 16:52:59.949][start_backend_server.py:start_backend_server():453][ERROR] JIT_CACHE_FAIL_OPEN: setup failed; cold start
 Traceback (most recent call last):
   File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/start_backend_server.py&quot;, line 449, in start_backend_server
     from rtp_llm.utils.jit_cache_manager import start_from_config
   File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/utils/jit_cache_manager.py&quot;, line 20, in &lt;module&gt;
     from watchdog.events import FileSystemEventHandler
 ModuleNotFoundError: No module named &#x27;watchdog&#x27;
-[process-35398][root][2026-08-24 11:29:08.042][start_backend_server.py:local_rank_start():67][INFO] [PROCESS_START]Start local rank process
-[process-35398][root][2026-08-24 11:29:08.042][util.py:copy_gemm_config():182][INFO] not found gemm_config in HIPPO_APP_INST_ROOT, not copy
-[process-35398][root][2026-08-24 11:29:08.042][server_config_setup.py:set_parallelism_config():360][INFO] set_parallelism_config: rank 0
+[process-35512][root][2026-08-24 16:52:59.951][start_backend_server.py:local_rank_start():67][INFO] [PROCESS_START]Start local rank process
+[process-35512][root][2026-08-24 16:52:59.952][util.py:copy_gemm_config():182][INFO] not found gemm_config in HIPPO_APP_INST_ROOT, not copy
+[process-35512][root][2026-08-24 16:52:59.952][server_config_setup.py:set_parallelism_config():359][INFO] set_parallelism_config: rank 0
 parallelism_config=tp_size: 1
 ep_size: 1
 dp_size: 1
@@ -120,48 +120,17 @@ method: DISABLED
 }
 world_rank=0
 
-[process-35398][root][2026-08-24 11:29:08.051][hippo_helper.py:HippoHelper():15][INFO] get container_ip from socket:10.67.77.202
-[process-35398][root][2026-08-24 11:29:08.051][report_worker.py:__init__():32][INFO] kmonitor report default tags: {}
-[process-35398][root][2026-08-24 11:29:08.052][report_worker.py:__init__():52][INFO] test mode, kmonitor metrics not reported.
-[process-35398][root][2026-08-24 11:29:08.261][async_log_handler.py:__init__():85][INFO] AsyncRotatingFileHandler init complete, worker thread alive: True
-[process-35398][root][2026-08-24 11:29:08.262][async_log_handler.py:__init__():85][INFO] AsyncRotatingFileHandler init complete, worker thread alive: True
-[process-35398][root][2026-08-24 11:29:08.262][access_logger.py:__init__():70][INFO] AccessLogger created: async_mode=True, rank_id=0, server_id=0
-[process-35398][root][2026-08-24 11:29:08.262][distributed_server.py:__init__():203][INFO] init DistributedServer, rank: 0,  size: 1
-[process-35398][root][2026-08-24 11:29:08.262][distributed_server.py:__init__():219][INFO] world_size == 1, do not start distributed_server
-[process-35398][root][2026-08-24 11:29:08.262][distributed_server.py:start():392][INFO] DistributedServer start, rank: 0,  size: 1
-[process-35398][root][2026-08-24 11:29:08.262][engine_config.py:update_worker_addrs():288][INFO] append member for pd sep 10.67.77.202:6790, 6791, 6793 to local rank 0, world rank 0
-Process dash_sc_server_0_1:
-Traceback (most recent call last):
-  File &quot;/opt/conda310/lib/python3.10/multiprocessing/process.py&quot;, line 314, in _bootstrap
-    self.run()
-  File &quot;/opt/conda310/lib/python3.10/multiprocessing/process.py&quot;, line 108, in run
-    self._target(*self._args, **self._kwargs)
-  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/start_dash_sc_server.py&quot;, line 47, in start_dash_sc_server
-    from rtp_llm.dash_sc import DashScApp
-  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/dash_sc/__init__.py&quot;, line 26, in __getattr__
-    from rtp_llm.dash_sc.app import DashScApp
-  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/dash_sc/app.py&quot;, line 26, in &lt;module&gt;
-    from rtp_llm.dash_sc.inference.grammar_validator import GrammarValidator
-  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/dash_sc/inference/grammar_validator.py&quot;, line 33, in &lt;module&gt;
-    from jsonschema import Draft7Validator
-ModuleNotFoundError: No module named &#x27;jsonschema&#x27;
-import rtp_llm.ops took 0.00s
+[process-35512][root][2026-08-24 16:52:59.961][hippo_helper.py:HippoHelper():15][INFO] get container_ip from socket:10.67.77.202
+[process-35512][root][2026-08-24 16:52:59.961][report_worker.py:__init__():32][INFO] kmonitor report default tags: {}
+[process-35512][root][2026-08-24 16:52:59.961][report_worker.py:__init__():52][INFO] test mode, kmonitor metrics not reported.
+[process-35512][root][2026-08-24 16:53:00.171][async_log_handler.py:__init__():85][INFO] AsyncRotatingFileHandler init complete, worker thread alive: True
+[process-35512][root][2026-08-24 16:53:00.171][async_log_handler.py:__init__():85][INFO] AsyncRotatingFileHandler init complete, worker thread alive: True
+[process-35512][root][2026-08-24 16:53:00.172][access_logger.py:__init__():70][INFO] AccessLogger created: async_mode=True, rank_id=0, server_id=0
+[process-35512][root][2026-08-24 16:53:00.172][distributed_server.py:__init__():203][INFO] init DistributedServer, rank: 0,  size: 1
+[process-35512][root][2026-08-24 16:53:00.172][distributed_server.py:__init__():219][INFO] world_size == 1, do not start distributed_server
+[process-35512][root][2026-08-24 16:53:00.172][distributed_server.py:start():392][INFO] DistributedServer start, rank: 0,  size: 1
+[process-35512][root][2026-08-24 16:53:00.172][engine_config.py:update_worker_addrs():288][INFO] append member for pd sep 10.67.77.202:6790, 6791, 6793 to local rank 0, world rank 0
 Process dash_sc_server_0_0:
-Traceback (most recent call last):
-  File &quot;/opt/conda310/lib/python3.10/multiprocessing/process.py&quot;, line 314, in _bootstrap
-    self.run()
-  File &quot;/opt/conda310/lib/python3.10/multiprocessing/process.py&quot;, line 108, in run
-    self._target(*self._args, **self._kwargs)
-  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/start_dash_sc_server.py&quot;, line 47, in start_dash_sc_server
-    from rtp_llm.dash_sc import DashScApp
-  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/dash_sc/__init__.py&quot;, line 26, in __getattr__
-    from rtp_llm.dash_sc.app import DashScApp
-  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/dash_sc/app.py&quot;, line 26, in &lt;module&gt;
-    from rtp_llm.dash_sc.inference.grammar_validator import GrammarValidator
-  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/dash_sc/inference/grammar_validator.py&quot;, line 33, in &lt;module&gt;
-    from jsonschema import Draft7Validator
-ModuleNotFoundError: No module named &#x27;jsonschema&#x27;
-import rtp_llm.ops took 0.00s
 Process dash_sc_server_0_3:
 Traceback (most recent call last):
   File &quot;/opt/conda310/lib/python3.10/multiprocessing/process.py&quot;, line 314, in _bootstrap
@@ -177,6 +146,21 @@ Traceback (most recent call last):
   File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/dash_sc/inference/grammar_validator.py&quot;, line 33, in &lt;module&gt;
     from jsonschema import Draft7Validator
 ModuleNotFoundError: No module named &#x27;jsonschema&#x27;
+Traceback (most recent call last):
+  File &quot;/opt/conda310/lib/python3.10/multiprocessing/process.py&quot;, line 314, in _bootstrap
+    self.run()
+  File &quot;/opt/conda310/lib/python3.10/multiprocessing/process.py&quot;, line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/start_dash_sc_server.py&quot;, line 47, in start_dash_sc_server
+    from rtp_llm.dash_sc import DashScApp
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/dash_sc/__init__.py&quot;, line 26, in __getattr__
+    from rtp_llm.dash_sc.app import DashScApp
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/dash_sc/app.py&quot;, line 26, in &lt;module&gt;
+    from rtp_llm.dash_sc.inference.grammar_validator import GrammarValidator
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/dash_sc/inference/grammar_validator.py&quot;, line 33, in &lt;module&gt;
+    from jsonschema import Draft7Validator
+ModuleNotFoundError: No module named &#x27;jsonschema&#x27;
+import rtp_llm.ops took 0.00s
 import rtp_llm.ops took 0.00s
 Process dash_sc_server_0_2:
 Traceback (most recent call last):
@@ -194,128 +178,144 @@ Traceback (most recent call last):
     from jsonschema import Draft7Validator
 ModuleNotFoundError: No module named &#x27;jsonschema&#x27;
 import rtp_llm.ops took 0.00s
-[process-35402][root][2026-08-24 11:29:08.482][hippo_helper.py:HippoHelper():15][INFO] get container_ip from socket:10.67.77.202
-[process-35399][root][2026-08-24 11:29:08.482][hippo_helper.py:HippoHelper():15][INFO] get container_ip from socket:10.67.77.202
-[process-35402][root][2026-08-24 11:29:08.482][report_worker.py:__init__():32][INFO] kmonitor report default tags: {}
-[process-35399][root][2026-08-24 11:29:08.483][report_worker.py:__init__():32][INFO] kmonitor report default tags: {}
-[process-35402][root][2026-08-24 11:29:08.483][report_worker.py:__init__():52][INFO] test mode, kmonitor metrics not reported.
-[process-35399][root][2026-08-24 11:29:08.483][report_worker.py:__init__():52][INFO] test mode, kmonitor metrics not reported.
-[process-35400][root][2026-08-24 11:29:08.494][hippo_helper.py:HippoHelper():15][INFO] get container_ip from socket:10.67.77.202
-[process-35400][root][2026-08-24 11:29:08.494][report_worker.py:__init__():32][INFO] kmonitor report default tags: {}
-[process-35400][root][2026-08-24 11:29:08.494][report_worker.py:__init__():52][INFO] test mode, kmonitor metrics not reported.
-[process-35401][root][2026-08-24 11:29:08.502][hippo_helper.py:HippoHelper():15][INFO] get container_ip from socket:10.67.77.202
-[process-35401][root][2026-08-24 11:29:08.502][report_worker.py:__init__():32][INFO] kmonitor report default tags: {}
-[process-35401][root][2026-08-24 11:29:08.502][report_worker.py:__init__():52][INFO] test mode, kmonitor metrics not reported.
+Process dash_sc_server_0_1:
+Traceback (most recent call last):
+  File &quot;/opt/conda310/lib/python3.10/multiprocessing/process.py&quot;, line 314, in _bootstrap
+    self.run()
+  File &quot;/opt/conda310/lib/python3.10/multiprocessing/process.py&quot;, line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/start_dash_sc_server.py&quot;, line 47, in start_dash_sc_server
+    from rtp_llm.dash_sc import DashScApp
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/dash_sc/__init__.py&quot;, line 26, in __getattr__
+    from rtp_llm.dash_sc.app import DashScApp
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/dash_sc/app.py&quot;, line 26, in &lt;module&gt;
+    from rtp_llm.dash_sc.inference.grammar_validator import GrammarValidator
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/dash_sc/inference/grammar_validator.py&quot;, line 33, in &lt;module&gt;
+    from jsonschema import Draft7Validator
+ModuleNotFoundError: No module named &#x27;jsonschema&#x27;
+import rtp_llm.ops took 0.00s
+[process-35516][root][2026-08-24 16:53:00.409][hippo_helper.py:HippoHelper():15][INFO] get container_ip from socket:10.67.77.202
+[process-35515][root][2026-08-24 16:53:00.409][hippo_helper.py:HippoHelper():15][INFO] get container_ip from socket:10.67.77.202
+[process-35514][root][2026-08-24 16:53:00.409][hippo_helper.py:HippoHelper():15][INFO] get container_ip from socket:10.67.77.202
+[process-35513][root][2026-08-24 16:53:00.409][hippo_helper.py:HippoHelper():15][INFO] get container_ip from socket:10.67.77.202
+[process-35516][root][2026-08-24 16:53:00.409][report_worker.py:__init__():32][INFO] kmonitor report default tags: {}
+[process-35515][root][2026-08-24 16:53:00.409][report_worker.py:__init__():32][INFO] kmonitor report default tags: {}
+[process-35514][root][2026-08-24 16:53:00.409][report_worker.py:__init__():32][INFO] kmonitor report default tags: {}
+[process-35513][root][2026-08-24 16:53:00.409][report_worker.py:__init__():32][INFO] kmonitor report default tags: {}
+[process-35514][root][2026-08-24 16:53:00.409][report_worker.py:__init__():52][INFO] test mode, kmonitor metrics not reported.
+[process-35515][root][2026-08-24 16:53:00.409][report_worker.py:__init__():52][INFO] test mode, kmonitor metrics not reported.
+[process-35516][root][2026-08-24 16:53:00.409][report_worker.py:__init__():52][INFO] test mode, kmonitor metrics not reported.
+[process-35513][root][2026-08-24 16:53:00.409][report_worker.py:__init__():52][INFO] test mode, kmonitor metrics not reported.
+Process frontend_server_2:
 Process frontend_server_3:
+Process frontend_server_1:
 Process frontend_server_0:
 Traceback (most recent call last):
 Traceback (most recent call last):
-  File &quot;/opt/conda310/lib/python3.10/multiprocessing/process.py&quot;, line 314, in _bootstrap
-    self.run()
-  File &quot;/opt/conda310/lib/python3.10/multiprocessing/process.py&quot;, line 108, in run
-    self._target(*self._args, **self._kwargs)
-  File &quot;/opt/conda310/lib/python3.10/multiprocessing/process.py&quot;, line 314, in _bootstrap
-    self.run()
-  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/start_frontend_server.py&quot;, line 47, in start_frontend_server
-    from rtp_llm.frontend.frontend_app import FrontendApp
-  File &quot;/opt/conda310/lib/python3.10/multiprocessing/process.py&quot;, line 108, in run
-    self._target(*self._args, **self._kwargs)
-  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/frontend/frontend_app.py&quot;, line 33, in &lt;module&gt;
-    from rtp_llm.frontend.frontend_server import FrontendServer
-  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/start_frontend_server.py&quot;, line 47, in start_frontend_server
-    from rtp_llm.frontend.frontend_app import FrontendApp
-  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/frontend/frontend_server.py&quot;, line 19, in &lt;module&gt;
-    from rtp_llm.frontend.frontend_worker import FrontendWorker, TokenizerEncodeResponse
-  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/frontend/frontend_app.py&quot;, line 33, in &lt;module&gt;
-    from rtp_llm.frontend.frontend_server import FrontendServer
-  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/frontend/frontend_worker.py&quot;, line 28, in &lt;module&gt;
-    from rtp_llm.pipeline.pipeline import Pipeline
-  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/frontend/frontend_server.py&quot;, line 19, in &lt;module&gt;
-    from rtp_llm.frontend.frontend_worker import FrontendWorker, TokenizerEncodeResponse
-  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/pipeline/__init__.py&quot;, line 1, in &lt;module&gt;
-    from .pipeline import Pipeline
-  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/frontend/frontend_worker.py&quot;, line 28, in &lt;module&gt;
-    from rtp_llm.pipeline.pipeline import Pipeline
-  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/pipeline/pipeline.py&quot;, line 28, in &lt;module&gt;
-    from rtp_llm.server.backend_rpc_server_visitor import (
-  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/pipeline/__init__.py&quot;, line 1, in &lt;module&gt;
-    from .pipeline import Pipeline
-  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/server/backend_rpc_server_visitor.py&quot;, line 19, in &lt;module&gt;
-    from rtp_llm.server.master_client import FlexlbResponse, MasterClient
-  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/pipeline/pipeline.py&quot;, line 28, in &lt;module&gt;
-    from rtp_llm.server.backend_rpc_server_visitor import (
-  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/server/master_client.py&quot;, line 19, in &lt;module&gt;
-    from rtp_llm.cpp.model_rpc.proto.flexlb_schedule_service_pb2 import (
-  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/server/backend_rpc_server_visitor.py&quot;, line 19, in &lt;module&gt;
-    from rtp_llm.server.master_client import FlexlbResponse, MasterClient
-  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/server/master_client.py&quot;, line 19, in &lt;module&gt;
-    from rtp_llm.cpp.model_rpc.proto.flexlb_schedule_service_pb2 import (
-ModuleNotFoundError: No module named &#x27;rtp_llm.cpp.model_rpc.proto.flexlb_schedule_service_pb2&#x27;
-ModuleNotFoundError: No module named &#x27;rtp_llm.cpp.model_rpc.proto.flexlb_schedule_service_pb2&#x27;
-import rtp_llm.ops took 0.00s
-import rtp_llm.ops took 0.00s
-Process frontend_server_1:
+Traceback (most recent call last):
 Traceback (most recent call last):
   File &quot;/opt/conda310/lib/python3.10/multiprocessing/process.py&quot;, line 314, in _bootstrap
     self.run()
+  File &quot;/opt/conda310/lib/python3.10/multiprocessing/process.py&quot;, line 314, in _bootstrap
+    self.run()
   File &quot;/opt/conda310/lib/python3.10/multiprocessing/process.py&quot;, line 108, in run
     self._target(*self._args, **self._kwargs)
-  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/start_frontend_server.py&quot;, line 47, in start_frontend_server
-    from rtp_llm.frontend.frontend_app import FrontendApp
-  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/frontend/frontend_app.py&quot;, line 33, in &lt;module&gt;
-    from rtp_llm.frontend.frontend_server import FrontendServer
-  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/frontend/frontend_server.py&quot;, line 19, in &lt;module&gt;
-    from rtp_llm.frontend.frontend_worker import FrontendWorker, TokenizerEncodeResponse
-  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/frontend/frontend_worker.py&quot;, line 28, in &lt;module&gt;
-    from rtp_llm.pipeline.pipeline import Pipeline
-  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/pipeline/__init__.py&quot;, line 1, in &lt;module&gt;
-    from .pipeline import Pipeline
-  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/pipeline/pipeline.py&quot;, line 28, in &lt;module&gt;
-    from rtp_llm.server.backend_rpc_server_visitor import (
-  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/server/backend_rpc_server_visitor.py&quot;, line 19, in &lt;module&gt;
-    from rtp_llm.server.master_client import FlexlbResponse, MasterClient
-  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/server/master_client.py&quot;, line 19, in &lt;module&gt;
-    from rtp_llm.cpp.model_rpc.proto.flexlb_schedule_service_pb2 import (
-ModuleNotFoundError: No module named &#x27;rtp_llm.cpp.model_rpc.proto.flexlb_schedule_service_pb2&#x27;
-import rtp_llm.ops took 0.00s
-Process frontend_server_2:
-Traceback (most recent call last):
   File &quot;/opt/conda310/lib/python3.10/multiprocessing/process.py&quot;, line 314, in _bootstrap
     self.run()
   File &quot;/opt/conda310/lib/python3.10/multiprocessing/process.py&quot;, line 108, in run
     self._target(*self._args, **self._kwargs)
   File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/start_frontend_server.py&quot;, line 47, in start_frontend_server
     from rtp_llm.frontend.frontend_app import FrontendApp
+  File &quot;/opt/conda310/lib/python3.10/multiprocessing/process.py&quot;, line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/start_frontend_server.py&quot;, line 47, in start_frontend_server
+    from rtp_llm.frontend.frontend_app import FrontendApp
+  File &quot;/opt/conda310/lib/python3.10/multiprocessing/process.py&quot;, line 314, in _bootstrap
+    self.run()
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/frontend/frontend_app.py&quot;, line 33, in &lt;module&gt;
+    from rtp_llm.frontend.frontend_server import FrontendServer
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/start_frontend_server.py&quot;, line 47, in start_frontend_server
+    from rtp_llm.frontend.frontend_app import FrontendApp
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/frontend/frontend_app.py&quot;, line 33, in &lt;module&gt;
+    from rtp_llm.frontend.frontend_server import FrontendServer
+  File &quot;/opt/conda310/lib/python3.10/multiprocessing/process.py&quot;, line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/frontend/frontend_server.py&quot;, line 19, in &lt;module&gt;
+    from rtp_llm.frontend.frontend_worker import FrontendWorker, TokenizerEncodeResponse
   File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/frontend/frontend_app.py&quot;, line 33, in &lt;module&gt;
     from rtp_llm.frontend.frontend_server import FrontendServer
   File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/frontend/frontend_server.py&quot;, line 19, in &lt;module&gt;
     from rtp_llm.frontend.frontend_worker import FrontendWorker, TokenizerEncodeResponse
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/start_frontend_server.py&quot;, line 47, in start_frontend_server
+    from rtp_llm.frontend.frontend_app import FrontendApp
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/frontend/frontend_worker.py&quot;, line 28, in &lt;module&gt;
+    from rtp_llm.pipeline.pipeline import Pipeline
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/frontend/frontend_server.py&quot;, line 19, in &lt;module&gt;
+    from rtp_llm.frontend.frontend_worker import FrontendWorker, TokenizerEncodeResponse
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/frontend/frontend_worker.py&quot;, line 28, in &lt;module&gt;
+    from rtp_llm.pipeline.pipeline import Pipeline
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/frontend/frontend_app.py&quot;, line 33, in &lt;module&gt;
+    from rtp_llm.frontend.frontend_server import FrontendServer
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/pipeline/__init__.py&quot;, line 1, in &lt;module&gt;
+    from .pipeline import Pipeline
   File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/frontend/frontend_worker.py&quot;, line 28, in &lt;module&gt;
     from rtp_llm.pipeline.pipeline import Pipeline
   File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/pipeline/__init__.py&quot;, line 1, in &lt;module&gt;
     from .pipeline import Pipeline
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/frontend/frontend_server.py&quot;, line 19, in &lt;module&gt;
+    from rtp_llm.frontend.frontend_worker import FrontendWorker, TokenizerEncodeResponse
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/pipeline/pipeline.py&quot;, line 28, in &lt;module&gt;
+    from rtp_llm.server.backend_rpc_server_visitor import (
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/pipeline/__init__.py&quot;, line 1, in &lt;module&gt;
+    from .pipeline import Pipeline
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/pipeline/pipeline.py&quot;, line 28, in &lt;module&gt;
+    from rtp_llm.server.backend_rpc_server_visitor import (
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/frontend/frontend_worker.py&quot;, line 28, in &lt;module&gt;
+    from rtp_llm.pipeline.pipeline import Pipeline
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/server/backend_rpc_server_visitor.py&quot;, line 19, in &lt;module&gt;
+    from rtp_llm.server.master_client import FlexlbResponse, MasterClient
   File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/pipeline/pipeline.py&quot;, line 28, in &lt;module&gt;
     from rtp_llm.server.backend_rpc_server_visitor import (
   File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/server/backend_rpc_server_visitor.py&quot;, line 19, in &lt;module&gt;
     from rtp_llm.server.master_client import FlexlbResponse, MasterClient
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/pipeline/__init__.py&quot;, line 1, in &lt;module&gt;
+    from .pipeline import Pipeline
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/server/master_client.py&quot;, line 19, in &lt;module&gt;
+    from rtp_llm.cpp.model_rpc.proto.flexlb_schedule_service_pb2 import (
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/server/backend_rpc_server_visitor.py&quot;, line 19, in &lt;module&gt;
+    from rtp_llm.server.master_client import FlexlbResponse, MasterClient
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/server/master_client.py&quot;, line 19, in &lt;module&gt;
+    from rtp_llm.cpp.model_rpc.proto.flexlb_schedule_service_pb2 import (
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/pipeline/pipeline.py&quot;, line 28, in &lt;module&gt;
+    from rtp_llm.server.backend_rpc_server_visitor import (
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/server/master_client.py&quot;, line 19, in &lt;module&gt;
+    from rtp_llm.cpp.model_rpc.proto.flexlb_schedule_service_pb2 import (
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/server/backend_rpc_server_visitor.py&quot;, line 19, in &lt;module&gt;
+    from rtp_llm.server.master_client import FlexlbResponse, MasterClient
+ModuleNotFoundError: No module named &#x27;rtp_llm.cpp.model_rpc.proto.flexlb_schedule_service_pb2&#x27;
   File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/server/master_client.py&quot;, line 19, in &lt;module&gt;
     from rtp_llm.cpp.model_rpc.proto.flexlb_schedule_service_pb2 import (
 ModuleNotFoundError: No module named &#x27;rtp_llm.cpp.model_rpc.proto.flexlb_schedule_service_pb2&#x27;
+ModuleNotFoundError: No module named &#x27;rtp_llm.cpp.model_rpc.proto.flexlb_schedule_service_pb2&#x27;
+ModuleNotFoundError: No module named &#x27;rtp_llm.cpp.model_rpc.proto.flexlb_schedule_service_pb2&#x27;
 import rtp_llm.ops took 0.00s
-[process-35398][root][2026-08-24 11:29:08.682][start_backend_server.py:local_rank_start():117][ERROR] start server error: No module named &#x27;rtp_llm.cpp.model_rpc.proto.flexlb_schedule_service_pb2&#x27;, trace: Traceback (most recent call last):
+import rtp_llm.ops took 0.00s
+import rtp_llm.ops took 0.00s
+import rtp_llm.ops took 0.00s
+[process-35512][root][2026-08-24 16:53:00.587][start_backend_server.py:local_rank_start():117][ERROR] start server error: No module named &#x27;rtp_llm.cpp.model_rpc.proto.flexlb_schedule_service_pb2&#x27;, trace: Traceback (most recent call last):
   File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/start_backend_server.py&quot;, line 98, in local_rank_start
     backend_manager.start()
   File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/server/backend_manager.py&quot;, line 70, in start
     model_config = ModelFactory.create_model_config(
-  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/model_factory.py&quot;, line 343, in create_model_config
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/model_factory.py&quot;, line 341, in create_model_config
     model_cls = ModelFactory.get_model_cls(model_args.model_type)
-  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/model_factory.py&quot;, line 61, in get_model_cls
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/model_factory.py&quot;, line 60, in get_model_cls
     if not ensure_model_registered(model_type):
   File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/model_factory_register.py&quot;, line 140, in ensure_model_registered
     _import_model_module(module_path)
   File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/model_factory_register.py&quot;, line 95, in _import_model_module
     _lazy_model_registry.import_module(module_path)
-  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/utils/import_util.py&quot;, line 103, in import_module
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/utils/import_util.py&quot;, line 81, in import_module
     importlib.import_module(module_path)
   File &quot;/opt/conda310/lib/python3.10/importlib/__init__.py&quot;, line 126, in import_module
     return _bootstrap._gcd_import(name[level:], package, level)
@@ -363,15 +363,15 @@ Traceback (most recent call last):
     backend_manager.start()
   File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/server/backend_manager.py&quot;, line 70, in start
     model_config = ModelFactory.create_model_config(
-  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/model_factory.py&quot;, line 343, in create_model_config
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/model_factory.py&quot;, line 341, in create_model_config
     model_cls = ModelFactory.get_model_cls(model_args.model_type)
-  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/model_factory.py&quot;, line 61, in get_model_cls
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/model_factory.py&quot;, line 60, in get_model_cls
     if not ensure_model_registered(model_type):
   File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/model_factory_register.py&quot;, line 140, in ensure_model_registered
     _import_model_module(module_path)
   File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/model_factory_register.py&quot;, line 95, in _import_model_module
     _lazy_model_registry.import_module(module_path)
-  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/utils/import_util.py&quot;, line 103, in import_module
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/utils/import_util.py&quot;, line 81, in import_module
     importlib.import_module(module_path)
   File &quot;/opt/conda310/lib/python3.10/importlib/__init__.py&quot;, line 126, in import_module
     return _bootstrap._gcd_import(name[level:], package, level)
@@ -407,21 +407,21 @@ Traceback (most recent call last):
     from rtp_llm.cpp.model_rpc.proto.flexlb_schedule_service_pb2 import (
 ModuleNotFoundError: No module named &#x27;rtp_llm.cpp.model_rpc.proto.flexlb_schedule_service_pb2&#x27;
 import rtp_llm.ops took 0.00s
-[process-35323][root][2026-08-24 11:29:09.509][process_manager.py:_health_check_worker():866][ERROR] backend_server process manager is not available
-[process-35323][root][2026-08-24 11:29:09.509][process_manager.py:_health_check_worker():866][ERROR] dash_sc_server process manager is not available
-[process-35323][root][2026-08-24 11:29:09.511][process_manager.py:_health_check_worker():866][ERROR] frontend_server process manager is not available
-[process-35323][root][2026-08-24 11:29:09.511][process_manager.py:wait_for_health_checks():939][ERROR] backend_server health check failed
-[process-35323][root][2026-08-24 11:29:09.511][process_manager.py:wait_for_health_checks():939][ERROR] frontend_server health check failed
-[process-35323][root][2026-08-24 11:29:09.511][process_manager.py:wait_for_health_checks():939][ERROR] dash_sc_server health check failed
-[process-35323][root][2026-08-24 11:29:09.511][start_server.py:start_server():699][ERROR] [START_SERVER] Health checks failed
-[process-35323][root][2026-08-24 11:29:09.511][start_server.py:start_server():711][ERROR] start failed, trace: Traceback (most recent call last):
+[process-35437][root][2026-08-24 16:53:01.426][process_manager.py:_health_check_worker():866][ERROR] dash_sc_server process manager is not available
+[process-35437][root][2026-08-24 16:53:01.426][process_manager.py:_health_check_worker():866][ERROR] backend_server process manager is not available
+[process-35437][root][2026-08-24 16:53:01.429][process_manager.py:_health_check_worker():866][ERROR] frontend_server process manager is not available
+[process-35437][root][2026-08-24 16:53:01.429][process_manager.py:wait_for_health_checks():939][ERROR] backend_server health check failed
+[process-35437][root][2026-08-24 16:53:01.429][process_manager.py:wait_for_health_checks():939][ERROR] frontend_server health check failed
+[process-35437][root][2026-08-24 16:53:01.429][process_manager.py:wait_for_health_checks():939][ERROR] dash_sc_server health check failed
+[process-35437][root][2026-08-24 16:53:01.429][start_server.py:start_server():699][ERROR] [START_SERVER] Health checks failed
+[process-35437][root][2026-08-24 16:53:01.429][start_server.py:start_server():711][ERROR] start failed, trace: Traceback (most recent call last):
   File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/start_server.py&quot;, line 700, in start_server
     raise Exception(&quot;Health checks failed&quot;)
 Exception: Health checks failed
 
-[process-35323][root][2026-08-24 11:29:09.511][process_manager.py:monitor_and_release_processes():770][INFO] Monitoring 9 processes
-[process-35323][root][2026-08-24 11:29:09.512][process_manager.py:_join_all_processes():728][INFO] All processes joined
-[process-35323][root][2026-08-24 11:29:09.512][process_manager.py:monitor_and_release_processes():795][ERROR] Child process failure cleanup completed, exiting parent
+[process-35437][root][2026-08-24 16:53:01.429][process_manager.py:monitor_and_release_processes():770][INFO] Monitoring 9 processes
+[process-35437][root][2026-08-24 16:53:01.430][process_manager.py:_join_all_processes():728][INFO] All processes joined
+[process-35437][root][2026-08-24 16:53:01.430][process_manager.py:monitor_and_release_processes():795][ERROR] Child process failure cleanup completed, exiting parent
 /opt/conda310/lib/python3.10/multiprocessing/resource_tracker.py:224: UserWarning: resource_tracker: There appear to be 7 leaked semaphore objects to clean up at shutdown
   warnings.warn(&#x27;resource_tracker: There appear to be %d &#x27;
 </pre>
