@@ -1,9 +1,9 @@
 #!/bin/bash
 # workspace is $GITHUB_WORKSPACE. /mnt/raid0/rtp-actions-runner-yuzho
 
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 compile_rtp(){
-    SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
     source ${SCRIPT_DIR}/compile_rtp.sh
     COMPILE_EXIT_CODE=$?
 
@@ -22,7 +22,7 @@ set_e2e_para(){
     #export WORKSPACE=/mnt/raid0/junyyang
     # yum --disablerepo="*" --enablerepo=alinux3-os install -y jq
     cp ${RTP_PATH}/bazel-bin/rtp_llm/cpp/model_rpc/proto/model_rpc_service_pb2* ${RTP_PATH}/rtp_llm/cpp/model_rpc/proto/
-    REGRESSION_CASES_FILE="${WORKSPACE}/rocm_benchmark/rtp_llm_benchmark/ci/regression_cases.json"
+    REGRESSION_CASES_FILE="${SCRIPT_DIR}/regression_cases.json"
 }
 
 start_and_wait_server() {
@@ -171,7 +171,18 @@ install_and_test_e2e() {
     
     echo "从 ${REGRESSION_CASES_FILE} 读取测试用例..."
     
-    local test_count=$(python3 -c "import json; data=json.load(open('${REGRESSION_CASES_FILE}')); print(len(data['test_cases']))")
+    if [[ ! -f "${REGRESSION_CASES_FILE}" ]]; then
+        echo "ERROR: regression cases file not found: ${REGRESSION_CASES_FILE}"
+        exit 1
+    fi
+
+    local test_count
+    test_count=$(python3 -c "import json; data=json.load(open('${REGRESSION_CASES_FILE}')); print(len(data['test_cases']))") || exit 1
+
+    if [[ -z "${test_count}" || ! "${test_count}" =~ ^[0-9]+$ || "${test_count}" -eq 0 ]]; then
+        echo "ERROR: no regression test cases found"
+        exit 1
+    fi
     
     echo "找到 ${test_count} 个测试用例"
     
@@ -191,14 +202,17 @@ install_and_test_e2e() {
         local expected_response=$(python3 -c "import json; data=json.load(open('${REGRESSION_CASES_FILE}')); resp=data['test_cases'][${i}].get('expected_response', ''); print(json.dumps(resp) if isinstance(resp, (list, dict)) else resp)")
         
         if ! start_and_wait_server "${case_tag}" "${server_params}" "${model_timeout}"; then
-            echo "✗ 服务启动失败，跳过此测试用例"
-            continue
+            echo "✗ 服务启动失败"
+            return 1
         fi
         
         # 发请求
         send_curl_request "${prompt}" "${generate_config}"
         # 验证结果
-        validate_curl_response "${RESPONSE}" "${ACTUAL_RESPONSE}" "${expected_response}" "${CURRENT_RESULT_FILE}" "${case_tag}" "${server_params}" "${prompt}" "${generate_config}"
+        if ! validate_curl_response "${RESPONSE}" "${ACTUAL_RESPONSE}" "${expected_response}" "${CURRENT_RESULT_FILE}" "${case_tag}" "${server_params}" "${prompt}" "${generate_config}"; then
+            stop_server
+            return 1
+        fi
         # 停止服务
         stop_server
         
