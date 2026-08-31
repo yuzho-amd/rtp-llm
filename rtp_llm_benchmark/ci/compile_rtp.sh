@@ -15,8 +15,15 @@ set_env_para(){
     # tmp 
     #yum --disablerepo="*" --enablerepo=alinux3-updates install -y openblas openblas-devel
     #/opt/conda310/bin/python3 -m pip uninstall -y pytorch_triton_rocm
-    /opt/conda310/bin/python -m pip uninstall -y triton
-    /opt/conda310/bin/python -m pip install -y triton==3.5.0 --index-url https://pypi.org/simple
+    if [ "${RTP_CI_QWEN35_397B_ONLY:-0}" = "1" ]; then
+        /opt/conda310/bin/python - <<'PY'
+import triton
+print(f"Initial ROCm Triton: {triton.__version__}")
+PY
+    else
+        /opt/conda310/bin/python -m pip uninstall -y triton
+        /opt/conda310/bin/python -m pip install -y triton==3.5.0 --index-url https://pypi.org/simple
+    fi
 }
 
 record_env() {
@@ -42,16 +49,60 @@ compile_rtp(){
     EXIT_CODE=0
     set -o pipefail
     # yum --disablerepo="*" --enablerepo=alinux3-os install -y patch
-    # /opt/conda310/bin/python3 -m pip install -r ./deps/requirements_rocm.txt
-    /opt/conda310/bin/python3 -m pip install --no-cache-dir -r ./deps/requirements_rocm.txt --index-url https://pypi.org/simple
+    if [ "${RTP_CI_QWEN35_397B_ONLY:-0}" = "1" ]; then
+        # Qwen3.5-397B ROCm cases need newer transformers APIs than the image
+        # provides, while full requirements_rocm currently hits resolver
+        # conflicts. Keep this scoped to this regression job.
+        /opt/conda310/bin/python3 -m pip install --no-cache-dir --index-url https://pypi.org/simple \
+            "https://sinian-metrics-platform.oss-cn-hangzhou.aliyuncs.com/kis/AMD/triton/triton-3.7.0%2Bamd.rocm7.2.0.gitd0d77a509-cp310-cp310-linux_x86_64.whl" \
+            "https://sinian-metrics-platform.oss-cn-hangzhou.aliyuncs.com/kis/AMD/triton/triton_kernels-1.0.0%2Bamd.rocm7.2.0.gitd0d77a509-py3-none-any.whl" \
+            watchdog==6.0.0 \
+            jsonschema==4.26.0 \
+            "https://sinian-metrics-platform.oss-cn-hangzhou.aliyuncs.com/kis/AMD/aiter/aiter-0.1.17.dev79%2Bg2570b35f9.d20260623-cp310-cp310-linux_x86_64.whl" || EXIT_CODE=1
+        /opt/conda310/bin/python3 -m pip install --no-cache-dir --no-deps --index-url https://pypi.org/simple \
+            transformers==5.2.0 \
+            huggingface-hub==1.3.0 \
+            hf-xet==1.5.0 \
+            tokenizers==0.22.2 \
+            safetensors==0.4.4 || EXIT_CODE=1
+    else
+        /opt/conda310/bin/python3 -m pip install --no-cache-dir -r ./deps/requirements_rocm.txt --index-url https://pypi.org/simple
+    fi
+    if [ "${RTP_CI_QWEN35_397B_ONLY:-0}" = "1" ]; then
+        /opt/conda310/bin/python3 - <<'PY' || EXIT_CODE=1
+import importlib.util
+missing = [name for name in ("aiter", "watchdog", "jsonschema") if importlib.util.find_spec(name) is None]
+if missing:
+    raise SystemExit(f"Missing CI runtime dependencies: {', '.join(missing)}")
+import triton
+triton_version = triton.__version__.split("+", 1)[0]
+triton_tuple = tuple(int(part) for part in triton_version.split(".")[:3])
+if triton_tuple < (3, 6, 0):
+    raise SystemExit(f"ROCm Triton >= 3.6.0 required by aiter, found {triton.__version__}")
+import transformers
+if transformers.__version__ != "5.2.0":
+    raise SystemExit(f"transformers==5.2.0 required by qwen3.5_moe, found {transformers.__version__}")
+import transformers.modeling_layers  # noqa: F401
+print(f"CI runtime dependencies ready: aiter, watchdog, jsonschema, triton {triton.__version__}, transformers {transformers.__version__}")
+PY
+    fi
     # /opt/conda310/bin/python3 -m pip install /mnt/raid0/yuzho/BACKUPS/flash_attn-2.8.3-cp310-cp310-linux_x86_64.whl # flash attn whl
     /opt/conda310/bin/python -m pip install ninja -i https://pypi.org/simple/
-    /opt/conda310/bin/python -m pip install flash_attn --no-build-isolation --index-url https://pypi.org/simple
+    if [ "${RTP_CI_QWEN35_397B_ONLY:-0}" = "1" ]; then
+        # The image's flash-attn wheel is linked against ROCm 6 (libamdhip64.so.6),
+        # but this job runs on ROCm 7.2. Removing it keeps transformers from loading
+        # the incompatible extension when qwen3.5_moe imports VIT modules.
+        /opt/conda310/bin/python3 -m pip uninstall -y flash-attn flash_attn || true
+        /opt/conda310/bin/python3 - <<'PY' || EXIT_CODE=1
+from transformers import CLIPVisionModel
+print("Transformers CLIP import ready without incompatible flash_attn")
+PY
+    fi
 
     # try to build
     bazelisk build //rtp_llm:rtp_llm //rtp_llm/dash_sc/proto:predict_v2_py //rtp_llm/cpp/model_rpc/proto:model_rpc_service_py //rtp_llm/cpp/model_rpc/proto:flexlb_schedule_service_py --jobs 150 --verbose_failures --config=rocm 2>&1 | tee "${LOG_DIR}/bazelbuild.log"
     BUILD_RESULT=$?
-    
+
     # if build failed and is because timeout, set PIP_TIMEOUT and try again
     if [ $BUILD_RESULT -ne 0 ]; then
         if grep -q -i "timeout\|timed out" "${LOG_DIR}/bazelbuild.log"; then

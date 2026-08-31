@@ -4,6 +4,7 @@
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 compile_rtp(){
+    export RTP_CI_QWEN35_397B_ONLY=1
     source ${SCRIPT_DIR}/compile_rtp.sh
     COMPILE_EXIT_CODE=$?
 
@@ -18,10 +19,11 @@ compile_rtp(){
 set_e2e_para(){
     export PORT=8011
     export HIP_VISIBLE_DEVICES=0,1,2,3,4,5,6,7
+    export HSA_COREDUMP_FILE=/dev/null
     #export RTP_PATH=/mnt/raid0/junyyang/rtp-llm
     #export WORKSPACE=/mnt/raid0/junyyang
     # yum --disablerepo="*" --enablerepo=alinux3-os install -y jq
-    cp ${RTP_PATH}/bazel-bin/rtp_llm/cpp/model_rpc/proto/model_rpc_service_pb2* ${RTP_PATH}/rtp_llm/cpp/model_rpc/proto/
+    cp ${RTP_PATH}/bazel-bin/rtp_llm/cpp/model_rpc/proto/*_pb2*.py ${RTP_PATH}/rtp_llm/cpp/model_rpc/proto/
     REGRESSION_CASES_FILE="${SCRIPT_DIR}/regression_cases.json"
 }
 
@@ -48,13 +50,17 @@ start_and_wait_server() {
     local waited=0
     while [ $waited -lt $model_timeout ]; do
         # 通过健康检查端点判断服务是否就绪
-        local health_response=$(curl -s -w "\n%{http_code}" http://localhost:${PORT}/health 2>/dev/null)
+        local health_response=$(curl -s --max-time 5 -w "\n%{http_code}" http://localhost:${PORT}/health 2>/dev/null)
         local health_status=$(echo "${health_response}" | tail -n 1)
         
         if [ "${health_status}" = "200" ]; then
             echo "✓ 服务已就绪（已等待 ${waited} 秒）"
             sleep 20
             break
+        fi
+        if ! kill -0 "${SERVER_PID}" 2>/dev/null; then
+            echo "✗ 错误: 服务进程已退出，日志: ${CURRENT_LOG_FILE}"
+            return 1
         fi
         sleep 5
         waited=$((waited + 5))
