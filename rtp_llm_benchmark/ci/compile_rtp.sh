@@ -58,7 +58,8 @@ compile_rtp(){
             "https://sinian-metrics-platform.oss-cn-hangzhou.aliyuncs.com/kis/AMD/triton/triton_kernels-1.0.0%2Bamd.rocm7.2.0.gitd0d77a509-py3-none-any.whl" \
             watchdog==6.0.0 \
             jsonschema==4.26.0 \
-            "https://search-ad.oss-cn-hangzhou-zmf-internal.aliyuncs.com/amd_pkgs/aiter-0.1.0-py3-none-any.whl" || EXIT_CODE=1
+            flydsl==0.3.1 \
+            "https://sinian-metrics-platform.oss-cn-hangzhou.aliyuncs.com/kis/AMD/aiter/aiter-0.1.21.dev80%2Bg987203ba5.d20260825-cp310-cp310-linux_x86_64.whl" || EXIT_CODE=1
         /opt/conda310/bin/python3 -m pip install --no-cache-dir --no-deps --index-url https://pypi.org/simple \
             transformers==5.2.0 \
             huggingface-hub==1.3.0 \
@@ -71,9 +72,10 @@ compile_rtp(){
     if [ "${RTP_CI_QWEN35_397B_ONLY:-0}" = "1" ]; then
         /opt/conda310/bin/python3 - <<'PY' || EXIT_CODE=1
 import importlib.util
-missing = [name for name in ("aiter", "watchdog", "jsonschema") if importlib.util.find_spec(name) is None]
+missing = [name for name in ("aiter", "watchdog", "jsonschema", "flydsl") if importlib.util.find_spec(name) is None]
 if missing:
     raise SystemExit(f"Missing CI runtime dependencies: {', '.join(missing)}")
+from aiter import rmsnorm2d_fwd_opus, rmsnorm2d_fwd_with_add_opus  # noqa: F401
 import triton
 triton_version = triton.__version__.split("+", 1)[0]
 triton_tuple = tuple(int(part) for part in triton_version.split(".")[:3])
@@ -83,8 +85,13 @@ import transformers
 if transformers.__version__ != "5.2.0":
     raise SystemExit(f"transformers==5.2.0 required by qwen3.5_moe, found {transformers.__version__}")
 import transformers.modeling_layers  # noqa: F401
-print(f"CI runtime dependencies ready: aiter, watchdog, jsonschema, triton {triton.__version__}, transformers {transformers.__version__}")
+print(f"CI runtime dependencies ready: aiter opus rmsnorm, watchdog, jsonschema, flydsl, triton {triton.__version__}, transformers {transformers.__version__}")
 PY
+        if [ $EXIT_CODE -ne 0 ]; then
+            echo "错误：Qwen3.5-397B CI依赖安装或校验失败"
+            record_env
+            return $EXIT_CODE
+        fi
     fi
     # /opt/conda310/bin/python3 -m pip install /mnt/raid0/yuzho/BACKUPS/flash_attn-2.8.3-cp310-cp310-linux_x86_64.whl # flash attn whl
     /opt/conda310/bin/python -m pip install ninja -i https://pypi.org/simple/
