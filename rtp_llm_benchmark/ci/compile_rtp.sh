@@ -58,7 +58,7 @@ compile_rtp(){
             "https://sinian-metrics-platform.oss-cn-hangzhou.aliyuncs.com/kis/AMD/triton/triton_kernels-1.0.0%2Bamd.rocm7.2.0.gitd0d77a509-py3-none-any.whl" \
             watchdog==6.0.0 \
             jsonschema==4.26.0 \
-            "https://sinian-metrics-platform.oss-cn-hangzhou.aliyuncs.com/kis/AMD/aiter/aiter-0.1.17.dev79%2Bg2570b35f9.d20260623-cp310-cp310-linux_x86_64.whl" || EXIT_CODE=1
+            "https://search-ad.oss-cn-hangzhou-zmf-internal.aliyuncs.com/amd_pkgs/aiter-0.1.0-py3-none-any.whl" || EXIT_CODE=1
         /opt/conda310/bin/python3 -m pip install --no-cache-dir --no-deps --index-url https://pypi.org/simple \
             transformers==5.2.0 \
             huggingface-hub==1.3.0 \
