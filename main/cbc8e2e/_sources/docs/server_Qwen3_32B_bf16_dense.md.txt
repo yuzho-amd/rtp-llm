@@ -2,11 +2,11 @@
 <pre>
 running server command: USE_AITER_PA=1 SEQ_SIZE_PER_BLOCK=16 DEVICE_RESERVE_MEMORY_BYTES=-2048000000 RESERVER_RUNTIME_MEM_MB=102400 MAX_SEQ_LEN=150000 CONCURRENCY_LIMIT=1024 WORLD_SIZE=1 DP_SIZE=1 TP_SIZE=1 WARM_UP=0 ACT_TYPE=bf16 TOKENIZER_PATH=/mnt/raid0/pretrained_model/rtp_ci/Qwen3-32B CHECKPOINT_PATH=/mnt/raid0/pretrained_model/rtp_ci/Qwen3-32B MODEL_TYPE=qwen_3 FT_SERVER_TEST=1 CUDA_VISIBLE_DEVICES=4,5,6,7 START_PORT=6789 /opt/conda310/bin/python3.10 -m rtp_llm.start_server
 WARNING:root:torch version 2.9.1+git7e1940d is outside the validated 2.11 for the UE8M0 dist.broadcast compat shim. The shim is still installed (only triggers on float8_e8m0fnu tensors) but verify multi-rank ckpt loading of UE8M0 weight scales and bump _TORCH_TESTED_MAJOR_MINOR in torch_patch.py once re-validated.
-[process-17701][root][2026-09-11 17:56:28.236][log_config.py:setup_logging():93][INFO] successfully set NCCL_DEBUG_FILE path to logs/nccl.log
-[process-17701][root][2026-09-11 17:56:28.246][server_args.py:parse_args():257][INFO] Parsing arguments and applying config bindings...
-[process-17701][root][2026-09-11 17:56:28.247][hw_kernel_group_args.py:_parse_prefill_capture_config():292][INFO] Generated 160 sequence lengths from range (step=1, max=160)
-[process-17701][root][2026-09-11 17:56:28.250][server_config_setup.py:set_parallelism_config():288][INFO] parallelism_config.ep_size == 0, auto set to world size
-[process-17701][root][2026-09-11 17:56:28.250][server_config_setup.py:set_parallelism_config():362][INFO] set_parallelism_config: rank None
+[process-17842][root][2026-09-12 17:06:22.627][log_config.py:setup_logging():93][INFO] successfully set NCCL_DEBUG_FILE path to logs/nccl.log
+[process-17842][root][2026-09-12 17:06:22.637][server_args.py:parse_args():257][INFO] Parsing arguments and applying config bindings...
+[process-17842][root][2026-09-12 17:06:22.637][hw_kernel_group_args.py:_parse_prefill_capture_config():292][INFO] Generated 160 sequence lengths from range (step=1, max=160)
+[process-17842][root][2026-09-12 17:06:22.640][server_config_setup.py:set_parallelism_config():288][INFO] parallelism_config.ep_size == 0, auto set to world size
+[process-17842][root][2026-09-12 17:06:22.640][server_config_setup.py:set_parallelism_config():362][INFO] set_parallelism_config: rank None
 parallelism_config=tp_size: 1
 ep_size: 1
 dp_size: 1
@@ -35,63 +35,63 @@ method: DISABLED
 }
 world_rank=None
 
-[process-17701][root][2026-09-11 17:56:28.250][server_config_setup.py:setup_default_args():413][INFO] [MI308X] enable FT_DISABLE_CUSTOM_AR by default, as amd has own implementation.
-[process-17701][root][2026-09-11 17:56:28.470][fuser.py:fetch_remote_file_to_local():314][INFO] Local path /mnt/raid0/pretrained_model/rtp_ci/Qwen3-32B use directly.
-[process-17701][root][2026-09-11 17:56:28.470][fuser.py:fetch_remote_file_to_local():314][INFO] Local path /mnt/raid0/pretrained_model/rtp_ci/Qwen3-32B use directly.
-[process-17701][root][2026-09-11 17:56:28.470][server_config_setup.py:fetch_model_files_to_local():518][INFO] Fetched model files - checkpoint_path: /mnt/raid0/pretrained_model/rtp_ci/Qwen3-32B, tokenizer_path: /mnt/raid0/pretrained_model/rtp_ci/Qwen3-32B, ptuning_path: , extra_data_path: , phy2log_path: 
-[process-17701][root][2026-09-11 17:56:28.470][server_config_setup.py:auto_configure_deepep():117][INFO] USE_ALL_GATHER is enabled (use_all_gather=True), all DeepEP settings are disabled (0, 0, 0)
-[process-17701][root][2026-09-11 17:56:28.470][start_server.py:start_server():624][INFO] [PROCESS_START]Start server
-[process-17701][root][2026-09-11 17:56:28.477][start_server.py:start_server():642][INFO] dp_size:  parallelism_config=1
-[process-17701][root][2026-09-11 17:56:28.477][concurrency_controller.py:init_controller():62][INFO] concurrency_limit : 1024, global_concurrency_limit : 1024
-[process-17701][root][2026-09-11 17:56:28.479][start_server.py:start_server():699][INFO] start backend server
-[process-17701][root][2026-09-11 17:56:28.486][start_server.py:start_backend_server_impl():114][INFO] [PROCESS_SPAWN]Start backend server process outer
+[process-17842][root][2026-09-12 17:06:22.640][server_config_setup.py:setup_default_args():413][INFO] [MI308X] enable FT_DISABLE_CUSTOM_AR by default, as amd has own implementation.
+[process-17842][root][2026-09-12 17:06:22.859][fuser.py:fetch_remote_file_to_local():314][INFO] Local path /mnt/raid0/pretrained_model/rtp_ci/Qwen3-32B use directly.
+[process-17842][root][2026-09-12 17:06:22.859][fuser.py:fetch_remote_file_to_local():314][INFO] Local path /mnt/raid0/pretrained_model/rtp_ci/Qwen3-32B use directly.
+[process-17842][root][2026-09-12 17:06:22.859][server_config_setup.py:fetch_model_files_to_local():518][INFO] Fetched model files - checkpoint_path: /mnt/raid0/pretrained_model/rtp_ci/Qwen3-32B, tokenizer_path: /mnt/raid0/pretrained_model/rtp_ci/Qwen3-32B, ptuning_path: , extra_data_path: , phy2log_path: 
+[process-17842][root][2026-09-12 17:06:22.859][server_config_setup.py:auto_configure_deepep():117][INFO] USE_ALL_GATHER is enabled (use_all_gather=True), all DeepEP settings are disabled (0, 0, 0)
+[process-17842][root][2026-09-12 17:06:22.860][start_server.py:start_server():624][INFO] [PROCESS_START]Start server
+[process-17842][root][2026-09-12 17:06:22.867][start_server.py:start_server():642][INFO] dp_size:  parallelism_config=1
+[process-17842][root][2026-09-12 17:06:22.867][concurrency_controller.py:init_controller():62][INFO] concurrency_limit : 1024, global_concurrency_limit : 1024
+[process-17842][root][2026-09-12 17:06:22.868][start_server.py:start_server():699][INFO] start backend server
+[process-17842][root][2026-09-12 17:06:22.875][start_server.py:start_backend_server_impl():114][INFO] [PROCESS_SPAWN]Start backend server process outer
 import rtp_llm.ops took 0.00s
-[process-17701][root][2026-09-11 17:56:28.487][time_util.py:wrapped():47][INFO] start backend server took: 0.01s
-[process-17701][root][2026-09-11 17:56:28.487][start_server.py:start_server():707][INFO] start frontend server
-[process-17701][root][2026-09-11 17:56:28.487][start_server.py:start_frontend_server_impl():496][INFO] multi rank starts with default local world size: 1, world size = 1
-[process-17701][root][2026-09-11 17:56:28.488][start_server.py:start_frontend_server_impl():505][INFO] [PROCESS_SPAWN]Start frontend server process rank_0_server_0 outer
-[process-17701][root][2026-09-11 17:56:28.488][start_server.py:start_frontend_server_impl():505][INFO] [PROCESS_SPAWN]Start frontend server process rank_0_server_1 outer
-[process-17701][root][2026-09-11 17:56:28.489][start_server.py:start_frontend_server_impl():505][INFO] [PROCESS_SPAWN]Start frontend server process rank_0_server_2 outer
-[process-17701][root][2026-09-11 17:56:28.489][start_server.py:start_frontend_server_impl():505][INFO] [PROCESS_SPAWN]Start frontend server process rank_0_server_3 outer
-[process-17701][root][2026-09-11 17:56:28.490][time_util.py:wrapped():47][INFO] start frontend server took: 0.00s
-[process-17701][root][2026-09-11 17:56:28.490][start_server.py:start_server():713][INFO] start dash_sc server
-[process-17701][root][2026-09-11 17:56:28.490][start_server.py:_iter_serving_ranks():209][INFO] multi rank starts with default local world size: 1, world size = 1
-[process-17701][root][2026-09-11 17:56:28.491][start_server.py:start_dash_sc_server_impl():246][INFO] [PROCESS_SPAWN]Start dash_sc server process rank_0_server_0 outer
-[process-17701][root][2026-09-11 17:56:28.491][start_server.py:start_dash_sc_server_impl():246][INFO] [PROCESS_SPAWN]Start dash_sc server process rank_0_server_1 outer
-[process-17701][root][2026-09-11 17:56:28.492][start_server.py:start_dash_sc_server_impl():246][INFO] [PROCESS_SPAWN]Start dash_sc server process rank_0_server_2 outer
-[process-17701][root][2026-09-11 17:56:28.492][start_server.py:start_dash_sc_server_impl():246][INFO] [PROCESS_SPAWN]Start dash_sc server process rank_0_server_3 outer
-[process-17701][root][2026-09-11 17:56:28.493][time_util.py:wrapped():47][INFO] start dash_sc server took: 0.00s
-[process-17701][root][2026-09-11 17:56:28.493][process_manager.py:start_parallel_health_checks():896][INFO] Starting parallel health checks for 3 processes
-[process-17701][root][2026-09-11 17:56:28.494][process_manager.py:wait_for_health_checks():924][INFO] Waiting for 3 health checks to complete...
+[process-17842][root][2026-09-12 17:06:22.876][time_util.py:wrapped():47][INFO] start backend server took: 0.01s
+[process-17842][root][2026-09-12 17:06:22.876][start_server.py:start_server():707][INFO] start frontend server
+[process-17842][root][2026-09-12 17:06:22.877][start_server.py:start_frontend_server_impl():496][INFO] multi rank starts with default local world size: 1, world size = 1
+[process-17842][root][2026-09-12 17:06:22.877][start_server.py:start_frontend_server_impl():505][INFO] [PROCESS_SPAWN]Start frontend server process rank_0_server_0 outer
+[process-17842][root][2026-09-12 17:06:22.878][start_server.py:start_frontend_server_impl():505][INFO] [PROCESS_SPAWN]Start frontend server process rank_0_server_1 outer
+[process-17842][root][2026-09-12 17:06:22.878][start_server.py:start_frontend_server_impl():505][INFO] [PROCESS_SPAWN]Start frontend server process rank_0_server_2 outer
+[process-17842][root][2026-09-12 17:06:22.879][start_server.py:start_frontend_server_impl():505][INFO] [PROCESS_SPAWN]Start frontend server process rank_0_server_3 outer
+[process-17842][root][2026-09-12 17:06:22.879][time_util.py:wrapped():47][INFO] start frontend server took: 0.00s
+[process-17842][root][2026-09-12 17:06:22.879][start_server.py:start_server():713][INFO] start dash_sc server
+[process-17842][root][2026-09-12 17:06:22.880][start_server.py:_iter_serving_ranks():209][INFO] multi rank starts with default local world size: 1, world size = 1
+[process-17842][root][2026-09-12 17:06:22.880][start_server.py:start_dash_sc_server_impl():246][INFO] [PROCESS_SPAWN]Start dash_sc server process rank_0_server_0 outer
+[process-17842][root][2026-09-12 17:06:22.881][start_server.py:start_dash_sc_server_impl():246][INFO] [PROCESS_SPAWN]Start dash_sc server process rank_0_server_1 outer
+[process-17842][root][2026-09-12 17:06:22.881][start_server.py:start_dash_sc_server_impl():246][INFO] [PROCESS_SPAWN]Start dash_sc server process rank_0_server_2 outer
+[process-17842][root][2026-09-12 17:06:22.882][start_server.py:start_dash_sc_server_impl():246][INFO] [PROCESS_SPAWN]Start dash_sc server process rank_0_server_3 outer
+[process-17842][root][2026-09-12 17:06:22.883][time_util.py:wrapped():47][INFO] start dash_sc server took: 0.00s
+[process-17842][root][2026-09-12 17:06:22.883][process_manager.py:start_parallel_health_checks():896][INFO] Starting parallel health checks for 3 processes
+[process-17842][root][2026-09-12 17:06:22.884][process_manager.py:wait_for_health_checks():924][INFO] Waiting for 3 health checks to complete...
 WARNING:root:torch version 2.9.1+git7e1940d is outside the validated 2.11 for the UE8M0 dist.broadcast compat shim. The shim is still installed (only triggers on float8_e8m0fnu tensors) but verify multi-rank ckpt loading of UE8M0 weight scales and bump _TORCH_TESTED_MAJOR_MINOR in torch_patch.py once re-validated.
 WARNING:root:torch version 2.9.1+git7e1940d is outside the validated 2.11 for the UE8M0 dist.broadcast compat shim. The shim is still installed (only triggers on float8_e8m0fnu tensors) but verify multi-rank ckpt loading of UE8M0 weight scales and bump _TORCH_TESTED_MAJOR_MINOR in torch_patch.py once re-validated.
 WARNING:root:torch version 2.9.1+git7e1940d is outside the validated 2.11 for the UE8M0 dist.broadcast compat shim. The shim is still installed (only triggers on float8_e8m0fnu tensors) but verify multi-rank ckpt loading of UE8M0 weight scales and bump _TORCH_TESTED_MAJOR_MINOR in torch_patch.py once re-validated.
 WARNING:root:torch version 2.9.1+git7e1940d is outside the validated 2.11 for the UE8M0 dist.broadcast compat shim. The shim is still installed (only triggers on float8_e8m0fnu tensors) but verify multi-rank ckpt loading of UE8M0 weight scales and bump _TORCH_TESTED_MAJOR_MINOR in torch_patch.py once re-validated.
 WARNING:root:torch version 2.9.1+git7e1940d is outside the validated 2.11 for the UE8M0 dist.broadcast compat shim. The shim is still installed (only triggers on float8_e8m0fnu tensors) but verify multi-rank ckpt loading of UE8M0 weight scales and bump _TORCH_TESTED_MAJOR_MINOR in torch_patch.py once re-validated.
+[process-17925][root][2026-09-12 17:06:24.199][start_dash_sc_server.py:start_dash_sc_server():43][INFO] [PROCESS_START]Start dash_sc server process rank_0_server_3
+[process-17924][root][2026-09-12 17:06:24.200][start_dash_sc_server.py:start_dash_sc_server():43][INFO] [PROCESS_START]Start dash_sc server process rank_0_server_2
+[process-17920][root][2026-09-12 17:06:24.201][start_frontend_server.py:start_frontend_server():43][INFO] [PROCESS_START]Start frontend server process rank_0_server_2
+WARNING:root:torch version 2.9.1+git7e1940d is outside the validated 2.11 for the UE8M0 dist.broadcast compat shim. The shim is still installed (only triggers on float8_e8m0fnu tensors) but verify multi-rank ckpt loading of UE8M0 weight scales and bump _TORCH_TESTED_MAJOR_MINOR in torch_patch.py once re-validated.
+[process-17922][root][2026-09-12 17:06:24.201][start_dash_sc_server.py:start_dash_sc_server():43][INFO] [PROCESS_START]Start dash_sc server process rank_0_server_0
 WARNING:root:torch version 2.9.1+git7e1940d is outside the validated 2.11 for the UE8M0 dist.broadcast compat shim. The shim is still installed (only triggers on float8_e8m0fnu tensors) but verify multi-rank ckpt loading of UE8M0 weight scales and bump _TORCH_TESTED_MAJOR_MINOR in torch_patch.py once re-validated.
 WARNING:root:torch version 2.9.1+git7e1940d is outside the validated 2.11 for the UE8M0 dist.broadcast compat shim. The shim is still installed (only triggers on float8_e8m0fnu tensors) but verify multi-rank ckpt loading of UE8M0 weight scales and bump _TORCH_TESTED_MAJOR_MINOR in torch_patch.py once re-validated.
 WARNING:root:torch version 2.9.1+git7e1940d is outside the validated 2.11 for the UE8M0 dist.broadcast compat shim. The shim is still installed (only triggers on float8_e8m0fnu tensors) but verify multi-rank ckpt loading of UE8M0 weight scales and bump _TORCH_TESTED_MAJOR_MINOR in torch_patch.py once re-validated.
-WARNING:root:torch version 2.9.1+git7e1940d is outside the validated 2.11 for the UE8M0 dist.broadcast compat shim. The shim is still installed (only triggers on float8_e8m0fnu tensors) but verify multi-rank ckpt loading of UE8M0 weight scales and bump _TORCH_TESTED_MAJOR_MINOR in torch_patch.py once re-validated.
-[process-17784][root][2026-09-11 17:56:29.811][start_dash_sc_server.py:start_dash_sc_server():43][INFO] [PROCESS_START]Start dash_sc server process rank_0_server_3
-[process-17778][root][2026-09-11 17:56:29.812][start_frontend_server.py:start_frontend_server():43][INFO] [PROCESS_START]Start frontend server process rank_0_server_1
-[process-17776][root][2026-09-11 17:56:29.812][start_backend_server.py:start_backend_server():383][INFO] [PROCESS_START]Start backend server process
-[process-17777][root][2026-09-11 17:56:29.813][start_frontend_server.py:start_frontend_server():43][INFO] [PROCESS_START]Start frontend server process rank_0_server_0
-[process-17779][root][2026-09-11 17:56:29.813][start_frontend_server.py:start_frontend_server():43][INFO] [PROCESS_START]Start frontend server process rank_0_server_2
-[process-17781][root][2026-09-11 17:56:29.813][start_dash_sc_server.py:start_dash_sc_server():43][INFO] [PROCESS_START]Start dash_sc server process rank_0_server_0
-[process-17780][root][2026-09-11 17:56:29.814][start_frontend_server.py:start_frontend_server():43][INFO] [PROCESS_START]Start frontend server process rank_0_server_3
-[process-17776][root][2026-09-11 17:56:29.814][server_config_setup.py:load_gpu_nic_affinity():552][WARNING] get gpu nic affinity failed, run /usr/local/bin/run_affinity failed, exception is [Errno 8] Exec format error: &#x27;/usr/local/bin/run_affinity&#x27;
-[process-17783][root][2026-09-11 17:56:29.815][start_dash_sc_server.py:start_dash_sc_server():43][INFO] [PROCESS_START]Start dash_sc server process rank_0_server_2
-[process-17782][root][2026-09-11 17:56:29.815][start_dash_sc_server.py:start_dash_sc_server():43][INFO] [PROCESS_START]Start dash_sc server process rank_0_server_1
-[process-17776][root][2026-09-11 17:56:30.047][start_backend_server.py:start_backend_server():410][ERROR] JIT_CACHE_FAIL_OPEN: setup failed; cold start
+[process-17921][root][2026-09-12 17:06:24.211][start_frontend_server.py:start_frontend_server():43][INFO] [PROCESS_START]Start frontend server process rank_0_server_3
+[process-17918][root][2026-09-12 17:06:24.220][start_frontend_server.py:start_frontend_server():43][INFO] [PROCESS_START]Start frontend server process rank_0_server_0
+[process-17919][root][2026-09-12 17:06:24.221][start_frontend_server.py:start_frontend_server():43][INFO] [PROCESS_START]Start frontend server process rank_0_server_1
+[process-17917][root][2026-09-12 17:06:24.221][start_backend_server.py:start_backend_server():383][INFO] [PROCESS_START]Start backend server process
+[process-17923][root][2026-09-12 17:06:24.222][start_dash_sc_server.py:start_dash_sc_server():43][INFO] [PROCESS_START]Start dash_sc server process rank_0_server_1
+[process-17917][root][2026-09-12 17:06:24.223][server_config_setup.py:load_gpu_nic_affinity():552][WARNING] get gpu nic affinity failed, run /usr/local/bin/run_affinity failed, exception is [Errno 8] Exec format error: &#x27;/usr/local/bin/run_affinity&#x27;
+[process-17917][root][2026-09-12 17:06:24.455][start_backend_server.py:start_backend_server():410][ERROR] JIT_CACHE_FAIL_OPEN: setup failed; cold start
 Traceback (most recent call last):
   File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/start_backend_server.py&quot;, line 406, in start_backend_server
     from rtp_llm.utils.jit_cache_manager import start_from_config
   File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/utils/jit_cache_manager.py&quot;, line 20, in &lt;module&gt;
     from watchdog.events import FileSystemEventHandler
 ModuleNotFoundError: No module named &#x27;watchdog&#x27;
-[process-17776][root][2026-09-11 17:56:30.049][start_backend_server.py:local_rank_start():68][INFO] [PROCESS_START]Start local rank process
-[process-17776][root][2026-09-11 17:56:30.049][util.py:copy_gemm_config():182][INFO] not found gemm_config in HIPPO_APP_INST_ROOT, not copy
-[process-17776][root][2026-09-11 17:56:30.050][server_config_setup.py:set_parallelism_config():362][INFO] set_parallelism_config: rank 0
+[process-17917][root][2026-09-12 17:06:24.458][start_backend_server.py:local_rank_start():68][INFO] [PROCESS_START]Start local rank process
+[process-17917][root][2026-09-12 17:06:24.458][util.py:copy_gemm_config():182][INFO] not found gemm_config in HIPPO_APP_INST_ROOT, not copy
+[process-17917][root][2026-09-12 17:06:24.458][server_config_setup.py:set_parallelism_config():362][INFO] set_parallelism_config: rank 0
 parallelism_config=tp_size: 1
 ep_size: 1
 dp_size: 1
@@ -120,33 +120,16 @@ method: DISABLED
 }
 world_rank=0
 
-[process-17776][root][2026-09-11 17:56:30.064][hippo_helper.py:HippoHelper():15][INFO] get container_ip from socket:10.67.77.202
-[process-17776][root][2026-09-11 17:56:30.065][report_worker.py:__init__():32][INFO] kmonitor report default tags: {}
-[process-17776][root][2026-09-11 17:56:30.065][report_worker.py:__init__():52][INFO] test mode, kmonitor metrics not reported.
-[process-17776][root][2026-09-11 17:56:30.279][log_utils.py:copy_aggregate_logs_script():42][INFO] Copied aggregate_logs.py to logs/aggregate_logs.py
-[process-17776][root][2026-09-11 17:56:30.280][access_logger.py:__init__():99][INFO] AccessLogger created: async_mode=True, rank_id=0, server_id=0
-[process-17776][root][2026-09-11 17:56:30.280][distributed_server.py:__init__():203][INFO] init DistributedServer, rank: 0,  size: 1
-[process-17776][root][2026-09-11 17:56:30.280][distributed_server.py:__init__():219][INFO] world_size == 1, do not start distributed_server
-[process-17776][root][2026-09-11 17:56:30.280][distributed_server.py:start():392][INFO] DistributedServer start, rank: 0,  size: 1
-[process-17776][root][2026-09-11 17:56:30.280][engine_config.py:derive_grammar_compile_threads():346][INFO] grammar compile fanout derived: num_workers=32 (affinity_cores=224, ranks_on_node=1)
-[process-17776][root][2026-09-11 17:56:30.280][engine_config.py:update_worker_addrs():290][INFO] append member for pd sep 10.67.77.202:6790, 6791, 6793 to local rank 0, world rank 0
-Process dash_sc_server_0_0:
-Process dash_sc_server_0_1:
-Traceback (most recent call last):
-  File &quot;/opt/conda310/lib/python3.10/multiprocessing/process.py&quot;, line 314, in _bootstrap
-    self.run()
-  File &quot;/opt/conda310/lib/python3.10/multiprocessing/process.py&quot;, line 108, in run
-    self._target(*self._args, **self._kwargs)
-  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/start_dash_sc_server.py&quot;, line 47, in start_dash_sc_server
-    from rtp_llm.dash_sc import DashScApp
-  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/dash_sc/__init__.py&quot;, line 26, in __getattr__
-    from rtp_llm.dash_sc.app import DashScApp
-  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/dash_sc/app.py&quot;, line 28, in &lt;module&gt;
-    from rtp_llm.dash_sc.inference.grammar_validator import GrammarValidator
-  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/dash_sc/inference/grammar_validator.py&quot;, line 37, in &lt;module&gt;
-    from jsonschema import Draft7Validator
-ModuleNotFoundError: No module named &#x27;jsonschema&#x27;
-import rtp_llm.ops took 0.00s
+[process-17917][root][2026-09-12 17:06:24.473][hippo_helper.py:HippoHelper():15][INFO] get container_ip from socket:10.67.77.202
+[process-17917][root][2026-09-12 17:06:24.473][report_worker.py:__init__():32][INFO] kmonitor report default tags: {}
+[process-17917][root][2026-09-12 17:06:24.473][report_worker.py:__init__():52][INFO] test mode, kmonitor metrics not reported.
+[process-17917][root][2026-09-12 17:06:24.687][log_utils.py:copy_aggregate_logs_script():42][INFO] Copied aggregate_logs.py to logs/aggregate_logs.py
+[process-17917][root][2026-09-12 17:06:24.688][access_logger.py:__init__():99][INFO] AccessLogger created: async_mode=True, rank_id=0, server_id=0
+[process-17917][root][2026-09-12 17:06:24.688][distributed_server.py:__init__():203][INFO] init DistributedServer, rank: 0,  size: 1
+[process-17917][root][2026-09-12 17:06:24.688][distributed_server.py:__init__():219][INFO] world_size == 1, do not start distributed_server
+[process-17917][root][2026-09-12 17:06:24.688][distributed_server.py:start():392][INFO] DistributedServer start, rank: 0,  size: 1
+[process-17917][root][2026-09-12 17:06:24.688][engine_config.py:derive_grammar_compile_threads():346][INFO] grammar compile fanout derived: num_workers=32 (affinity_cores=224, ranks_on_node=1)
+[process-17917][root][2026-09-12 17:06:24.689][engine_config.py:update_worker_addrs():290][INFO] append member for pd sep 10.67.77.202:6790, 6791, 6793 to local rank 0, world rank 0
 Process dash_sc_server_0_3:
 Traceback (most recent call last):
   File &quot;/opt/conda310/lib/python3.10/multiprocessing/process.py&quot;, line 314, in _bootstrap
@@ -163,22 +146,7 @@ Traceback (most recent call last):
     from jsonschema import Draft7Validator
 ModuleNotFoundError: No module named &#x27;jsonschema&#x27;
 import rtp_llm.ops took 0.00s
-Traceback (most recent call last):
 Process dash_sc_server_0_2:
-  File &quot;/opt/conda310/lib/python3.10/multiprocessing/process.py&quot;, line 314, in _bootstrap
-    self.run()
-  File &quot;/opt/conda310/lib/python3.10/multiprocessing/process.py&quot;, line 108, in run
-    self._target(*self._args, **self._kwargs)
-  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/start_dash_sc_server.py&quot;, line 47, in start_dash_sc_server
-    from rtp_llm.dash_sc import DashScApp
-  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/dash_sc/__init__.py&quot;, line 26, in __getattr__
-    from rtp_llm.dash_sc.app import DashScApp
-  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/dash_sc/app.py&quot;, line 28, in &lt;module&gt;
-    from rtp_llm.dash_sc.inference.grammar_validator import GrammarValidator
-  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/dash_sc/inference/grammar_validator.py&quot;, line 37, in &lt;module&gt;
-    from jsonschema import Draft7Validator
-ModuleNotFoundError: No module named &#x27;jsonschema&#x27;
-import rtp_llm.ops took 0.00s
 Traceback (most recent call last):
   File &quot;/opt/conda310/lib/python3.10/multiprocessing/process.py&quot;, line 314, in _bootstrap
     self.run()
@@ -194,21 +162,76 @@ Traceback (most recent call last):
     from jsonschema import Draft7Validator
 ModuleNotFoundError: No module named &#x27;jsonschema&#x27;
 import rtp_llm.ops took 0.00s
-[process-17778][root][2026-09-11 17:56:30.530][hippo_helper.py:HippoHelper():15][INFO] get container_ip from socket:10.67.77.202
-[process-17777][root][2026-09-11 17:56:30.531][hippo_helper.py:HippoHelper():15][INFO] get container_ip from socket:10.67.77.202
-[process-17779][root][2026-09-11 17:56:30.531][hippo_helper.py:HippoHelper():15][INFO] get container_ip from socket:10.67.77.202
-[process-17780][root][2026-09-11 17:56:30.531][hippo_helper.py:HippoHelper():15][INFO] get container_ip from socket:10.67.77.202
-[process-17778][root][2026-09-11 17:56:30.531][report_worker.py:__init__():32][INFO] kmonitor report default tags: {}
-[process-17778][root][2026-09-11 17:56:30.532][report_worker.py:__init__():52][INFO] test mode, kmonitor metrics not reported.
-[process-17777][root][2026-09-11 17:56:30.532][report_worker.py:__init__():32][INFO] kmonitor report default tags: {}
-[process-17779][root][2026-09-11 17:56:30.532][report_worker.py:__init__():32][INFO] kmonitor report default tags: {}
-[process-17777][root][2026-09-11 17:56:30.532][report_worker.py:__init__():52][INFO] test mode, kmonitor metrics not reported.
-[process-17780][root][2026-09-11 17:56:30.532][report_worker.py:__init__():32][INFO] kmonitor report default tags: {}
-[process-17779][root][2026-09-11 17:56:30.532][report_worker.py:__init__():52][INFO] test mode, kmonitor metrics not reported.
-[process-17780][root][2026-09-11 17:56:30.532][report_worker.py:__init__():52][INFO] test mode, kmonitor metrics not reported.
+Process dash_sc_server_0_1:
+Traceback (most recent call last):
+  File &quot;/opt/conda310/lib/python3.10/multiprocessing/process.py&quot;, line 314, in _bootstrap
+    self.run()
+  File &quot;/opt/conda310/lib/python3.10/multiprocessing/process.py&quot;, line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/start_dash_sc_server.py&quot;, line 47, in start_dash_sc_server
+    from rtp_llm.dash_sc import DashScApp
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/dash_sc/__init__.py&quot;, line 26, in __getattr__
+    from rtp_llm.dash_sc.app import DashScApp
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/dash_sc/app.py&quot;, line 28, in &lt;module&gt;
+    from rtp_llm.dash_sc.inference.grammar_validator import GrammarValidator
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/dash_sc/inference/grammar_validator.py&quot;, line 37, in &lt;module&gt;
+    from jsonschema import Draft7Validator
+ModuleNotFoundError: No module named &#x27;jsonschema&#x27;
+import rtp_llm.ops took 0.00s
+Process dash_sc_server_0_0:
+Traceback (most recent call last):
+  File &quot;/opt/conda310/lib/python3.10/multiprocessing/process.py&quot;, line 314, in _bootstrap
+    self.run()
+  File &quot;/opt/conda310/lib/python3.10/multiprocessing/process.py&quot;, line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/start_dash_sc_server.py&quot;, line 47, in start_dash_sc_server
+    from rtp_llm.dash_sc import DashScApp
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/dash_sc/__init__.py&quot;, line 26, in __getattr__
+    from rtp_llm.dash_sc.app import DashScApp
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/dash_sc/app.py&quot;, line 28, in &lt;module&gt;
+    from rtp_llm.dash_sc.inference.grammar_validator import GrammarValidator
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/dash_sc/inference/grammar_validator.py&quot;, line 37, in &lt;module&gt;
+    from jsonschema import Draft7Validator
+ModuleNotFoundError: No module named &#x27;jsonschema&#x27;
+import rtp_llm.ops took 0.00s
+[process-17921][root][2026-09-12 17:06:24.904][hippo_helper.py:HippoHelper():15][INFO] get container_ip from socket:10.67.77.202
+[process-17919][root][2026-09-12 17:06:24.904][hippo_helper.py:HippoHelper():15][INFO] get container_ip from socket:10.67.77.202
+[process-17918][root][2026-09-12 17:06:24.904][hippo_helper.py:HippoHelper():15][INFO] get container_ip from socket:10.67.77.202
+[process-17920][root][2026-09-12 17:06:24.904][hippo_helper.py:HippoHelper():15][INFO] get container_ip from socket:10.67.77.202
+[process-17921][root][2026-09-12 17:06:24.905][report_worker.py:__init__():32][INFO] kmonitor report default tags: {}
+[process-17919][root][2026-09-12 17:06:24.905][report_worker.py:__init__():32][INFO] kmonitor report default tags: {}
+[process-17918][root][2026-09-12 17:06:24.905][report_worker.py:__init__():32][INFO] kmonitor report default tags: {}
+[process-17921][root][2026-09-12 17:06:24.905][report_worker.py:__init__():52][INFO] test mode, kmonitor metrics not reported.
+[process-17919][root][2026-09-12 17:06:24.905][report_worker.py:__init__():52][INFO] test mode, kmonitor metrics not reported.
+[process-17918][root][2026-09-12 17:06:24.905][report_worker.py:__init__():52][INFO] test mode, kmonitor metrics not reported.
+[process-17920][root][2026-09-12 17:06:24.905][report_worker.py:__init__():32][INFO] kmonitor report default tags: {}
+[process-17920][root][2026-09-12 17:06:24.905][report_worker.py:__init__():52][INFO] test mode, kmonitor metrics not reported.
+Process frontend_server_0:
 Process frontend_server_3:
 Process frontend_server_1:
-Process frontend_server_0:
+Traceback (most recent call last):
+  File &quot;/opt/conda310/lib/python3.10/multiprocessing/process.py&quot;, line 314, in _bootstrap
+    self.run()
+  File &quot;/opt/conda310/lib/python3.10/multiprocessing/process.py&quot;, line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/start_frontend_server.py&quot;, line 47, in start_frontend_server
+    from rtp_llm.frontend.frontend_app import FrontendApp
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/frontend/frontend_app.py&quot;, line 38, in &lt;module&gt;
+    from rtp_llm.frontend.frontend_server import FrontendServer
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/frontend/frontend_server.py&quot;, line 19, in &lt;module&gt;
+    from rtp_llm.frontend.frontend_worker import FrontendWorker, TokenizerEncodeResponse
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/frontend/frontend_worker.py&quot;, line 28, in &lt;module&gt;
+    from rtp_llm.pipeline.pipeline import Pipeline
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/pipeline/__init__.py&quot;, line 1, in &lt;module&gt;
+    from .pipeline import Pipeline
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/pipeline/pipeline.py&quot;, line 28, in &lt;module&gt;
+    from rtp_llm.server.backend_rpc_server_visitor import (
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/server/backend_rpc_server_visitor.py&quot;, line 19, in &lt;module&gt;
+    from rtp_llm.server.master_client import FlexlbResponse, MasterClient
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/server/master_client.py&quot;, line 19, in &lt;module&gt;
+    from rtp_llm.cpp.model_rpc.proto.flexlb_schedule_service_pb2 import (
+ModuleNotFoundError: No module named &#x27;rtp_llm.cpp.model_rpc.proto.flexlb_schedule_service_pb2&#x27;
+import rtp_llm.ops took 0.00s
 Process frontend_server_2:
 Traceback (most recent call last):
   File &quot;/opt/conda310/lib/python3.10/multiprocessing/process.py&quot;, line 314, in _bootstrap
@@ -232,31 +255,8 @@ Traceback (most recent call last):
   File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/server/master_client.py&quot;, line 19, in &lt;module&gt;
     from rtp_llm.cpp.model_rpc.proto.flexlb_schedule_service_pb2 import (
 ModuleNotFoundError: No module named &#x27;rtp_llm.cpp.model_rpc.proto.flexlb_schedule_service_pb2&#x27;
-Traceback (most recent call last):
 import rtp_llm.ops took 0.00s
-  File &quot;/opt/conda310/lib/python3.10/multiprocessing/process.py&quot;, line 314, in _bootstrap
-    self.run()
-  File &quot;/opt/conda310/lib/python3.10/multiprocessing/process.py&quot;, line 108, in run
-    self._target(*self._args, **self._kwargs)
-  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/start_frontend_server.py&quot;, line 47, in start_frontend_server
-    from rtp_llm.frontend.frontend_app import FrontendApp
-  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/frontend/frontend_app.py&quot;, line 38, in &lt;module&gt;
-    from rtp_llm.frontend.frontend_server import FrontendServer
-  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/frontend/frontend_server.py&quot;, line 19, in &lt;module&gt;
-    from rtp_llm.frontend.frontend_worker import FrontendWorker, TokenizerEncodeResponse
-  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/frontend/frontend_worker.py&quot;, line 28, in &lt;module&gt;
-    from rtp_llm.pipeline.pipeline import Pipeline
-  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/pipeline/__init__.py&quot;, line 1, in &lt;module&gt;
-    from .pipeline import Pipeline
-  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/pipeline/pipeline.py&quot;, line 28, in &lt;module&gt;
-    from rtp_llm.server.backend_rpc_server_visitor import (
-  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/server/backend_rpc_server_visitor.py&quot;, line 19, in &lt;module&gt;
-    from rtp_llm.server.master_client import FlexlbResponse, MasterClient
-  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/server/master_client.py&quot;, line 19, in &lt;module&gt;
-    from rtp_llm.cpp.model_rpc.proto.flexlb_schedule_service_pb2 import (
-ModuleNotFoundError: No module named &#x27;rtp_llm.cpp.model_rpc.proto.flexlb_schedule_service_pb2&#x27;
 Traceback (most recent call last):
-import rtp_llm.ops took 0.00s
   File &quot;/opt/conda310/lib/python3.10/multiprocessing/process.py&quot;, line 314, in _bootstrap
     self.run()
   File &quot;/opt/conda310/lib/python3.10/multiprocessing/process.py&quot;, line 108, in run
@@ -302,7 +302,7 @@ Traceback (most recent call last):
     from rtp_llm.cpp.model_rpc.proto.flexlb_schedule_service_pb2 import (
 ModuleNotFoundError: No module named &#x27;rtp_llm.cpp.model_rpc.proto.flexlb_schedule_service_pb2&#x27;
 import rtp_llm.ops took 0.00s
-[process-17776][root][2026-09-11 17:56:30.772][start_backend_server.py:local_rank_start():119][ERROR] start server error: No module named &#x27;rtp_llm.cpp.model_rpc.proto.flexlb_schedule_service_pb2&#x27;, trace: Traceback (most recent call last):
+[process-17917][root][2026-09-12 17:06:25.218][start_backend_server.py:local_rank_start():119][ERROR] start server error: No module named &#x27;rtp_llm.cpp.model_rpc.proto.flexlb_schedule_service_pb2&#x27;, trace: Traceback (most recent call last):
   File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/start_backend_server.py&quot;, line 100, in local_rank_start
     backend_manager.start()
   File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/server/backend_manager.py&quot;, line 70, in start
@@ -407,41 +407,41 @@ Traceback (most recent call last):
     from rtp_llm.cpp.model_rpc.proto.flexlb_schedule_service_pb2 import (
 ModuleNotFoundError: No module named &#x27;rtp_llm.cpp.model_rpc.proto.flexlb_schedule_service_pb2&#x27;
 import rtp_llm.ops took 0.00s
-[process-17701][root][2026-09-11 17:56:31.497][process_manager.py:_health_check_worker():866][ERROR] dash_sc_server process manager is not available
-[process-17701][root][2026-09-11 17:56:31.498][process_manager.py:_health_check_worker():866][ERROR] backend_server process manager is not available
-[process-17701][root][2026-09-11 17:56:31.500][process_manager.py:_health_check_worker():866][ERROR] frontend_server process manager is not available
-[process-17701][root][2026-09-11 17:56:31.500][process_manager.py:wait_for_health_checks():939][ERROR] backend_server health check failed
-[process-17701][root][2026-09-11 17:56:31.501][process_manager.py:wait_for_health_checks():939][ERROR] frontend_server health check failed
-[process-17701][root][2026-09-11 17:56:31.501][process_manager.py:wait_for_health_checks():939][ERROR] dash_sc_server health check failed
-[process-17701][root][2026-09-11 17:56:31.501][start_server.py:start_server():724][ERROR] [START_SERVER] Health checks failed
-[process-17701][root][2026-09-11 17:56:31.501][start_server.py:start_server():736][ERROR] start failed, trace: Traceback (most recent call last):
+[process-17842][root][2026-09-12 17:06:25.886][process_manager.py:_health_check_worker():866][ERROR] backend_server process manager is not available
+[process-17842][root][2026-09-12 17:06:25.888][process_manager.py:_health_check_worker():866][ERROR] dash_sc_server process manager is not available
+[process-17842][root][2026-09-12 17:06:25.892][process_manager.py:_health_check_worker():866][ERROR] frontend_server process manager is not available
+[process-17842][root][2026-09-12 17:06:25.893][process_manager.py:wait_for_health_checks():939][ERROR] backend_server health check failed
+[process-17842][root][2026-09-12 17:06:25.893][process_manager.py:wait_for_health_checks():939][ERROR] frontend_server health check failed
+[process-17842][root][2026-09-12 17:06:25.893][process_manager.py:wait_for_health_checks():939][ERROR] dash_sc_server health check failed
+[process-17842][root][2026-09-12 17:06:25.893][start_server.py:start_server():724][ERROR] [START_SERVER] Health checks failed
+[process-17842][root][2026-09-12 17:06:25.893][start_server.py:start_server():736][ERROR] start failed, trace: Traceback (most recent call last):
   File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/start_server.py&quot;, line 725, in start_server
     raise Exception(&quot;Health checks failed&quot;)
 Exception: Health checks failed
 
-[process-17701][root][2026-09-11 17:56:31.501][process_manager.py:monitor_and_release_processes():770][INFO] Monitoring 9 processes
-[process-17701][root][2026-09-11 17:56:31.501][process_manager.py:_terminate_processes():366][INFO] Sending SIGTERM (drain_timeout=0s)
-[process-17701][root][2026-09-11 17:56:31.501][process_manager.py:_send_pre_stop_drain_signal():575][INFO] Sending SIGUSR1 to frontend process group for pre-stop drain
-[process-17701][root][2026-09-11 17:56:31.501][process_manager.py:_terminate_process_list():225][INFO] proc.name [frontend_server_0] pid[17777] is not alived
-[process-17701][root][2026-09-11 17:56:31.501][process_manager.py:_terminate_process_list():225][INFO] proc.name [frontend_server_1] pid[17778] is not alived
-[process-17701][root][2026-09-11 17:56:31.501][process_manager.py:_terminate_process_list():225][INFO] proc.name [frontend_server_2] pid[17779] is not alived
-[process-17701][root][2026-09-11 17:56:31.501][process_manager.py:_terminate_process_list():225][INFO] proc.name [frontend_server_3] pid[17780] is not alived
-[process-17701][root][2026-09-11 17:56:31.501][process_manager.py:_terminate_process_list():225][INFO] proc.name [dash_sc_server_0_0] pid[17781] is not alived
-[process-17701][root][2026-09-11 17:56:31.502][process_manager.py:_terminate_process_list():225][INFO] proc.name [dash_sc_server_0_1] pid[17782] is not alived
-[process-17701][root][2026-09-11 17:56:31.502][process_manager.py:_terminate_process_list():225][INFO] proc.name [dash_sc_server_0_2] pid[17783] is not alived
-[process-17701][root][2026-09-11 17:56:31.502][process_manager.py:_terminate_process_list():225][INFO] proc.name [dash_sc_server_0_3] pid[17784] is not alived
-[process-17701][root][2026-09-11 17:56:31.502][process_manager.py:_pre_stop_drain_signal_window_seconds():638][INFO] Clamp pre-stop drain signal window from 120.000s to 0.000s (remaining_shutdown_budget=0.000s, headroom=1.000s)
-[process-17701][root][2026-09-11 17:56:31.502][process_manager.py:_terminate_process_list():225][INFO] proc.name [frontend_server_0] pid[17777] is not alived
-[process-17701][root][2026-09-11 17:56:31.502][process_manager.py:_terminate_process_list():225][INFO] proc.name [frontend_server_1] pid[17778] is not alived
-[process-17701][root][2026-09-11 17:56:31.502][process_manager.py:_terminate_process_list():225][INFO] proc.name [frontend_server_2] pid[17779] is not alived
-[process-17701][root][2026-09-11 17:56:31.502][process_manager.py:_terminate_process_list():225][INFO] proc.name [frontend_server_3] pid[17780] is not alived
-[process-17701][root][2026-09-11 17:56:31.502][process_manager.py:_terminate_process_list():225][INFO] proc.name [dash_sc_server_0_0] pid[17781] is not alived
-[process-17701][root][2026-09-11 17:56:31.502][process_manager.py:_terminate_process_list():225][INFO] proc.name [dash_sc_server_0_1] pid[17782] is not alived
-[process-17701][root][2026-09-11 17:56:31.502][process_manager.py:_terminate_process_list():225][INFO] proc.name [dash_sc_server_0_2] pid[17783] is not alived
-[process-17701][root][2026-09-11 17:56:31.502][process_manager.py:_terminate_process_list():225][INFO] proc.name [dash_sc_server_0_3] pid[17784] is not alived
-[process-17701][root][2026-09-11 17:56:31.502][process_manager.py:_terminate_process_list():210][INFO] Sending SIGINT to backend process backend_manager pid=17776
-[process-17701][root][2026-09-11 17:56:31.502][process_manager.py:_drain_deadline_passed():293][WARNING] Timed out waiting for deferred process group to exit, alive=[17776]
-Exception ignored in atexit callback: &lt;function shutdown at 0x7fc306857640&gt;
+[process-17842][root][2026-09-12 17:06:25.893][process_manager.py:monitor_and_release_processes():770][INFO] Monitoring 9 processes
+[process-17842][root][2026-09-12 17:06:25.893][process_manager.py:_terminate_processes():366][INFO] Sending SIGTERM (drain_timeout=0s)
+[process-17842][root][2026-09-12 17:06:25.893][process_manager.py:_send_pre_stop_drain_signal():575][INFO] Sending SIGUSR1 to frontend process group for pre-stop drain
+[process-17842][root][2026-09-12 17:06:25.893][process_manager.py:_terminate_process_list():225][INFO] proc.name [frontend_server_0] pid[17918] is not alived
+[process-17842][root][2026-09-12 17:06:25.893][process_manager.py:_terminate_process_list():225][INFO] proc.name [frontend_server_1] pid[17919] is not alived
+[process-17842][root][2026-09-12 17:06:25.893][process_manager.py:_terminate_process_list():225][INFO] proc.name [frontend_server_2] pid[17920] is not alived
+[process-17842][root][2026-09-12 17:06:25.893][process_manager.py:_terminate_process_list():225][INFO] proc.name [frontend_server_3] pid[17921] is not alived
+[process-17842][root][2026-09-12 17:06:25.893][process_manager.py:_terminate_process_list():225][INFO] proc.name [dash_sc_server_0_0] pid[17922] is not alived
+[process-17842][root][2026-09-12 17:06:25.893][process_manager.py:_terminate_process_list():225][INFO] proc.name [dash_sc_server_0_1] pid[17923] is not alived
+[process-17842][root][2026-09-12 17:06:25.893][process_manager.py:_terminate_process_list():225][INFO] proc.name [dash_sc_server_0_2] pid[17924] is not alived
+[process-17842][root][2026-09-12 17:06:25.893][process_manager.py:_terminate_process_list():225][INFO] proc.name [dash_sc_server_0_3] pid[17925] is not alived
+[process-17842][root][2026-09-12 17:06:25.893][process_manager.py:_pre_stop_drain_signal_window_seconds():638][INFO] Clamp pre-stop drain signal window from 120.000s to 0.000s (remaining_shutdown_budget=0.000s, headroom=1.000s)
+[process-17842][root][2026-09-12 17:06:25.894][process_manager.py:_terminate_process_list():225][INFO] proc.name [frontend_server_0] pid[17918] is not alived
+[process-17842][root][2026-09-12 17:06:25.894][process_manager.py:_terminate_process_list():225][INFO] proc.name [frontend_server_1] pid[17919] is not alived
+[process-17842][root][2026-09-12 17:06:25.894][process_manager.py:_terminate_process_list():225][INFO] proc.name [frontend_server_2] pid[17920] is not alived
+[process-17842][root][2026-09-12 17:06:25.894][process_manager.py:_terminate_process_list():225][INFO] proc.name [frontend_server_3] pid[17921] is not alived
+[process-17842][root][2026-09-12 17:06:25.894][process_manager.py:_terminate_process_list():225][INFO] proc.name [dash_sc_server_0_0] pid[17922] is not alived
+[process-17842][root][2026-09-12 17:06:25.894][process_manager.py:_terminate_process_list():225][INFO] proc.name [dash_sc_server_0_1] pid[17923] is not alived
+[process-17842][root][2026-09-12 17:06:25.894][process_manager.py:_terminate_process_list():225][INFO] proc.name [dash_sc_server_0_2] pid[17924] is not alived
+[process-17842][root][2026-09-12 17:06:25.894][process_manager.py:_terminate_process_list():225][INFO] proc.name [dash_sc_server_0_3] pid[17925] is not alived
+[process-17842][root][2026-09-12 17:06:25.894][process_manager.py:_terminate_process_list():210][INFO] Sending SIGINT to backend process backend_manager pid=17917
+[process-17842][root][2026-09-12 17:06:25.894][process_manager.py:_drain_deadline_passed():293][WARNING] Timed out waiting for deferred process group to exit, alive=[17917]
+Exception ignored in atexit callback: &lt;function shutdown at 0x7fc29981b640&gt;
 Traceback (most recent call last):
   File &quot;/opt/conda310/lib/python3.10/logging/__init__.py&quot;, line 2183, in shutdown
     h.close()
@@ -454,9 +454,9 @@ Traceback (most recent call last):
   File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/start_backend_server.py&quot;, line 378, in abort
     raise KeyboardInterrupt(f&quot;signal {signum} during startup&quot;)
 KeyboardInterrupt: signal 2 during startup
-[process-17701][root][2026-09-11 17:56:36.507][process_manager.py:_force_kill_processes():672][WARNING] Force-killing surviving children
-[process-17701][root][2026-09-11 17:56:36.508][process_manager.py:_join_all_processes():728][INFO] All processes joined
-[process-17701][root][2026-09-11 17:56:36.508][process_manager.py:monitor_and_release_processes():795][ERROR] Child process failure cleanup completed, exiting parent
+[process-17842][root][2026-09-12 17:06:30.899][process_manager.py:_force_kill_processes():672][WARNING] Force-killing surviving children
+[process-17842][root][2026-09-12 17:06:30.899][process_manager.py:_join_all_processes():728][INFO] All processes joined
+[process-17842][root][2026-09-12 17:06:30.899][process_manager.py:monitor_and_release_processes():795][ERROR] Child process failure cleanup completed, exiting parent
 /opt/conda310/lib/python3.10/multiprocessing/resource_tracker.py:224: UserWarning: resource_tracker: There appear to be 7 leaked semaphore objects to clean up at shutdown
   warnings.warn(&#x27;resource_tracker: There appear to be %d &#x27;
 </pre>
