@@ -2,7 +2,7 @@
 <pre>
 running server command: USE_AITER_PA=1 SEQ_SIZE_PER_BLOCK=16 TOKENIZER_PATH=/mnt/raid0/pretrained_model/rtp_ci/Qwen3-8B-FP8-Dynamic CHECKPOINT_PATH=/mnt/raid0/pretrained_model/rtp_ci/Qwen3-8B-FP8-Dynamic MODEL_TYPE=qwen_3 FP8_KV_CACHE=1 CUDA_VISIBLE_DEVICES=4,5,6,7 START_PORT=6789 /opt/conda310/bin/python3.10 -m rtp_llm.start_server
 WARNING:root:torch version 2.9.1+git7e1940d is outside the validated 2.11 for the UE8M0 dist.broadcast compat shim. The shim is still installed (only triggers on float8_e8m0fnu tensors) but verify multi-rank ckpt loading of UE8M0 weight scales and bump _TORCH_TESTED_MAJOR_MINOR in torch_patch.py once re-validated.
-[process-19599][root][2026-10-04 18:25:35.945][log_config.py:setup_logging():93][INFO] successfully set NCCL_DEBUG_FILE path to logs/nccl.log
+[process-19684][root][2026-10-05 21:47:39.740][log_config.py:setup_logging():93][INFO] successfully set NCCL_DEBUG_FILE path to logs/nccl.log
 import rtp_llm.ops took 0.00s
 WARNING:root:torch version 2.9.1+git7e1940d is outside the validated 2.11 for the UE8M0 dist.broadcast compat shim. The shim is still installed (only triggers on float8_e8m0fnu tensors) but verify multi-rank ckpt loading of UE8M0 weight scales and bump _TORCH_TESTED_MAJOR_MINOR in torch_patch.py once re-validated.
 WARNING:root:torch version 2.9.1+git7e1940d is outside the validated 2.11 for the UE8M0 dist.broadcast compat shim. The shim is still installed (only triggers on float8_e8m0fnu tensors) but verify multi-rank ckpt loading of UE8M0 weight scales and bump _TORCH_TESTED_MAJOR_MINOR in torch_patch.py once re-validated.
@@ -13,7 +13,7 @@ WARNING:root:torch version 2.9.1+git7e1940d is outside the validated 2.11 for th
 WARNING:root:torch version 2.9.1+git7e1940d is outside the validated 2.11 for the UE8M0 dist.broadcast compat shim. The shim is still installed (only triggers on float8_e8m0fnu tensors) but verify multi-rank ckpt loading of UE8M0 weight scales and bump _TORCH_TESTED_MAJOR_MINOR in torch_patch.py once re-validated.
 WARNING:root:torch version 2.9.1+git7e1940d is outside the validated 2.11 for the UE8M0 dist.broadcast compat shim. The shim is still installed (only triggers on float8_e8m0fnu tensors) but verify multi-rank ckpt loading of UE8M0 weight scales and bump _TORCH_TESTED_MAJOR_MINOR in torch_patch.py once re-validated.
 WARNING:root:torch version 2.9.1+git7e1940d is outside the validated 2.11 for the UE8M0 dist.broadcast compat shim. The shim is still installed (only triggers on float8_e8m0fnu tensors) but verify multi-rank ckpt loading of UE8M0 weight scales and bump _TORCH_TESTED_MAJOR_MINOR in torch_patch.py once re-validated.
-Process dash_sc_server_0_2:
+Process dash_sc_server_0_0:
 Traceback (most recent call last):
   File &quot;/opt/conda310/lib/python3.10/multiprocessing/process.py&quot;, line 314, in _bootstrap
     self.run()
@@ -45,31 +45,9 @@ Traceback (most recent call last):
     from jsonschema import Draft7Validator
 ModuleNotFoundError: No module named &#x27;jsonschema&#x27;
 import rtp_llm.ops took 0.00s
-Process frontend_server_0:
+Process dash_sc_server_0_2:
+Process dash_sc_server_0_1:
 Traceback (most recent call last):
-  File &quot;/opt/conda310/lib/python3.10/multiprocessing/process.py&quot;, line 314, in _bootstrap
-    self.run()
-  File &quot;/opt/conda310/lib/python3.10/multiprocessing/process.py&quot;, line 108, in run
-    self._target(*self._args, **self._kwargs)
-  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/start_frontend_server.py&quot;, line 47, in start_frontend_server
-    from rtp_llm.frontend.frontend_app import FrontendApp
-  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/frontend/frontend_app.py&quot;, line 38, in &lt;module&gt;
-    from rtp_llm.frontend.frontend_server import FrontendServer
-  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/frontend/frontend_server.py&quot;, line 19, in &lt;module&gt;
-    from rtp_llm.frontend.frontend_worker import FrontendWorker, TokenizerEncodeResponse
-  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/frontend/frontend_worker.py&quot;, line 28, in &lt;module&gt;
-    from rtp_llm.pipeline.pipeline import Pipeline
-  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/pipeline/__init__.py&quot;, line 1, in &lt;module&gt;
-    from .pipeline import Pipeline
-  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/pipeline/pipeline.py&quot;, line 28, in &lt;module&gt;
-    from rtp_llm.server.backend_rpc_server_visitor import (
-  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/server/backend_rpc_server_visitor.py&quot;, line 19, in &lt;module&gt;
-    from rtp_llm.server.master_client import FlexlbResponse, MasterClient
-  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/server/master_client.py&quot;, line 19, in &lt;module&gt;
-    from rtp_llm.cpp.model_rpc.proto.flexlb_schedule_service_pb2 import (
-ModuleNotFoundError: No module named &#x27;rtp_llm.cpp.model_rpc.proto.flexlb_schedule_service_pb2&#x27;
-import rtp_llm.ops took 0.00s
-Process dash_sc_server_0_0:
 Traceback (most recent call last):
   File &quot;/opt/conda310/lib/python3.10/multiprocessing/process.py&quot;, line 314, in _bootstrap
     self.run()
@@ -83,9 +61,23 @@ Traceback (most recent call last):
     from rtp_llm.dash_sc.inference.grammar_validator import GrammarValidator
   File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/dash_sc/inference/grammar_validator.py&quot;, line 37, in &lt;module&gt;
     from jsonschema import Draft7Validator
+  File &quot;/opt/conda310/lib/python3.10/multiprocessing/process.py&quot;, line 314, in _bootstrap
+    self.run()
+  File &quot;/opt/conda310/lib/python3.10/multiprocessing/process.py&quot;, line 108, in run
+    self._target(*self._args, **self._kwargs)
+ModuleNotFoundError: No module named &#x27;jsonschema&#x27;
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/start_dash_sc_server.py&quot;, line 47, in start_dash_sc_server
+    from rtp_llm.dash_sc import DashScApp
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/dash_sc/__init__.py&quot;, line 26, in __getattr__
+    from rtp_llm.dash_sc.app import DashScApp
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/dash_sc/app.py&quot;, line 28, in &lt;module&gt;
+    from rtp_llm.dash_sc.inference.grammar_validator import GrammarValidator
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/dash_sc/inference/grammar_validator.py&quot;, line 37, in &lt;module&gt;
+    from jsonschema import Draft7Validator
 ModuleNotFoundError: No module named &#x27;jsonschema&#x27;
 import rtp_llm.ops took 0.00s
-Process frontend_server_2:
+import rtp_llm.ops took 0.00s
+Process frontend_server_0:
 Traceback (most recent call last):
   File &quot;/opt/conda310/lib/python3.10/multiprocessing/process.py&quot;, line 314, in _bootstrap
     self.run()
@@ -133,23 +125,31 @@ Traceback (most recent call last):
     from rtp_llm.cpp.model_rpc.proto.flexlb_schedule_service_pb2 import (
 ModuleNotFoundError: No module named &#x27;rtp_llm.cpp.model_rpc.proto.flexlb_schedule_service_pb2&#x27;
 import rtp_llm.ops took 0.00s
-Process dash_sc_server_0_1:
+Process frontend_server_3:
 Traceback (most recent call last):
   File &quot;/opt/conda310/lib/python3.10/multiprocessing/process.py&quot;, line 314, in _bootstrap
     self.run()
   File &quot;/opt/conda310/lib/python3.10/multiprocessing/process.py&quot;, line 108, in run
     self._target(*self._args, **self._kwargs)
-  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/start_dash_sc_server.py&quot;, line 47, in start_dash_sc_server
-    from rtp_llm.dash_sc import DashScApp
-  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/dash_sc/__init__.py&quot;, line 26, in __getattr__
-    from rtp_llm.dash_sc.app import DashScApp
-  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/dash_sc/app.py&quot;, line 28, in &lt;module&gt;
-    from rtp_llm.dash_sc.inference.grammar_validator import GrammarValidator
-  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/dash_sc/inference/grammar_validator.py&quot;, line 37, in &lt;module&gt;
-    from jsonschema import Draft7Validator
-ModuleNotFoundError: No module named &#x27;jsonschema&#x27;
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/start_frontend_server.py&quot;, line 47, in start_frontend_server
+    from rtp_llm.frontend.frontend_app import FrontendApp
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/frontend/frontend_app.py&quot;, line 38, in &lt;module&gt;
+    from rtp_llm.frontend.frontend_server import FrontendServer
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/frontend/frontend_server.py&quot;, line 19, in &lt;module&gt;
+    from rtp_llm.frontend.frontend_worker import FrontendWorker, TokenizerEncodeResponse
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/frontend/frontend_worker.py&quot;, line 28, in &lt;module&gt;
+    from rtp_llm.pipeline.pipeline import Pipeline
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/pipeline/__init__.py&quot;, line 1, in &lt;module&gt;
+    from .pipeline import Pipeline
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/pipeline/pipeline.py&quot;, line 28, in &lt;module&gt;
+    from rtp_llm.server.backend_rpc_server_visitor import (
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/server/backend_rpc_server_visitor.py&quot;, line 19, in &lt;module&gt;
+    from rtp_llm.server.master_client import FlexlbResponse, MasterClient
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/server/master_client.py&quot;, line 19, in &lt;module&gt;
+    from rtp_llm.cpp.model_rpc.proto.flexlb_schedule_service_pb2 import (
+ModuleNotFoundError: No module named &#x27;rtp_llm.cpp.model_rpc.proto.flexlb_schedule_service_pb2&#x27;
 import rtp_llm.ops took 0.00s
-Process frontend_server_3:
+Process frontend_server_2:
 Traceback (most recent call last):
   File &quot;/opt/conda310/lib/python3.10/multiprocessing/process.py&quot;, line 314, in _bootstrap
     self.run()
@@ -223,25 +223,44 @@ Traceback (most recent call last):
     from rtp_llm.openai.renderers.custom_renderer import (
   File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/openai/renderers/custom_renderer.py&quot;, line 42, in &lt;module&gt;
     from rtp_llm.server.backend_rpc_server_visitor import BackendRPCServerVisitor
-  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/server/backend_rpc_server_visitor.py&quot;, line 19, in &lt;module&gt;
-    from rtp_llm.server.master_client import FlexlbResponse, MasterClient
-  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/server/master_client.py&quot;, line 19, in &lt;module&gt;
-    from rtp_llm.cpp.model_rpc.proto.flexlb_schedule_service_pb2 import (
-ModuleNotFoundError: No module named &#x27;rtp_llm.cpp.model_rpc.proto.flexlb_schedule_service_pb2&#x27;
-import rtp_llm.ops took 0.00s
-Exception ignored in atexit callback: &lt;function shutdown at 0x7f520d8e3640&gt;
-Traceback (most recent call last):
-  File &quot;/opt/conda310/lib/python3.10/logging/__init__.py&quot;, line 2183, in shutdown
-    h.close()
-  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/access_logger/async_log_handler.py&quot;, line 291, in close
-    target_closed = self._wait_for_target_close(deadline) if drained else False
-  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/access_logger/async_log_handler.py&quot;, line 233, in _wait_for_target_close
-    self._pending_condition.wait(
-  File &quot;/opt/conda310/lib/python3.10/threading.py&quot;, line 324, in wait
-    gotit = waiter.acquire(True, timeout)
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/server/backend_rpc_server_visitor.py&quot;, line 18, in &lt;module&gt;
+    from rtp_llm.server.host_service import HostService, HostServiceArgs
+  File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/server/host_service.py&quot;, line 168, in &lt;module&gt;
+    class ServiceRoute(BaseModel):
+  File &quot;/opt/conda310/lib/python3.10/site-packages/pydantic/_internal/_model_construction.py&quot;, line 256, in __new__
+    complete_model_class(
+  File &quot;/opt/conda310/lib/python3.10/site-packages/pydantic/_internal/_model_construction.py&quot;, line 667, in complete_model_class
+    schema = gen_schema.generate_schema(cls)
+  File &quot;/opt/conda310/lib/python3.10/site-packages/pydantic/_internal/_generate_schema.py&quot;, line 744, in generate_schema
+    schema = self._generate_schema_inner(obj)
+  File &quot;/opt/conda310/lib/python3.10/site-packages/pydantic/_internal/_generate_schema.py&quot;, line 1028, in _generate_schema_inner
+    return self._model_schema(obj)
+  File &quot;/opt/conda310/lib/python3.10/site-packages/pydantic/_internal/_generate_schema.py&quot;, line 858, in _model_schema
+    {k: self._generate_md_field_schema(k, v, decorators) for k, v in fields.items()},
+  File &quot;/opt/conda310/lib/python3.10/site-packages/pydantic/_internal/_generate_schema.py&quot;, line 858, in &lt;dictcomp&gt;
+    {k: self._generate_md_field_schema(k, v, decorators) for k, v in fields.items()},
+  File &quot;/opt/conda310/lib/python3.10/site-packages/pydantic/_internal/_generate_schema.py&quot;, line 1235, in _generate_md_field_schema
+    schema, metadata = self._common_field_schema(name, field_info, decorators)
+  File &quot;/opt/conda310/lib/python3.10/site-packages/pydantic/_internal/_generate_schema.py&quot;, line 1311, in _common_field_schema
+    schema = wrap_default(field_info, schema)
+  File &quot;/opt/conda310/lib/python3.10/site-packages/pydantic/_internal/_generate_schema.py&quot;, line 2663, in wrap_default
+    default_factory_takes_data=takes_validated_data_argument(field_info.default_factory),
+  File &quot;/opt/conda310/lib/python3.10/site-packages/pydantic/_internal/_fields.py&quot;, line 694, in takes_validated_data_argument
+    sig = _typing_extra.signature_no_eval(default_factory)
+  File &quot;/opt/conda310/lib/python3.10/site-packages/pydantic/_internal/_typing_extra.py&quot;, line 582, in signature_no_eval
+    return signature(f)
+  File &quot;/opt/conda310/lib/python3.10/inspect.py&quot;, line 3253, in signature
+    return Signature.from_callable(obj, follow_wrapped=follow_wrapped,
+  File &quot;/opt/conda310/lib/python3.10/inspect.py&quot;, line 3001, in from_callable
+    return _signature_from_callable(obj, sigcls=cls,
+  File &quot;/opt/conda310/lib/python3.10/inspect.py&quot;, line 2522, in _signature_from_callable
+    return _signature_fromstr(sigcls, base, text_sig)
+  File &quot;/opt/conda310/lib/python3.10/inspect.py&quot;, line 2161, in _signature_fromstr
+    sys_module_dict = sys.modules.copy()
   File &quot;/mnt/raid0/rtp-actions-runner-yuzho/_work/rtp-llm/rtp-llm/rtp-llm/rtp_llm/start_backend_server.py&quot;, line 378, in abort
     raise KeyboardInterrupt(f&quot;signal {signum} during startup&quot;)
 KeyboardInterrupt: signal 2 during startup
+import rtp_llm.ops took 0.00s
 /opt/conda310/lib/python3.10/multiprocessing/resource_tracker.py:224: UserWarning: resource_tracker: There appear to be 7 leaked semaphore objects to clean up at shutdown
   warnings.warn(&#x27;resource_tracker: There appear to be %d &#x27;
 </pre>
