@@ -1,6 +1,9 @@
 name: rtp-llm unit tests (test)
 
 on:
+  push:
+    branches:
+      - yuzho/ci_workflows
   workflow_dispatch:
     inputs:
       branch:
@@ -23,7 +26,7 @@ env:
 
 jobs:
   clean_gpu:
-    runs-on: test
+    runs-on: MI308-staging
     steps:
     - name: Clean GPU
       run: |
@@ -41,7 +44,7 @@ jobs:
         EOF
 
   unit_tests: #TODO: assign 1 gpu card to this job
-    runs-on: test
+    runs-on: MI308-staging
     needs: [ clean_gpu ]
     steps:
     # for pull request: using PR's source branch. 
@@ -99,7 +102,7 @@ jobs:
         path: logs_unit_tests.tar.gz
 
   e2e_tests: #TODO: assign 4 gpu cards to this job
-    runs-on: test
+    runs-on: MI308-staging
     needs: [ clean_gpu ]
     steps:
 
@@ -156,7 +159,7 @@ jobs:
         path: logs_e2e_tests.tar.gz
 
   deploy_results:
-    runs-on: test
+    runs-on: MI308-staging
     needs: [ unit_tests, e2e_tests ]
     if: ${{ always() && !cancelled() }}
     steps:
@@ -220,6 +223,10 @@ jobs:
         token: ${{ secrets.PUSH_TO_MAIN }}
       continue-on-error: true  
       run: |   
+        if [[ ${{ github.event_name }} == 'push' ]]; then
+          echo "Skip gh-pages publish for the push-triggered test run"
+          exit 0
+        fi
         if [[ ${{ github.event_name }} == 'workflow_dispatch' ]]; then
           cd rtp-llm
           branch=$(git rev-parse --abbrev-ref HEAD)
