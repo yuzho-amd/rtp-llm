@@ -1,0 +1,23 @@
+name: staging smoke
+
+on:
+  workflow_dispatch:
+
+jobs:
+  smoke:
+    runs-on: [self-hosted, MI308-staging]
+    steps:
+      - name: host
+        run: |
+          hostname
+          whoami
+          rocm-smi --showproductname | head
+      - name: gpu in ci image
+        run: |
+          docker run --rm --privileged \
+            --device=/dev/kfd --device=/dev/dri \
+            --group-add video --group-add render \
+            --network=host \
+            -e CUDA_VISIBLE_DEVICES=3 \
+            hub.docker.alibaba-inc.com/isearch/rtp_llm_dev_rocm:2026_02_02_19_35_ff2f700_yuzho \
+            bash -lc 'echo CUDA_VISIBLE_DEVICES=$CUDA_VISIBLE_DEVICES; rocminfo | grep "Marketing Name" | head'
