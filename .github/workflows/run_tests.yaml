@@ -332,5 +332,18 @@ jobs:
           else
             echo "Wiki unchanged, skip push."
           fi
-        fi    
-        
+        fi
+
+    - name: Fail job if summary has FAILED cases
+      if: always()
+      run: |
+        summary=logs/summary.md
+        if [ ! -f "${summary}" ]; then
+          echo "${summary} not found"
+          exit 1
+        fi
+        if grep -E '^\| .* \| FAILED +\|' "${summary}"; then
+          echo "Found FAILED cases in ${summary}"
+          exit 1
+        fi
+        echo "No FAILED cases in ${summary}"
