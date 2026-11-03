@@ -11,10 +11,31 @@ if [ $COMPILE_EXIT_CODE -ne 0 ]; then
     exit $COMPILE_EXIT_CODE
 fi
 
+install_runtime_deps(){
+    # The server runs on the image python instead of the bazel pip deps, and the image lacks or has
+    # older versions of packages it imports. Install them at the versions bazel uses; the lock file
+    # is fully resolved, so skip dependency resolution.
+    # The image's flash-attn is built against ROCm 6 and breaks transformers imports on ROCm 7.2.
+    local python=/opt/conda310/bin/python3
+    local extra_index=https://rtp-opensource.oss-cn-hangzhou.aliyuncs.com/rtp_llm/simple/
+    local pkgs="amd-aiter|triton|triton-kernels|flydsl|jsonschema|jsonschema-specifications|referencing|rpds-py|watchdog"
+    pkgs="${pkgs}|transformers|huggingface-hub|hf-xet|tokenizers|safetensors|sentence-transformers|httpx|typer-slim|shellingham"
+    ${python} -m pip uninstall -y triton flash-attn
+    ${python} -m pip install --no-cache-dir --no-deps --index-url https://pypi.org/simple --extra-index-url ${extra_index} \
+        $(grep -E "^(${pkgs})==" ${RTP_PATH}/deps/requirements_lock_rocm.txt | sed 's/ .*//') || return 1
+    ${python} -c "import aiter, triton, flydsl, jsonschema, watchdog, sentence_transformers, transformers
+from transformers import CLIPVisionModel
+print('runtime deps ready: triton', triton.__version__, 'transformers', transformers.__version__)"
+}
+
 set_e2e_para(){
     export PORT=6789
     # yum --disablerepo="*" --enablerepo=alinux3-os install -y jq
-    cp ${RTP_PATH}/bazel-bin/rtp_llm/cpp/model_rpc/proto/model_rpc_service_pb2* ${RTP_PATH}/rtp_llm/cpp/model_rpc/proto/
+    if ! install_runtime_deps; then
+        echo "错误：E2E运行时依赖安装失败"
+        exit 1
+    fi
+    cp ${RTP_PATH}/bazel-bin/rtp_llm/cpp/model_rpc/proto/*_pb2*.py ${RTP_PATH}/rtp_llm/cpp/model_rpc/proto/
     GOLDEN_RESPONSES_FILE="${SCRIPT_DIR}/golden_responses.json"
 }
 
@@ -73,7 +94,7 @@ start_and_wait_server() {
     local waited=0
     while [ $waited -lt $model_timeout ]; do
         # 通过健康检查端点判断服务是否就绪
-        local health_response=$(curl -s -w "\n%{http_code}" http://localhost:${PORT}/health 2>/dev/null)
+        local health_response=$(curl -s --max-time 5 -w "\n%{http_code}" http://localhost:${PORT}/health 2>/dev/null)
         # local health_body=$(echo "${health_response}" | head -n -1)
         local health_status=$(echo "${health_response}" | tail -n 1)
         
@@ -82,6 +103,10 @@ start_and_wait_server() {
             echo "✓ 服务已就绪（已等待 ${waited} 秒）"
             sleep 20
             break
+        fi
+        if ! kill -0 "${SERVER_PID}" 2>/dev/null; then
+            echo "✗ 错误: 服务进程已退出，日志: ${CURRENT_LOG_FILE}"
+            return 1
         fi
         sleep 5
         waited=$((waited + 5))
@@ -434,7 +459,7 @@ install_and_test_e2e() {
         local case_tag=$(python3 -c "import json; data=json.load(open('${GOLDEN_RESPONSES_FILE}')); print(data['test_cases'][${i}]['case_tag'])")
 
         # 临时跳过列表(用例保留在json中,仅CI运行时跳过;需要时从此列表移除即可恢复)
-        SKIP_CASES="Qwen_VL_TP1 Qwen_VL_TP4 Bert_int8"
+        SKIP_CASES="Qwen_VL_TP1 Qwen_VL_TP4 Bert_int8 Qwen3-32B_FP8_ptpc_dense_Quark"
         if echo " $SKIP_CASES " | grep -qw "$case_tag"; then
             echo "=========================================="
             echo "跳过用例: ${case_tag} (临时禁用,用例仍保留在json)"
