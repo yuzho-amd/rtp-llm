@@ -228,7 +228,6 @@ jobs:
       if: always()
       env:
         token: ${{ secrets.PUSH_TO_MAIN }}
-      continue-on-error: true  
       run: |   
         if [[ ${{ github.event_name }} == 'workflow_dispatch' ]]; then
           cd rtp-llm
@@ -259,10 +258,18 @@ jobs:
           echo "Need to push new commit."
           git config --local user.name "yuzho"
           git config --local user.email "yuzho@amd.com"
-          git fetch origin
+          retry() { for i in 1 2 3; do "$@" && return 0; sleep 30; done; return 1; }
+          # Only fetch gh-pages: a bare "git fetch origin" pulls every branch with full history.
+          retry git fetch origin gh-pages:refs/remotes/origin/gh-pages
           git merge -X ours origin/gh-pages
           git commit -a -m "update results for ${target_subdir}"
-          git push origin gh-pages
+          for i in 1 2 3; do
+            git push origin gh-pages && break
+            [ ${i} -eq 3 ] && exit 1
+            sleep 30
+            retry git fetch origin gh-pages:refs/remotes/origin/gh-pages
+            git merge -X ours origin/gh-pages
+          done
           git config --local --unset user.name
           git config --local --unset user.email
         else
@@ -270,7 +277,7 @@ jobs:
         fi
 
     - name: (Pull Request) send results link into PR comments
-      if: success() || failure()
+      if: (success() || failure()) && steps.deploy_logs.outcome == 'success'
       run: |
         if [ ${{ github.event_name }} == 'pull_request' ]; then
           comment_body="The unit test result of this PR is: https://yuzho-amd.github.io/${{ github.event.repository.name }}/${{ steps.deploy_logs.outputs.target_subdir }}/"
@@ -290,7 +297,7 @@ jobs:
         fi
 
     - name: (Schedule) send results link into wiki
-      if: success() || failure()
+      if: (success() || failure()) && steps.deploy_logs.outcome == 'success'
       env:
         PUSH_TOKEN: ${{ secrets.PUSH_TO_MAIN }}
       run: |
