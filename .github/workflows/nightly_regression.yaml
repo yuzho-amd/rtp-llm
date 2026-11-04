@@ -1,8 +1,10 @@
 name: Nightly Regression Tests
 
 on:
-  schedule:
-    - cron: '0 14 * * *'   # UTC 14:00 = 北京时间 22:00
+  # Both workflows need all GPUs, so chain after the scheduled unit tests run instead of using a separate cron.
+  workflow_run:
+    workflows: [ "rtp-llm unit tests" ]
+    types: [ completed ]
   workflow_dispatch:
     inputs:
       branch:
@@ -16,12 +18,14 @@ env:
 jobs:
   nightly_regression:
     runs-on: [ MI308 ]
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.event == 'schedule' }}
     steps:
-    # for schedule: using default branch; for manual: use input branch
+    # for workflow_run: using the commit the unit tests ran on; for manual: use input branch
     - name: Check out rtp llm source code
       uses: actions/checkout@v3
       if: ${{ github.event_name != 'workflow_dispatch' }}
       with:
+        ref: ${{ github.event.workflow_run.head_sha }}
         path: rtp-llm
 
     - name: Check out rtp llm source code (manual)
